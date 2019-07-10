@@ -48,10 +48,7 @@ public:
 	int getZ() { return Z; }
     double getL(const int pCharge);
 
-    /**
-     * @brief Returns negative decadic logarithm of dissociation constant - used as a human readable value
-     * @param pCharge maximum positive or negative charge
-     */
+
     double getPKa(const int pCharge);
     double getDif() { return dif; }
     void show();
