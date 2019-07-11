@@ -506,18 +506,16 @@ void Engine::setup()
     //Sample &s1 = getMix().addConstituent(cdb.get(441)); // 441 Sebacic acid
     //s1.setIC(0, 0.21).setIC(1, 0.21).setIC(2, 0.21).setIC(3, 0.21);
 
-
-
     Sample &s2 = getMix().addConstituent(cdb.get(258)); // 258 Histidine
     s2.setIC(0, 10).setIC(1, 0).setIC(2, 0).setIC(3, 0);
 
-    //Sample &s2 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
-    //s2.setIC(0, 0.313).setIC(1, 0.314).setIC(2, 0.313).setIC(3, 0.313);
-
-
-
     Sample &s3 = getMix().addConstituent(cdb.get(399)); // 399 Phosphoric acid
     s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
+
+    Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
+    s4.setIC(0, 0.313).setIC(1, 0.314).setIC(2, 0.313).setIC(3, 0.313);
+
+
 
 
 }
