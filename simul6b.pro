@@ -48,7 +48,8 @@ SOURCES += \
     segmentsmodel.cpp \
     preferences.cpp \
     parametersmodel.cpp \
-    mixcontrol.cpp
+    mixcontrol.cpp \
+    mixcontrolmodel.cpp
 
 HEADERS += \
     simul6.h \
@@ -70,7 +71,8 @@ HEADERS += \
     segmentsmodel.h \
     preferences.h \
     parametersmodel.h \
-    mixcontrol.h
+    mixcontrol.h \
+    mixcontrolmodel.h
 
 FORMS += \
     simul6.ui \

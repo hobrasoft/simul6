@@ -2,17 +2,26 @@
 #include "constituentsmodel.h"
 #include "ui_constituentsdialog.h"
 #include "parametersmodel.h"
+#include <QSortFilterProxyModel>
+#include <QRegExp>
 
 ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ConstituentsDialog)
 {
     ui->setupUi(this);
-    ConstituentsModel *model = new ConstituentsModel(this);
-    ui->f_databaseView->setModel(model);
-    connect(model, &ConstituentsModel::loaded, this, &ConstituentsDialog::modelLoaded);
+    ConstituentsModel *databaseModel = new ConstituentsModel(this);
+    QSortFilterProxyModel *databaseProxyModel = new QSortFilterProxyModel(this);
+    databaseProxyModel->setSourceModel(databaseModel);
+    ui->f_databaseView->setModel(databaseProxyModel);
+    connect(databaseModel, &ConstituentsModel::loaded, this, &ConstituentsDialog::modelLoaded);
     connect(ui->f_manuallyGroupBox, &QGroupBox::toggled, this, &ConstituentsDialog::enableGroupBoxes);
     enableGroupBoxes();
+    databaseProxyModel->setFilterKeyColumn(ConstituentsModel::Name);
+    databaseProxyModel->sort(ConstituentsModel::Name);
+    connect(ui->f_search, &QLineEdit::textEdited, [=](const QString& text) {
+        databaseProxyModel->setFilterRegExp(QRegExp(text, Qt::CaseInsensitive));
+    });
 
     m_segmentsModel = new SegmentsModel(this);
     m_segmentsModel->setSegmentsNumber(ui->f_segmentsNumber->value());
@@ -21,6 +30,7 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
 
     m_parametersModel = new ParametersModel(this);
     ui->f_parametersView->setModel(m_parametersModel);
+
 }
 
 ConstituentsDialog::~ConstituentsDialog()

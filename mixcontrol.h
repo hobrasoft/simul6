@@ -2,6 +2,7 @@
 #define MIXCONTROL_H
 
 #include <QGroupBox>
+#include "mixcontrolmodel.h"
 
 namespace Ui {
 class MixControl;
@@ -17,6 +18,8 @@ public:
 
 private:
     Ui::MixControl *ui;
+
+    MixControlModel *m_model;
 };
 
 #endif // MIXCONTROL_H
