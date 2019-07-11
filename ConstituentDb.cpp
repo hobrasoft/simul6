@@ -8,6 +8,9 @@
 #include <fstream>
 #include <assert.h>
 #include "json11.hpp"
+#include <QString>
+#include <QByteArray>
+#include <QSettings>
 
 using namespace std;
 using namespace json11;
@@ -19,8 +22,19 @@ ConstituentDb::ConstituentDb(const char *pFileName)
     read(pFileName);
 }
 
+ConstituentDb::ConstituentDb()
+{
+    read();
+}
+
 ConstituentDb::~ConstituentDb()
 {
+}
+
+void ConstituentDb::read() {
+    QSettings settings;
+    QString filename = settings.value("DB/filename").toString();
+    read(filename.toUtf8().data());
 }
 
 void ConstituentDb::read(const char *pFileName)

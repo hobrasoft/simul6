@@ -1,4 +1,5 @@
 #include "simul6.h"
+#include "preferences.h"
 #include "ui_simul6.h"
 #include "computecontrol.h"
 #include "simulationprofile.h"
@@ -13,6 +14,7 @@ Simul6::Simul6(QWidget *parent) :
     ui(new Ui::Simul6)
 {
     ui->setupUi(this);
+    createActions();
     connect(ui->f_computeControl, &ComputeControl::init, ui->f_simulationProfile, &SimulationProfile::slotInit);
     connect(ui->f_computeControl, &ComputeControl::run, [this]() {
         ui->f_parameters->setEnabled(false);
@@ -50,8 +52,20 @@ void Simul6::init() {
 
 void Simul6::createActions() {
     QMenu *menu = new QMenu(tr("Application"), this);
-    QAction *action = new QAction(tr("Quit application"), this);
+    QAction *action;
+    action = new QAction(tr("Quit application"), this);
     menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        zavrit();
+    });
+
+    action = new QAction(tr("Preferences"), this);
+    connect(action, &QAction::triggered, [this]() {
+        Preferences preferences(this);
+        preferences.exec();
+    });
+    menu->addAction(action);
+
     ui->menuBar->addMenu(menu);
 }
 

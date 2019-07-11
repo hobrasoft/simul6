@@ -484,8 +484,7 @@ void Engine::show()
 
 void Engine::setup()
 {
-    ConstituentDb cdb(DATABASE);
-    //ConstituentDb cdb("c:\\Users\\gasp\\Documents\\Qt\\Simul\\db1.json");
+    ConstituentDb cdb;
 
     setB(20, 200, 400, 600);
     setCapLen(CAPLEN);

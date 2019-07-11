@@ -35,7 +35,7 @@ void ConstituentsModel::createColumns() {
 
 
 void ConstituentsModel::loadData() {
-    ConstituentDb db(DATABASE);
+    ConstituentDb db;
     QMap<unsigned int, Constituent> map = QMap<unsigned int, Constituent>(db.constituents());
     QMapIterator<unsigned int, Constituent> iterator(map);
     removeRows(0, rowCount());

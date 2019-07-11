@@ -14,7 +14,8 @@ public:
 
 public:
 	ConstituentDb(const char *pFileName);
-	~ConstituentDb();
+    ConstituentDb();
+    ~ConstituentDb();
 
     const map<unsigned int, Constituent>& constituents() const { return m_constituents; }
 
@@ -22,7 +23,8 @@ private:
 	map<unsigned int, Constituent> m_constituents;
 
 private:
-	void read(const char *pFileName);
+    void read();
+    void read(const char *pFileName);
 
 public:
 	void show();
