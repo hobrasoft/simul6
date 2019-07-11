@@ -518,7 +518,7 @@ void Engine::setup()
 
 
     Sample &s3 = getMix().addConstituent(cdb.get(399)); // 399 Phosphoric acid
-    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.50);
+    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
 
 
 }
