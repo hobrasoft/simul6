@@ -46,7 +46,9 @@ SOURCES += \
     constituentsmodel.cpp \
     constituentsdialog.cpp \
     segmentsmodel.cpp \
-    preferences.cpp
+    preferences.cpp \
+    parametersmodel.cpp \
+    mixcontrol.cpp
 
 HEADERS += \
     simul6.h \
@@ -66,7 +68,9 @@ HEADERS += \
     settings.h \
     constituentsdialog.h \
     segmentsmodel.h \
-    preferences.h
+    preferences.h \
+    parametersmodel.h \
+    mixcontrol.h
 
 FORMS += \
     simul6.ui \
@@ -74,7 +78,8 @@ FORMS += \
     simulationprofile.ui \
     inputparameters.ui \
     constituentsdialog.ui \
-    preferences.ui
+    preferences.ui \
+    mixcontrol.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

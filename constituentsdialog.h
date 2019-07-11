@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "segmentsmodel.h"
+#include "parametersmodel.h"
 
 namespace Ui {
 class ConstituentsDialog;
@@ -24,6 +25,7 @@ private:
     Ui::ConstituentsDialog *ui;
 
     SegmentsModel *m_segmentsModel;
+    ParametersModel *m_parametersModel;
 };
 
 #endif // CONSTITUENTSDIALOG_H

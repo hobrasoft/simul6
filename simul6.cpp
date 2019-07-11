@@ -34,11 +34,6 @@ Simul6::Simul6(QWidget *parent) :
         ui->f_computeControl->slotFinished();
     });
 
-    connect(ui->pushButton, &QPushButton::clicked, [this]() {
-        ConstituentsDialog dialog;
-        dialog.exec();
-    });
-
     QTimer::singleShot(0, this, &Simul6::init);
 }
 

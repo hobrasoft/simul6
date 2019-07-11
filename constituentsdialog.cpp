@@ -1,6 +1,7 @@
 #include "constituentsdialog.h"
 #include "constituentsmodel.h"
 #include "ui_constituentsdialog.h"
+#include "parametersmodel.h"
 
 ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     QDialog(parent),
@@ -17,6 +18,9 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     m_segmentsModel->setSegmentsNumber(ui->f_segmentsNumber->value());
     ui->f_segmentsView->setModel(m_segmentsModel);
     connect(ui->f_segmentsNumber, SIGNAL(valueChanged(int)), m_segmentsModel, SLOT(setSegmentsNumber(int)));
+
+    m_parametersModel = new ParametersModel(this);
+    ui->f_parametersView->setModel(m_parametersModel);
 }
 
 ConstituentsDialog::~ConstituentsDialog()

@@ -39,11 +39,7 @@
      <widget class="InputParameters" name="f_parameters" native="true"/>
     </item>
     <item row="0" column="2">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
+     <widget class="MixControl" name="widget" native="true"/>
     </item>
    </layout>
   </widget>
@@ -77,6 +73,12 @@
    <class>InputParameters</class>
    <extends>QWidget</extends>
    <header>inputparameters.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MixControl</class>
+   <extends>QWidget</extends>
+   <header>mixcontrol.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
