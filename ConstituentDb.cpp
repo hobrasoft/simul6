@@ -8,8 +8,8 @@
 
 #include <QString>
 #include <QByteArray>
-#include <QSettings>
 #include <QFile>
+#include "msettings.h"
 
 using namespace std;
 
@@ -30,8 +30,7 @@ ConstituentDb::~ConstituentDb()
 }
 
 void ConstituentDb::read() {
-    QSettings settings;
-    QString filename = settings.value("DB/filename").toString();
+    QString filename = MSETTINGS->dbFilename();
     read(filename);
 }
 

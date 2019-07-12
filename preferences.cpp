@@ -1,7 +1,7 @@
 #include "preferences.h"
 #include "ui_preferences.h"
 #include <QFileDialog>
-#include <QSettings>
+#include "msettings.h"
 
 Preferences::Preferences(QWidget *parent) :
     QDialog(parent),
@@ -9,8 +9,7 @@ Preferences::Preferences(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QSettings settings;
-    ui->f_db_filename->setText(settings.value("DB/filename").toString());
+    ui->f_db_filename->setText(MSETTINGS->dbFilename());
 
     connect(ui->f_db_select, &QToolButton::clicked, [this]() {
         QString filename = QFileDialog::getOpenFileName(this,
@@ -30,7 +29,6 @@ Preferences::~Preferences()
 }
 
 void Preferences::accept() {
-    QSettings settings;
-    settings.setValue("DB/filename", ui->f_db_filename->text());
+    MSETTINGS->setDbFilename(ui->f_db_filename->text());
     done(QDialog::Accepted);
 }

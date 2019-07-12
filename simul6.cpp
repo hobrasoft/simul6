@@ -4,7 +4,7 @@
 #include "computecontrol.h"
 #include "simulationprofile.h"
 #include "constituentsdialog.h"
-#include <QSettings>
+#include "msettings.h"
 #include <QSize>
 #include <QMessageBox>
 #include <QTimer>
@@ -13,37 +13,49 @@ Simul6::Simul6(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Simul6)
 {
+    MSettings::instance(this);
     ui->setupUi(this);
     createActions();
-    connect(ui->f_computeControl, &ComputeControl::init, ui->f_simulationProfile, &SimulationProfile::slotInit);
-    connect(ui->f_computeControl, &ComputeControl::run, [this]() {
-        ui->f_parameters->setEnabled(false);
-        double current = ui->f_parameters->current();
-        double dt = ui->f_parameters->dt();
-        bool optimizeDt = ui->f_parameters->optimizeDt();
-        ui->f_simulationProfile->engine()->setCurDen(-508*current);
-        ui->f_simulationProfile->engine()->setDt(dt);
-        ui->f_simulationProfile->engine()->setOptimizeDt(optimizeDt);
-        ui->f_simulationProfile->slotRun();
-    });
-    connect(ui->f_computeControl, &ComputeControl::stop, [this]() {
-        ui->f_parameters->setEnabled(true);
-        ui->f_simulationProfile->slotStop();
-    });
-    connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, ui->f_computeControl, &ComputeControl::showTime);
-    connect(ui->f_simulationProfile, &SimulationProfile::finished, [this]() {
-        ui->f_parameters->setEnabled(true);
-        ui->f_computeControl->slotFinished();
-    });
+    connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
+    connect(ui->f_computeControl, &ComputeControl::run, this, &Simul6::runEngine);
+    connect(ui->f_computeControl, &ComputeControl::stop, this, &Simul6::stopEngine);
 
+    connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, ui->f_computeControl, &ComputeControl::showTime);
+
+    connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
     QTimer::singleShot(0, this, &Simul6::init);
 }
 
 
 void Simul6::init() {
-    QSettings settings;
-    QSize newsize = settings.value("windows/size", QSize(800,66)).toSize();
-    resize(newsize);
+}
+
+    
+void Simul6::engineFinished() {
+    ui->f_parameters->setEnabled(true);
+    ui->f_computeControl->slotFinished();
+
+}
+
+void Simul6::runEngine() {
+    ui->f_parameters->setEnabled(false);
+    double current = ui->f_parameters->current();
+    double dt = ui->f_parameters->dt();
+    bool optimizeDt = ui->f_parameters->optimizeDt();
+    ui->f_simulationProfile->engine()->setCurDen(-508*current);
+    ui->f_simulationProfile->engine()->setDt(dt);
+    ui->f_simulationProfile->engine()->setOptimizeDt(optimizeDt);
+    ui->f_simulationProfile->slotRun();
+}
+
+
+void Simul6::initEngine() {
+    ui->f_simulationProfile->engine()->init();
+}
+
+void Simul6::stopEngine() {
+    ui->f_parameters->setEnabled(true);
+    ui->f_simulationProfile->slotStop();
 }
 
 
