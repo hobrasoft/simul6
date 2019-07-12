@@ -132,12 +132,3 @@ double Sample::getDerH(const int pCharge, const unsigned int pI)
     return derH[getHIdx(pCharge, pI)];
 }
 
-void Sample::show()
-{
-    std::cout << "Showing sample" << std::endl;
-    Constituent::show();
-
-    for (unsigned int i = 0; i < areas; i++) {
-        std::cout << "- IC[" << i << "] = " << IC[i] << std::endl;
-    }
-}

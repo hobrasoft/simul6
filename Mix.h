@@ -6,7 +6,7 @@
 #include "Sample.h"
 #include <list>
 #include <vector>
-#include <string>
+#include <QString>
 
 class Mix
 {
@@ -19,7 +19,7 @@ public:
     Mix(const unsigned int pAreas, const int pNp);
 	~Mix();
 	Sample &addConstituent(const Constituent &pConstituent);
-    Sample &addConstituent(const std::string pName, const double pU, const int pZ);
+    Sample &addConstituent(const QString& pName, const double pU, const int pZ);
     Sample &getSample(unsigned int pIndex);
     std::vector<Sample> &getSamples() { return samples; }
     int getNp() { return np; }
@@ -27,7 +27,6 @@ public:
     std::vector<Sample>::iterator end();
     void initV();
 
-	void show();
     size_t size();
 };
 

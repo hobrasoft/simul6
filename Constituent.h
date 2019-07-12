@@ -2,32 +2,32 @@
 #ifndef CONSTITUENT_HPP
 #define CONSTITUENT_HPP
 
-#include <list>
-#include <string>
-#include <vector>
+#include <QList>
+#include <QVector>
+#include <QString>
 
 class Constituent
 {
 private:
 	bool valid;
-    std::string name;
+    QString name;
 	double U;
 	int Z;
 	unsigned int negCount;
 	unsigned int posCount;
-    std::vector<double> uNeg;
-    std::vector<double> uPos;
-    std::vector<double> pKaNeg;
-    std::vector<double> pKaPos;
-    std::vector<double> kaNeg;
-    std::vector<double> kaPos;
-    std::vector<double> lNeg; // do samplu?
-    std::vector<double> lPos; // do samplu?
+    QVector<double> uNeg;
+    QVector<double> uPos;
+    QVector<double> pKaNeg;
+    QVector<double> pKaPos;
+    QVector<double> kaNeg;
+    QVector<double> kaPos;
+    QVector<double> lNeg; // do samplu?
+    QVector<double> lPos; // do samplu?
     double dif;
 
 public:
 	Constituent();
-    Constituent(const std::string pName, const double pU = 0, const int pZ = 0);
+    Constituent(const QString& pName, const double pU = 0, const int pZ = 0);
     //Constituent(const Constituent &pConstituent);
 	~Constituent();
 
@@ -52,7 +52,7 @@ public:
     double getPKa(const int pCharge);
     double getDif() { return dif; }
     void show();
-    std::string &getName() { return name; }
+    const QString& getName() { return name; }
 
 private:
     void calculateDif();

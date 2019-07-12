@@ -70,7 +70,6 @@ public:
     double getQ3(const unsigned int pI) { return q3[pI]; }
     double getQ4(const unsigned int pI) { return q4[pI]; }
 
-    void show();
 };
 
 #endif
