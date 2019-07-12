@@ -82,6 +82,7 @@ Engine::Engine(unsigned int pAreas, int pNp) :
     m_initialized(false),
     m_running(false),
     m_sendSignals(false),
+    m_optimizeDt(false),
     m_iterations(0)
 {
     cout << "Engine constructor" << endl;
@@ -570,8 +571,11 @@ void Engine::runPrivate() {
         return;
     }
 
-    cashkarp();      // if Optimize dt is checked
-    //rungekutta();    // if Optimize dt is not checked
+    if (m_optimizeDt) {
+        cashkarp();      // if Optimize dt is checked
+    } else {
+        rungekutta();    // if Optimize dt is not checked
+    }
 
     if (t > TimeDisplay) {
         qDebug() << "Engine::runPrivate()" << m_iterations;

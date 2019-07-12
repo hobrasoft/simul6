@@ -20,8 +20,10 @@ Simul6::Simul6(QWidget *parent) :
         ui->f_parameters->setEnabled(false);
         double current = ui->f_parameters->current();
         double dt = ui->f_parameters->dt();
+        bool optimizeDt = ui->f_parameters->optimizeDt();
         ui->f_simulationProfile->engine()->setCurDen(-508*current);
         ui->f_simulationProfile->engine()->setDt(dt);
+        ui->f_simulationProfile->engine()->setOptimizeDt(optimizeDt);
         ui->f_simulationProfile->slotRun();
     });
     connect(ui->f_computeControl, &ComputeControl::stop, [this]() {

@@ -39,7 +39,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QCheckBox" name="f_optimise_dt">
+      <widget class="QCheckBox" name="f_optimize_dt">
        <property name="text">
         <string>Optimise dt</string>
        </property>

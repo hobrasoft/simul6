@@ -130,6 +130,7 @@ public:
     void setErrL(double pErrL) { ErrL = pErrL; }
     void setErrH(double pErrH) { ErrH = pErrH; }
     void setTimeInterval(double pTimeInterval) {TimeInterval = pTimeInterval; }
+    void setOptimizeDt(bool x) { m_optimizeDt = x; }
 
     void setTimeDisplay(double pTimeDisplay) {TimeDisplay = pTimeDisplay; }
     void setTimeStop(double pTimeStop) {TimeStop = pTimeStop; }
@@ -152,6 +153,7 @@ public:
     bool m_running;
     int  m_iterations;
     bool m_sendSignals;
+    bool m_optimizeDt;
 
 signals:
     void drawGraph(Mix *pMix, std::vector<double> *pHpl);

@@ -17,6 +17,7 @@ public:
 
     double current() const;
     double dt() const;
+    bool optimizeDt() const;
 
 private slots:
     void enableInputs();

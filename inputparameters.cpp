@@ -7,7 +7,7 @@ InputParameters::InputParameters(QWidget *parent) :
 {
     ui->setupUi(this);
     enableInputs();
-    connect(ui->f_optimise_dt, &QCheckBox::stateChanged, this, &InputParameters::enableInputs);
+    connect(ui->f_optimize_dt, &QCheckBox::stateChanged, this, &InputParameters::enableInputs);
 }
 
 InputParameters::~InputParameters()
@@ -16,7 +16,7 @@ InputParameters::~InputParameters()
 }
 
 void InputParameters::enableInputs() {
-    ui->f_dt->setEnabled(!ui->f_optimise_dt->isChecked());
+    ui->f_dt->setEnabled(!ui->f_optimize_dt->isChecked());
 }
 
 double InputParameters::current() const {
@@ -25,4 +25,8 @@ double InputParameters::current() const {
 
 double InputParameters::dt() const {
     return ui->f_dt->value();
+}
+
+bool InputParameters::optimizeDt() const {
+    return ui->f_optimize_dt->isChecked();
 }
