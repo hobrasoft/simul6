@@ -31,6 +31,32 @@ const double Engine::beta32 = 0.15875966;
 const double Engine::beta41 = 0.21810038;
 const double Engine::beta42 = 3.0509647;
 const double Engine::beta43 = 3.83286432;
+
+const double Engine:: W51 = 37.0/378.0;
+const double Engine:: W53 = 250.0/621.0;
+const double Engine:: W54 = 125.0/594.0;
+const double Engine:: W56 = 512.0/1771.0;
+const double Engine:: W41 = 2825.0/27648.0;
+const double Engine:: W43 = 18575.0/48384.0;
+const double Engine:: W44 = 13525.0/55296.0;
+const double Engine:: W45 = 277.0/14336.0;
+const double Engine:: W46 = 0.25;
+const double Engine:: C21 = 0.2;
+const double Engine:: C31 = 3.0/40.0;
+const double Engine:: C32 = 9.0/40.0;
+const double Engine:: C41 =  0.3;
+const double Engine:: C42 = -0.9;
+const double Engine:: C43 =  1.2;
+const double Engine:: C51 = -11.0/54.0;
+const double Engine:: C52 =  2.5;
+const double Engine:: C53 = -70.0/27.0;
+const double Engine:: C54 =  35.0/27.0;
+const double Engine:: C61 = 1631.0/55296.0;
+const double Engine:: C62 = 175.0/512.0;
+const double Engine:: C63 = 575.0/13824.0;
+const double Engine:: C64 = 44275.0/110592.0;
+const double Engine:: C65 = 253.0/4096.0;
+
 const double Engine::uHpl = 363e-9;
 const double Engine::uOHmin = 205e-9;
 const double Engine::difHpl = Engine::uHpl * Engine::r * Engine::te/ Engine::farc;
@@ -47,7 +73,10 @@ Engine::Engine(unsigned int pAreas, int pNp) :
     t(0),
     concUp(0),
     concDown(0),
-    critG(0),
+    critG(0),    
+    ErrL(0),
+    ErrH(0),
+    ErrMax(0),
     c0(1000),
     mix(pAreas, pNp),
     m_initialized(false),
@@ -127,6 +156,7 @@ void Engine::initVectors()
     kapa.resize(np + 1, 0);
     oH.resize(np + 1, 0);
     e.resize(np + 1, 0);
+    Error.resize(np + 1);
     difPot.resize(np + 1, 0);
 }
 
@@ -425,6 +455,94 @@ void Engine::rungekutta()
 }
 
 
+
+void Engine::cashkarp()
+{
+    mix.initV();
+
+    der();
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i <= np; i++) {
+        for (auto &s : mix.getSamples()) {
+            s.setQ1(i, s.getD(0, i) * dt);
+            s.setA(0, i, s.getV(i) + C21 * s.getQ1(i));
+        }
+    }
+
+    gCalc();
+    der();
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i <= np; i++) {
+        for (auto &s : mix.getSamples()) {
+            s.setQ2(i, s.getD(0, i) * dt);
+            s.setA(0, i, s.getV(i) + C31 * s.getQ1(i) + C32 * s.getQ2(i));
+        }
+    }
+    gCalc();
+    der();
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i <= np; i++) {
+        for (auto &s : mix.getSamples()) {
+            s.setQ3(i, s.getD(0, i) * dt);
+            s.setA(0, i, s.getV(i) + C41 * s.getQ1(i) + C42 * s.getQ2(i) + C43 * s.getQ3(i));
+        }
+    }
+    gCalc();
+    der();
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i <= np; i++) {
+        for (auto &s : mix.getSamples()) {
+            s.setQ4(i, s.getD(0, i) * dt);
+            s.setA(0, i, s.getV(i) + C51 * s.getQ1(i) + C52 * s.getQ2(i) + C53 * s.getQ3(i) + C54 * s.getQ4(i));
+        }
+    }
+    gCalc();
+    der();
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i <= np; i++) {
+        for (auto &s : mix.getSamples()) {
+            s.setQ5(i, s.getD(0, i) * dt);
+            s.setA(0, i, s.getV(i) + C61 * s.getQ1(i) + C62 * s.getQ2(i) + C63 * s.getQ3(i) + C64 * s.getQ4(i) + C65 * s.getQ5(i));
+        }
+    }
+    gCalc();
+    der();
+
+    ErrMax = 0;
+
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i <= np; i++) {
+        for (auto &s : mix.getSamples()) {
+            s.setQ6(i, s.getD(0, i) * dt);
+            s.setA(0, i, s.getV(i) + W51 * s.getQ1(i) + W53 * s.getQ3(i) + W54 * s.getQ4(i) + W56 * s.getQ6(i));
+        }
+
+        Error[i] = 0;
+
+        for (auto &s : mix.getSamples()) {
+            Error[i] = Error[i] + s.getQ1(i)*(W51-W41) + s.getQ3(i)*(W53-W43)
+                    + s.getQ4(i)*(W54-W44) - s.getQ5(i)*W45 + s.getQ6(i)*(W56-W46);
+        }
+
+        Error[i] = abs(Error[i]);
+
+        if (Error[i] > ErrMax) ErrMax = Error[i];
+    }
+
+    gCalc();
+
+    if (ErrMax <= ErrL) dt = dt*1.1;
+    else if (ErrMax > ErrH) dt = dt/1.1;
+
+    t = t + dt;
+}
+
+
 void Engine::stop() {
     qDebug() << "Engine::stop()";
     m_running = false;
@@ -437,6 +555,7 @@ void Engine::run()
     if (!m_initialized) {
         init();
     }
+    TimeDisplay = TimeInterval;
     m_running = true;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
@@ -444,17 +563,20 @@ void Engine::run()
 void Engine::runPrivate() {
 //  qDebug() << "Engine::runPrivate()" << m_iterations;
 
-    if (!m_running || m_iterations++ > 50000) {
+    if (!m_running || t >= TimeStop) {
         emit drawGraph(&mix, &hpl);
         emit timeChanged(t);
         emit finished();
         return;
     }
 
-    rungekutta();
-    if (m_iterations % numb == 0) {
+    cashkarp();      // if Optimize dt is checked
+    //rungekutta();    // if Optimize dt is not checked
+
+    if (t > TimeDisplay) {
         qDebug() << "Engine::runPrivate()" << m_iterations;
         emit drawGraph(&mix, &hpl);
+        TimeDisplay += TimeInterval;
     }
 
     if (m_sendSignals) {
@@ -495,6 +617,11 @@ void Engine::setup()
 
     setNumb(5000);
     setCritG(1e-6);
+    setErrMax(0);
+    setErrL(1e-8);
+    setErrH(1e-7);
+    setTimeInterval(50);
+    setTimeStop(500);
     setC0(1000);
 
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
@@ -514,9 +641,6 @@ void Engine::setup()
 
     Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
     s4.setIC(0, 0.313).setIC(1, 0.314).setIC(2, 0.313).setIC(3, 0.313);
-
-
-
 
 }
 

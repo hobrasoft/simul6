@@ -34,6 +34,32 @@ public:
 	static const double beta41;
 	static const double beta42;
 	static const double beta43;
+
+    static const double W51;
+    static const double W53;
+    static const double W54;
+    static const double W56;
+    static const double W41;
+    static const double W43;
+    static const double W44;
+    static const double W45;
+    static const double W46;
+    static const double C21;
+    static const double C31;
+    static const double C32;
+    static const double C41;
+    static const double C42;
+    static const double C43;
+    static const double C51;
+    static const double C52;
+    static const double C53;
+    static const double C54;
+    static const double C61;
+    static const double C62;
+    static const double C63;
+    static const double C64;
+    static const double C65;
+
     static const double uHpl; // Mobility of Hydrogen ions
     static const double uOHmin; // Mobility of Hydroxide ions
     static const double difHpl;
@@ -53,6 +79,12 @@ public:
     double concUp; // Upper limit of y-axis [mmol/m3]
     double concDown; // Upper limit of y-axis [mmol/m3]
     double critG; // Criterion for ending iteration of G function
+    double ErrL;  // Lovest error along x-axix
+    double ErrH;  // Highest error along x-axix
+    double ErrMax; // Max error along x-axix
+    double TimeInterval; // how often to display
+    double TimeDisplay; // how often to display
+    double TimeStop;  // when to stop calculation
     int c0; // Transfer factor to SI system of units
 
     // 2-dimensional arrays
@@ -65,6 +97,9 @@ public:
     std::vector<std::vector<double> > q2;
     std::vector<std::vector<double> > q3;
     std::vector<std::vector<double> > q4;
+    std::vector<std::vector<double> > q5;
+    std::vector<std::vector<double> > q6;
+
     std::vector<std::vector<double> > pd1, pd2;
 
     // Vectors
@@ -74,6 +109,7 @@ public:
     std::vector<double> kapa; // Conductivity
     std::vector<double> oH;
     std::vector<double> e;
+    std::vector<double> Error;
     std::vector<double> difPot;
 
     Mix mix;
@@ -90,6 +126,14 @@ public:
     void setConcUp(double pConcUp) { concUp = pConcUp; }
     void setConcDown(double pConcDown) { concDown = pConcDown; }
     void setCritG(double pCritG) { critG = pCritG; }
+    void setErrMax(double pErrMax) { ErrMax = pErrMax; }
+    void setErrL(double pErrL) { ErrL = pErrL; }
+    void setErrH(double pErrH) { ErrH = pErrH; }
+    void setTimeInterval(double pTimeInterval) {TimeInterval = pTimeInterval; }
+
+    void setTimeDisplay(double pTimeDisplay) {TimeDisplay = pTimeDisplay; }
+    void setTimeStop(double pTimeStop) {TimeStop = pTimeStop; }
+
     void setC0(const int pC0) { c0 = pC0; }
 
     size_t getNm(); // Get number of constituents - obsolete
@@ -127,6 +171,7 @@ private:
     void gCalc();
 	void der();
 	void rungekutta();
+    void cashkarp();
 
 public:
 	void show();

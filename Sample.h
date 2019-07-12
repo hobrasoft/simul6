@@ -19,7 +19,7 @@ private:
     Vec2d a, d;
     std::vector<double> v;
     std::vector<double> pd;
-    std::vector<double> q1, q2, q3, q4;
+    std::vector<double> q1, q2, q3, q4, q5, q6;
 
     unsigned int getChargeIndex(const int pCharge);
 
@@ -65,10 +65,14 @@ public:
     void setQ2(const unsigned int pI, const double pValue) { q2[pI] = pValue; }
     void setQ3(const unsigned int pI, const double pValue) { q3[pI] = pValue; }
     void setQ4(const unsigned int pI, const double pValue) { q4[pI] = pValue; }
+    void setQ5(const unsigned int pI, const double pValue) { q5[pI] = pValue; }
+    void setQ6(const unsigned int pI, const double pValue) { q6[pI] = pValue; }
     double getQ1(const unsigned int pI) { return q1[pI]; }
     double getQ2(const unsigned int pI) { return q2[pI]; }
     double getQ3(const unsigned int pI) { return q3[pI]; }
     double getQ4(const unsigned int pI) { return q4[pI]; }
+    double getQ5(const unsigned int pI) { return q5[pI]; }
+    double getQ6(const unsigned int pI) { return q6[pI]; }
 
     void show();
 };

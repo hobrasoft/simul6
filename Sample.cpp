@@ -31,7 +31,9 @@ Sample::Sample(const Constituent &pConstituent, const unsigned int pAreas, const
     q1(pNp + 1),
     q2(pNp + 1),
     q3(pNp + 1),
-    q4(pNp + 1)
+    q4(pNp + 1),
+    q5(pNp + 1),
+    q6(pNp + 1)
 {
     std::cout << "Sample constructor" << std::endl;
 }
