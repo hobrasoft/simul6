@@ -2,32 +2,31 @@
 #ifndef CONSTITUENTDB_HPP
 #define CONSTITUENTDB_HPP
 
-#include <map>
+#include <QMap>
+#include <QObject>
 #include "Constituent.h"
 
-using namespace std;
 
-class ConstituentDb
+class ConstituentDb : public QObject 
 {
 public:
     static const double uFactor;
 
 public:
-	ConstituentDb(const char *pFileName);
-    ConstituentDb();
+	ConstituentDb(const QString& filename, QObject *parent = nullptr);
+    ConstituentDb(QObject *parent = nullptr);
     ~ConstituentDb();
 
-    const map<unsigned int, Constituent>& constituents() const { return m_constituents; }
+    const QMap<unsigned int, Constituent>& constituents() const { return m_constituents; }
 
 private:
-	map<unsigned int, Constituent> m_constituents;
+	QMap<unsigned int, Constituent> m_constituents;
 
 private:
     void read();
-    void read(const char *pFileName);
+    void read(const QString& filename);
 
 public:
-	void show();
     size_t size();
 	const Constituent &get(unsigned int pId);
 };

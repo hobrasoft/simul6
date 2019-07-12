@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts
+QT       += core gui charts network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +27,8 @@ CONFIG += c++14
 
 msvc: QMAKE_CXXFLAGS += /openmp
 
+include(utils/utils.pri)
+
 
 SOURCES += \
     main.cpp \
@@ -40,7 +42,6 @@ SOURCES += \
     Sample.cpp \
     Vec2d.cpp \
     pch.cpp \
-    json11.cpp \
     graf.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
@@ -62,7 +63,6 @@ HEADERS += \
     Sample.h \
     Vec2d.h \
     pch.h \
-    json11.hpp \
     graf.h \
     inputparameters.h \
     constituentsmodel.h \
