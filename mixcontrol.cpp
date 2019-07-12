@@ -9,6 +9,12 @@ MixControl::MixControl(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_model = new MixControlModel(this);
+    ui->f_view->setModel(m_model);
+    for (int i=0; i<MixControlModel::LastCol; i++) {
+        ui->f_view->resizeColumnToContents(i);
+    }
+
     QAction *action;
     action = new QAction("Add", this);
     ui->f_add->setDefaultAction(action);

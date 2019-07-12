@@ -18,7 +18,9 @@ Preferences::Preferences(QWidget *parent) :
                                      QString(),
                                      "JSON database (*.json)"
                                      );
-        ui->f_db_filename->setText(filename);
+        if (!filename.isEmpty()) {
+            ui->f_db_filename->setText(filename);
+        }
     });
 }
 
