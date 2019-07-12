@@ -5,6 +5,7 @@
 #include "simulationprofile.h"
 #include "constituentsdialog.h"
 #include "msettings.h"
+#include "messagedialog.h"
 #include <QSize>
 #include <QMessageBox>
 #include <QTimer>

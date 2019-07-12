@@ -1,6 +1,6 @@
 #include "segmentsmodel.h"
 #include "settings.h"
-#include <QDebug>
+#include "pdebug.h"
 
 SegmentsModel::SegmentsModel(QObject *parent)
     : QStandardItemModel(parent)
@@ -12,7 +12,7 @@ SegmentsModel::SegmentsModel(QObject *parent)
 }
 
 void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
-    qDebug() << "SegmentsModel::setSegmentsNumber" << segmentsNumber;
+    PDEBUG << segmentsNumber;
     m_segmentsNumber = segmentsNumber;
     int currentColumnsCount = columnCount();
     if (currentColumnsCount > m_segmentsNumber) {

@@ -3,7 +3,7 @@
 #define CONSTITUENTDB_CPP
 
 #include "ConstituentDb.h"
-#include "message.h"
+#include "messagedialog.h"
 #include "json.h"
 
 #include <QString>
@@ -38,7 +38,7 @@ void ConstituentDb::read(const QString& filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        MESSAGE(tr("Could not open database file %s").arg(filename));
+        SHOWMESSAGE(tr("Could not open database file %s").arg(filename));
         return;
         }
     QByteArray text = file.readAll();
@@ -61,7 +61,7 @@ void ConstituentDb::read(const QString& filename)
 
         if (negCount != uNeg.size() || negCount != pKaNeg.size() ||
             posCount != uPos.size() || posCount != pKaPos.size()) {
-            MESSAGE(tr("Bad format in database: id: %s  name: %s").arg(id).arg(name));
+            SHOWMESSAGE(tr("Bad format in database: id: %s  name: %s").arg(id).arg(name));
             continue;
             }
 

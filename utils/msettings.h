@@ -13,13 +13,7 @@
 #include <QUrl>
 
 /**
- * @page conf Konfigurační soubor klientské aplikace (Raspberry Pi)
- *
- * Konfigurační soubor se může nalézat na třech různých místech (seřazené dle priority):
- * - ~/.config/hobrasoft.cz/simul.conf
- * - ~/.simul.conf
- * - /etc/simul.conf
- *
+ * @page conf Konfigurační soubor aplikace 
  */
 
 /**
@@ -79,7 +73,7 @@ class MSettings : public QSettings {
     /**
      * @brief Konstruktor, otevře zadaný soubor
      */
-    MSettings(const QString& filename, QObject *parent);
+    MSettings(QObject *parent);
     #ifndef DOXYGEN_SHOULD_SKIP_THIS
     static MSettings *m_instance;
     #endif

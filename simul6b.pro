@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts network
+QT += core gui charts network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,6 +28,7 @@ CONFIG += c++14
 msvc: QMAKE_CXXFLAGS += /openmp
 
 include(utils/utils.pri)
+include(widgets/widgets.pri)
 
 
 SOURCES += \
