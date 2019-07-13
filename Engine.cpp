@@ -362,11 +362,11 @@ void Engine::der()
 
 
     Resist = 0;
-    for (int i = 1; i <= np/2 - 1; i++) Resist = Resist + 2 / kapa[2*i];
-    for (int i = 1; i<= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
+    for (int i = 1; i <= np/2 - 1; i++) Resist = Resist + 2/kapa[2*i];
+    for (int i = 1; i <= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
     Resist = Resist + 1/kapa[0] + 1/kapa[np];
     Resist = Resist * dx / 3;
-    curDen = Voltage/Resist;
+    curDen = Voltage / Resist;
 
     for (int i = 1; i <= np - 1; i++) {
         e[i] = ( -difPot[i - 1] + difPot[i + 1]) / 2 / dx;
@@ -427,8 +427,9 @@ void Engine::rungekutta()
 // tahle srandicka je pro vyzkouseni jak funguje omp parallel
 //#pragma omp parallel for schedule(static)
 //        for (int i = 0; i <= np; i++) double kuk = 1.0;
+//#pragma omp barrier
 
-//    gCalc();
+    //gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -438,7 +439,7 @@ void Engine::rungekutta()
             s.setA(0, i, s.getV(i) + beta31 * s.getQ1(i) + beta32 * s.getQ2(i));
         }
     }
-//    gCalc();
+    //gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -448,7 +449,7 @@ void Engine::rungekutta()
             s.setA(0, i, s.getV(i) + beta41 * s.getQ1(i) - beta42 * s.getQ2(i) + beta43 * s.getQ3(i));
         }
     }
-//    gCalc();
+    //gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -631,8 +632,8 @@ void Engine::setup()
     setNumb(5000);
     setCritG(1e-6);
     setErrMax(0);
-    setErrL(1e-8);
-    setErrH(1e-7);
+    setErrL(1e-9);
+    setErrH(1e-8);
     setTimeInterval(50);
     setTimeStop(500);
     setC0(1000);
@@ -652,8 +653,8 @@ void Engine::setup()
     Sample &s3 = getMix().addConstituent(cdb.get(399)); // 399 Phosphoric acid
     s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
 
-    Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
-    s4.setIC(0, 0.313).setIC(1, 0.313).setIC(2, 0.313).setIC(3, 0.313);
+    //Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
+    //s4.setIC(0, 0.313).setIC(1, 0.313).setIC(2, 0.313).setIC(3, 0.313);
 
 }
 
