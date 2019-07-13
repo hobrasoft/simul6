@@ -44,11 +44,11 @@ void ConstituentsModel::loadData() {
         iterator.next();
         unsigned int id = iterator.key();
         Constituent constituent = iterator.value();
-        int posCount = constituent.getPosCount();
-        int negCount = constituent.getNegCount();
+        unsigned int posCount = constituent.getPosCount();
+        unsigned int negCount = constituent.getNegCount();
         insertRows(row, 1);
         setData(index(row, Id), id);
-        setData(index(row, Name), QString::fromStdString(constituent.getName()));
+        setData(index(row, Name), constituent.getName());
         if (posCount == 3) {
             setData(index(row, PPka3), (constituent.getPKa(+3)));
             setData(index(row, PU3), 10e8 * constituent.getU(+3));

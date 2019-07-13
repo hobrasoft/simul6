@@ -4,7 +4,6 @@
 
 #include "Constituent.h"
 #include "Engine.h"
-#include <iostream>
 #include <cmath>
 
 using namespace std;
@@ -14,7 +13,7 @@ Constituent::Constituent()
 {
 }
 
-Constituent::Constituent(const std::string pName, const double pU, const int pZ) :
+Constituent::Constituent(const QString& pName, const double pU, const int pZ) :
     valid(true),
 	name(pName), 
 	U(pU), 
@@ -23,7 +22,6 @@ Constituent::Constituent(const std::string pName, const double pU, const int pZ)
     posCount(0),
     dif(0)
 {
-	cout << "Constituent " << pName << " constructor" << endl;
 }
 
 
@@ -39,7 +37,6 @@ Constituent::Constituent(const std::string pName, const double pU, const int pZ)
 
 Constituent::~Constituent()
 {
-	cout << "Constituent destructor" << endl;
 }
 
 void Constituent::addNegU(double pValue)
@@ -127,63 +124,5 @@ void Constituent::calculateDif()
     }
 }
 
-void Constituent::show()
-{
-	int i = 0;
-	cout << "Showing constituent" << endl;
-	cout << "- name: " << name << endl;
-	cout << "- U, Z: " << U << ", " << Z << endl;
-	cout << "- negCount: " << negCount << endl;
-	cout << "- posCount: " << posCount << endl;
-
-	cout << "- U-: ";
-	for (auto &j : uNeg) {
-		if (i++ > 0) {
-			cout << ", ";
-		}
-		cout << j;
-	}
-	cout << endl;
-
-	cout << "- U+: ";
-	i = 0;
-	for (auto &j : uPos) {
-		if (i++ > 0) {
-			cout << ", ";
-		}
-		cout << j;
-	}
-	cout << endl;
-
-	cout << "- pKa-: ";
-	for (auto &j : pKaNeg) {
-		if (i++ > 0) {
-			cout << ", ";
-		}
-		cout << j;
-	}
-	cout << endl;
-
-	cout << "- pKa+: ";
-	i = 0;
-	for (auto &j : pKaPos) {
-		if (i++ > 0) {
-			cout << ", ";
-		}
-		cout << j;
-	}
-	cout << endl;
-
-    cout << "- L: ";
-    for (int i = static_cast<int>(-negCount); i <= static_cast<int>(posCount); i++) {
-        if (i != static_cast<int>(-negCount)) {
-            cout << ", ";
-        }
-        cout << "(" << i << ") = " << getL(i);
-    }
-    cout << endl;
-
-    cout << "difK: " << dif << endl;
-}
 
 #endif 

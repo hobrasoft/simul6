@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts
+QT += core gui charts network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +27,9 @@ CONFIG += c++14
 
 msvc: QMAKE_CXXFLAGS += /openmp
 
+include(utils/utils.pri)
+include(widgets/widgets.pri)
+
 
 SOURCES += \
     main.cpp \
@@ -40,7 +43,6 @@ SOURCES += \
     Sample.cpp \
     Vec2d.cpp \
     pch.cpp \
-    json11.cpp \
     graf.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
@@ -49,7 +51,8 @@ SOURCES += \
     preferences.cpp \
     parametersmodel.cpp \
     mixcontrol.cpp \
-    mixcontrolmodel.cpp
+    mixcontrolmodel.cpp \
+    databaseview.cpp
 
 HEADERS += \
     simul6.h \
@@ -62,7 +65,6 @@ HEADERS += \
     Sample.h \
     Vec2d.h \
     pch.h \
-    json11.hpp \
     graf.h \
     inputparameters.h \
     constituentsmodel.h \
@@ -72,7 +74,8 @@ HEADERS += \
     preferences.h \
     parametersmodel.h \
     mixcontrol.h \
-    mixcontrolmodel.h
+    mixcontrolmodel.h \
+    databaseview.h
 
 FORMS += \
     simul6.ui \

@@ -166,6 +166,7 @@ void Engine::init()
     qDebug() << "Engine::init()";
     m_initialized = true;
     m_iterations = 0;
+    t = 0;
     int i;
 
     initArrays();

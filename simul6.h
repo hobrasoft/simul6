@@ -21,6 +21,11 @@ private slots:
     void createActions();
     void zavrit();
 
+    void initEngine();
+    void runEngine();
+    void stopEngine();
+    void engineFinished();
+
 private:
     Ui::Simul6 *ui;
     void closeEvent(QCloseEvent *) override;

@@ -3,26 +3,24 @@
 #define CONSTITUENTDB_CPP
 
 #include "ConstituentDb.h"
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <assert.h>
-#include "json11.hpp"
+#include "messagedialog.h"
+#include "json.h"
+
 #include <QString>
 #include <QByteArray>
-#include <QSettings>
+#include <QFile>
+#include "msettings.h"
 
 using namespace std;
-using namespace json11;
 
 const double ConstituentDb::uFactor = 1e-9;
 
-ConstituentDb::ConstituentDb(const char *pFileName)
+ConstituentDb::ConstituentDb(const QString& filename, QObject *parent) : QObject(parent)
 {
-    read(pFileName);
+    read(filename);
 }
 
-ConstituentDb::ConstituentDb()
+ConstituentDb::ConstituentDb(QObject *parent) : QObject(parent)
 {
     read();
 }
@@ -32,69 +30,59 @@ ConstituentDb::~ConstituentDb()
 }
 
 void ConstituentDb::read() {
-    QSettings settings;
-    QString filename = settings.value("DB/filename").toString();
-    read(filename.toUtf8().data());
+    QString filename = MSETTINGS->dbFilename();
+    read(filename);
 }
 
-void ConstituentDb::read(const char *pFileName)
+void ConstituentDb::read(const QString& filename)
 {
-    string err;
-	ifstream ifs(pFileName);
-	stringstream buffer;
-	unsigned int key;
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        SHOWMESSAGE(tr("Could not open database file %s").arg(filename));
+        return;
+        }
+    QByteArray text = file.readAll();
+    file.close();
 
-	buffer << ifs.rdbuf();
-	auto json = Json::parse(buffer.str(), err);
-	if (!err.empty()) {
-        std::cout << "Failed: " << err.c_str() << std::endl;
-	}
-	else {
-		for (auto &k : json["constituents"].array_items()) {
-            key = static_cast<unsigned int>(k["id"].int_value());
-			Constituent c(k["name"].string_value(), 0, 0);
-            /*for (auto &l : k["uNeg"].array_items()) {
-				c.addNegU(l.number_value());
-			}
-			for (auto &l : k["uPos"].array_items()) {
-				c.addPosU(l.number_value());
-			}
-            for (auto &l : k["pKaNeg"].array_items()) {
-				c.addNegPKa(l.number_value());
-			}
-            for (auto &l : k["pKaPos"].array_items()) {
-				c.addPosPKa(l.number_value());
-            }*/
-            for (auto i = k["uNeg"].array_items().rbegin(); i != k["uNeg"].array_items().rend(); ++i) {
-                c.addNegU(i->number_value() * uFactor);
+    QVariant data = JSON::data(text);
+    
+    QVariantList list = data.toMap()["constituents"].toList();
+    QListIterator<QVariant> iterator(list);
+    while (iterator.hasNext()) {
+        const QVariantMap& item = iterator.next().toMap();
+        int id = item["id"].toInt();
+        QString name = item["name"].toString();
+        int negCount = item["negCount"].toInt();
+        int posCount = item["posCount"].toInt();
+        QVariantList uNeg = item["uNeg"].toList();
+        QVariantList uPos = item["uPos"].toList();
+        QVariantList pKaNeg = item["pKaNeg"].toList();
+        QVariantList pKaPos = item["pKaPos"].toList();
+
+        if (negCount != uNeg.size() || negCount != pKaNeg.size() ||
+            posCount != uPos.size() || posCount != pKaPos.size()) {
+            SHOWMESSAGE(tr("Bad format in database: id: %s  name: %s").arg(id).arg(name));
+            continue;
             }
 
-            for (auto i = k["uPos"].array_items().begin(); i != k["uPos"].array_items().end(); ++i) {
-                c.addPosU(i->number_value() * uFactor);
+        Constituent constituent(name);
+        QListIterator<QVariant> citerator(uNeg);
+        for (citerator = uNeg, citerator.toBack(); citerator.hasPrevious();) {
+            constituent.addNegU(citerator.previous().toDouble() * uFactor);
+            }
+        for (citerator = uPos; citerator.hasNext();) {
+            constituent.addPosU(citerator.next().toDouble() * uFactor);
+            }
+        for (citerator = pKaNeg, citerator.toBack(); citerator.hasPrevious();) {
+            constituent.addNegPKa(citerator.previous().toDouble());
+            }
+        for (citerator = pKaPos; citerator.hasNext();) {
+            constituent.addPosPKa(citerator.next().toDouble());
             }
 
-            for (auto i = k["pKaNeg"].array_items().rbegin(); i != k["pKaNeg"].array_items().rend(); ++i) {
-                c.addNegPKa(i->number_value());
-            }
+        m_constituents[id] = constituent;
+        }
 
-            for (auto i = k["pKaPos"].array_items().begin(); i != k["pKaPos"].array_items().end(); ++i) {
-                c.addPosPKa(i->number_value());
-            }
-            //c.show();
-			m_constituents[key] = c;
-		}
-
-		cout << size() << " constituents read from DB" << endl;
-	}
-}
-
-void ConstituentDb::show()
-{
-	cout << "Showing DB of constituents" << endl;
-	for (auto &i : m_constituents) {
-		cout << "Id: " << i.first << endl;
-		i.second.show();
-	}
 }
 
 size_t ConstituentDb::size()
