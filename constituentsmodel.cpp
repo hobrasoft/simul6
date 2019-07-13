@@ -44,8 +44,8 @@ void ConstituentsModel::loadData() {
         iterator.next();
         unsigned int id = iterator.key();
         Constituent constituent = iterator.value();
-        int posCount = constituent.getPosCount();
-        int negCount = constituent.getNegCount();
+        unsigned int posCount = constituent.getPosCount();
+        unsigned int negCount = constituent.getNegCount();
         insertRows(row, 1);
         setData(index(row, Id), id);
         setData(index(row, Name), constituent.getName());

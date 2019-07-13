@@ -51,7 +51,8 @@ SOURCES += \
     preferences.cpp \
     parametersmodel.cpp \
     mixcontrol.cpp \
-    mixcontrolmodel.cpp
+    mixcontrolmodel.cpp \
+    databaseview.cpp
 
 HEADERS += \
     simul6.h \
@@ -73,7 +74,8 @@ HEADERS += \
     preferences.h \
     parametersmodel.h \
     mixcontrol.h \
-    mixcontrolmodel.h
+    mixcontrolmodel.h \
+    databaseview.h
 
 FORMS += \
     simul6.ui \

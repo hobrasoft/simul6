@@ -16,6 +16,10 @@ public:
         LastRow
     };
 
+    enum Columns {
+        N3=0, N2, N1, P1, P2, P3
+    };
+
 private:
 };
 

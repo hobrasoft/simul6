@@ -2,8 +2,10 @@
 #define CONSTITUENTSDIALOG_H
 
 #include <QDialog>
+#include <QSortFilterProxyModel>
 #include "segmentsmodel.h"
 #include "parametersmodel.h"
+#include "constituentsmodel.h"
 
 namespace Ui {
 class ConstituentsDialog;
@@ -20,12 +22,16 @@ public:
 private slots:
     void modelLoaded();
     void enableGroupBoxes();
+    void currentRowChanged(int);
 
 private:
     Ui::ConstituentsDialog *ui;
 
+    int m_id;
     SegmentsModel *m_segmentsModel;
     ParametersModel *m_parametersModel;
+    ConstituentsModel *m_constituentsModel;
+    QSortFilterProxyModel *m_constituentsProxyModel;
 };
 
 #endif // CONSTITUENTSDIALOG_H
