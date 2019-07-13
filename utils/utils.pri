@@ -12,4 +12,5 @@ HEADERS += \
  $$PWD/msettings.h \
  $$PWD/logger.h \
  $$PWD/udpsocket.h \
+ $$PWD/pdebug.h \
 
