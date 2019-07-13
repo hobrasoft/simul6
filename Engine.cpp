@@ -630,12 +630,12 @@ void Engine::setup()
     setConcDown(0);
 
     setNumb(5000);
-    setCritG(1e-6);
+    setCritG(1e-7);
     setErrMax(0);
     setErrL(1e-9);
     setErrH(1e-8);
     setTimeInterval(50);
-    setTimeStop(500);
+    setTimeStop(2000);
     setC0(1000);
 
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
@@ -651,7 +651,7 @@ void Engine::setup()
     s2.setIC(0, 10).setIC(1, 0).setIC(2, 0).setIC(3, 0);
 
     Sample &s3 = getMix().addConstituent(cdb.get(399)); // 399 Phosphoric acid
-    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
+    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 0);
 
     //Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
     //s4.setIC(0, 0.313).setIC(1, 0.313).setIC(2, 0.313).setIC(3, 0.313);
