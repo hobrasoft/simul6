@@ -326,6 +326,7 @@ void Engine::gCalc()
 
 void Engine::der()
 {
+    double Resist;
 
 #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
@@ -359,6 +360,13 @@ void Engine::der()
     }
 /*konec pragmy*/
 
+
+    Resist = 0;
+    for (int i = 1; i <= np/2 - 1; i++) Resist = Resist + 2 / kapa[2*i];
+    for (int i = 1; i<= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
+    Resist = Resist + 1/kapa[0] + 1/kapa[np];
+    Resist = Resist * dx / 3;
+    curDen = Voltage/Resist;
 
     for (int i = 1; i <= np - 1; i++) {
         e[i] = ( -difPot[i - 1] + difPot[i + 1]) / 2 / dx;
@@ -615,6 +623,7 @@ void Engine::setup()
     setB(20, 200, 400, 600);
     setCapLen(CAPLEN);
     setCurDen(-30);
+    setVoltage(-10);
     setDt(0.01);
     setConcUp(20);
     setConcDown(0);
@@ -641,7 +650,7 @@ void Engine::setup()
     s2.setIC(0, 10).setIC(1, 0).setIC(2, 0).setIC(3, 0);
 
     Sample &s3 = getMix().addConstituent(cdb.get(399)); // 399 Phosphoric acid
-    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 0);
+    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
 
     Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
     s4.setIC(0, 0.313).setIC(1, 0.313).setIC(2, 0.313).setIC(3, 0.313);

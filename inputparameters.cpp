@@ -19,8 +19,8 @@ void InputParameters::enableInputs() {
     ui->f_dt->setEnabled(!ui->f_optimize_dt->isChecked());
 }
 
-double InputParameters::current() const {
-    return ui->f_current->value();
+double InputParameters::Voltage() const {
+    return ui->f_voltage->value();
 }
 
 double InputParameters::dt() const {

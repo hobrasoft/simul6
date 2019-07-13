@@ -15,7 +15,8 @@ public:
     explicit InputParameters(QWidget *parent = nullptr);
     ~InputParameters();
 
-    double current() const;
+    //double current() const;
+    double Voltage() const;
     double dt() const;
     bool optimizeDt() const;
 

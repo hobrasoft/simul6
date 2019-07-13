@@ -75,6 +75,7 @@ public:
     double dx; // Lenght increment at x-axis [m]
     double dt; // Time increment [s]
     double curDen; // Current density [A/m2]
+    double Voltage;
     double capLen; // Physical length of capillary [m]
     double concUp; // Upper limit of y-axis [mmol/m3]
     double concDown; // Upper limit of y-axis [mmol/m3]
@@ -122,6 +123,7 @@ public:
 	void setT(double pT) { t = pT; }
 	void setDt(double pDt) { dt = pDt; }
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
+    void setVoltage(double pVoltage) { Voltage = pVoltage; }
     void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
     void setConcUp(double pConcUp) { concUp = pConcUp; }
     void setConcDown(double pConcDown) { concDown = pConcDown; }
