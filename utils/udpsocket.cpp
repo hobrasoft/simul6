@@ -37,7 +37,7 @@ bool UdpSocket::send(const QHostAddress& ip, const QByteArray& data) {
             m_port);
 
     if (bytessent < 0) {
-        PDEBUG << m_socket->error();
+        //PDEBUG << m_socket->error();
         return false;
         }
 
@@ -57,7 +57,7 @@ bool UdpSocket::send(const QHostAddress& ip, int port, const QByteArray& data) {
             port);
 
     if (bytessent < 0) {
-        PDEBUG << m_socket->error();
+        //PDEBUG << m_socket->error();
         return false;
         }
 
