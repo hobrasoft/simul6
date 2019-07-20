@@ -13,8 +13,6 @@
 
 using namespace std;
 
-const double ConstituentDb::uFactor = 1e-9;
-
 ConstituentDb::ConstituentDb(const QString& filename, QObject *parent) : QObject(parent)
 {
     read(filename);
@@ -66,12 +64,13 @@ void ConstituentDb::read(const QString& filename)
             }
 
         Constituent constituent(name);
+        constituent.setId(id);
         QListIterator<QVariant> citerator(uNeg);
         for (citerator = uNeg, citerator.toBack(); citerator.hasPrevious();) {
-            constituent.addNegU(citerator.previous().toDouble() * uFactor);
+            constituent.addNegU(citerator.previous().toDouble() * Constituent::uFactor);
             }
         for (citerator = uPos; citerator.hasNext();) {
-            constituent.addPosU(citerator.next().toDouble() * uFactor);
+            constituent.addPosU(citerator.next().toDouble() * Constituent::uFactor);
             }
         for (citerator = pKaNeg, citerator.toBack(); citerator.hasPrevious();) {
             constituent.addNegPKa(citerator.previous().toDouble());

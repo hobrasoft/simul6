@@ -8,6 +8,8 @@
 
 using namespace std;
 
+const double Constituent::uFactor = 1e-9;
+
 Constituent::Constituent()
 :	valid(false)
 {
@@ -71,7 +73,7 @@ void Constituent::addPosPKa(double pValue)
     lPos.push_back(((c == 0) ? 1 : lPos[c - 1]) / kaPos[c]);
 }
 
-double Constituent::getU(int pCharge)
+double Constituent::getU(int pCharge) const
 {
     unsigned int sign;
 
@@ -91,7 +93,7 @@ double Constituent::getU(int pCharge)
 	return 0;
 }
 
-double Constituent::getL(const int pCharge)
+double Constituent::getL(const int pCharge) const
 {
     if (pCharge < 0) {
         return lNeg[static_cast<unsigned int>(-1 * pCharge) - 1];
@@ -102,7 +104,7 @@ double Constituent::getL(const int pCharge)
     }
 }
 
-double Constituent::getPKa(const int pCharge)
+double Constituent::getPKa(const int pCharge) const
 {
     if (pCharge < 0) {
         return pKaNeg[static_cast<unsigned int>(-1 * pCharge) - 1];

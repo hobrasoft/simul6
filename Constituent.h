@@ -9,7 +9,8 @@
 class Constituent
 {
 private:
-	bool valid;
+    bool valid;
+    int id;
     QString name;
 	double U;
 	int Z;
@@ -28,8 +29,13 @@ private:
 public:
 	Constituent();
     Constituent(const QString& pName, const double pU = 0, const int pZ = 0);
-    //Constituent(const Constituent &pConstituent);
-	~Constituent();
+
+    static const double uFactor;
+
+    ~Constituent();
+
+    int getId() const;
+    void setId(int x) { id = x; }
 
 	void setU(double pU) { U = pU; }
 	void setZ(int pZ) { Z = pZ; }
@@ -43,16 +49,16 @@ public:
     unsigned int getPosCount() { return posCount; }
     int getPosCharge() { return static_cast<int>(posCount); }
 
-    double getU() { return U; }
-    double getU(int pCharge);
-	int getZ() { return Z; }
-    double getL(const int pCharge);
+    double getU() const { return U; }
+    double getU(int pCharge) const;
+    int getZ() const { return Z; }
+    double getL(const int pCharge) const;
 
 
-    double getPKa(const int pCharge);
-    double getDif() { return dif; }
-    void show();
-    const QString& getName() { return name; }
+    double getPKa(const int pCharge) const;
+    double getDif() const { return dif; }
+    void show() const;
+    const QString& getName() const { return name; }
 
 private:
     void calculateDif();

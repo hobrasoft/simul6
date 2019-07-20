@@ -6,6 +6,7 @@
 #include "segmentsmodel.h"
 #include "parametersmodel.h"
 #include "constituentsmodel.h"
+#include "Constituent.h"
 
 namespace Ui {
 class ConstituentsDialog;
@@ -18,6 +19,8 @@ class ConstituentsDialog : public QDialog
 public:
     explicit ConstituentsDialog(QWidget *parent = nullptr);
     ~ConstituentsDialog();
+
+    Constituent constituent() const;
 
 private slots:
     void modelLoaded();

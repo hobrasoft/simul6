@@ -10,9 +10,6 @@
 class ConstituentDb : public QObject 
 {
 public:
-    static const double uFactor;
-
-public:
 	ConstituentDb(const QString& filename, QObject *parent = nullptr);
     ConstituentDb(QObject *parent = nullptr);
     ~ConstituentDb();

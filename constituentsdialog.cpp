@@ -98,3 +98,68 @@ void ConstituentsDialog::currentRowChanged(int row) {
 
 }
 
+
+Constituent ConstituentsDialog::constituent() const {
+    QVariant npka3 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3));
+    QVariant npka2 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2));
+    QVariant npka1 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1));
+    QVariant ppka1 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P1));
+    QVariant ppka2 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P2));
+    QVariant ppka3 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P3));
+    QVariant nu3   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::N3));
+    QVariant nu2   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::N2));
+    QVariant nu1   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::N1));
+    QVariant pu1   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P1));
+    QVariant pu2   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P2));
+    QVariant pu3   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P3));
+
+    bool manually = ui->f_manuallyGroupBox->isChecked();
+    Constituent constituent(ui->f_name->text());
+    constituent.setId((manually) ? 0 : m_id);
+
+    for (;;) {
+        if (npka1.isValid() && nu1.isValid()) {
+            constituent.addNegU(nu1.toDouble() * Constituent::uFactor);
+            constituent.addNegPKa(npka1.toDouble());
+        } else {
+            break;
+        }
+        if (npka2.isValid() && nu2.isValid()) {
+            constituent.addNegU(nu2.toDouble() * Constituent::uFactor);
+            constituent.addNegPKa(npka2.toDouble());
+        } else {
+            break;
+        }
+        if (npka3.isValid() && nu3.isValid()) {
+            constituent.addNegU(nu3.toDouble() * Constituent::uFactor);
+            constituent.addNegPKa(npka3.toDouble());
+        } else {
+            break;
+        }
+    }
+
+    for (;;) {
+        if (ppka1.isValid() && pu1.isValid()) {
+            constituent.addNegU(pu1.toDouble() * Constituent::uFactor);
+            constituent.addNegPKa(ppka1.toDouble());
+        } else {
+            break;
+        }
+        if (ppka2.isValid() && pu2.isValid()) {
+            constituent.addNegU(nu2.toDouble() * Constituent::uFactor);
+            constituent.addNegPKa(npka2.toDouble());
+        } else {
+            break;
+        }
+        if (ppka3.isValid() && pu3.isValid()) {
+            constituent.addNegU(pu3.toDouble() * Constituent::uFactor);
+            constituent.addNegPKa(ppka3.toDouble());
+        } else {
+            break;
+        }
+    }
+
+    return constituent;
+
+}
+
