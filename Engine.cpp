@@ -588,7 +588,7 @@ void Engine::runPrivate() {
     }
 
     if (t > TimeDisplay) {
-        qDebug() << "Engine::runPrivate()" << m_iterations;
+        qDebug() << "Engine::runPrivate()" << t;
         emit drawGraph(&mix, &hpl);
         TimeDisplay += TimeInterval;
     }

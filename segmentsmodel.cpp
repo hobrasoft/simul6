@@ -12,7 +12,7 @@ SegmentsModel::SegmentsModel(QObject *parent)
 }
 
 void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
-    PDEBUG << segmentsNumber;
+    //PDEBUG << segmentsNumber;
     m_segmentsNumber = segmentsNumber;
     int currentColumnsCount = columnCount();
     if (currentColumnsCount > m_segmentsNumber) {
