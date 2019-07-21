@@ -595,6 +595,9 @@ void Engine::runPrivate() {
 
     if (m_sendSignals) {
         emit timeChanged(t);
+
+        //do tohoto mista pridat zobrazovani chyby ErrMax v objektu f_error ve tride inputparameters.ui
+
         m_sendSignals = false;
     }
 
