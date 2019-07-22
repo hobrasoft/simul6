@@ -2,6 +2,7 @@
 #define SEGMENTSMODEL_H
 
 #include <QStandardItemModel>
+#include "segments.h"
 
 class SegmentsModel : public QStandardItemModel
 {
@@ -9,6 +10,8 @@ class SegmentsModel : public QStandardItemModel
 
 public:
     explicit SegmentsModel(QObject *parent = nullptr);
+
+    Segments segments() const;
 
     enum Rows {
         Ratio = 0,

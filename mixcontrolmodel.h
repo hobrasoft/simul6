@@ -2,6 +2,8 @@
 #define MIXCONTROLMODEL_H
 
 #include <QStandardItemModel>
+#include "Constituent.h"
+#include "segments.h"
 
 class MixControlModel : public QStandardItemModel
 {
@@ -20,6 +22,8 @@ public:
         Ratio,
         LastCol
     };
+
+    void add(const Constituent&, const Segments&);
 
 private:
 };

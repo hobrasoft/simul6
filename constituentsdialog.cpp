@@ -163,3 +163,6 @@ Constituent ConstituentsDialog::constituent() const {
 
 }
 
+Segments ConstituentsDialog::segments() const {
+    return m_segmentsModel->segments();
+}

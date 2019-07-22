@@ -20,7 +20,11 @@ MixControl::MixControl(QWidget *parent) :
     ui->f_add->setDefaultAction(action);
     connect(action, &QAction::triggered, this, [this]() {
         ConstituentsDialog dialog;
-        dialog.exec();
+        if (QDialog::Accepted == dialog.exec()) {
+            Constituent c = dialog.constituent();
+            Segments s = dialog.segments();
+            m_model->add(c, s);
+        }
     });
 
     action = new QAction("Remove", this);
@@ -30,7 +34,11 @@ MixControl::MixControl(QWidget *parent) :
     ui->f_edit->setDefaultAction(action);
     connect(action, &QAction::triggered, this, [this]() {
         ConstituentsDialog dialog;
-        dialog.exec();
+        if (QDialog::Accepted == dialog.exec()) {
+            Constituent c = dialog.constituent();
+            Segments s = dialog.segments();
+            // m_model->add(c, s);
+        }
     });
 }
 

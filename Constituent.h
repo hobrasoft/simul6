@@ -34,9 +34,7 @@ public:
 
     ~Constituent();
 
-    int getId() const;
     void setId(int x) { id = x; }
-
 	void setU(double pU) { U = pU; }
 	void setZ(int pZ) { Z = pZ; }
 	void addNegU(double pValue);
@@ -44,10 +42,11 @@ public:
 	void addNegPKa(double pValue);
 	void addPosPKa(double pValue);
 
-    unsigned int getNegCount() { return negCount; }
-    int getNegCharge() { return -1 * static_cast<int>(negCount); }
-    unsigned int getPosCount() { return posCount; }
-    int getPosCharge() { return static_cast<int>(posCount); }
+    int getId() const;
+    unsigned int getNegCount() const { return negCount; }
+    int getNegCharge() const { return -1 * static_cast<int>(negCount); }
+    unsigned int getPosCount() const { return posCount; }
+    int getPosCharge() const { return static_cast<int>(posCount); }
 
     double getU() const { return U; }
     double getU(int pCharge) const;

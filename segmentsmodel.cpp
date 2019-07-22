@@ -32,6 +32,27 @@ void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
 }
 
 
+Segments SegmentsModel::segments() const {
+    Segments segments;
+    double ratioSum = 0;
+    for (int column = 0; column < columnCount(); column++) {
+        double ratio = data(index(Ratio, column)).toDouble();
+        ratioSum += ratio;
+    }
+    for (int column = 0; column < columnCount(); column++) {
+        double ratio = data(index(Ratio, column)).toDouble();
+        double concentration = data(index(Concentration, column)).toDouble();
+        double ratioLen = (ratioSum > 0) ? 1000*ratio*CAPLEN/ratioSum : 0;
+        Segments::Segment segment;
+        segment.ratio = ratio;
+        segment.length = ratioLen;
+        segment.concentration = concentration;
+        segments << segment;
+    }
+    return segments;
+}
+
+
 void SegmentsModel::slotDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
     Q_UNUSED(topLeft);
     Q_UNUSED(bottomRight);

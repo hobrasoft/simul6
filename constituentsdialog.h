@@ -6,6 +6,7 @@
 #include "segmentsmodel.h"
 #include "parametersmodel.h"
 #include "constituentsmodel.h"
+#include "segments.h"
 #include "Constituent.h"
 
 namespace Ui {
@@ -21,6 +22,7 @@ public:
     ~ConstituentsDialog();
 
     Constituent constituent() const;
+    Segments segments() const;
 
 private slots:
     void modelLoaded();
