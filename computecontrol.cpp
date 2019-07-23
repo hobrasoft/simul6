@@ -23,6 +23,7 @@ void ComputeControl::showTime(double time) {
     ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
 }
 
+
 void ComputeControl::slotRunClicked() {
     ui->f_init->setEnabled(false);
     ui->f_run->setEnabled(false);

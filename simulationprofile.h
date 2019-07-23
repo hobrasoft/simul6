@@ -26,6 +26,7 @@ public slots:
 
 signals:
     void timeChanged(double);
+    void errorChanged(double);
     void finished();
 
 private:

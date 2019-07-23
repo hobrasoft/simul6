@@ -160,6 +160,7 @@ public:
 signals:
     void drawGraph(Mix *pMix, std::vector<double> *pHpl);
     void timeChanged(double);
+    void errorChanged(double);
     void finished();
 
 public slots:

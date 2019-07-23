@@ -20,6 +20,9 @@ public:
     double dt() const;
     bool optimizeDt() const;
 
+public slots:
+    void showError(double);
+
 private slots:
     void enableInputs();
 

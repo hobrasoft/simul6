@@ -36,7 +36,7 @@ void ConstituentDb::read(const QString& filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        SHOWMESSAGE(tr("Could not open database file %s").arg(filename));
+        SHOWMESSAGE(tr("Could not open database file %1").arg(filename));
         return;
         }
     QByteArray text = file.readAll();
