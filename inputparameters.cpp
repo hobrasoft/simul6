@@ -25,6 +25,11 @@ void InputParameters::showError(double time) {
 }
 
 
+void InputParameters::showDt(double dt) {
+    ui->f_currentDt->setText(QString("%1").arg(dt, 0, 'e', 3));
+}
+
+
 double InputParameters::Voltage() const {
     return ui->f_voltage->value();
 }

@@ -15,6 +15,7 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
     connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);
     connect(m_engine, &Engine::timeChanged, this, &SimulationProfile::timeChanged);
     connect(m_engine, &Engine::errorChanged, this, &SimulationProfile::errorChanged);
+    connect(m_engine, &Engine::dtChanged, this, &SimulationProfile::dtChanged);
     connect(m_engine, &Engine::finished, this, &SimulationProfile::finished);
 }
 
