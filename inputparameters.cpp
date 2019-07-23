@@ -21,7 +21,7 @@ void InputParameters::enableInputs() {
 
 
 void InputParameters::showError(double time) {
-    ui->f_error->setText(QString("%1").arg(time, 0, 'f', 2));
+    ui->f_error->setText(QString("%1").arg(time, 0, 'e', 3));
 }
 
 
