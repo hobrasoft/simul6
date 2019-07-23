@@ -163,6 +163,7 @@ signals:
     void errorChanged(double);
     void finished();
     void dtChanged(double);
+    void curDenChanged(double);
 
 public slots:
     void init();

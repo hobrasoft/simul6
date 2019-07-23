@@ -22,7 +22,8 @@ public:
 
 public slots:
     void showError(double);
-    void showDt(double);
+    void showcurDen(double)
+;    void showDt(double);
 
 private slots:
     void enableInputs();

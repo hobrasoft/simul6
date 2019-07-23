@@ -430,7 +430,7 @@ void Engine::rungekutta()
 //        for (int i = 0; i <= np; i++) double kuk = 1.0;
 //#pragma omp barrier
 
-    //gCalc();
+    gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -440,7 +440,7 @@ void Engine::rungekutta()
             s.setA(0, i, s.getV(i) + beta31 * s.getQ1(i) + beta32 * s.getQ2(i));
         }
     }
-    //gCalc();
+    gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -450,7 +450,7 @@ void Engine::rungekutta()
             s.setA(0, i, s.getV(i) + beta41 * s.getQ1(i) - beta42 * s.getQ2(i) + beta43 * s.getQ3(i));
         }
     }
-    //gCalc();
+    gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -597,6 +597,7 @@ void Engine::runPrivate() {
         emit timeChanged(t);
         emit errorChanged(ErrMax);
         emit dtChanged(dt);
+        emit curDenChanged(curDen);
         m_sendSignals = false;
     }
 
@@ -638,7 +639,7 @@ void Engine::setup()
     setErrL(1e-9);
     setErrH(1e-8);
     setTimeInterval(50);
-    setTimeStop(500);
+    setTimeStop(1000);
     setC0(1000);
 
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
@@ -654,7 +655,7 @@ void Engine::setup()
     s2.setIC(0, 10).setIC(1, 0).setIC(2, 0).setIC(3, 0);
 
     Sample &s3 = getMix().addConstituent(cdb.get(399)); // 399 Phosphoric acid
-    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
+    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 0);
 
     //Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
     //s4.setIC(0, 0.313).setIC(1, 0.313).setIC(2, 0.313).setIC(3, 0.313);

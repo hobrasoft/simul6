@@ -24,7 +24,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, ui->f_computeControl, &ComputeControl::showTime);
     connect(ui->f_simulationProfile, &SimulationProfile::errorChanged, ui->f_parameters, &InputParameters::showError);
     connect(ui->f_simulationProfile, &SimulationProfile::dtChanged, ui->f_parameters, &InputParameters::showDt);
-
+    connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showcurDen);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
     QTimer::singleShot(0, this, &Simul6::init);
 }
