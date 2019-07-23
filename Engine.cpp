@@ -596,6 +596,7 @@ void Engine::runPrivate() {
     if (m_sendSignals) {
         emit timeChanged(t);
         emit errorChanged(ErrMax);
+        emit dtChanged(dt);
         m_sendSignals = false;
     }
 

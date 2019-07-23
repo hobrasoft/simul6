@@ -162,6 +162,7 @@ signals:
     void timeChanged(double);
     void errorChanged(double);
     void finished();
+    void dtChanged(double);
 
 public slots:
     void init();
