@@ -23,7 +23,6 @@ void ComputeControl::showTime(double time) {
     ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
 }
 
-
 void ComputeControl::slotRunClicked() {
     ui->f_init->setEnabled(false);
     ui->f_run->setEnabled(false);
@@ -42,3 +41,6 @@ void ComputeControl::slotFinished() {
     ui->f_stop->setEnabled(false);
 }
 
+double ComputeControl::Caplen() const {
+    return ui->f_caplen->value();
+}

@@ -45,6 +45,7 @@ void Simul6::runEngine() {
     //double current = ui->f_parameters->current();
     double dt = ui->f_parameters->dt();
     double Voltage = ui->f_parameters->Voltage();
+    double Caplen = ui->f_computeControl->Caplen();
     bool optimizeDt = ui->f_parameters->optimizeDt();
     //ui->f_simulationProfile->engine()->setCurDen(-508*current);
     ui->f_simulationProfile->engine()->setVoltage(Voltage);
