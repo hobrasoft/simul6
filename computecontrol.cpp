@@ -41,6 +41,8 @@ void ComputeControl::slotFinished() {
     ui->f_stop->setEnabled(false);
 }
 
-double ComputeControl::Caplen() const {
+double ComputeControl::CapLen() const {
     return ui->f_caplen->value();
 }
+
+

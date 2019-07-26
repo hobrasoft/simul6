@@ -14,7 +14,9 @@ class ComputeControl : public QGroupBox
 public:
     explicit ComputeControl(QWidget *parent = nullptr);
     ~ComputeControl();
-    double Caplen() const;
+
+public:
+    double CapLen() const;
 
 signals:
     void init();

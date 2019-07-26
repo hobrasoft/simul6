@@ -76,7 +76,7 @@ public:
     double dt; // Time increment [s]
     double curDen; // Current density [A/m2]
     double Voltage;
-    double capLen; // Physical length of capillary [m]
+    double CapLen; // Physical length of capillary [m]
     double concUp; // Upper limit of y-axis [mmol/m3]
     double concDown; // Upper limit of y-axis [mmol/m3]
     double critG; // Criterion for ending iteration of G function
@@ -124,7 +124,7 @@ public:
 	void setDt(double pDt) { dt = pDt; }
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
     void setVoltage(double pVoltage) { Voltage = pVoltage; }
-    void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
+    void setCapLen(double pCapLen) { CapLen = pCapLen; dx = CapLen / np; }
     void setConcUp(double pConcUp) { concUp = pConcUp; }
     void setConcDown(double pConcDown) { concDown = pConcDown; }
     void setCritG(double pCritG) { critG = pCritG; }

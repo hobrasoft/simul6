@@ -626,13 +626,12 @@ void Engine::setup()
     ConstituentDb cdb;
 
     setB(20, 200, 400, 600);
-    setCapLen(CAPLEN);
-    setCurDen(-30);
-    setVoltage(-10);
+//    setCapLen(CAPLEN);
+//    setCurDen(-30);
+//    setVoltage(-10);
     setDt(0.01);
     setConcUp(20);
     setConcDown(0);
-
     setNumb(5000);
     setCritG(1e-7);
     setErrMax(0);
@@ -641,7 +640,6 @@ void Engine::setup()
     setTimeInterval(50);
     setTimeStop(500);
     setC0(1000);
-
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
     s1.setIC(0, 0).setIC(1, 10).setIC(2, 10).setIC(3, 10);
 
