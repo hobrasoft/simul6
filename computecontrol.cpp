@@ -45,4 +45,15 @@ double ComputeControl::CapLen() const {
     return ui->f_caplen->value();
 }
 
+double ComputeControl::TimeStop() const {
+    return ui->f_timestop->value();
+}
+
+double ComputeControl::TimeInterval() const {
+    return ui->f_timeinterval->value();
+}
+
+int ComputeControl::np() const {
+    return ui->f_np->value();
+}
 

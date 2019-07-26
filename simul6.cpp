@@ -46,10 +46,16 @@ void Simul6::runEngine() {
     double dt = ui->f_parameters->dt();
     double Voltage = ui->f_parameters->Voltage();
     double CapLen = ui->f_computeControl->CapLen();
+    double TimeStop = ui->f_computeControl->TimeStop();
+    double TimeInterval = ui->f_computeControl->TimeInterval();
+    double np = ui->f_computeControl->np();
     bool optimizeDt = ui->f_parameters->optimizeDt();
     //ui->f_simulationProfile->engine()->setCurDen(-508*current);
     ui->f_simulationProfile->engine()->setVoltage(Voltage);
     ui->f_simulationProfile->engine()->setCapLen(CapLen);
+    ui->f_simulationProfile->engine()->setTimeInterval(TimeInterval);
+    ui->f_simulationProfile->engine()->setTimeStop(TimeStop);
+    //    ui->f_simulationProfile->engine()->setnp(Cnp);
     ui->f_simulationProfile->engine()->setDt(dt);
     ui->f_simulationProfile->engine()->setOptimizeDt(optimizeDt);
     ui->f_simulationProfile->slotRun();

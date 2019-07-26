@@ -637,8 +637,8 @@ void Engine::setup()
     setErrMax(0);
     setErrL(1e-9);
     setErrH(1e-8);
-    setTimeInterval(50);
-    setTimeStop(500);
+//    setTimeInterval(50);
+//    setTimeStop(500);
     setC0(1000);
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
     s1.setIC(0, 0).setIC(1, 10).setIC(2, 10).setIC(3, 10);

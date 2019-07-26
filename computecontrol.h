@@ -17,6 +17,9 @@ public:
 
 public:
     double CapLen() const;
+    double TimeStop() const;
+    double TimeInterval() const;
+    int np() const;
 
 signals:
     void init();

@@ -125,17 +125,18 @@ public:
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
     void setVoltage(double pVoltage) { Voltage = pVoltage; }
     void setCapLen(double pCapLen) { CapLen = pCapLen; dx = CapLen / np; }
+    void setTimeStop(double pTimeStop) { TimeStop = pTimeStop; }
+    void setTimeInterval(double pTimeInterval) { TimeInterval = pTimeInterval; }
     void setConcUp(double pConcUp) { concUp = pConcUp; }
     void setConcDown(double pConcDown) { concDown = pConcDown; }
     void setCritG(double pCritG) { critG = pCritG; }
     void setErrMax(double pErrMax) { ErrMax = pErrMax; }
     void setErrL(double pErrL) { ErrL = pErrL; }
     void setErrH(double pErrH) { ErrH = pErrH; }
-    void setTimeInterval(double pTimeInterval) {TimeInterval = pTimeInterval; }
     void setOptimizeDt(bool x) { m_optimizeDt = x; }
 
     void setTimeDisplay(double pTimeDisplay) {TimeDisplay = pTimeDisplay; }
-    void setTimeStop(double pTimeStop) {TimeStop = pTimeStop; }
+
 
     void setC0(const int pC0) { c0 = pC0; }
 
