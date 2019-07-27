@@ -1,5 +1,8 @@
 #include "mixcontrolmodel.h"
 
+#define ConstituentRole Qt::UserRole+1
+#define SegmentsRole Qt::UserRole+2
+
 MixControlModel::MixControlModel(QObject *parent)
     : QStandardItemModel(parent)
 {
@@ -13,7 +16,13 @@ MixControlModel::MixControlModel(QObject *parent)
     setHeaderData(Ratio, Qt::Horizontal, tr("Ratio"));
 }
 
-void MixControlModel::add(const Constituent& constituent, const Segments& segments) {
+QModelIndex MixControlModel::add(const Constituent& constituent, const Segments& segments) {
+    insertRows(0, 1);
+    setConstituentAndSegments(constituent, segments, 0);
+    return index(0, 0);
+}
+
+void MixControlModel::setConstituentAndSegments(const Constituent& constituent, const Segments& segments, int row) {
     QStringList ratio;
     QStringList len;
     QStringList conc;
@@ -23,11 +32,27 @@ void MixControlModel::add(const Constituent& constituent, const Segments& segmen
         conc  << QString("%1").arg(segments.segments[i].concentration, 0, 'f', 2);
     }
 
-    insertRows(0, 1);
-    setData(index(0, Name), constituent.getName());
-    setData(index(0, NegCount), constituent.getNegCount());
-    setData(index(0, PosCount), constituent.getPosCount());
-    setData(index(0, SegCount), len.join("; "));
-    setData(index(0, Concentrations), conc.join("; "));
-    setData(index(0, Ratio), ratio.join("; "));
+    setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
+    setData(index(row, 0), QVariant::fromValue(segments), SegmentsRole);
+    setData(index(row, Name), constituent.getName());
+    setData(index(row, NegCount), constituent.getNegCount());
+    setData(index(row, PosCount), constituent.getPosCount());
+    setData(index(row, SegCount), len.join("; "));
+    setData(index(row, Concentrations), conc.join("; "));
+    setData(index(row, Ratio), ratio.join("; "));
 }
+
+
+Constituent MixControlModel::constituent(int row) const {
+    return data(index(row, 0), ConstituentRole).value<Constituent>();
+}
+
+
+Segments MixControlModel::segments(int row) const {
+    return data(index(row, 0), SegmentsRole).value<Segments>();
+}
+
+
+
+
+

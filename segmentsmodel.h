@@ -12,6 +12,7 @@ public:
     explicit SegmentsModel(QObject *parent = nullptr);
 
     Segments segments() const;
+    void setSegments(const Segments&);
 
     enum Rows {
         Ratio = 0,

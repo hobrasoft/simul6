@@ -23,7 +23,12 @@ public:
         LastCol
     };
 
-    void add(const Constituent&, const Segments&);
+    QModelIndex add(const Constituent&, const Segments&);
+
+    Constituent constituent(int row) const;
+    Segments segments(int row) const;
+
+    void setConstituentAndSegments(const Constituent&, const Segments&, int row);
 
 private:
 };

@@ -23,23 +23,44 @@ MixControl::MixControl(QWidget *parent) :
         if (QDialog::Accepted == dialog.exec()) {
             Constituent c = dialog.constituent();
             Segments s = dialog.segments();
-            m_model->add(c, s);
+            QModelIndex index = m_model->add(c, s);
+            // QItemSelectionModel sm;
+            // sm.select(index, QItemSelectionModel::Rows);
+            // ui->f_view->setSelectionModel(&sm);
         }
     });
+    ui->f_view->addAction(action);
 
     action = new QAction("Remove", this);
+    action->setEnabled(false);
     ui->f_remove->setDefaultAction(action);
+    connect(action, &QAction::triggered, this, [this]() {
+        QModelIndex index = ui->f_view->currentIndex();
+        m_model->removeRows(index.row(), 1);
+    });
+    connect(ui->f_view, &MyView::currentRowChanged, [this,action]() {
+        action->setEnabled(ui->f_view->currentIndex().isValid());
+    });
+    ui->f_view->addAction(action);
 
     action = new QAction("Edit", this);
+    action->setEnabled(false);
     ui->f_edit->setDefaultAction(action);
     connect(action, &QAction::triggered, this, [this]() {
+        int row = ui->f_view->currentIndex().row();
         ConstituentsDialog dialog;
+        dialog.setConstituent(m_model->constituent(row));
+        dialog.setSegments(m_model->segments(row));
         if (QDialog::Accepted == dialog.exec()) {
             Constituent c = dialog.constituent();
             Segments s = dialog.segments();
-            // m_model->add(c, s);
+            m_model->setConstituentAndSegments(c, s, row);
         }
     });
+    connect(ui->f_view, &MyView::currentRowChanged, [this,action]() {
+        action->setEnabled(ui->f_view->currentIndex().isValid());
+    });
+    ui->f_view->addAction(action);
 }
 
 MixControl::~MixControl()

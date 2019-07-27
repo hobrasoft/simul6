@@ -53,6 +53,20 @@ Segments SegmentsModel::segments() const {
 }
 
 
+void SegmentsModel::setSegments(const Segments& segments) {
+    removeColumns(0, columnCount());
+    insertColumns(0, segments.size());
+    for (int i=0; i<segments.size(); i++) {
+        double ratio = segments.segments[i].ratio;
+        double ratioLen = segments.segments[i].length;
+        double concentration = segments.segments[i].concentration;
+        setData(index(Ratio, i), ratio);
+        setData(index(Concentration, i), concentration);
+    }
+    recalculate();
+}
+
+
 void SegmentsModel::slotDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
     Q_UNUSED(topLeft);
     Q_UNUSED(bottomRight);

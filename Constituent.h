@@ -5,6 +5,7 @@
 #include <QList>
 #include <QVector>
 #include <QString>
+#include <QDebug>
 
 class Constituent
 {
@@ -42,7 +43,7 @@ public:
 	void addNegPKa(double pValue);
 	void addPosPKa(double pValue);
 
-    int getId() const;
+    int getId() const { return id; }
     unsigned int getNegCount() const { return negCount; }
     int getNegCharge() const { return -1 * static_cast<int>(negCount); }
     unsigned int getPosCount() const { return posCount; }
@@ -59,8 +60,14 @@ public:
     void show() const;
     const QString& getName() const { return name; }
 
+
 private:
     void calculateDif();
 };
+
+
+QDebug operator<<(QDebug dbg, const Constituent& other);
+
+Q_DECLARE_METATYPE(Constituent);
 
 #endif

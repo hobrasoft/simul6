@@ -24,6 +24,9 @@ public:
     Constituent constituent() const;
     Segments segments() const;
 
+    void setConstituent(const Constituent&);
+    void setSegments(const Segments&);
+
 private slots:
     void modelLoaded();
     void enableGroupBoxes();

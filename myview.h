@@ -3,12 +3,12 @@
 
 #include <QTreeView>
 
-class DatabaseView : public QTreeView
+class MyView : public QTreeView
 {
     Q_OBJECT
 
 public:
-    explicit DatabaseView(QWidget *parent = nullptr);
+    explicit MyView(QWidget *parent = nullptr);
 
 signals:
    void currentRowChanged(int);

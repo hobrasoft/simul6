@@ -27,6 +27,12 @@ Constituent::Constituent(const QString& pName, const double pU, const int pZ) :
 }
 
 
+QDebug operator<<(QDebug dbg, const Constituent& c) {
+    dbg.nospace() << '(' << c.getId() << ", " << c.getName() << ")";
+    return dbg;
+}
+
+
 /*Constituent::Constituent(const Constituent &pConstituent)
 {
 	name = pConstituent.name;

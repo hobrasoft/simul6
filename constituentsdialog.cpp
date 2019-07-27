@@ -31,7 +31,7 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     m_parametersModel = new ParametersModel(this);
     ui->f_parametersView->setModel(m_parametersModel);
 
-    connect(ui->f_databaseView, &DatabaseView::currentRowChanged, this, &ConstituentsDialog::currentRowChanged);
+    connect(ui->f_databaseView, &MyView::currentRowChanged, this, &ConstituentsDialog::currentRowChanged);
 
 }
 
@@ -62,6 +62,19 @@ void ConstituentsDialog::modelLoaded() {
     ui->f_databaseView->resizeColumnToContents(ConstituentsModel::PU1);
     ui->f_databaseView->resizeColumnToContents(ConstituentsModel::PU2);
     ui->f_databaseView->resizeColumnToContents(ConstituentsModel::PU3);
+
+    int rowCount = m_constituentsProxyModel->rowCount();
+    if (m_id >= 0) {
+        for (int i=0; i<rowCount; i++) {
+            QModelIndex index = m_constituentsProxyModel->index(i, ConstituentsModel::Id);
+            int id = m_constituentsProxyModel->data(index).toInt();
+            if (id == m_id) {
+                ui->f_databaseView->setCurrentIndex(index);
+                ui->f_databaseView->scrollTo(index);
+                break;
+            }
+        }
+    }
 }
 
 
@@ -136,27 +149,29 @@ Constituent ConstituentsDialog::constituent() const {
         } else {
             break;
         }
+        break;
     }
 
     for (;;) {
         if (ppka1.isValid() && pu1.isValid()) {
-            constituent.addNegU(pu1.toDouble() * Constituent::uFactor);
-            constituent.addNegPKa(ppka1.toDouble());
+            constituent.addPosU(pu1.toDouble() * Constituent::uFactor);
+            constituent.addPosPKa(ppka1.toDouble());
         } else {
             break;
         }
         if (ppka2.isValid() && pu2.isValid()) {
-            constituent.addNegU(nu2.toDouble() * Constituent::uFactor);
-            constituent.addNegPKa(npka2.toDouble());
+            constituent.addPosU(nu2.toDouble() * Constituent::uFactor);
+            constituent.addPosPKa(npka2.toDouble());
         } else {
             break;
         }
         if (ppka3.isValid() && pu3.isValid()) {
-            constituent.addNegU(pu3.toDouble() * Constituent::uFactor);
-            constituent.addNegPKa(ppka3.toDouble());
+            constituent.addPosU(pu3.toDouble() * Constituent::uFactor);
+            constituent.addPosPKa(ppka3.toDouble());
         } else {
             break;
         }
+        break;
     }
 
     return constituent;
@@ -165,4 +180,47 @@ Constituent ConstituentsDialog::constituent() const {
 
 Segments ConstituentsDialog::segments() const {
     return m_segmentsModel->segments();
+}
+
+void ConstituentsDialog::setSegments(const Segments& segments) {
+    ui->f_segmentsNumber->setValue(segments.size());
+    m_segmentsModel->setSegments(segments);
+}
+
+
+void ConstituentsDialog::setConstituent(const Constituent& constituent) {
+    unsigned int negCount = constituent.getNegCount();
+    unsigned int posCount = constituent.getPosCount();
+    m_id 			= constituent.getId();
+    QString name    = constituent.getName();
+    QVariant npka3  = (negCount >= 3) ? constituent.getPKa(-3) : QVariant();
+    QVariant npka2  = (negCount >= 2) ? constituent.getPKa(-2) : QVariant();
+    QVariant npka1  = (negCount >= 1) ? constituent.getPKa(-1) : QVariant();
+    QVariant ppka1  = (posCount >= 1) ? constituent.getPKa(1) : QVariant();
+    QVariant ppka2  = (posCount >= 2) ? constituent.getPKa(2) : QVariant();
+    QVariant ppka3  = (posCount >= 3) ? constituent.getPKa(3) : QVariant();
+    QVariant nu3    = (negCount >= 3) ? constituent.getU(-3)/Constituent::uFactor : QVariant();
+    QVariant nu2    = (negCount >= 2) ? constituent.getU(-2)/Constituent::uFactor : QVariant();
+    QVariant nu1    = (negCount >= 1) ? constituent.getU(-1)/Constituent::uFactor : QVariant();
+    QVariant pu1    = (posCount >= 1) ? constituent.getU(1)/Constituent::uFactor : QVariant();
+    QVariant pu2    = (posCount >= 2) ? constituent.getU(2)/Constituent::uFactor : QVariant();
+    QVariant pu3    = (posCount >= 3) ? constituent.getU(3)/Constituent::uFactor : QVariant();
+
+    ui->f_name->setText(name);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3), npka3);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2), npka2);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1), npka1);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P1), ppka1);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P2), ppka2);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P3), ppka3);
+
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::N3), nu3);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::N2), nu2);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::N1), nu1);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P1), pu1);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P2), pu2);
+    m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P3), pu3);
+
+    ui->f_manuallyGroupBox->setChecked(m_id <= 0);
+
 }
