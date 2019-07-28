@@ -2,6 +2,7 @@
 #define GRAF_H
 
 #include "Mix.h"
+#include "Engine.h"
 #include <vector>
 #include <QChartView>
 
@@ -17,7 +18,8 @@ signals:
 
 public slots:
     //void drawGraph(std::vector<std::vector<double> > *pData);
-    void drawGraph(Mix *pMix, std::vector<double> *pHpl);
+    //void drawGraph(Mix *pMix, std::vector<double> *pHpl);
+    void drawGraph(Engine *pEngine, std::vector<double> *pHpl);
 };
 
 #endif // GRAF_H

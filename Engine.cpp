@@ -197,7 +197,8 @@ void Engine::init()
     }
 
     gCalc();
-    emit drawGraph(&mix, &hpl);
+    //emit drawGraph(&mix, &hpl);
+    emit drawGraph(this, &hpl);
     qDebug() << "Engine::init() hotovo";
 }
 
@@ -575,7 +576,7 @@ void Engine::runPrivate() {
 //  qDebug() << "Engine::runPrivate()" << m_iterations;
 
     if (!m_running || t >= TimeStop) {
-        emit drawGraph(&mix, &hpl);
+        emit drawGraph(this, &hpl);
         emit timeChanged(t);
         emit finished();
         return;
@@ -589,7 +590,7 @@ void Engine::runPrivate() {
 
     if (t > TimeDisplay) {
         qDebug() << "Engine::runPrivate()" << t;
-        emit drawGraph(&mix, &hpl);
+        emit drawGraph(this, &hpl);
         TimeDisplay += TimeInterval;
     }
 

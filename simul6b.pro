@@ -24,7 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++14
 
-# msvc: QMAKE_CXXFLAGS += /openmp
+msvc: QMAKE_CXXFLAGS += /openmp
 
 include(utils/utils.pri)
 include(widgets/widgets.pri)

@@ -17,8 +17,8 @@ public:
 
 public:
     double CapLen() const;
-    double TimeStop() const;
-    double TimeInterval() const;
+    double getTimeStop() const;
+    double getTimeInterval() const;
     int np() const;
 
 signals:

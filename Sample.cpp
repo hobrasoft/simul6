@@ -35,12 +35,12 @@ Sample::Sample(const Constituent &pConstituent, const unsigned int pAreas, const
     q5(pNp + 1),
     q6(pNp + 1)
 {
-    std::cout << "Sample constructor" << std::endl;
+    //std::cout << "Sample constructor" << std::endl;
 }
 
 Sample::~Sample()
 {
-    std::cout << "Sample destructor" << std::endl;
+    //std::cout << "Sample destructor" << std::endl;
 }
 
 size_t Sample::getHIdx(const int pCharge, const unsigned int pI)
