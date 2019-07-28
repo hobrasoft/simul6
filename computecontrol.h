@@ -16,10 +16,9 @@ public:
     ~ComputeControl();
 
 public:
-    double CapLen() const;
+    double getCapLen() const;
     double getTimeStop() const;
     double getTimeInterval() const;
-    int np() const;
 
 signals:
     void init();

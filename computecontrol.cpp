@@ -41,7 +41,7 @@ void ComputeControl::slotFinished() {
     ui->f_stop->setEnabled(false);
 }
 
-double ComputeControl::CapLen() const {
+double ComputeControl::getCapLen() const {
     return ui->f_caplen->value();
 }
 
@@ -53,7 +53,4 @@ double ComputeControl::getTimeInterval() const {
     return ui->f_timeinterval->value();
 }
 
-int ComputeControl::np() const {
-    return ui->f_np->value();
-}
 

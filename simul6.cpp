@@ -43,17 +43,14 @@ void Simul6::engineFinished() {
 void Simul6::runEngine() {
     ui->f_parameters->setEnabled(false);
     //double current = ui->f_parameters->current();
-    double dt = ui->f_parameters->dt();
-    double Voltage = ui->f_parameters->Voltage();
-    double CapLen = ui->f_computeControl->CapLen();
-    double np = ui->f_computeControl->np();
     bool optimizeDt = ui->f_parameters->optimizeDt();
     //ui->f_simulationProfile->engine()->setCurDen(-508*current);
-    ui->f_simulationProfile->engine()->setVoltage(Voltage);
-    ui->f_simulationProfile->engine()->setCapLen(CapLen);
+
+    ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
-    ui->f_simulationProfile->engine()->setDt(dt);
+    ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getdt());
+    ui->f_simulationProfile->engine()->setVoltage(ui->f_parameters->getVoltage());
     ui->f_simulationProfile->engine()->setOptimizeDt(optimizeDt);
     ui->f_simulationProfile->slotRun();
 }

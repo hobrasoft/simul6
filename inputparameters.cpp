@@ -31,12 +31,11 @@ void InputParameters::showDt(double dt) {
     ui->f_currentDt->setText(QString("%1").arg(dt, 0, 'g', 4));
 }
 
-double InputParameters::Voltage() const {
+double InputParameters::getVoltage() const {
     return ui->f_voltage->value();
 }
 
-
-double InputParameters::dt() const {
+double InputParameters::getdt() const {
     return ui->f_dt->value();
 }
 

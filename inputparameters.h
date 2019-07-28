@@ -16,8 +16,8 @@ public:
     ~InputParameters();
 
     //double current() const;
-    double Voltage() const;
-    double dt() const;
+    double getVoltage() const;
+    double getdt() const;
     bool optimizeDt() const;
 
 public slots:
