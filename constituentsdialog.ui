@@ -138,7 +138,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="1" column="0" colspan="2">
-       <widget class="DatabaseView" name="f_databaseView">
+       <widget class="MyView" name="f_databaseView">
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
         </property>
@@ -207,9 +207,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DatabaseView</class>
+   <class>MyView</class>
    <extends>QTreeView</extends>
-   <header>databaseview.h</header>
+   <header>myview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
