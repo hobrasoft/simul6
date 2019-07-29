@@ -35,7 +35,7 @@ double InputParameters::getVoltage() const {
     return ui->f_voltage->value();
 }
 
-double InputParameters::getdt() const {
+double InputParameters::getDt() const {
     return ui->f_dt->value();
 }
 

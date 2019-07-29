@@ -17,7 +17,7 @@ public:
 
     //double current() const;
     double getVoltage() const;
-    double getdt() const;
+    double getDt() const;
     bool optimizeDt() const;
 
 public slots:

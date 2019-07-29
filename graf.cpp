@@ -46,18 +46,8 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
 //    std::cout << "Thread " << omp_get_thread_num() << "\n";
 
     size_t p = pEngine->getMix().getNp(); // points
-    //size_t p=(*pMix).getNp();
     QChart *chart = new QChart();
     QLineSeries *series;
-
-    /*
-    for (auto &s : pMix->getSamples()) {
-        series = new QLineSeries();
-        for (unsigned int i = 0; i <= p; i++){
-            *series << QPointF(i, s.getA(0, i));
-        }
-*/
-
 
     double inc_x = pEngine->getCapLen() / p;
     for (auto &s : pEngine->getMix().getSamples()) {
@@ -71,13 +61,15 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
         chart->addSeries(series);
         chart->createDefaultAxes();
     }
-/*
+
     series = new QLineSeries();
+    double x = 0;
     for (unsigned int i = 0; i <= p; i++) {
-        *series << QPointF(i, -log((*pHpl)[i]) / log(10));
+        *series << QPointF(x, -log((*pHpl)[i]) / log(10));
+        x = x + inc_x;
     }
     chart->addSeries(series);
     chart->createDefaultAxes();
-*/
+
     this->setChart(chart);
 }

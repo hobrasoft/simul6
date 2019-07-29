@@ -74,9 +74,9 @@ Engine::Engine(unsigned int pAreas, int pNp) :
     concUp(0),
     concDown(0),
     critG(0),    
-    ErrL(0),
-    ErrH(0),
-    ErrMax(0),
+    errL(0),
+    errH(0),
+    errMax(0),
     c0(1000),
     mix(pAreas, pNp),
     m_initialized(false),
@@ -157,7 +157,7 @@ void Engine::initVectors()
     kapa.resize(np + 1, 0);
     oH.resize(np + 1, 0);
     e.resize(np + 1, 0);
-    Error.resize(np + 1);
+    error.resize(np + 1);
     difPot.resize(np + 1, 0);
 }
 
@@ -368,7 +368,7 @@ void Engine::der()
     for (int i = 1; i <= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
     Resist = Resist + 1/kapa[0] + 1/kapa[np];
     Resist = Resist * dx / 3;
-    curDen = Voltage / Resist;
+    curDen = voltage / Resist;
 
     for (int i = 1; i <= np - 1; i++) {
         e[i] = ( -difPot[i - 1] + difPot[i + 1]) / 2 / dx;
@@ -427,12 +427,16 @@ void Engine::rungekutta()
     }
 
 // tahle srandicka je pro vyzkouseni jak funguje omp parallel
-//#pragma omp parallel for schedule(static)
+// #pragma omp parallel for schedule(static)
 //        for (int i = 0; i <= np; i++) double kuk = 1.0;
-//#pragma omp barrier
+//
+
+
+
 
 //    gCalc();
     der();
+
 
 #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
@@ -525,7 +529,7 @@ void Engine::cashkarp()
     gCalc();
     der();
 
-    ErrMax = 0;
+    errMax = 0;
 
 #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
@@ -534,22 +538,22 @@ void Engine::cashkarp()
             s.setA(0, i, s.getV(i) + W51 * s.getQ1(i) + W53 * s.getQ3(i) + W54 * s.getQ4(i) + W56 * s.getQ6(i));
         }
 
-        Error[i] = 0;
+        error[i] = 0;
 
         for (auto &s : mix.getSamples()) {
-            Error[i] = Error[i] + s.getQ1(i)*(W51-W41) + s.getQ3(i)*(W53-W43)
+            error[i] = error[i] + s.getQ1(i)*(W51-W41) + s.getQ3(i)*(W53-W43)
                     + s.getQ4(i)*(W54-W44) - s.getQ5(i)*W45 + s.getQ6(i)*(W56-W46);
         }
 
-        Error[i] = abs(Error[i]);
+        error[i] = abs(error[i]);
 
-        if (Error[i] > ErrMax) ErrMax = Error[i];
+        if (error[i] > errMax) errMax = error[i];
     }
 
     gCalc();
 
-    if (ErrMax <= ErrL) dt = dt*1.1;
-    else if (ErrMax > ErrH) dt = dt/1.1;
+    if (errMax <= errL) dt = dt*1.1;
+    else if (errMax > errH) dt = dt/1.1;
 
     t = t + dt;
 }
@@ -567,7 +571,7 @@ void Engine::run()
     if (!m_initialized) {
         init();
     }
-    TimeDisplay = TimeInterval;
+    timeDisplay = timeInterval;
     m_running = true;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
@@ -575,7 +579,7 @@ void Engine::run()
 void Engine::runPrivate() {
 //  qDebug() << "Engine::runPrivate()" << m_iterations;
 
-    if (!m_running || t >= TimeStop) {
+    if (!m_running || t >= timeStop) {
         emit drawGraph(this, &hpl);
         emit timeChanged(t);
         emit finished();
@@ -588,15 +592,15 @@ void Engine::runPrivate() {
         rungekutta();    // if Optimize dt is not checked
     }
 
-    if (t > TimeDisplay) {
+    if (t > timeDisplay) {
         qDebug() << "Engine::runPrivate()" << t;
         emit drawGraph(this, &hpl);
-        TimeDisplay += TimeInterval;
+        timeDisplay += timeInterval;
     }
 
     if (m_sendSignals) {
         emit timeChanged(t);
-        emit errorChanged(ErrMax);
+        emit errorChanged(errMax);
         emit dtChanged(dt);
         emit curDenChanged(curDen);
         m_sendSignals = false;
@@ -627,9 +631,7 @@ void Engine::setup()
     ConstituentDb cdb;
 
     setB(20, 200, 400, 600);
-//    setCapLen(CAPLEN);
 //    setCurDen(-30);
-//    setVoltage(-10);
     setDt(0.01);
     setConcUp(20);
     setConcDown(0);
@@ -638,8 +640,6 @@ void Engine::setup()
     setErrMax(0);
     setErrL(1e-9);
     setErrH(1e-8);
-//    setTimeInterval(50);
-//    setTimeStop(500);
     setC0(1000);
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
     s1.setIC(0, 0).setIC(1, 10).setIC(2, 10).setIC(3, 10);

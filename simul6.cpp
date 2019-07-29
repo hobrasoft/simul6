@@ -49,7 +49,7 @@ void Simul6::runEngine() {
     ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
-    ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getdt());
+    ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
     ui->f_simulationProfile->engine()->setVoltage(ui->f_parameters->getVoltage());
     ui->f_simulationProfile->engine()->setOptimizeDt(optimizeDt);
     ui->f_simulationProfile->slotRun();

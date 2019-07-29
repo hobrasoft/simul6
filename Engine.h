@@ -75,17 +75,17 @@ public:
     double dx; // Lenght increment at x-axis [m]
     double dt; // Time increment [s]
     double curDen; // Current density [A/m2]
-    double Voltage;
-    double CapLen; // Physical length of capillary [m]
+    double voltage;
+    double capLen; // Physical length of capillary [m]
     double concUp; // Upper limit of y-axis [mmol/m3]
     double concDown; // Upper limit of y-axis [mmol/m3]
     double critG; // Criterion for ending iteration of G function
-    double ErrL;  // Lovest error along x-axix
-    double ErrH;  // Highest error along x-axix
-    double ErrMax; // Max error along x-axix
-    double TimeInterval; // how often to display
-    double TimeDisplay; // how often to display
-    double TimeStop;  // when to stop calculation
+    double errL;  // Lovest error along x-axix
+    double errH;  // Highest error along x-axix
+    double errMax; // Max error along x-axix
+    double timeInterval; // how often to display
+    double timeDisplay; // time to display
+    double timeStop;  // when to stop calculation
     int c0; // Transfer factor to SI system of units
 
     // 2-dimensional arrays
@@ -110,7 +110,7 @@ public:
     std::vector<double> kapa; // Conductivity
     std::vector<double> oH;
     std::vector<double> e;
-    std::vector<double> Error;
+    std::vector<double> error;
     std::vector<double> difPot;
 
     Mix mix;
@@ -123,25 +123,25 @@ public:
 	void setT(double pT) { t = pT; }
 	void setDt(double pDt) { dt = pDt; }
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
-    void setVoltage(double pVoltage) { Voltage = pVoltage; }
-    void setCapLen(double pCapLen) { CapLen = pCapLen; dx = CapLen / np; }
-    double getCapLen() { return CapLen; }
-    void setTimeStop(double pTimeStop) { TimeStop = pTimeStop; }
-    void setTimeInterval(double pTimeInterval) { TimeInterval = pTimeInterval; }
+    void setVoltage(double pVoltage) { voltage = pVoltage; }
+    void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
+    double getCapLen() { return capLen; }
+    void setTimeStop(double pTimeStop) { timeStop = pTimeStop; }
+    void setTimeInterval(double pTimeInterval) { timeInterval = pTimeInterval; }
     void setConcUp(double pConcUp) { concUp = pConcUp; }
     void setConcDown(double pConcDown) { concDown = pConcDown; }
     void setCritG(double pCritG) { critG = pCritG; }
-    void setErrMax(double pErrMax) { ErrMax = pErrMax; }
-    void setErrL(double pErrL) { ErrL = pErrL; }
-    void setErrH(double pErrH) { ErrH = pErrH; }
+    void setErrMax(double pErrMax) { errMax = pErrMax; }
+    void setErrL(double pErrL) { errL = pErrL; }
+    void setErrH(double pErrH) { errH = pErrH; }
     void setOptimizeDt(bool x) { m_optimizeDt = x; }
 
-    void setTimeDisplay(double pTimeDisplay) {TimeDisplay = pTimeDisplay; }
+    void setTimeDisplay(double pTimeDisplay) {timeDisplay = pTimeDisplay; }
 
 
     void setC0(const int pC0) { c0 = pC0; }
 
-    size_t getNm(); // Get number of constituents - obsolete
+    size_t getNm(); // Get number of constituents
     size_t getConstituentCount(); // Get number of constituents
     int getNp() { return np; }
 	double getDx() { return dx; }
