@@ -11,6 +11,7 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_stop, &QPushButton::clicked, this, &ComputeControl::stop);
     connect(ui->f_run, &QPushButton::clicked, this, &ComputeControl::slotRunClicked);
     connect(ui->f_stop, &QPushButton::clicked, this, &ComputeControl::slotStopClicked);
+    connect(ui->f_init, &QPushButton::clicked, this, &ComputeControl::slotInitClicked);
 }
 
 ComputeControl::~ComputeControl()
@@ -21,6 +22,13 @@ ComputeControl::~ComputeControl()
 
 void ComputeControl::showTime(double time) {
     ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
+}
+
+
+void ComputeControl::slotInitClicked() {
+    ui->f_init->setEnabled(false);
+    ui->f_run->setEnabled(true);
+    ui->f_stop->setEnabled(true);
 }
 
 void ComputeControl::slotRunClicked() {

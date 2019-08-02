@@ -55,7 +55,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
             *series << QPointF(x, s.getA(0, i));
-            x = x + inc_x;
+            x += inc_x;
         }
 
         chart->addSeries(series);
@@ -66,7 +66,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     double x = 0;
     for (unsigned int i = 0; i <= p; i++) {
         *series << QPointF(x, -log((*pHpl)[i]) / log(10));
-        x = x + inc_x;
+        x += inc_x;
     }
     chart->addSeries(series);
     chart->createDefaultAxes();

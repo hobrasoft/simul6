@@ -68,9 +68,8 @@ public:
     static const double kw;
     static const unsigned int maxCharge; // Maximum negative and positive charge of compounds
 
-    int np; // Number of axial intervals
-    int bw, b1, b2, b3;
-    int numb; // How often to draw
+    int np; // Number of axial grid points
+    int bw, b1, b2, b3;  // bw thickness of the boundary between segments. b1 2 3 pozitions of boundaried among segments
     double t; // Time
     double dx; // Lenght increment at x-axis [m]
     double dt; // Time increment [s]
@@ -86,6 +85,7 @@ public:
     double timeInterval; // how often to display
     double timeDisplay; // time to display
     double timeStop;  // when to stop calculation
+    double intervalCounter;  // for measuring time elapsed
     int c0; // Transfer factor to SI system of units
 
     // 2-dimensional arrays
@@ -115,10 +115,10 @@ public:
 
     Mix mix;
 
-    //Graph graph;
+
     Engine(unsigned int pAreas, int pNp);
+
     void setB(int pBw, int pB1, int pB2, int pB3);
-	void setNumb(int pNumb) { numb = pNumb; }
 	void setDx(double pDx) { dx = pDx; }
 	void setT(double pT) { t = pT; }
 	void setDt(double pDt) { dt = pDt; }
@@ -147,7 +147,6 @@ public:
 	double getDx() { return dx; }
 	Mix &getMix();
 	void addMix(const Mix *m);
-
     void setup();
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();
@@ -155,7 +154,6 @@ public:
 
     bool m_initialized;
     bool m_running;
-    int  m_iterations;
     bool m_sendSignals;
     bool m_optimizeDt;
 

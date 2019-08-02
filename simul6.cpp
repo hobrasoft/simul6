@@ -15,6 +15,7 @@ Simul6::Simul6(QWidget *parent) :
     ui(new Ui::Simul6)
 {
     MSettings::instance(this);
+    qDebug() << "Simul6";
     ui->setupUi(this);
     createActions();
     connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
@@ -42,10 +43,8 @@ void Simul6::engineFinished() {
 
 void Simul6::runEngine() {
     ui->f_parameters->setEnabled(false);
-    //double current = ui->f_parameters->current();
-    bool optimizeDt = ui->f_parameters->optimizeDt();
-    //ui->f_simulationProfile->engine()->setCurDen(-508*current);
 
+    bool optimizeDt = ui->f_parameters->optimizeDt();
     ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());

@@ -7703,6 +7703,90 @@
                 9.7,
                 9
             ]
+        },
+	{
+            "id": 518,
+            "name": "S1",
+            "negCount": 0,
+            "posCount": 1,
+            "uNeg": [],
+            "uPos": [
+                57.0
+            ],
+            "pKaNeg": [],
+            "pKaPos": [
+                13.7
+            ]
+        },
+	{
+            "id": 519,
+            "name": "S2",
+            "negCount": 0,
+            "posCount": 1,
+            "uNeg": [],
+            "uPos": [
+                45.0
+            ],
+            "pKaNeg": [],
+            "pKaPos": [
+                13.7
+            ]
+        },
+	{
+            "id": 520,
+            "name": "S3",
+            "negCount": 0,
+            "posCount": 1,
+            "uNeg": [],
+            "uPos": [
+                35.0
+            ],
+            "pKaNeg": [],
+            "pKaPos": [
+                13.7
+            ]
+        },
+	{
+            "id": 521,
+            "name": "S4",
+            "negCount": 0,
+            "posCount": 1,
+            "uNeg": [],
+            "uPos": [
+                26.0
+            ],
+            "pKaNeg": [],
+            "pKaPos": [
+                13.7
+            ]
+        },
+	{
+            "id": 522,
+            "name": "S5",
+            "negCount": 0,
+            "posCount": 1,
+            "uNeg": [],
+            "uPos": [
+                18.0
+            ],
+            "pKaNeg": [],
+            "pKaPos": [
+                13.7
+            ]
+        },
+{
+            "id": 523,
+            "name": "term",
+            "negCount": 0,
+            "posCount": 1,
+            "uNeg": [],
+            "uPos": [
+                15.0
+            ],
+            "pKaNeg": [],
+            "pKaPos": [
+                13.7
+            ]
         }
     ]
 }

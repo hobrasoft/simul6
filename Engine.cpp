@@ -69,7 +69,6 @@ using namespace std;
 
 Engine::Engine(unsigned int pAreas, int pNp) :
     np(pNp),
-    numb(0),
     t(0),
     concUp(0),
     concDown(0),
@@ -81,9 +80,8 @@ Engine::Engine(unsigned int pAreas, int pNp) :
     mix(pAreas, pNp),
     m_initialized(false),
     m_running(false),
-    m_sendSignals(false),
-    m_optimizeDt(false),
-    m_iterations(0)
+    m_sendSignals(false),    
+    m_optimizeDt(false)
 {
     cout << "Engine constructor" << endl;
     QTimer *timer = new QTimer(this);
@@ -165,7 +163,6 @@ void Engine::init()
 {
     qDebug() << "Engine::init()";
     m_initialized = true;
-    m_iterations = 0;
     t = 0;
     int i;
 
@@ -434,7 +431,7 @@ void Engine::rungekutta()
 
 
 
-//    gCalc();
+    gCalc();
     der();
 
 
@@ -445,7 +442,7 @@ void Engine::rungekutta()
             s.setA(0, i, s.getV(i) + beta31 * s.getQ1(i) + beta32 * s.getQ2(i));
         }
     }
-//    gCalc();
+    gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -455,7 +452,7 @@ void Engine::rungekutta()
             s.setA(0, i, s.getV(i) + beta41 * s.getQ1(i) - beta42 * s.getQ2(i) + beta43 * s.getQ3(i));
         }
     }
-//    gCalc();
+    gCalc();
     der();
 
 #pragma omp parallel for schedule(static)
@@ -569,20 +566,21 @@ void Engine::run()
 {
     qDebug() << "Engine::run()";
     if (!m_initialized) {
-        init();
+        init();     
     }
     timeDisplay = timeInterval;
+    intervalCounter = 0;
     m_running = true;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
 
 void Engine::runPrivate() {
-//  qDebug() << "Engine::runPrivate()" << m_iterations;
 
     if (!m_running || t >= timeStop) {
         emit drawGraph(this, &hpl);
         emit timeChanged(t);
         emit finished();
+        qDebug() << "Time elapsed " << intervalCounter / 1000 << " s";
         return;
     }
 
@@ -592,10 +590,10 @@ void Engine::runPrivate() {
         rungekutta();    // if Optimize dt is not checked
     }
 
-    if (t > timeDisplay) {
+    if (t >= timeDisplay) {
         qDebug() << "Engine::runPrivate()" << t;
         emit drawGraph(this, &hpl);
-        timeDisplay += timeInterval;
+        timeDisplay += timeInterval;        
     }
 
     if (m_sendSignals) {
@@ -603,6 +601,7 @@ void Engine::runPrivate() {
         emit errorChanged(errMax);
         emit dtChanged(dt);
         emit curDenChanged(curDen);
+        intervalCounter += 500;
         m_sendSignals = false;
     }
 
@@ -630,17 +629,18 @@ void Engine::setup()
 {
     ConstituentDb cdb;
 
-    setB(20, 200, 400, 600);
+    setB(40, 160, 320, 600);
 //    setCurDen(-30);
     setDt(0.01);
     setConcUp(20);
     setConcDown(0);
-    setNumb(5000);
     setCritG(1e-7);
     setErrMax(0);
     setErrL(1e-9);
     setErrH(1e-8);
     setC0(1000);
+
+/*
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
     s1.setIC(0, 0).setIC(1, 10).setIC(2, 10).setIC(3, 10);
 
@@ -657,7 +657,34 @@ void Engine::setup()
     s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
 
     //Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
-    //s4.setIC(0, 0.313).setIC(1, 0.313).setIC(2, 0.313).setIC(3, 0.313);
+    //s4.setIC(0, 0.313).setIC(1, 0.314).setIC(2, 0.313).setIC(3, 0.313);
+*/
+
+
+    Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
+    s1.setIC(0, 0).setIC(1, 0).setIC(2, 10).setIC(3, 10);
+
+    Sample &s2 = getMix().addConstituent(cdb.get(85)); // 85 Acetic acid
+    s2.setIC(0, 20).setIC(1, 20).setIC(2, 20).setIC(3, 20);
+
+    Sample &s3 = getMix().addConstituent(cdb.get(523)); // 523 term
+    s3.setIC(0, 10).setIC(1, 0).setIC(2, 0).setIC(3, 0);
+
+    Sample &s4 = getMix().addConstituent(cdb.get(518)); // 518 S1
+    s4.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
+
+    Sample &s5 = getMix().addConstituent(cdb.get(519)); // 519 S2
+    s5.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
+
+    Sample &s6 = getMix().addConstituent(cdb.get(520)); // 520 S3
+    s6.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
+
+    Sample &s7 = getMix().addConstituent(cdb.get(521)); // 521 S4
+    s7.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
+
+    Sample &s8 = getMix().addConstituent(cdb.get(522)); // 522 S5
+    s8.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
+
 
 }
 

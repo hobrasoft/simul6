@@ -32,6 +32,7 @@ public slots:
 private slots:
     void slotRunClicked();
     void slotStopClicked();
+    void slotInitClicked();
 
 private:
     Ui::ComputeControl *ui;

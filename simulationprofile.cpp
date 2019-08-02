@@ -8,7 +8,7 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_engine = new Engine(4, 800);  // at present this is the input point of the number of grid-points, np
+    m_engine = new Engine(4, 2000);  // at present this is the input point of the number of grid-points, np
     m_thread.start();
     m_engine->moveToThread(&m_thread);
 
