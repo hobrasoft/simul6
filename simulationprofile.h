@@ -18,6 +18,7 @@ public:
     ~SimulationProfile();
 
     Engine *engine() const { return m_engine; }
+    Engine *getNewEngine();
 
 public slots:
     void slotInit();

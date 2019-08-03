@@ -62,21 +62,21 @@ const double Engine::uOHmin = 205e-9;
 const double Engine::difHpl = Engine::uHpl * Engine::r * Engine::te/ Engine::farc;
 const double Engine::difOHmin = Engine::uOHmin * Engine::r * Engine::te / Engine::farc;
 const double Engine::pKw = 14;
+const double Engine::c0 = 1000.0;
+const double Engine::critG = 1e-7;
 const double Engine::kw = exp(-Engine::pKw * log(10));
+
 const unsigned int Engine::maxCharge = 3;
+
 
 using namespace std;
 
 Engine::Engine(unsigned int pAreas, int pNp) :
     np(pNp),
     t(0),
-    concUp(0),
-    concDown(0),
-    critG(0),    
     errL(0),
     errH(0),
     errMax(0),
-    c0(1000),
     mix(pAreas, pNp),
     m_initialized(false),
     m_running(false),
@@ -102,11 +102,6 @@ void Engine::setB( int pBw, int pB1, int pB2, int pB3)
     b3 = pB3;
 }
 
-/*void Engine::addMix(const Mix *m)
-{
-
-}*/
-
 Mix &Engine::getMix()
 {
     return mix;
@@ -118,10 +113,6 @@ size_t Engine::getNm()
     return mix.size();
 }
 
-size_t Engine::getConstituentCount()
-{
-    return mix.size();
-}
 
 void Engine::initArray(vector< vector<double> > &pVector)
 {
@@ -290,7 +281,7 @@ void Engine::gCalc()
             }
 
             double derG = 0;
-            for (unsigned int k = 0; k < getConstituentCount(); k++) {
+            for (unsigned int k = 0; k < getNm(); k++) {
                 Sample &s = mix.getSample(k);
                 derG += s.getDerHc(i) * s.getA(0, i);
             }
@@ -305,7 +296,7 @@ void Engine::gCalc()
         } while (abs(hPlusIn - hPlus)/hPlus >= critG);
 
         // Calculation of charged species
-        for (unsigned int k = 0; k < getConstituentCount(); k++) {
+        for (unsigned int k = 0; k < getNm(); k++) {
             Sample &s = mix.getSample(k);
 
             for (int j = 1; j <= s.getPosCharge(); j++) {
@@ -428,12 +419,8 @@ void Engine::rungekutta()
 //        for (int i = 0; i <= np; i++) double kuk = 1.0;
 //
 
-
-
-
     gCalc();
     der();
-
 
 #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
@@ -608,37 +595,15 @@ void Engine::runPrivate() {
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
 
-void Engine::show()
-{
-    cout << "Showing engine parameters:" << endl;
-    cout << "- dx = " << dx << endl;
-    cout << "- difs:" << endl;
-    for (unsigned int i = 0; i < getNm(); i++) {
-        cout << "  - dif[" << i << "] = " << dif[i] << endl;
-    }
-    /*
-    cout << "- a:" << endl;
-    for (int i = 0; i <= getNp(); i++) {
-    cout << "  - a[" << i << "][0] = " << a[i][0] << endl;
-    }*/
-
-    //console.drawSample(a, 0);
-}
 
 void Engine::setup()
 {
     ConstituentDb cdb;
 
-    setB(40, 160, 320, 600);
-//    setCurDen(-30);
-    setDt(0.01);
-    setConcUp(20);
-    setConcDown(0);
-    setCritG(1e-7);
-    setErrMax(0);
-    setErrL(1e-9);
-    setErrH(1e-8);
-    setC0(1000);
+    setB(40, 160, 320, 600);    //tohle se bude zadavat ve formulari Segments
+    setErrH(1e-7);  //tohle se bude zadavat z formulare Parameters
+                    //pokud bude zakliknute Optimize dt, tedy pokud bude m_optimizeDt == true
+
 
 /*
     Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
@@ -684,7 +649,6 @@ void Engine::setup()
 
     Sample &s8 = getMix().addConstituent(cdb.get(522)); // 522 S5
     s8.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
-
 
 }
 

@@ -20,6 +20,12 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
     connect(m_engine, &Engine::finished, this, &SimulationProfile::finished);
 }
 
+Engine *SimulationProfile::getNewEngine()
+{
+    delete m_engine;
+    m_engine = new Engine(4, 2000);
+    return m_engine;
+}
 
 void SimulationProfile::slotInit() {
     m_engine->init();

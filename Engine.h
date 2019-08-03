@@ -66,6 +66,8 @@ public:
     static const double difOHmin;
     static const double pKw; // Ionic product of water
     static const double kw;
+    static const double c0;
+    static const double critG;
     static const unsigned int maxCharge; // Maximum negative and positive charge of compounds
 
     int np; // Number of axial grid points
@@ -76,9 +78,6 @@ public:
     double curDen; // Current density [A/m2]
     double voltage;
     double capLen; // Physical length of capillary [m]
-    double concUp; // Upper limit of y-axis [mmol/m3]
-    double concDown; // Upper limit of y-axis [mmol/m3]
-    double critG; // Criterion for ending iteration of G function
     double errL;  // Lovest error along x-axix
     double errH;  // Highest error along x-axix
     double errMax; // Max error along x-axix
@@ -86,7 +85,6 @@ public:
     double timeDisplay; // time to display
     double timeStop;  // when to stop calculation
     double intervalCounter;  // for measuring time elapsed
-    int c0; // Transfer factor to SI system of units
 
     // 2-dimensional arrays
     //vector<vector<vector<double> > > a;
@@ -115,7 +113,6 @@ public:
 
     Mix mix;
 
-
     Engine(unsigned int pAreas, int pNp);
 
     void setB(int pBw, int pB1, int pB2, int pB3);
@@ -128,25 +125,15 @@ public:
     double getCapLen() { return capLen; }
     void setTimeStop(double pTimeStop) { timeStop = pTimeStop; }
     void setTimeInterval(double pTimeInterval) { timeInterval = pTimeInterval; }
-    void setConcUp(double pConcUp) { concUp = pConcUp; }
-    void setConcDown(double pConcDown) { concDown = pConcDown; }
-    void setCritG(double pCritG) { critG = pCritG; }
     void setErrMax(double pErrMax) { errMax = pErrMax; }
-    void setErrL(double pErrL) { errL = pErrL; }
-    void setErrH(double pErrH) { errH = pErrH; }
+    void setErrH(double pErrH) { errH = pErrH; errL = errH / 10.0; }
     void setOptimizeDt(bool x) { m_optimizeDt = x; }
-
     void setTimeDisplay(double pTimeDisplay) {timeDisplay = pTimeDisplay; }
 
-
-    void setC0(const int pC0) { c0 = pC0; }
-
     size_t getNm(); // Get number of constituents
-    size_t getConstituentCount(); // Get number of constituents
     int getNp() { return np; }
 	double getDx() { return dx; }
 	Mix &getMix();
-	void addMix(const Mix *m);
     void setup();
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();
@@ -180,9 +167,6 @@ private:
 	void der();
 	void rungekutta();
     void cashkarp();
-
-public:
-	void show();
 
 };
 

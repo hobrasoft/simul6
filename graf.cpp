@@ -62,7 +62,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
         chart->createDefaultAxes();
     }
 
-    series = new QLineSeries();
+/*    series = new QLineSeries();
     double x = 0;
     for (unsigned int i = 0; i <= p; i++) {
         *series << QPointF(x, -log((*pHpl)[i]) / log(10));
@@ -70,6 +70,6 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     }
     chart->addSeries(series);
     chart->createDefaultAxes();
-
+*/
     this->setChart(chart);
 }
