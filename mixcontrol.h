@@ -16,6 +16,8 @@ public:
     explicit MixControl(QWidget *parent = nullptr);
     ~MixControl();
 
+    const MixControlModel *model() const { return m_model; }
+
 private:
     Ui::MixControl *ui;
 

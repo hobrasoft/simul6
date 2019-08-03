@@ -1,6 +1,9 @@
 #include "simulationprofile.h"
 #include "ui_simulationprofile.h"
 #include "Engine.h"
+#include "mixcontrolmodel.h"
+#include "simul6.h"
+#include "pdebug.h"
 
 SimulationProfile::SimulationProfile(QWidget *parent) :
     QGroupBox(parent),
@@ -28,9 +31,12 @@ Engine *SimulationProfile::getNewEngine()
 }
 
 void SimulationProfile::slotInit() {
-    m_engine->init();
+    const MixControlModel *model = Simul6::instance()->mixControlModel();
+    for (int row=0; row<model->rowCount(); row++) {
+        Constituent constituent = model->constituent(row);
+        Segments segments = model->segments(row);
+    }
 }
-
 
 void SimulationProfile::slotRun() {
     m_engine->run();

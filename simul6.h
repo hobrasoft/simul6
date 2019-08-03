@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include "mixcontrolmodel.h"
 
 namespace Ui {
 class Simul6;
@@ -13,8 +14,10 @@ class Simul6 : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Simul6(QWidget *parent = nullptr);
     ~Simul6();
+    static Simul6 *instance();
+
+    const MixControlModel *mixControlModel() const;
 
 private slots:
     void init();
@@ -27,6 +30,8 @@ private slots:
     void engineFinished();
 
 private:
+    explicit Simul6(QWidget *parent = nullptr);
+    static Simul6 *m_instance;
     Ui::Simul6 *ui;
     void closeEvent(QCloseEvent *) override;
 };

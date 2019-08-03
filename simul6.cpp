@@ -10,10 +10,13 @@
 #include <QMessageBox>
 #include <QTimer>
 
+Simul6 *Simul6::m_instance = nullptr;
+
 Simul6::Simul6(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Simul6)
 {
+    m_instance = this;
     MSettings::instance(this);
     qDebug() << "Simul6";
     ui->setupUi(this);
@@ -31,7 +34,20 @@ Simul6::Simul6(QWidget *parent) :
 }
 
 
+Simul6 *Simul6::instance() {
+    if (m_instance == nullptr) {
+        new Simul6(nullptr);
+    }
+    return m_instance;
+}
+
+
 void Simul6::init() {
+}
+
+
+const MixControlModel *Simul6::mixControlModel() const {
+    return ui->f_mixcontrol->model();
 }
 
 
@@ -56,7 +72,7 @@ void Simul6::runEngine() {
 
 
 void Simul6::initEngine() {
-    ui->f_simulationProfile->engine()->init();
+    ui->f_simulationProfile->slotInit();
 }
 
 void Simul6::stopEngine() {
