@@ -91,7 +91,7 @@ Engine::Engine(unsigned int pAreas, int pNp) :
     connect(timer, &QTimer::timeout, [this](){
         m_sendSignals = true;
     });
-    // setup();
+    setup();
 }
 
 void Engine::setB( int pBw, int pB1, int pB2, int pB3)

@@ -35,6 +35,7 @@ void SimulationProfile::slotInit() {
     for (int row=0; row<model->rowCount(); row++) {
         Constituent constituent = model->constituent(row);
         Segments segments = model->segments(row);
+        // tady by se měl krmit engine daty z modelu
     }
 }
 
