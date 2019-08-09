@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class MixControlModel;
+
 class Engine :  public QObject
 {
     Q_OBJECT
@@ -71,7 +73,7 @@ public:
     static const unsigned int maxCharge; // Maximum negative and positive charge of compounds
 
     int np; // Number of axial grid points
-    int bw, b1, b2, b3;  // bw thickness of the boundary between segments. b1 2 3 pozitions of boundaried among segments
+    int bw; // bw thickness of the boundary between segments
     double t; // Time
     double dx; // Lenght increment at x-axis [m]
     double dt; // Time increment [s]
@@ -115,7 +117,6 @@ public:
 
     Engine(unsigned int pAreas, int pNp);
 
-    void setB(int pBw, int pB1, int pB2, int pB3);
 	void setDx(double pDx) { dx = pDx; }
 	void setT(double pT) { t = pT; }
 	void setDt(double pDt) { dt = pDt; }
@@ -134,7 +135,7 @@ public:
     int getNp() { return np; }
 	double getDx() { return dx; }
 	Mix &getMix();
-    void setup();
+    void setMix(const MixControlModel *model);
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();
     void initVectors();
@@ -154,7 +155,6 @@ signals:
     void curDenChanged(double);
 
 public slots:
-    void init();
     void run();
     void stop();
 

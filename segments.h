@@ -2,6 +2,7 @@
 #define SEGMENTS_H
 
 #include <QList>
+#include <QListIterator>
 #include <QVariant>
 
 struct Segments
@@ -23,6 +24,15 @@ public:
 
     int size() const {
         return segments.size();
+    }
+
+    int ratioSum() const {
+        int sum = 0;
+        QListIterator<Segment> iterator(segments);
+        while (iterator.hasNext()) {
+            sum += iterator.next().ratio;
+            }
+        return sum;
     }
 };
 

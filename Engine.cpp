@@ -7,7 +7,9 @@
 #include "Constituent.h"
 #include "ConstituentDb.h"
 #include "Sample.h"
+#include "mixcontrolmodel.h"
 #include "Mix.h"
+#include "pdebug.h"
 #include <iostream>
 #include <cmath>
 #include <chrono>
@@ -77,7 +79,6 @@ Engine::Engine(unsigned int pAreas, int pNp) :
     errL(0),
     errH(0),
     errMax(0),
-    mix(pAreas, pNp),
     m_initialized(false),
     m_running(false),
     m_sendSignals(false),    
@@ -91,16 +92,8 @@ Engine::Engine(unsigned int pAreas, int pNp) :
     connect(timer, &QTimer::timeout, [this](){
         m_sendSignals = true;
     });
-    setup();
 }
 
-void Engine::setB( int pBw, int pB1, int pB2, int pB3)
-{
-    bw = pBw;
-    b1 = pB1;
-    b2 = pB2;
-    b3 = pB3;
-}
 
 Mix &Engine::getMix()
 {
@@ -150,17 +143,47 @@ void Engine::initVectors()
     difPot.resize(np + 1, 0);
 }
 
-void Engine::init()
+
+void Engine::setMix(const MixControlModel *model)
 {
     qDebug() << "Engine::init()";
     m_initialized = true;
     t = 0;
-    int i;
 
     initArrays();
     initVectors();
 
-    for (auto &s : mix.getSamples()) {
+    for (int row=0; row<model->rowCount(); row++) {
+        Constituent constituent = model->constituent(row);
+        Segments segments = model->segments(row);
+        int segmentsCount = segments.size();
+        int ratioSum = segments.ratioSum();
+        Sample sample(constituent, segmentsCount, np);
+        mix.addSample(sample);
+        PDEBUG << row << constituent.getName() << segmentsCount;
+
+        int segmentBegin = 0;
+        for (int segmentNumber = 0; segmentNumber < segmentsCount; segmentNumber++) {
+            double concentration = segments.segments[segmentNumber].concentration;
+            int segmentRatio = segments.segments[segmentNumber].ratio;
+            sample.setIC(segmentNumber, concentration);
+
+            int segmentEnd = segmentBegin + (np/ratioSum*segmentRatio);
+
+            for (int i=segmentBegin; i<segmentEnd; i++) {
+                sample.setA(segmentNumber, i, concentration);
+                }
+
+
+            // Úplně na konci!
+            segmentBegin = segmentEnd + 1;
+        }
+
+    }
+
+
+/*
+ *
         for (i = 0; i <= b1; i++) {
             s.setA(0, i, s.getIC(0));
         }
@@ -183,6 +206,8 @@ void Engine::init()
             s.setA(0, i, s.getIC(3));
         }
     }
+*/
+
 
     gCalc();
     //emit drawGraph(&mix, &hpl);
@@ -552,14 +577,13 @@ void Engine::stop() {
 void Engine::run()
 {
     qDebug() << "Engine::run()";
-    if (!m_initialized) {
-        init();     
-    }
+    Q_ASSERT (m_initialized == true);
     timeDisplay = timeInterval;
     intervalCounter = 0;
     m_running = true;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
+
 
 void Engine::runPrivate() {
 
@@ -593,63 +617,6 @@ void Engine::runPrivate() {
     }
 
     QTimer::singleShot(0, this, &Engine::runPrivate);
-}
-
-
-void Engine::setup()
-{
-    ConstituentDb cdb;
-
-    setB(40, 160, 320, 600);    //tohle se bude zadavat ve formulari Segments
-    setErrH(1e-7);  //tohle se bude zadavat z formulare Parameters
-                    //pokud bude zakliknute Optimize dt, tedy pokud bude m_optimizeDt == true
-
-
-/*
-    Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
-    s1.setIC(0, 0).setIC(1, 10).setIC(2, 10).setIC(3, 10);
-
-    //Sample &s1 = getMix().addConstituent(cdb.get(216)); // 216 Ethylenediamine
-    //s1.setIC(0, 0).setIC(1, 10).setIC(2, 0).setIC(3, 10);
-
-    //Sample &s1 = getMix().addConstituent(cdb.get(441)); // 441 Sebacic acid
-    //s1.setIC(0, 0.21).setIC(1, 0.21).setIC(2, 0.21).setIC(3, 0.21);
-
-    Sample &s2 = getMix().addConstituent(cdb.get(258)); // 258 Histidine
-    s2.setIC(0, 10).setIC(1, 0).setIC(2, 0).setIC(3, 0);
-
-    Sample &s3 = getMix().addConstituent(cdb.get(399)); // 399 Phosphoric acid
-    s3.setIC(0, 7.5).setIC(1, 7.5).setIC(2, 7.5).setIC(3, 7.5);
-
-    //Sample &s4 = getMix().addConstituent(cdb.get(280)); // 280 Imidazole
-    //s4.setIC(0, 0.313).setIC(1, 0.314).setIC(2, 0.313).setIC(3, 0.313);
-*/
-
-
-    Sample &s1 = getMix().addConstituent(cdb.get(418)); // 418 Potassium
-    s1.setIC(0, 0).setIC(1, 0).setIC(2, 10).setIC(3, 10);
-
-    Sample &s2 = getMix().addConstituent(cdb.get(85)); // 85 Acetic acid
-    s2.setIC(0, 20).setIC(1, 20).setIC(2, 20).setIC(3, 20);
-
-    Sample &s3 = getMix().addConstituent(cdb.get(523)); // 523 term
-    s3.setIC(0, 10).setIC(1, 0).setIC(2, 0).setIC(3, 0);
-
-    Sample &s4 = getMix().addConstituent(cdb.get(518)); // 518 S1
-    s4.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
-
-    Sample &s5 = getMix().addConstituent(cdb.get(519)); // 519 S2
-    s5.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
-
-    Sample &s6 = getMix().addConstituent(cdb.get(520)); // 520 S3
-    s6.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
-
-    Sample &s7 = getMix().addConstituent(cdb.get(521)); // 521 S4
-    s7.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
-
-    Sample &s8 = getMix().addConstituent(cdb.get(522)); // 522 S5
-    s8.setIC(0, 0).setIC(1, 4).setIC(2, 0).setIC(3, 0);
-
 }
 
 

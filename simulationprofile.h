@@ -3,6 +3,7 @@
 
 #include <QGroupBox>
 #include <QThread>
+#include "mixcontrolmodel.h"
 #include "Engine.h"
 
 namespace Ui {
@@ -18,10 +19,10 @@ public:
     ~SimulationProfile();
 
     Engine *engine() const { return m_engine; }
-    Engine *getNewEngine();
+
+    void createEngine();
 
 public slots:
-    void slotInit();
     void slotRun();
     void slotStop();
 

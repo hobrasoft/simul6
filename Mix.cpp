@@ -4,9 +4,7 @@
 
 #include "Mix.h"
 
-Mix::Mix(const unsigned int pAreas, const int pNp) :
-    areas(pAreas),
-    np(pNp)
+Mix::Mix() 
 {
 	// cout << "Mix constructor" << endl;
 }
@@ -19,20 +17,12 @@ Mix::~Mix()
 	}*/
 }
 
-Sample &Mix::addConstituent(const Constituent &pConstituent)
+Sample &Mix::addSample(const Sample &sample)
 {
 	//Sample *s = new Sample(pConstituent, areas);
-    Sample s(pConstituent, areas, np);
-	samples.push_back(s);
+	samples.push_back(sample);
 
 	return samples.back();
-}
-
-Sample &Mix::addConstituent(const QString& pName, double pU, int pZ)
-{
-	Constituent c(pName, pU, pZ);
-
-	return addConstituent(c);
 }
 
 std::vector<Sample>::iterator Mix::begin()

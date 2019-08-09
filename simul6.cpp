@@ -59,21 +59,22 @@ void Simul6::engineFinished() {
 
 void Simul6::runEngine() {
     ui->f_parameters->setEnabled(false);
-
-    bool optimizeDt = ui->f_parameters->optimizeDt();
-    ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
-    ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
-    ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
-    ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
-    ui->f_simulationProfile->engine()->setVoltage(ui->f_parameters->getVoltage());
-    ui->f_simulationProfile->engine()->setOptimizeDt(optimizeDt);
     ui->f_simulationProfile->slotRun();
 }
 
 
 void Simul6::initEngine() {
-    ui->f_simulationProfile->slotInit();
+    ui->f_simulationProfile->createEngine();
+    ui->f_simulationProfile->engine()->setMix(mixControlModel()); // Nakrmí nový engine směsí
+    ui->f_simulationProfile->engine()->setErrH(1e-7);   // Odkud se bere?
+    ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
+    ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
+    ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
+    ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
+    ui->f_simulationProfile->engine()->setVoltage(ui->f_parameters->getVoltage());
+    ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
 }
+
 
 void Simul6::stopEngine() {
     ui->f_parameters->setEnabled(true);

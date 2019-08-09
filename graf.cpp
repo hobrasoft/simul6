@@ -45,7 +45,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     std::cout << "Zde" << std::endl;
 //    std::cout << "Thread " << omp_get_thread_num() << "\n";
 
-    size_t p = pEngine->getMix().getNp(); // points
+    size_t p = pEngine->getNp(); // points
     QChart *chart = new QChart();
     QLineSeries *series;
 

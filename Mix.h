@@ -12,17 +12,14 @@ class Mix
 {
 private:
     std::vector<Sample> samples;
-    unsigned int areas;
-    int np;
 
 public:
-    Mix(const unsigned int pAreas, const int pNp);
+    Mix();
 	~Mix();
-	Sample &addConstituent(const Constituent &pConstituent);
-    Sample &addConstituent(const QString& pName, const double pU, const int pZ);
+	Sample &addSample(const Sample&);
+    // Sample &addConstituent(const QString& pName, const double pU, const int pZ);
     Sample &getSample(unsigned int pIndex);
     std::vector<Sample> &getSamples() { return samples; }
-    int getNp() { return np; }
     std::vector<Sample>::iterator begin();
     std::vector<Sample>::iterator end();
     void initV();

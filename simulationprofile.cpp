@@ -11,8 +11,17 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_engine = new Engine(4, 2000);  // at present this is the input point of the number of grid-points, np
     m_thread.start();
+    m_engine = nullptr;
+}
+
+
+void SimulationProfile::createEngine() 
+{
+    if (m_engine != nullptr) {
+        m_engine->deleteLater();
+        }
+    m_engine = new Engine(4, 2000);  // at present this is the input point of the number of grid-points, np
     m_engine->moveToThread(&m_thread);
 
     connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);
@@ -23,28 +32,15 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
     connect(m_engine, &Engine::finished, this, &SimulationProfile::finished);
 }
 
-Engine *SimulationProfile::getNewEngine()
-{
-    delete m_engine;
-    m_engine = new Engine(4, 2000);
-    return m_engine;
-}
-
-void SimulationProfile::slotInit() {
-    const MixControlModel *model = Simul6::instance()->mixControlModel();
-    for (int row=0; row<model->rowCount(); row++) {
-        Constituent constituent = model->constituent(row);
-        Segments segments = model->segments(row);
-        // tady by se měl krmit engine daty z modelu
-    }
-}
 
 void SimulationProfile::slotRun() {
+    Q_ASSERT(m_engine != nullptr);
     m_engine->run();
 }
 
 
 void SimulationProfile::slotStop() {
+    Q_ASSERT(m_engine != nullptr);
     m_engine->stop();
 }
 
