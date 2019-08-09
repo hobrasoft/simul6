@@ -20,7 +20,7 @@ public:
 
     Engine *engine() const { return m_engine; }
 
-    void createEngine();
+    void createEngine(int np);
 
 public slots:
     void slotRun();

@@ -9,7 +9,6 @@
 #include "Sample.h"
 #include "mixcontrolmodel.h"
 #include "Mix.h"
-#include "pdebug.h"
 #include <iostream>
 #include <cmath>
 #include <chrono>
@@ -73,7 +72,7 @@ const unsigned int Engine::maxCharge = 3;
 
 using namespace std;
 
-Engine::Engine(unsigned int pAreas, int pNp) :
+Engine::Engine(int pNp) :
     np(pNp),
     t(0),
     errL(0),
@@ -150,17 +149,12 @@ void Engine::setMix(const MixControlModel *model)
     m_initialized = true;
     t = 0;
 
-    initArrays();
-    initVectors();
-
     for (int row=0; row<model->rowCount(); row++) {
         Constituent constituent = model->constituent(row);
         Segments segments = model->segments(row);
         int segmentsCount = segments.size();
         int ratioSum = segments.ratioSum();
         Sample sample(constituent, segmentsCount, np);
-        mix.addSample(sample);
-        PDEBUG << row << constituent.getName() << segmentsCount;
 
         int segmentBegin = 0;
         for (int segmentNumber = 0; segmentNumber < segmentsCount; segmentNumber++) {
@@ -168,9 +162,10 @@ void Engine::setMix(const MixControlModel *model)
             int segmentRatio = segments.segments[segmentNumber].ratio;
             sample.setIC(segmentNumber, concentration);
 
-            int segmentEnd = segmentBegin + (np/ratioSum*segmentRatio);
+            int segmentEnd = segmentBegin + ((np-1)/ratioSum*segmentRatio);
 
             for (int i=segmentBegin; i<segmentEnd; i++) {
+                Q_ASSERT(i < np);
                 sample.setA(segmentNumber, i, concentration);
                 }
 
@@ -179,7 +174,12 @@ void Engine::setMix(const MixControlModel *model)
             segmentBegin = segmentEnd + 1;
         }
 
+        mix.addSample(sample);
+
     }
+
+    initArrays();
+    initVectors();
 
 
 /*

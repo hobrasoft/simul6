@@ -16,12 +16,12 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
 }
 
 
-void SimulationProfile::createEngine() 
+void SimulationProfile::createEngine(int np) 
 {
     if (m_engine != nullptr) {
         m_engine->deleteLater();
         }
-    m_engine = new Engine(4, 2000);  // at present this is the input point of the number of grid-points, np
+    m_engine = new Engine(np);
     m_engine->moveToThread(&m_thread);
 
     connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);

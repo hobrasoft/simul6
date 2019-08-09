@@ -61,4 +61,7 @@ double ComputeControl::getTimeInterval() const {
     return ui->f_timeinterval->value();
 }
 
+int ComputeControl::getNp() const {
+    return ui->f_np->value();
+}
 

@@ -19,6 +19,7 @@ public:
     double getCapLen() const;
     double getTimeStop() const;
     double getTimeInterval() const;
+    int    getNp() const;
 
 signals:
     void init();

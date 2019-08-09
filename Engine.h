@@ -115,7 +115,7 @@ public:
 
     Mix mix;
 
-    Engine(unsigned int pAreas, int pNp);
+    Engine(int pNp);
 
 	void setDx(double pDx) { dx = pDx; }
 	void setT(double pT) { t = pT; }
