@@ -4,6 +4,7 @@
 
 #include "Engine.h"
 #include "settings.h"
+#include "pdebug.h"
 #include "Constituent.h"
 #include "ConstituentDb.h"
 #include "Sample.h"
@@ -148,6 +149,10 @@ void Engine::setMix(const MixControlModel *model)
     qDebug() << "Engine::init()";
     m_initialized = true;
     t = 0;
+    bw = 40;
+
+    initArrays();
+    initVectors();
 
     for (int row=0; row<model->rowCount(); row++) {
         Constituent constituent = model->constituent(row);
@@ -157,6 +162,7 @@ void Engine::setMix(const MixControlModel *model)
         Sample sample(constituent, segmentsCount, np);
 
         int segmentBegin = 0;
+        double prevConcentration = segments.segments[0].concentration;
         for (int segmentNumber = 0; segmentNumber < segmentsCount; segmentNumber++) {
             double concentration = segments.segments[segmentNumber].concentration;
             int segmentRatio = segments.segments[segmentNumber].ratio;
@@ -166,11 +172,22 @@ void Engine::setMix(const MixControlModel *model)
 
             for (int i=segmentBegin; i<segmentEnd; i++) {
                 Q_ASSERT(i < np);
-                sample.setA(segmentNumber, i, concentration);
+                if (i < segmentBegin+bw) {
+                    double concentration_bw = 
+                        prevConcentration +
+                        (concentration - prevConcentration) *
+                        (erf(-2 * static_cast<double>(i-segmentBegin) / bw * 4) + 1) / 2;
+                    PDEBUG << i << concentration_bw << concentration << prevConcentration;
+                    sample.setA(0, i, concentration_bw);
+                    continue;
                 }
+                PDEBUG << i << concentration;
+                sample.setA(0, i, concentration);
+            }
 
 
             // Úplně na konci!
+            prevConcentration = concentration;
             segmentBegin = segmentEnd + 1;
         }
 
@@ -178,39 +195,7 @@ void Engine::setMix(const MixControlModel *model)
 
     }
 
-    initArrays();
-    initVectors();
-
-
-/*
- *
-        for (i = 0; i <= b1; i++) {
-            s.setA(0, i, s.getIC(0));
-        }
-        for (i = b1 + 1; i <= b1 + bw; i++) {
-            s.setA(0, i, s.getIC(0) + (s.getIC(1) - s.getIC(0)) * (erf(-2 + static_cast<double>(i - b1) / bw * 4) + 1) / 2);
-        }
-        for (i = b1 + bw + 1; i <= b2; i++) {
-            s.setA(0, i, s.getIC(1));
-        }
-        for (i = b2 + 1; i <= b2 + bw; i++) {
-            s.setA(0, i, s.getIC(1) + (s.getIC(2) - s.getIC(1)) * (erf(-2 + static_cast<double>(i - b2) / bw * 4) + 1) / 2);
-        }
-        for (i = b2 + bw + 1; i <= b3; i++) {
-            s.setA(0, i, s.getIC(2));
-        }
-        for (i = b3 + 1; i <= b3 + bw; i++) {
-            s.setA(0, i, s.getIC(2) + (s.getIC(3) - s.getIC(2)) * (erf(-2 + static_cast<double>(i - b3) / bw * 4) + 1) / 2);
-        }
-        for (i = b3 + bw + 1; i <= getNp(); i++) {
-            s.setA(0, i, s.getIC(3));
-        }
-    }
-*/
-
-
     gCalc();
-    //emit drawGraph(&mix, &hpl);
     emit drawGraph(this, &hpl);
     qDebug() << "Engine::init() hotovo";
 }

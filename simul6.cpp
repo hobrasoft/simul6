@@ -65,7 +65,6 @@ void Simul6::runEngine() {
 
 void Simul6::initEngine() {
     ui->f_simulationProfile->createEngine(ui->f_computeControl->getNp());
-    ui->f_simulationProfile->engine()->setMix(mixControlModel()); // Nakrmí nový engine směsí
     ui->f_simulationProfile->engine()->setErrH(1e-7);   // Odkud se bere?
     ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
@@ -73,6 +72,7 @@ void Simul6::initEngine() {
     ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
     ui->f_simulationProfile->engine()->setVoltage(ui->f_parameters->getVoltage());
     ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
+    ui->f_simulationProfile->engine()->setMix(mixControlModel()); // Nakrmí nový engine směsí
 }
 
 

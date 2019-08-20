@@ -1,5 +1,6 @@
 #include "graf.h"
 #include "omp.h"
+#include "pdebug.h"
 #include <iostream>
 #include <cmath>
 #include <QLineSeries>
@@ -39,7 +40,6 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 
 }
 
-//void Graf::drawGraph(Mix *pMix, std::vector<double> *pHpl)
 void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
 {
     std::cout << "Zde" << std::endl;
@@ -50,6 +50,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     QLineSeries *series;
 
     double inc_x = pEngine->getCapLen() / p;
+    // PDEBUG << inc_x << pEngine->getCapLen() << pEngine->getNp();
     for (auto &s : pEngine->getMix().getSamples()) {
         series = new QLineSeries();
         double x = 0;
