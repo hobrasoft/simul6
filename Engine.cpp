@@ -177,18 +177,18 @@ void Engine::setMix(const MixControlModel *model)
                         prevConcentration +
                         (concentration - prevConcentration) *
                         (erf(-2 + static_cast<double>(i-segmentBegin) / bw * 4) + 1) / 2;
-//                    PDEBUG << i << concentration_bw << concentration << prevConcentration;
+                    PDEBUG << i << concentration_bw << concentration << prevConcentration;
                     sample.setA(0, i, concentration_bw);
                     continue;
                 }
-//                PDEBUG << i << concentration;
+                PDEBUG << i << concentration;
                 sample.setA(0, i, concentration);
             }
 
 
             // Úplně na konci!
             prevConcentration = concentration;
-            segmentBegin = segmentEnd + 1;
+            segmentBegin = segmentEnd;
         }
 
         mix.addSample(sample);

@@ -30,6 +30,9 @@ public:
 
     void setConstituentAndSegments(const Constituent&, const Segments&, int row);
 
+    void save(const QString& filename) const;
+    void load(const QString& filename);
+
 private:
 };
 

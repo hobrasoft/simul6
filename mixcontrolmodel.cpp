@@ -53,6 +53,13 @@ Segments MixControlModel::segments(int row) const {
 }
 
 
+void MixControlModel::save(const QString& filename) const {
+}
+
+
+void MixControlModel::load(const QString& filename) {
+}
+
 
 
 
