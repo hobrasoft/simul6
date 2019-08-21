@@ -172,7 +172,7 @@ void Engine::setMix(const MixControlModel *model)
 
             for (int i=segmentBegin; i<segmentEnd; i++) {
                 Q_ASSERT(i < np);
-                if (i <= segmentBegin+bw) {
+                if (i < segmentBegin+bw) {
                     double concentration_bw = 
                         prevConcentration +
                         (concentration - prevConcentration) *
