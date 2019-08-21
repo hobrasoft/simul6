@@ -168,7 +168,10 @@ void Engine::setMix(const MixControlModel *model)
             int segmentRatio = segments.segments[segmentNumber].ratio;
             sample.setIC(segmentNumber, concentration);
 
-            int segmentEnd = segmentBegin + ((np-1)/ratioSum*segmentRatio);
+            int segmentEnd = segmentBegin + ((np+1)/ratioSum*segmentRatio);
+            if (segmentEnd >= np-5) {
+                segmentEnd = np+1;
+                }
 
             for (int i=segmentBegin; i<segmentEnd; i++) {
                 Q_ASSERT(i < np);
