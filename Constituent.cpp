@@ -33,18 +33,34 @@ QDebug operator<<(QDebug dbg, const Constituent& c) {
 }
 
 
-/*Constituent::Constituent(const Constituent &pConstituent)
-{
-	name = pConstituent.name;
-	U = pConstituent.U;
-	Z = pConstituent.Z;
-	negCount = pConstituent.negCount;
-	posCount = pConstituent.posCount;
-}
-*/
-
 Constituent::~Constituent()
 {
+}
+
+QVariantMap Constituent::json() const {
+    QVariantList listuNeg;
+    QVariantList listpKaNeg;
+    for (unsigned int i=0; i<negCount; i++) {
+        listuNeg.prepend(uNeg[i] / uFactor);
+        listpKaNeg.prepend(pKaNeg[i]);
+    }
+
+    QVariantList listuPos;
+    QVariantList listpKaPos;
+    for (unsigned int i=0; i<posCount; i++) {
+        listuNeg << uPos[i] / uFactor;
+        listpKaNeg << pKaPos[i];
+    }
+
+    QVariantMap data;
+    data["name"] = name;
+    data["negCount"] = negCount;
+    data["posCount"] = posCount;
+    data["uNeg"] = listuNeg;
+    data["uPos"] = listuPos;
+    data["pKaNeg"] = listpKaNeg;
+    data["pKaPos"] = listpKaPos;
+    return data;
 }
 
 void Constituent::addNegU(double pValue)

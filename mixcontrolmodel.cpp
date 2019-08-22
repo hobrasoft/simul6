@@ -1,4 +1,6 @@
 #include "mixcontrolmodel.h"
+#include "pdebug.h"
+#include "json.h"
 
 #define ConstituentRole Qt::UserRole+1
 #define SegmentsRole Qt::UserRole+2
@@ -40,6 +42,8 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
     setData(index(row, SegCount), len.join("; "));
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
+
+    json();
 }
 
 
@@ -53,11 +57,20 @@ Segments MixControlModel::segments(int row) const {
 }
 
 
-void MixControlModel::save(const QString& filename) const {
+QVariantList MixControlModel::json() const {
+    QVariantList list;
+    for (int row=0; row<rowCount(); row++) {
+        QVariantMap sample;
+        sample["constituent"] = constituent(row).json();
+        sample["segments"] = segments(row).json();
+        list << sample;
+        }
+    PDEBUG << JSON::json(list);
+    return list;
 }
 
 
-void MixControlModel::load(const QString& filename) {
+void MixControlModel::setJson(const QVariantList& json) {
 }
 
 

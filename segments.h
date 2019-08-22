@@ -14,6 +14,12 @@ public:
         double  concentration;
         double  length;
         double  ratio;
+        QVariantMap json() const {
+            QVariantMap data;
+            data["concetration"] = concentration;
+            data["ratio"] = ratio;
+            return data;
+            }
     };
 
     QList<Segments::Segment>	segments;
@@ -25,6 +31,14 @@ public:
     int size() const {
         return segments.size();
     }
+
+    QVariantList json() const {
+        QVariantList list;
+        for (int i=0; i<segments.size(); i++) {
+            list << segments[i].json();
+            }
+        return list;
+        }
 
     int ratioSum() const {
         int sum = 0;

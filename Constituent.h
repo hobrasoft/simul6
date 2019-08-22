@@ -6,6 +6,7 @@
 #include <QVector>
 #include <QString>
 #include <QDebug>
+#include <QVariantMap>
 
 class Constituent
 {
@@ -59,6 +60,8 @@ public:
     double getDif() const { return dif; }
     void show() const;
     const QString& getName() const { return name; }
+
+    QVariantMap json() const;
 
 
 private:
