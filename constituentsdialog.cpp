@@ -128,7 +128,7 @@ Constituent ConstituentsDialog::constituent() const {
 
     bool manually = ui->f_manuallyGroupBox->isChecked();
     Constituent constituent(ui->f_name->text());
-    constituent.setId((manually) ? 0 : m_id);
+    constituent.setId((manually) ? -1 : m_id);
 
     for (;;) {
         if (npka1.isValid() && nu1.isValid()) {
@@ -221,6 +221,6 @@ void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P2), pu2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P3), pu3);
 
-    ui->f_manuallyGroupBox->setChecked(m_id <= 0);
+    ui->f_manuallyGroupBox->setChecked(m_id < 0);
 
 }
