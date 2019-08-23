@@ -85,13 +85,14 @@ void Simul6::stopEngine() {
 
 
 void Simul6::saveData() {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save calculation"), "", 
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), "", 
         tr("Simul6 data (*.simul6.json)")
         );
     if (filename.isEmpty()) { return; }
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
         SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
+        return;
         }
     QVariantMap data;
     data["mix"] = mixControlModel()->json();
@@ -100,9 +101,33 @@ void Simul6::saveData() {
 }
 
 
+void Simul6::loadData() {
+    QString filename = QFileDialog::getOpenFileName(this, tr("Load simulation"), "", 
+        tr("Simul6 data (*.simul6.json)")
+        );
+    if (filename.isEmpty()) { return; }
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        SHOWMESSAGE(tr("Could not open file %1").arg(filename));
+        return;
+        }
+    QVariant data = JSON::data(file.readAll());
+    MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
+    model->setJson(data.toMap()["mix"].toList());
+    initEngine();
+}
+
+
 void Simul6::createActions() {
     QMenu *menu = new QMenu(tr("Application"), this);
     QAction *action;
+
+
+    action = new QAction(tr("Load data"), this);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        loadData();
+    });
 
 
     action = new QAction(tr("Save data"), this);

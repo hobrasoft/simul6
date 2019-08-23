@@ -26,11 +26,11 @@ QModelIndex MixControlModel::add(const Constituent& constituent, const Segments&
 
 void MixControlModel::setConstituentAndSegments(const Constituent& constituent, const Segments& segments, int row) {
     QStringList ratio;
-    QStringList len;
+    // QStringList len;
     QStringList conc;
     for (int i=0; i<segments.segments.size(); i++) {
         ratio << QString("%1").arg(segments.segments[i].ratio, 0, 'f', 2);
-        len   << QString("%1").arg(segments.segments[i].length, 0, 'f', 2);
+        // len   << QString("%1").arg(segments.segments[i].length, 0, 'f', 2);
         conc  << QString("%1").arg(segments.segments[i].concentration, 0, 'f', 2);
     }
 
@@ -39,7 +39,7 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
     setData(index(row, Name), constituent.getName());
     setData(index(row, NegCount), constituent.getNegCount());
     setData(index(row, PosCount), constituent.getPosCount());
-    setData(index(row, SegCount), len.join("; "));
+    // setData(index(row, SegCount), len.join("; "));
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
 
@@ -68,7 +68,14 @@ QVariantList MixControlModel::json() const {
 }
 
 
-void MixControlModel::setJson(const QVariantList& json) {
+void MixControlModel::setJson(const QVariantList& list) {
+    for (int i=0; i<list.size(); i++) {
+        QVariantMap constituentMap = list[i].toMap()["constituent"].toMap();
+        QVariantList segmentsMap = list[i].toMap()["segments"].toList();
+        Constituent constituent(constituentMap);
+        Segments segments(segmentsMap);
+        add(constituent, segments);
+        }
 }
 
 

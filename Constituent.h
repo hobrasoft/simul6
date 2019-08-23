@@ -11,55 +11,56 @@
 class Constituent
 {
 private:
-    bool valid;
-    int id;
-    QString name;
-	double U;
-	int Z;
-	unsigned int negCount;
-	unsigned int posCount;
-    QVector<double> uNeg;
-    QVector<double> uPos;
-    QVector<double> pKaNeg;
-    QVector<double> pKaPos;
-    QVector<double> kaNeg;
-    QVector<double> kaPos;
-    QVector<double> lNeg; // do samplu?
-    QVector<double> lPos; // do samplu?
-    double dif;
+    bool m_valid;
+    int m_id;
+    QString m_name;
+	double m_U;
+	int m_Z;
+	unsigned int m_negCount;
+	unsigned int m_posCount;
+    QVector<double> m_uNeg;
+    QVector<double> m_uPos;
+    QVector<double> m_pKaNeg;
+    QVector<double> m_pKaPos;
+    QVector<double> m_kaNeg;
+    QVector<double> m_kaPos;
+    QVector<double> m_lNeg; // do samplu?
+    QVector<double> m_lPos; // do samplu?
+    double m_dif;
 
 public:
 	Constituent();
     Constituent(const QString& pName, const double pU = 0, const int pZ = 0);
+    Constituent(const QVariantMap& json);
 
     static const double uFactor;
 
     ~Constituent();
 
-    void setId(int x) { id = x; }
-	void setU(double pU) { U = pU; }
-	void setZ(int pZ) { Z = pZ; }
+    void setId(int x) { m_id = x; }
+	void setU(double pU) { m_U = pU; }
+	void setZ(int pZ) { m_Z = pZ; }
 	void addNegU(double pValue);
 	void addPosU(double pValue);
 	void addNegPKa(double pValue);
 	void addPosPKa(double pValue);
 
-    int getId() const { return id; }
-    unsigned int getNegCount() const { return negCount; }
-    int getNegCharge() const { return -1 * static_cast<int>(negCount); }
-    unsigned int getPosCount() const { return posCount; }
-    int getPosCharge() const { return static_cast<int>(posCount); }
+    int getId() const { return m_id; }
+    unsigned int getNegCount() const { return m_negCount; }
+    int getNegCharge() const { return -1 * static_cast<int>(m_negCount); }
+    unsigned int getPosCount() const { return m_posCount; }
+    int getPosCharge() const { return static_cast<int>(m_posCount); }
 
-    double getU() const { return U; }
+    double getU() const { return m_U; }
     double getU(int pCharge) const;
-    int getZ() const { return Z; }
+    int getZ() const { return m_Z; }
     double getL(const int pCharge) const;
 
 
     double getPKa(const int pCharge) const;
-    double getDif() const { return dif; }
+    double getDif() const { return m_dif; }
     void show() const;
-    const QString& getName() const { return name; }
+    const QString& getName() const { return m_name; }
 
     QVariantMap json() const;
 

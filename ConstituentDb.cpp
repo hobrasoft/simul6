@@ -49,6 +49,11 @@ void ConstituentDb::read(const QString& filename)
     while (iterator.hasNext()) {
         const QVariantMap& item = iterator.next().toMap();
         int id = item["id"].toInt();
+        Constituent constituent(item);
+        constituent.setId(id);
+        m_constituents[id] = constituent;
+
+/*
         QString name = item["name"].toString();
         int negCount = item["negCount"].toInt();
         int posCount = item["posCount"].toInt();
@@ -80,6 +85,7 @@ void ConstituentDb::read(const QString& filename)
             }
 
         m_constituents[id] = constituent;
+*/
         }
 
 }

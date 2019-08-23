@@ -42,10 +42,8 @@ Segments SegmentsModel::segments() const {
     for (int column = 0; column < columnCount(); column++) {
         double ratio = data(index(Ratio, column)).toDouble();
         double concentration = data(index(Concentration, column)).toDouble();
-        double ratioLen = (ratioSum > 0) ? 1000*ratio*CAPLEN/ratioSum : 0;
         Segments::Segment segment;
         segment.ratio = ratio;
-        segment.length = ratioLen;
         segment.concentration = concentration;
         segments << segment;
     }
@@ -58,7 +56,6 @@ void SegmentsModel::setSegments(const Segments& segments) {
     insertColumns(0, segments.size());
     for (int i=0; i<segments.size(); i++) {
         double ratio = segments.segments[i].ratio;
-        double ratioLen = segments.segments[i].length;
         double concentration = segments.segments[i].concentration;
         setData(index(Ratio, i), ratio);
         setData(index(Concentration, i), concentration);
