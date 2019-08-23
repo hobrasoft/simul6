@@ -160,8 +160,8 @@ Constituent ConstituentsDialog::constituent() const {
             break;
         }
         if (ppka2.isValid() && pu2.isValid()) {
-            constituent.addPosU(nu2.toDouble() * Constituent::uFactor);
-            constituent.addPosPKa(npka2.toDouble());
+            constituent.addPosU(pu2.toDouble() * Constituent::uFactor);
+            constituent.addPosPKa(ppka2.toDouble());
         } else {
             break;
         }

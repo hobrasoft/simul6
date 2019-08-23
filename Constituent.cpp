@@ -48,9 +48,11 @@ QVariantMap Constituent::json() const {
     QVariantList listuPos;
     QVariantList listpKaPos;
     for (unsigned int i=0; i<posCount; i++) {
-        listuNeg << uPos[i] / uFactor;
-        listpKaNeg << pKaPos[i];
+        listuPos << uPos[i] / uFactor;
+        listpKaPos << pKaPos[i];
     }
+
+//  PDEBUG << listuNeg << pKaNeg << uNeg << pKaPos << uPos;
 
     QVariantMap data;
     data["name"] = name;
