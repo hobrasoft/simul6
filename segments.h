@@ -16,7 +16,7 @@ public:
         double  ratio;
         QVariantMap json() const {
             QVariantMap data;
-            data["concetration"] = concentration;
+            data["concentration"] = concentration;
             data["ratio"] = ratio;
             return data;
             }
