@@ -154,7 +154,7 @@ void Engine::setMix(const MixControlModel *model)
     initArrays();
     initVectors();
 
-    for (int row=0; row<model->rowCount(); row++) {
+    for (int row = 0; row<model->rowCount(); row++) {
         Constituent constituent = model->constituent(row);
         Segments segments = model->segments(row);
         int segmentsCount = segments.size();
@@ -168,14 +168,14 @@ void Engine::setMix(const MixControlModel *model)
             int segmentRatio = segments.segments[segmentNumber].ratio;
             sample.setIC(segmentNumber, concentration);
 
-            int segmentEnd = segmentBegin + ((np+1)/ratioSum*segmentRatio);
-            if (segmentEnd >= np-5) {
-                segmentEnd = np+1;
+            int segmentEnd = segmentBegin + ((np + 1)/ratioSum*segmentRatio);
+            if (segmentEnd >= np - 5) {
+                segmentEnd = np + 1;
                 }
 
-            for (int i=segmentBegin; i<segmentEnd; i++) {
+            for (int i = segmentBegin; i < segmentEnd; i++) {
                 Q_ASSERT(i < np);
-                if (i < segmentBegin+bw) {
+                if (i < segmentBegin + bw) {
                     double concentration_bw = 
                         prevConcentration +
                         (concentration - prevConcentration) *
