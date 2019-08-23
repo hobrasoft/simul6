@@ -6,6 +6,8 @@
 #include "constituentsdialog.h"
 #include "msettings.h"
 #include "messagedialog.h"
+#include "json.h"
+#include <QFileDialog>
 #include <QSize>
 #include <QMessageBox>
 #include <QTimer>
@@ -82,9 +84,34 @@ void Simul6::stopEngine() {
 }
 
 
+void Simul6::saveData() {
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save calculation"), "", 
+        tr("Simul6 data (*.simul6.json)")
+        );
+    if (filename.isEmpty()) { return; }
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)) {
+        SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
+        }
+    QVariantMap data;
+    data["mix"] = mixControlModel()->json();
+    file.write(JSON::json(data));
+    file.close();
+}
+
+
 void Simul6::createActions() {
     QMenu *menu = new QMenu(tr("Application"), this);
     QAction *action;
+
+
+    action = new QAction(tr("Save data"), this);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        saveData();
+    });
+
+
     action = new QAction(tr("Quit application"), this);
     menu->addAction(action);
     connect(action, &QAction::triggered, [this]() {

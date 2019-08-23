@@ -43,7 +43,6 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
 
-    json();
 }
 
 
@@ -65,7 +64,6 @@ QVariantList MixControlModel::json() const {
         sample["segments"] = segments(row).json();
         list << sample;
         }
-    PDEBUG << JSON::json(list);
     return list;
 }
 

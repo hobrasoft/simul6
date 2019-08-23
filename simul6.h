@@ -28,6 +28,7 @@ private slots:
     void runEngine();
     void stopEngine();
     void engineFinished();
+    void saveData();
 
 private:
     explicit Simul6(QWidget *parent = nullptr);
