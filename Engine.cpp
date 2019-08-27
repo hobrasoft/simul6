@@ -165,8 +165,8 @@ void Engine::setMix(const MixControlModel *model)
         double prevConcentration = segments.segments[0].concentration;
         for (int segmentNumber = 0; segmentNumber < segmentsCount; segmentNumber++) {
             double concentration = segments.segments[segmentNumber].concentration;
-            int segmentRatio = segments.segments[segmentNumber].ratio;
-            sample.setIC(segmentNumber, concentration);
+            double segmentRatio = segments.segments[segmentNumber].ratio;
+     //       sample.setIC(segmentNumber, concentration);              k cemu to tam je?
 
             int segmentEnd = segmentBegin + ((np + 1)/ratioSum*segmentRatio);
             if (segmentEnd >= np - 5) {

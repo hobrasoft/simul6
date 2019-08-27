@@ -10,7 +10,7 @@ Segments::Segments(const QVariantList& json) {
         Segment segment;
         segment.concentration = json[i].toMap()["concentration"].toDouble();
         segment.ratio = json[i].toMap()["ratio"].toDouble();
-        PDEBUG << segment.concentration << segment.ratio;
+        //PDEBUG << segment.concentration << segment.ratio;
         segments << segment;
         }
 }
