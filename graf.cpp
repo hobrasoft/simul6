@@ -53,6 +53,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     // PDEBUG << inc_x << pEngine->getCapLen() << pEngine->getNp();
     for (auto &s : pEngine->getMix().getSamples()) {
         series = new QLineSeries();
+        series->setName(s.getName());
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
             *series << QPointF(x, s.getA(0, i));
@@ -64,6 +65,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     }
 
     series = new QLineSeries();
+    series->setName(tr("pH"));
     double x = 0;
     for (unsigned int i = 0; i <= p; i++) {
         *series << QPointF(x, -log((*pHpl)[i]) / log(10));

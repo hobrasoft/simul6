@@ -69,6 +69,7 @@ QVariantList MixControlModel::json() const {
 
 
 void MixControlModel::setJson(const QVariantList& list) {
+    removeRows(0, rowCount());
     for (int i=0; i<list.size(); i++) {
         QVariantMap constituentMap = list[i].toMap()["constituent"].toMap();
         QVariantList segmentsMap = list[i].toMap()["segments"].toList();
