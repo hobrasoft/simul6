@@ -168,7 +168,7 @@ void Engine::setMix(const MixControlModel *model)
             double segmentRatio = segments.segments[segmentNumber].ratio;
      //       sample.setIC(segmentNumber, concentration);              k cemu to tam je?
 
-            int segmentEnd = segmentBegin + ((np + 1)/ratioSum*segmentRatio);
+            int segmentEnd = segmentBegin + (int)((double)(np + 1)/((double)ratioSum)*((double)segmentRatio));
             if (segmentEnd >= np - 5) {
                 segmentEnd = np + 1;
                 }
@@ -180,11 +180,11 @@ void Engine::setMix(const MixControlModel *model)
                         prevConcentration +
                         (concentration - prevConcentration) *
                         (erf(-2 + static_cast<double>(i-segmentBegin) / bw * 4) + 1) / 2;
-                    // PDEBUG << i << concentration_bw << concentration << prevConcentration;
+                    // PDEBUG << i << concentration_bw << concentration << prevConcentration; 
                     sample.setA(0, i, concentration_bw);
                     continue;
                 }
-                // PDEBUG << i << concentration;
+                // PDEBUG << i << concentration; 
                 sample.setA(0, i, concentration);
             }
 
