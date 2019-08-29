@@ -294,25 +294,18 @@ void Engine::gCalc()
             }
 
             double derG = 0;
-            for (unsigned int k = 0; k < getNm(); k++) {
-                Sample &s = mix.getSample(k);
+            for (auto &s : mix.getSamples()) {
                 derG += s.getDerHc(i) * s.getA(0, i);
             }
             derG += c0 + Engine::kw / hPlus / hPlus * c0;
 
             hPlus -= g / derG;
-            if (g > 0) {
-                //hPlus = hPlusIn / 1.1;
-                //std::cout << "kuk" << endl;
-            };
 
         } while (abs(hPlusIn - hPlus)/hPlus >= critG);
 
         // Calculation of charged species
-        for (unsigned int k = 0; k < getNm(); k++) {
-            Sample &s = mix.getSample(k);
-
-            for (int j = 1; j <= s.getPosCharge(); j++) {
+        for (auto &s : mix.getSamples()) {
+                for (int j = 1; j <= s.getPosCharge(); j++) {
                 s.setA(j, i, s.getH(j, i) * s.getA(0, i));
             }
 
@@ -549,8 +542,8 @@ void Engine::cashkarp()
 
     gCalc();
 
-    if (errMax <= errL) dt = dt*1.1;
-    else if (errMax > errH) dt = dt/1.1;
+    if (errMax <= errL) dt = dt*1.5;
+    else if (errMax > errH) dt = dt/1.5;
 
     t = t + dt;
 }

@@ -67,7 +67,7 @@ void Simul6::runEngine() {
 
 void Simul6::initEngine() {
     ui->f_simulationProfile->createEngine(ui->f_computeControl->getNp());
-    ui->f_simulationProfile->engine()->setErrH(1e-7);   // Odkud se bere?
+    ui->f_simulationProfile->engine()->setErrH(1e-7); //this must be set carefully to ensure stability of computation with optimization of dt
     ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());

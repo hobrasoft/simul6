@@ -15,7 +15,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 
 void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
 {
-    std::cout << "Zde" << std::endl;
+//    std::cout << "Zde" << std::endl;
 //    std::cout << "Thread " << omp_get_thread_num() << "\n";
 
     size_t p = pEngine->getNp(); // points
