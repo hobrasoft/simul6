@@ -542,7 +542,7 @@ void Engine::cashkarp()
 
     gCalc();
 
-    if (errMax <= errL) dt = dt*1.5;
+    if (errMax <= errL) dt = dt*1.1;
     else if (errMax > errH) dt = dt/1.5;
 
     t = t + dt;

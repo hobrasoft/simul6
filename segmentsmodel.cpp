@@ -24,8 +24,8 @@ void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
         int insertColumnsCount = m_segmentsNumber - currentColumnsCount;
         insertColumns(m_segmentsNumber-insertColumnsCount, insertColumnsCount);
         for (int column = m_segmentsNumber - insertColumnsCount; column < columnCount(); column++) {
-            setData(index(Ratio, column), 1);
-            setData(index(Concentration, column), 0);
+            setData(index(Ratio, column), 1.0);
+            setData(index(Concentration, column), 0.0);
         }
         recalculate();
         }
