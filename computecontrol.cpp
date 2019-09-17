@@ -26,7 +26,7 @@ void ComputeControl::showTime(double time) {
 
 
 void ComputeControl::slotInitClicked() {
-    ui->f_init->setEnabled(false);
+    ui->f_init->setEnabled(true);
     ui->f_run->setEnabled(true);
     ui->f_stop->setEnabled(true);
 }

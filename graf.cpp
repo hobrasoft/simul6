@@ -8,18 +8,18 @@
 Graf::Graf(QWidget *parent) : QChartView(parent)
 {
     setRenderHint(QPainter::Antialiasing);
-    QChart *chart = new QChart();
-    chart->createDefaultAxes();
-    setChart(chart);
+    m_chart = nullptr;
 }
 
 void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
 {
-//    std::cout << "Zde" << std::endl;
-//    std::cout << "Thread " << omp_get_thread_num() << "\n";
+    if (m_chart != nullptr) {
+        m_chart->deleteLater();
+        }
 
+    m_chart = new QChart();
+    
     size_t p = pEngine->getNp(); // points
-    QChart *chart = new QChart();
     QLineSeries *series;
 
     double inc_x = pEngine->getCapLen() / p;
@@ -33,8 +33,8 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
             x += inc_x;
         }
 
-        chart->addSeries(series);
-        chart->createDefaultAxes();
+        m_chart->addSeries(series);
+        m_chart->createDefaultAxes();
     }
 
     series = new QLineSeries();
@@ -44,8 +44,9 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
         *series << QPointF(x, -log((*pHpl)[i]) / log(10));
         x += inc_x;
     }
-    chart->addSeries(series);
-    chart->createDefaultAxes();
+    m_chart->addSeries(series);
+    m_chart->createDefaultAxes();
 
-    this->setChart(chart);
+    this->setChart(m_chart);
 }
+
