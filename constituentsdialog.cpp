@@ -2,8 +2,10 @@
 #include "constituentsmodel.h"
 #include "ui_constituentsdialog.h"
 #include "parametersmodel.h"
+#include "msettings.h"
 #include <QSortFilterProxyModel>
 #include <QRegExp>
+#include <QTimer>
 
 ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     QDialog(parent),
@@ -32,11 +34,12 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     ui->f_parametersView->setModel(m_parametersModel);
 
     connect(ui->f_databaseView, &MyView::currentRowChanged, this, &ConstituentsDialog::currentRowChanged);
-
+    QTimer::singleShot(1, this, &ConstituentsDialog::readSettings);
 }
 
 ConstituentsDialog::~ConstituentsDialog()
 {
+    writeSettings();
     delete ui;
 }
 
@@ -224,3 +227,14 @@ void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     ui->f_manuallyGroupBox->setChecked(m_id < 0);
 
 }
+
+
+void ConstituentsDialog::readSettings() {
+    resize(MSETTINGS->guiConstituentsDialogSize());
+}
+
+
+void ConstituentsDialog::writeSettings() {
+    MSETTINGS->setGuiConstituentsDialogSize(size());
+}
+

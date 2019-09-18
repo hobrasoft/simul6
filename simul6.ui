@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
-     <widget class="QSplitter" name="splitter">
+     <widget class="QSplitter" name="f_splitter1">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -75,7 +75,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>26</height>
+     <height>34</height>
     </rect>
    </property>
   </widget>

@@ -14,7 +14,7 @@ class Simul6 : public QMainWindow
     Q_OBJECT
 
 public:
-    ~Simul6();
+   ~Simul6();
     static Simul6 *instance();
 
     const MixControlModel *mixControlModel() const;
@@ -22,7 +22,7 @@ public:
 private slots:
     void init();
     void createActions();
-    void zavrit();
+    void closeWindow();
 
     void initEngine();
     void runEngine();
@@ -30,6 +30,9 @@ private slots:
     void engineFinished();
     void saveData();
     void loadData();
+
+    void readSettings();
+    void writeSettings();
 
 private:
     explicit Simul6(QWidget *parent = nullptr);

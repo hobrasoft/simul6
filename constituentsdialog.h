@@ -32,6 +32,9 @@ private slots:
     void enableGroupBoxes();
     void currentRowChanged(int);
 
+    void readSettings();
+    void writeSettings();
+
 private:
     Ui::ConstituentsDialog *ui;
 

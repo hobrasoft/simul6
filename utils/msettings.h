@@ -10,6 +10,7 @@
 
 #include <QSettings>
 #include <QString>
+#include <QSize>
 #include <QUrl>
 
 /**
@@ -41,6 +42,11 @@ class MSettings : public QSettings {
 
     static constexpr const char *DbFileName              = "db/filename";
 
+    static constexpr const char *GuiMainWindowSize       = "gui/mainwindow-size";
+    static constexpr const char *GuiMainWindowLayout1    = "gui/mainwindow-layout1";
+    static constexpr const char *GuiMainWindowLayout2    = "gui/mainwindow-layout2";
+    static constexpr const char *GuiConstituentsDialogSize       = "gui/constituents-dialog-size";
+
     // Logování
     bool    logAll() const { return value(LogAll, true).toBool(); }
     QString logInclude() const { return value(LogInclude).toString(); }
@@ -50,6 +56,16 @@ class MSettings : public QSettings {
     // DB
     QString dbFilename() const { return value(DbFileName, QString()).toString(); }
     void setDbFilename(const QString& x) { setValue(DbFileName, x); }
+
+    // GUI
+    QSize guiMainWindowSize() { return value(GuiMainWindowSize, QSize(1000, 800)).toSize(); }
+    void setGuiMainWindowSize(const QSize& size) { setValue(GuiMainWindowSize, size); }
+    QByteArray guiMainWindowLayout1() { return value(GuiMainWindowLayout1).toByteArray(); }
+    void setGuiMainWindowLayout1(const QByteArray& layout) { setValue(GuiMainWindowLayout1, layout); }
+    QByteArray guiMainWindowLayout2() { return value(GuiMainWindowLayout2).toByteArray(); }
+    void setGuiMainWindowLayout2(const QByteArray& layout) { setValue(GuiMainWindowLayout2, layout); }
+    QSize guiConstituentsDialogSize() { return value(GuiConstituentsDialogSize, QSize(1000, 996)).toSize(); }
+    void setGuiConstituentsDialogSize(const QSize& size) { setValue(GuiConstituentsDialogSize, size); }
 
   protected:
 

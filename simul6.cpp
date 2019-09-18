@@ -7,12 +7,21 @@
 #include "msettings.h"
 #include "messagedialog.h"
 #include "json.h"
+#include "pdebug.h"
 #include <QFileDialog>
 #include <QSize>
 #include <QMessageBox>
 #include <QTimer>
 
 Simul6 *Simul6::m_instance = nullptr;
+
+
+Simul6::~Simul6()
+{
+    writeSettings();
+    delete ui;
+}
+
 
 Simul6::Simul6(QWidget *parent) :
     QMainWindow(parent),
@@ -45,6 +54,7 @@ Simul6 *Simul6::instance() {
 
 
 void Simul6::init() {
+    readSettings();
 }
 
 
@@ -140,7 +150,7 @@ void Simul6::createActions() {
     action = new QAction(tr("Quit application"), this);
     menu->addAction(action);
     connect(action, &QAction::triggered, [this]() {
-        zavrit();
+        closeWindow();
     });
 
     action = new QAction(tr("Preferences"), this);
@@ -154,24 +164,36 @@ void Simul6::createActions() {
 }
 
 
-void Simul6::zavrit() {
+void Simul6::closeWindow() {
     int rc= QMessageBox::question(this,
             tr("I have a question"),
             tr("Do you really want to close the application?"),
             QMessageBox::Yes, QMessageBox::No, QMessageBox::NoButton);
     if (rc == QMessageBox::Yes) {
+        deleteLater();
         QCoreApplication::quit();
     }
 }
 
 
 void Simul6::closeEvent(QCloseEvent *event) {
-    zavrit();
+    closeWindow();
     event->ignore();
 }
 
 
-Simul6::~Simul6()
-{
-    delete ui;
+void Simul6::readSettings() {
+    resize(MSETTINGS->guiMainWindowSize());
+
+    restoreState(MSETTINGS->guiMainWindowLayout1(), 1);
+    ui->f_splitter1->restoreState(MSETTINGS->guiMainWindowLayout2());
 }
+
+
+void Simul6::writeSettings() {
+    PDEBUG;
+    MSETTINGS->setGuiMainWindowSize(size());
+    MSETTINGS->setGuiMainWindowLayout1(saveState(1));
+    MSETTINGS->setGuiMainWindowLayout2(ui->f_splitter1->saveState());
+}
+
