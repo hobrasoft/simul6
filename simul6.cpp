@@ -7,6 +7,7 @@
 #include "msettings.h"
 #include "messagedialog.h"
 #include "json.h"
+#include "importsna.h"
 #include "pdebug.h"
 #include <QFileDialog>
 #include <QSize>
@@ -55,6 +56,8 @@ Simul6 *Simul6::instance() {
 
 void Simul6::init() {
     readSettings();
+    // ImportSna import(this);
+    // import.readData("/home/tycho/Desktop/TestSNA.sna");
 }
 
 

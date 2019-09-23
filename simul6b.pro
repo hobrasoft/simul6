@@ -57,6 +57,7 @@ SOURCES += \
     mixcontrol.cpp \
     mixcontrolmodel.cpp \
     segments.cpp \
+    importsna.cpp \
     myview.cpp
 
 HEADERS += \
@@ -81,6 +82,7 @@ HEADERS += \
     mixcontrol.h \
     mixcontrolmodel.h \
     segments.h \
+    importsna.h \
     myview.h
 
 FORMS += \
