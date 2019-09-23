@@ -9,6 +9,7 @@
 #include "json.h"
 #include "importsna.h"
 #include "pdebug.h"
+#include "ampholines.h"
 #include <QFileDialog>
 #include <QSize>
 #include <QMessageBox>
@@ -184,6 +185,13 @@ void Simul6::createActions() {
     connect(action, &QAction::triggered, [this]() {
         Preferences preferences(this);
         preferences.exec();
+    });
+    menu->addAction(action);
+
+    action = new QAction(tr("Ampholines"), this);
+    connect(action, &QAction::triggered, [this]() {
+        Ampholines ampholines(this);
+        ampholines.exec();
     });
     menu->addAction(action);
 

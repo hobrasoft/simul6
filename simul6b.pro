@@ -58,6 +58,7 @@ SOURCES += \
     mixcontrolmodel.cpp \
     segments.cpp \
     importsna.cpp \
+    ampholines.cpp \
     myview.cpp
 
 HEADERS += \
@@ -83,6 +84,7 @@ HEADERS += \
     mixcontrolmodel.h \
     segments.h \
     importsna.h \
+    ampholines.h \
     myview.h
 
 FORMS += \
@@ -92,7 +94,8 @@ FORMS += \
     inputparameters.ui \
     constituentsdialog.ui \
     preferences.ui \
-    mixcontrol.ui
+    mixcontrol.ui \
+    ampholines.ui \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
