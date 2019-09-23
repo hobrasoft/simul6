@@ -42,3 +42,17 @@ double InputParameters::getDt() const {
 bool InputParameters::optimizeDt() const {
     return ui->f_optimize_dt->isChecked();
 }
+
+void InputParameters::setDt(double x) {
+    ui->f_dt->setValue(x);
+}
+
+void InputParameters::setOptimizeDt(bool x) {
+    ui->f_optimize_dt->setChecked(x);
+}
+
+void InputParameters::setVoltage(double x) {
+    ui->f_voltage->setValue(x);
+}
+
+

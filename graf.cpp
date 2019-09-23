@@ -29,7 +29,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
         series->setName(s.getName());
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
-            *series << QPointF(x, s.getA(0, i));
+            *series << QPointF(x * 1000.0, s.getA(0, i));
             x += inc_x;
         }
 
@@ -41,7 +41,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     series->setName(tr("pH"));
     double x = 0;
     for (unsigned int i = 0; i <= p; i++) {
-        *series << QPointF(x, -log((*pHpl)[i]) / log(10));
+        *series << QPointF(x * 1000.0, -log((*pHpl)[i]) / log(10));
         x += inc_x;
     }
     m_chart->addSeries(series);

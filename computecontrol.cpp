@@ -65,3 +65,32 @@ int ComputeControl::getNp() const {
     return ui->f_np->value();
 }
 
+int ComputeControl::getBW() const {
+    return (int)(((double)ui->f_np->value()) * ui->f_bw->value() / ui->f_caplen->value());
+}
+
+double ComputeControl::getBWmeters() const {
+    return ui->f_bw->value() / 1000.0;
+}
+
+void   ComputeControl::setCaplen(double x) {
+    ui->f_caplen->setValue(x);
+}
+
+void   ComputeControl::setBWmeters(double x) {
+    ui->f_bw->setValue(x*1000.0);
+}
+
+void   ComputeControl::setNp(int x) {
+    ui->f_np->setValue(x);
+}
+
+void   ComputeControl::setTimeInterval(double x) {
+    ui->f_timeinterval->setValue(x);
+}
+
+void   ComputeControl::setTimeStop(double x) {
+    ui->f_timestop->setValue(x);
+}
+
+

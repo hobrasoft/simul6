@@ -20,6 +20,10 @@ public:
     double getDt() const;
     bool optimizeDt() const;
 
+    void   setDt(double);
+    void   setOptimizeDt(bool);
+    void   setVoltage(double);
+
 public slots:
     void showError(double);
     void showcurDen(double);

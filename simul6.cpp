@@ -78,7 +78,8 @@ void Simul6::runEngine() {
 void Simul6::initEngine() {
     ui->f_simulationProfile->createEngine(ui->f_computeControl->getNp());
     ui->f_simulationProfile->engine()->setErrH(1e-7); //this must be set carefully to ensure stability of computation with optimization of dt
-    ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen());
+    ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen()/1000.0);
+    ui->f_simulationProfile->engine()->setBW(ui->f_computeControl->getBW());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
     ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
@@ -96,7 +97,7 @@ void Simul6::stopEngine() {
 
 void Simul6::saveData() {
     QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), "", 
-        tr("Simul6 data (*.simul6.json)")
+        tr("Simul6 data [.simul6.json] (*.simul6.json)")
         );
     if (filename.isEmpty()) { return; }
     QFile file(filename);
@@ -106,6 +107,18 @@ void Simul6::saveData() {
         }
     QVariantMap data;
     data["mix"] = mixControlModel()->json();
+
+    QVariantMap ccontrol;
+    ccontrol["caplen"] = ui->f_computeControl->getCapLen()/1000.0;
+    ccontrol["zone_edge"] = ui->f_computeControl->getBWmeters();
+    ccontrol["number_of_points"] = ui->f_computeControl->getNp();
+    ccontrol["display_interval"] = ui->f_computeControl->getTimeInterval();
+    ccontrol["stop_time"] = ui->f_computeControl->getTimeStop();
+    ccontrol["dt"] = ui->f_parameters->getDt();
+    ccontrol["optimize_dt"] = ui->f_parameters->optimizeDt();
+    ccontrol["voltage"] = ui->f_parameters->getVoltage();
+    data["compute_control"] = ccontrol;
+
     file.write(JSON::json(data));
     file.close();
 }
@@ -124,6 +137,17 @@ void Simul6::loadData() {
     QVariant data = JSON::data(file.readAll());
     MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
     model->setJson(data.toMap()["mix"].toList());
+
+    QVariantMap ccontrol = data.toMap()["compute_control"].toMap();
+    ui->f_computeControl->setCaplen(1000.0 * ccontrol["caplen"].toDouble());
+    ui->f_computeControl->setBWmeters( ccontrol["zone_edge"].toDouble() );
+    ui->f_computeControl->setNp( ccontrol["number_of_points"].toInt() );
+    ui->f_computeControl->setTimeInterval( ccontrol["display_interval"].toDouble() );
+    ui->f_computeControl->setTimeStop( ccontrol["stop_time"].toDouble() );
+    ui->f_parameters->setDt( ccontrol["dt"].toDouble() );
+    ui->f_parameters->setOptimizeDt( ccontrol["optimize_dt"].toBool() );
+    ui->f_parameters->setVoltage( ccontrol["voltage"].toDouble() );
+
     initEngine();
 }
 

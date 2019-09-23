@@ -130,6 +130,7 @@ public:
     void setErrH(double pErrH) { errH = pErrH; errL = errH / 10.0; }
     void setOptimizeDt(bool x) { m_optimizeDt = x; }
     void setTimeDisplay(double pTimeDisplay) {timeDisplay = pTimeDisplay; }
+    void setBW(int x) { bw = x; }
 
     size_t getNm(); // Get number of constituents
     int getNp() { return np; }

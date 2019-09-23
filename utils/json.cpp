@@ -20,7 +20,7 @@
 
 QByteArray JSON::json(const QVariant& data) {
     #if QT_VERSION > 0x050000
-    QByteArray json = QJsonDocument::fromVariant(data).toJson(QJsonDocument::Compact);
+    QByteArray json = QJsonDocument::fromVariant(data).toJson(QJsonDocument::Indented);
     return json;
 
     #else
@@ -43,7 +43,7 @@ QByteArray JSON::json(const QVariant& data) {
 
 QByteArray JSON::json(const QVariant& data, bool *ok) {
     #if QT_VERSION > 0x050000
-    QByteArray json = QJsonDocument::fromVariant(data).toJson(QJsonDocument::Compact);
+    QByteArray json = QJsonDocument::fromVariant(data).toJson(QJsonDocument::Indented);
     *ok = true;
     return json;
 

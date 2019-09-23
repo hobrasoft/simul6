@@ -19,7 +19,15 @@ public:
     double getCapLen() const;
     double getTimeStop() const;
     double getTimeInterval() const;
+    int    getBW() const;
+    double getBWmeters() const;
     int    getNp() const;
+
+    void   setCaplen(double);
+    void   setBWmeters(double);
+    void   setNp(int);
+    void   setTimeInterval(double);
+    void   setTimeStop(double);
 
 signals:
     void init();
