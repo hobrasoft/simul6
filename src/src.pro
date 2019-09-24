@@ -35,6 +35,7 @@ msvc {
 }
 
 include(../global.pri)
+include(../data/data.pri)
 include(utils/utils.pri)
 include(widgets/widgets.pri)
 include(database/database.pri)

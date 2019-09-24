@@ -151,6 +151,19 @@ QString Database::dbFileName() const {
 
 
 void Database::save(const Dbt::Graf& graf) {
+    auto toString = [](const QList<double>& list) {
+        QStringList stringlist;
+        for (int i=0; i<list.size(); i++) {
+            stringlist << QString("%1").arg(list[i]);
+            }
+        return stringlist.join(",");
+        };
+    MSqlQuery q(m_db);
+    q.prepare("insert into graf (time, id, values_array) values (:time, :id, :values_array);");
+    q.bindValue(":time", graf.time);
+    q.bindValue(":id", graf.id);
+    q.bindValue(":values_array", toString(graf.values_array));
+    q.exec();
 }
 
 

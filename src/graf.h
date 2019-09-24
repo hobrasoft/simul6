@@ -3,6 +3,7 @@
 
 #include "Mix.h"
 #include "Engine.h"
+#include "db.h"
 #include <vector>
 #include <QChartView>
 
@@ -22,6 +23,7 @@ public slots:
     void drawGraph(const Engine *pEngine);
 private:
     QChart *m_chart;
+    Db::Database *m_db;
 };
 
 #endif // GRAF_H

@@ -1,0 +1,6 @@
+<RCC>
+<qresource prefix="/data">
+<file>constituents.json</file>
+</qresource>
+</RCC>
+

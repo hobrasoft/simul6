@@ -9,7 +9,7 @@ Preferences::Preferences(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->f_db_filename->setText(MSETTINGS->dbFilename());
+    ui->f_db_filename->setText(MSETTINGS->dbConstituents());
 
     connect(ui->f_db_select, &QToolButton::clicked, [this]() {
         QString filename = QFileDialog::getOpenFileName(this,
@@ -29,6 +29,6 @@ Preferences::~Preferences()
 }
 
 void Preferences::accept() {
-    MSETTINGS->setDbFilename(ui->f_db_filename->text());
+    MSETTINGS->setDbConstituents(ui->f_db_filename->text());
     done(QDialog::Accepted);
 }

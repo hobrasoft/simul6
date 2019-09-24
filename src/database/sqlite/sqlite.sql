@@ -16,9 +16,9 @@ create table controls (
 );
 
 create table graf (
-    time    text not null,
-    id      int  not null references mix(id) on update cascade on delete cascade,
-    text    values_array
+    time    numeric not null,
+    id      int     not null references mix(id) on update cascade on delete cascade,
+    values_array text
 );
 
 commit;

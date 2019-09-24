@@ -39,9 +39,9 @@ struct Control {
 
 
 struct Graf {
-    QTime           time;
+    double          time;
     int             id;     // references MixComponent(id)
-    QList<double>   values;
+    QList<double>   values_array;
 };
 
 

@@ -28,7 +28,7 @@ ConstituentDb::~ConstituentDb()
 }
 
 void ConstituentDb::read() {
-    QString filename = MSETTINGS->dbFilename();
+    QString filename = MSETTINGS->dbConstituents();
     read(filename);
 }
 

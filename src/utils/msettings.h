@@ -40,7 +40,7 @@ class MSettings : public QSettings {
     static constexpr const char *LogExclude              = "log/exclude";
     static constexpr const char *LogFile                 = "log/file";
 
-    static constexpr const char *DbFileName              = "db/filename";
+    static constexpr const char *DbConstituents          = "db/constituents";
 
     static constexpr const char *GuiMainWindowSize       = "gui/mainwindow-size";
     static constexpr const char *GuiMainWindowLayout1    = "gui/mainwindow-layout1";
@@ -54,8 +54,8 @@ class MSettings : public QSettings {
     QString logFile() const { return value(LogFile).toString(); }
 
     // DB
-    QString dbFilename() const { return value(DbFileName, QString()).toString(); }
-    void setDbFilename(const QString& x) { setValue(DbFileName, x); }
+    QString dbConstituents() const { return value(DbConstituents, "://data/constituents.json").toString(); }
+    void setDbConstituents(const QString& x) { setValue(DbConstituents, x); }
 
     // GUI
     QSize guiMainWindowSize() { return value(GuiMainWindowSize, QSize(1000, 800)).toSize(); }
