@@ -19,7 +19,8 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
         }
 
     m_chart = new QChart();
-    
+
+    pEngine->lock(); 
     size_t p = pEngine->getNp(); // points
     QLineSeries *series;
 
@@ -37,6 +38,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
         m_chart->addSeries(series);
         m_chart->createDefaultAxes();
     }
+    pEngine->unlock(); 
 
     series = new QLineSeries();
     series->setName(tr("pH"));

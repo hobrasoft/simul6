@@ -94,7 +94,7 @@ Engine::Engine(int pNp) :
 }
 
 
-Mix &Engine::getMix()
+Mix &Engine::getMix() 
 {
     return mix;
 }
@@ -554,6 +554,16 @@ void Engine::stop() {
 }
 
 
+void Engine::lock() const {
+    m_mutex.lock();
+}
+
+
+void Engine::unlock() const {
+    m_mutex.unlock();
+}
+
+
 void Engine::run()
 {
     qDebug() << "Engine::run()";
@@ -566,7 +576,6 @@ void Engine::run()
 
 
 void Engine::runPrivate() {
-
     if (!m_running || t >= timeStop) {
         emit drawGraph(this, &hpl);
         emit timeChanged(t);
@@ -575,11 +584,13 @@ void Engine::runPrivate() {
         return;
     }
 
+    lock();
     if (m_optimizeDt) {
         cashkarp();      // if Optimize dt is checked
     } else {
         rungekutta();    // if Optimize dt is not checked
     }
+    unlock();
 
     if (t >= timeDisplay) {
         qDebug() << "Engine::runPrivate()" << t;

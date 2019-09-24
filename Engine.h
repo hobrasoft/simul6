@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <QObject>
+#include <QMutex>
 
 using namespace std;
 
@@ -123,7 +124,7 @@ public:
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
     void setVoltage(double pVoltage) { voltage = pVoltage; }
     void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
-    double getCapLen() { return capLen; }
+    double getCapLen() const { return capLen; }
     void setTimeStop(double pTimeStop) { timeStop = pTimeStop; }
     void setTimeInterval(double pTimeInterval) { timeInterval = pTimeInterval; }
     void setErrMax(double pErrMax) { errMax = pErrMax; }
@@ -133,7 +134,7 @@ public:
     void setBW(int x) { bw = x; }
 
     size_t getNm(); // Get number of constituents
-    int getNp() { return np; }
+    int getNp() const { return np; }
 	double getDx() { return dx; }
 	Mix &getMix();
     void setMix(const QList<Constituent>&, const QList<Segments>&);
@@ -158,6 +159,8 @@ signals:
 public slots:
     void run();
     void stop();
+    void lock() const;
+    void unlock() const;
 
 private slots:
     void runPrivate();
@@ -168,6 +171,7 @@ private:
 	void der();
 	void rungekutta();
     void cashkarp();
+    mutable QMutex m_mutex;
 
 };
 
