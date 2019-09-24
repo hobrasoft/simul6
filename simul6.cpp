@@ -75,6 +75,8 @@ void Simul6::engineFinished() {
 
 void Simul6::runEngine() {
     ui->f_parameters->setEnabled(false);
+    ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
+    ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
     ui->f_simulationProfile->slotRun();
 }
 
