@@ -1,0 +1,49 @@
+{
+    "compute_control": {
+        "caplen": 0.024,
+        "display_interval": 1,
+        "dt": 0.009999999999999997,
+        "number_of_points": 2002,
+        "optimize_dt": true,
+        "stop_time": 180,
+        "voltage": -100,
+        "zone_edge": 0.003
+    },
+    "mix": [
+        {
+            "constituent": {
+                "name": "2-CHLORO-3-OH-BUTYRIC ACID",
+                "negCount": 1,
+                "pKaNeg": [
+                    2.602
+                ],
+                "pKaPos": [
+                ],
+                "posCount": 0,
+                "uNeg": [
+                    34.400000000000006
+                ],
+                "uPos": [
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 2,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                }
+            ]
+        }
+    ]
+}

@@ -2,3 +2,4 @@ simul6b.pro.user
 simul6b.pro.user.*
 Makefile
 .qmake.stash
+src/.tmp/*
