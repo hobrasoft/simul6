@@ -167,16 +167,13 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
             double segmentRatio = segments.segments[segmentNumber].ratio;
      //       sample.setIC(segmentNumber, concentration);              k cemu to tam je?
 
-            int segmentEnd = segmentBegin + (int)((double)(np + 1)/((double)ratioSum)*((double)segmentRatio));
+            int segmentEnd = segmentBegin + (int)((double)(np)/((double)ratioSum)*((double)segmentRatio));
             if (segmentEnd >= np - 5) {
                 segmentEnd = np + 1;
                 }
-            if (segmentEnd >= np) {
-                segmentEnd = np -1;
-                }
 
             for (int i = segmentBegin; i < segmentEnd; i++) {
-                Q_ASSERT(i < np);
+                // Q_ASSERT(i < np);
                 if (i < segmentBegin + bw) {
                     double concentration_bw = 
                         prevConcentration +

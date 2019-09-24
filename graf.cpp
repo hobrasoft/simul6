@@ -9,6 +9,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 {
     setRenderHint(QPainter::Antialiasing);
     m_chart = nullptr;
+    setRubberBand(QChartView::RectangleRubberBand);
 }
 
 void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
