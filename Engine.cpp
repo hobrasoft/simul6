@@ -94,7 +94,7 @@ Engine::Engine(int pNp) :
 }
 
 
-Mix &Engine::getMix() 
+const Mix &Engine::getMix() const 
 {
     return mix;
 }
@@ -198,7 +198,7 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
     }
 
     gCalc();
-    emit drawGraph(this, &hpl);
+    emit drawGraph(this);
     qDebug() << "Engine::init() hotovo";
 }
 
@@ -577,7 +577,7 @@ void Engine::run()
 
 void Engine::runPrivate() {
     if (!m_running || t >= timeStop) {
-        emit drawGraph(this, &hpl);
+        emit drawGraph(this);
         emit timeChanged(t);
         emit finished();
         qDebug() << "Time elapsed " << intervalCounter / 1000 << " s";
@@ -594,7 +594,7 @@ void Engine::runPrivate() {
 
     if (t >= timeDisplay) {
         qDebug() << "Engine::runPrivate()" << t;
-        emit drawGraph(this, &hpl);
+        emit drawGraph(this);
         timeDisplay += timeInterval;        
     }
 

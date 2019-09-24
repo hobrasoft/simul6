@@ -43,7 +43,7 @@ Sample::~Sample()
     //std::cout << "Sample destructor" << std::endl;
 }
 
-size_t Sample::getHIdx(const int pCharge, const unsigned int pI)
+size_t Sample::getHIdx(const int pCharge, const unsigned int pI) const
 {
   return pI * CHARGE_BLOCK_SIZE + getChargeIndex(pCharge);
 }
@@ -57,12 +57,12 @@ Sample &Sample::setIC(const unsigned int pArea, const double pValue)
     return *this;
 }
 
-double Sample::getIC(unsigned int pArea)
+double Sample::getIC(unsigned int pArea) const
 {
     return (pArea < areas) ? IC[pArea] : 0;
 }
 
-unsigned int Sample::getChargeIndex(const int pCharge)
+unsigned int Sample::getChargeIndex(const int pCharge) const
 {
     return static_cast<unsigned int>(pCharge + static_cast<int>(Engine::maxCharge));
 }
@@ -73,7 +73,7 @@ void Sample::setA(const int pCharge, const unsigned int pI, const double pValue)
     a.set(pCharge, pI, pValue);
 }
 
-double Sample::getA(const int pCharge, const unsigned int pI)
+double Sample::getA(const int pCharge, const unsigned int pI) const
 {
     return a.get(pCharge, pI);
 }
@@ -89,7 +89,7 @@ void Sample::addD(const int pCharge, const unsigned int pI, const double pValue)
     setD(pCharge, pI, getD(pCharge, pI) + pValue);
 }
 
-double Sample::getD(const int pCharge, const unsigned int pI)
+double Sample::getD(const int pCharge, const unsigned int pI) const
 {
     return d.get(pCharge, pI);
 }
@@ -113,7 +113,7 @@ void Sample::addH(const int pCharge, const double pValue, const unsigned int pI)
     h[getHIdx(pCharge, pI)] += pValue;
 }
 
-double Sample::getH(const int pCharge, const unsigned int pI)
+double Sample::getH(const int pCharge, const unsigned int pI) const
 {
     return h[getHIdx(pCharge, pI)];
 }
@@ -129,7 +129,7 @@ void Sample::addDerH(const int pCharge, const double pValue, const unsigned int 
     derH[getHIdx(pCharge, pI)] += pValue;
 }
 
-double Sample::getDerH(const int pCharge, const unsigned int pI)
+double Sample::getDerH(const int pCharge, const unsigned int pI) const
 {
     return derH[getHIdx(pCharge, pI)];
 }

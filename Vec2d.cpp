@@ -7,7 +7,7 @@ Vec2d::Vec2d(const unsigned int pMaxCharge, const int pNp) :
 {
 }
 
-unsigned int Vec2d::getChargeIndex(const int pCharge)
+unsigned int Vec2d::getChargeIndex(const int pCharge) const
 {
     return static_cast<unsigned int>(pCharge + static_cast<int>(maxCharge));
 }

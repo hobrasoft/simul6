@@ -12,11 +12,13 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     setRubberBand(QChartView::RectangleRubberBand);
 }
 
-void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
+void Graf::drawGraph(const Engine *pEngine)
 {
     if (m_chart != nullptr) {
         m_chart->deleteLater();
         }
+
+    auto hpl = pEngine->getHpl();
 
     m_chart = new QChart();
 
@@ -44,7 +46,7 @@ void Graf::drawGraph(Engine *pEngine, std::vector<double> *pHpl)
     series->setName(tr("pH"));
     double x = 0;
     for (unsigned int i = 0; i <= p; i++) {
-        *series << QPointF(x * 1000.0, -log((*pHpl)[i]) / log(10));
+        *series << QPointF(x * 1000.0, -log(hpl[i]) / log(10));
         x += inc_x;
     }
     m_chart->addSeries(series);

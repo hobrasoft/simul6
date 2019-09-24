@@ -135,8 +135,10 @@ public:
 
     size_t getNm(); // Get number of constituents
     int getNp() const { return np; }
-	double getDx() { return dx; }
-	Mix &getMix();
+	double getDx() const { return dx; }
+    const std::vector<double>& getHpl() const { return hpl; }
+	const Mix &getMix() const;
+    
     void setMix(const QList<Constituent>&, const QList<Segments>&);
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();
@@ -149,7 +151,7 @@ public:
 
 signals:
     //void drawGraph(Mix *pMix, std::vector<double> *pHpl);
-    void drawGraph(Engine *pEngine, std::vector<double> *pHpl);
+    void drawGraph(const Engine *pEngine);
     void timeChanged(double);
     void errorChanged(double);
     void finished();

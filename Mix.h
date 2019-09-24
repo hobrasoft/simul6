@@ -18,7 +18,8 @@ public:
 	~Mix();
 	Sample &addSample(const Sample&);
     // Sample &addConstituent(const QString& pName, const double pU, const int pZ);
-    Sample &getSample(unsigned int pIndex);
+    const Sample &getSample(unsigned int pIndex);
+    const std::vector<Sample> &getSamples() const { return samples; }
     std::vector<Sample> &getSamples() { return samples; }
     std::vector<Sample>::iterator begin();
     std::vector<Sample>::iterator end();
