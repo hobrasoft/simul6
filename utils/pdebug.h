@@ -12,7 +12,7 @@
 
 #define PDEBUG qDebug() \
             << QThread::currentThread() \
-            << qPrintable(QString(__PRETTY_FUNCTION__) \
+            << qPrintable(QString(PDEBUG_FUNCTION_NAME) \
                     .replace(QRegExp("^[a-zA-Z*<>]*\\s"),"") \
                     .replace(QRegExp("\\(.*\\)"), "()") \
                     .replace(QRegExp("^void "), "") \

@@ -28,8 +28,10 @@ CONFIG += c++14
 
 msvc { 
     QMAKE_CXXFLAGS += /openmp
+    DEFINES += PDEBUG_FUNCTION_NAME=__FUNCSIG__
 } else {
     QMAKE_CXXFLAGS += -ftree-parallelize-loops=16 -fopenmp
+    DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
     LIBS += -lgomp
 }
 
