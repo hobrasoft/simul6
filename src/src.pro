@@ -37,7 +37,10 @@ msvc {
 include(../global.pri)
 include(utils/utils.pri)
 include(widgets/widgets.pri)
+include(database/database.pri)
 
+INCLUDEPATH += $$PWD
+DEPENDPATH += $$PWD
 
 SOURCES += \
     main.cpp \
