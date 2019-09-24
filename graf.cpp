@@ -18,16 +18,15 @@ void Graf::drawGraph(const Engine *pEngine)
         m_chart->deleteLater();
         }
 
-    auto hpl = pEngine->getHpl();
 
     m_chart = new QChart();
 
     pEngine->lock(); 
+    auto hpl = pEngine->getHpl();
     size_t p = pEngine->getNp(); // points
     QLineSeries *series;
 
     double inc_x = pEngine->getCapLen() / p;
-    // PDEBUG << inc_x << pEngine->getCapLen() << pEngine->getNp();
     for (auto &s : pEngine->getMix().getSamples()) {
         series = new QLineSeries();
         series->setName(s.getName());
@@ -40,15 +39,17 @@ void Graf::drawGraph(const Engine *pEngine)
         m_chart->addSeries(series);
         m_chart->createDefaultAxes();
     }
-    pEngine->unlock(); 
 
     series = new QLineSeries();
     series->setName(tr("pH"));
     double x = 0;
     for (unsigned int i = 0; i <= p; i++) {
-        *series << QPointF(x * 1000.0, -log(hpl[i]) / log(10));
+        if (hpl[i] > 0) {
+            *series << QPointF(x * 1000.0, -log(hpl[i]) / log(10));
+            }
         x += inc_x;
     }
+    pEngine->unlock(); 
     m_chart->addSeries(series);
     m_chart->createDefaultAxes();
 

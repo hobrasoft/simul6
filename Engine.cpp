@@ -595,7 +595,7 @@ void Engine::runPrivate() {
     if (t >= timeDisplay) {
         qDebug() << "Engine::runPrivate()" << t;
         emit drawGraph(this);
-        timeDisplay += timeInterval;        
+        timeDisplay += timeInterval;
     }
 
     if (m_sendSignals) {
