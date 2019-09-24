@@ -116,6 +116,7 @@ public:
 
     Engine(int pNp);
 
+	void setTime(double x) { t = x; emit timeChanged(0); }
 	void setDx(double pDx) { dx = pDx; }
 	void setT(double pT) { t = pT; }
 	void setDt(double pDt) { dt = pDt; }
