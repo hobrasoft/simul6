@@ -313,6 +313,10 @@ void Engine::gCalc()
             }
         }
 
+        if (hPlus < 0 || std::isnan(hPlus) || std::isinf(hPlus)) {
+            PDEBUG << "hpl[i] < 0" << i << hPlus << t;
+            }
+
         hpl[i] = hPlus;
     }
 /*konec pragmy*/

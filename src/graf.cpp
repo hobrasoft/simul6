@@ -50,7 +50,7 @@ void Graf::drawGraph(const Engine *pEngine)
         gdata.time = pEngine->t;
         gdata.id = id;
         gdata.values_array = vlist;
-        m_db->save(gdata);
+        if (m_db != nullptr) { m_db->save(gdata); }
 
         m_chart->addSeries(series);
         m_chart->createDefaultAxes();

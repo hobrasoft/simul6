@@ -58,8 +58,6 @@ Simul6 *Simul6::instance() {
 
 void Simul6::init() {
     readSettings();
-    Db::Database *db = new Db::Database("abcd.simul6.sqlite3", this);
-    db->open();
     // ImportSna import(this);
     // import.readData("/home/tycho/Desktop/TestSNA.sna");
 }
