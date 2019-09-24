@@ -23,7 +23,7 @@ MixControl::MixControl(QWidget *parent) :
         if (QDialog::Accepted == dialog.exec()) {
             Constituent c = dialog.constituent();
             Segments s = dialog.segments();
-            QModelIndex index = m_model->add(c, s);
+            // QModelIndex index = m_model->add(c, s);
             // QItemSelectionModel sm;
             // sm.select(index, QItemSelectionModel::Rows);
             // ui->f_view->setSelectionModel(&sm);

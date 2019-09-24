@@ -6,7 +6,7 @@
 #include "Sample.h"
 #include "Mix.h"
 #include "Vec2d.h"
-//#include "Graph.h"
+#include "segments.h"
 #include <list>
 #include <string>
 #include <vector>
@@ -14,7 +14,6 @@
 
 using namespace std;
 
-class MixControlModel;
 
 class Engine :  public QObject
 {
@@ -136,7 +135,7 @@ public:
     int getNp() { return np; }
 	double getDx() { return dx; }
 	Mix &getMix();
-    void setMix(const MixControlModel *model);
+    void setMix(const QList<Constituent>&, const QList<Segments>&);
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();
     void initVectors();

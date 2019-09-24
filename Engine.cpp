@@ -8,7 +8,6 @@
 #include "Constituent.h"
 #include "ConstituentDb.h"
 #include "Sample.h"
-#include "mixcontrolmodel.h"
 #include "Mix.h"
 #include <iostream>
 #include <cmath>
@@ -144,19 +143,19 @@ void Engine::initVectors()
 }
 
 
-void Engine::setMix(const MixControlModel *model)
+void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segments>& psegments)
 {
+    Q_ASSERT(pconstituents.size() == psegments.size());
     qDebug() << "Engine::init()";
     m_initialized = true;
     t = 0;
-    bw = 40;
 
     initArrays();
     initVectors();
 
-    for (int row = 0; row<model->rowCount(); row++) {
-        Constituent constituent = model->constituent(row);
-        Segments segments = model->segments(row);
+    for (int row = 0; row < pconstituents.size(); row++) {
+        const Constituent& constituent = pconstituents[row];
+        const Segments& segments = psegments[row];
         int segmentsCount = segments.size();
         int ratioSum = segments.ratioSum();
         Sample sample(constituent, segmentsCount, np);
@@ -171,6 +170,9 @@ void Engine::setMix(const MixControlModel *model)
             int segmentEnd = segmentBegin + (int)((double)(np + 1)/((double)ratioSum)*((double)segmentRatio));
             if (segmentEnd >= np - 5) {
                 segmentEnd = np + 1;
+                }
+            if (segmentEnd >= np) {
+                segmentEnd = np -1;
                 }
 
             for (int i = segmentBegin; i < segmentEnd; i++) {

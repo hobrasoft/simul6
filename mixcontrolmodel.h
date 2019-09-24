@@ -24,6 +24,10 @@ public:
     };
 
     QModelIndex add(const Constituent&, const Segments&);
+    void add(const QList<Constituent>&, const QList<Segments>&);
+
+    QList<Constituent> constituents() const;
+    QList<Segments> segments() const;
 
     Constituent constituent(int row) const;
     Segments segments(int row) const;

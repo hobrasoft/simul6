@@ -24,6 +24,13 @@ QModelIndex MixControlModel::add(const Constituent& constituent, const Segments&
     return index(0, 0);
 }
 
+void MixControlModel::add(const QList<Constituent>& constituents, const QList<Segments>& segments) {
+    Q_ASSERT(constituents.size() == segments.size());
+    for (int i=0; i<constituents.size(); i++) {
+        add(constituents[i], segments[i]);
+        }
+}
+
 void MixControlModel::setConstituentAndSegments(const Constituent& constituent, const Segments& segments, int row) {
     QStringList ratio;
     // QStringList len;
@@ -53,6 +60,24 @@ Constituent MixControlModel::constituent(int row) const {
 
 Segments MixControlModel::segments(int row) const {
     return data(index(row, 0), SegmentsRole).value<Segments>();
+}
+
+
+QList<Constituent> MixControlModel::constituents() const {
+    QList<Constituent> list;
+    for (int i=0; i<rowCount(); i++) {
+        list << constituent(i);
+        }
+    return list;
+}
+
+
+QList<Segments> MixControlModel::segments() const {
+    QList<Segments> list;
+    for (int i=0; i<rowCount(); i++) {
+        list << segments(i);
+        }
+    return list;
 }
 
 
