@@ -1,5 +1,3 @@
-CONFIG += debug
-
 system( $$QMAKE_CXX --version | grep -e "\\ 4\\.[0-8]") {
     message( "g++ version 4.8 or earlier found" )
     QMAKE_CXXFLAGS += -fstack-protector-all
