@@ -2,6 +2,7 @@
 #include "ui_mixcontrol.h"
 #include "constituentsdialog.h"
 #include <QAction>
+#include <QMessageBox>
 
 
 MixControl::~MixControl()
@@ -74,7 +75,13 @@ MixControl::MixControl(QWidget *parent) :
     action = new QAction("Remove All", this);
     ui->f_removeAll->setDefaultAction(action);
     connect(action, &QAction::triggered, this, [this]() {
-        m_model->removeRows(0, m_model->rowCount());
+        int rc= QMessageBox::question(this,
+                tr("I have a question"),
+                tr("Do you really want to remove all constituents?"),
+                QMessageBox::Yes, QMessageBox::No, QMessageBox::NoButton);
+        if (rc == QMessageBox::Yes) {
+            m_model->removeRows(0, m_model->rowCount());
+        }
     });
     ui->f_view->addAction(action);
 

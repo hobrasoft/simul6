@@ -36,6 +36,7 @@ void Graf::init(const Engine *pEngine) {
 
     QLineSeries *series = new QLineSeries(this);
     series->setName(tr("pH"));
+    series->setUseOpenGL(true);
     double x = 0;
     auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
