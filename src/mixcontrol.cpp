@@ -71,6 +71,13 @@ MixControl::MixControl(QWidget *parent) :
     });
     ui->f_view->addAction(action);
 
+    action = new QAction("Remove All", this);
+    ui->f_removeAll->setDefaultAction(action);
+    connect(action, &QAction::triggered, this, [this]() {
+        m_model->removeRows(0, m_model->rowCount());
+    });
+    ui->f_view->addAction(action);
+
     connect(ui->f_view, &QAbstractItemView::doubleClicked, [this](const QModelIndex& index) {
         int row = index.row();
         ConstituentsDialog dialog;
