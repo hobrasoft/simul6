@@ -1,6 +1,7 @@
 #include "mixcontrolmodel.h"
 #include "pdebug.h"
 #include "simul6.h"
+#include "colorsgenerator.h"
 #include "json.h"
 
 #define ConstituentRole Qt::UserRole+1
@@ -57,6 +58,7 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
     setData(index(row, SegCount), len.join("; "));
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
+    setData(index(row, Color), QBrush(ColorsGenerator::color(rowCount())), Qt::BackgroundRole);
 
 }
 

@@ -1,6 +1,7 @@
 #include "graf.h"
 #include "omp.h"
 #include "pdebug.h"
+#include "colorsgenerator.h"
 #include <iostream>
 #include <cmath>
 #include <QLineSeries>
@@ -34,8 +35,10 @@ void Graf::init(const Engine *pEngine) {
     pEngine->lock();
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
+    int id = 0;
     for (auto &s : pEngine->getMix().getSamples()) {
         QLineSeries *series = new QLineSeries(this);
+        series->setColor(ColorsGenerator::color(id));
         series->setName(s.getName());
         series->setUseOpenGL(true);
         m_chart->addSeries(series);
@@ -47,6 +50,7 @@ void Graf::init(const Engine *pEngine) {
                 }
             x += inc_x;
             }
+        id += 1;
         }
 
     QLineSeries *series = new QLineSeries(this);

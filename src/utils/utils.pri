@@ -11,4 +11,5 @@ HEADERS += \
  $$PWD/msettings.h \
  $$PWD/logger.h \
  $$PWD/pdebug.h \
+ $$PWD/colorsgenerator.h \
 
