@@ -36,6 +36,7 @@ msvc {
 
 include(../global.pri)
 include(../data/data.pri)
+include(../images/images.pri)
 include(utils/utils.pri)
 include(widgets/widgets.pri)
 include(database/database.pri)
@@ -93,6 +94,7 @@ HEADERS += \
     segments.h \
     importsna.h \
     ampholines.h \
+    version.h \
     myview.h
 
 FORMS += \

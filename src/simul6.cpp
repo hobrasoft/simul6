@@ -10,6 +10,7 @@
 #include "importsna.h"
 #include "pdebug.h"
 #include "ampholines.h"
+#include "about.h"
 #include "db.h"
 #include <QFileDialog>
 #include <QFileInfo>
@@ -227,6 +228,8 @@ void Simul6::createActions() {
 
     action = new QAction(tr("About"), this);
     connect(action, &QAction::triggered, [this]() {
+        About about(this);
+        about.exec();
     });
     menu->addAction(action);
 
