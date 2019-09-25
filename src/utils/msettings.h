@@ -46,6 +46,7 @@ class MSettings : public QSettings {
     static constexpr const char *GuiMainWindowLayout1    = "gui/mainwindow-layout1";
     static constexpr const char *GuiMainWindowLayout2    = "gui/mainwindow-layout2";
     static constexpr const char *GuiConstituentsDialogSize       = "gui/constituents-dialog-size";
+    static constexpr const char *GuiDataDirName          = "gui/data-dir-name";
 
     // Logování
     bool    logAll() const { return value(LogAll, true).toBool(); }
@@ -58,14 +59,16 @@ class MSettings : public QSettings {
     void setDbConstituents(const QString& x) { setValue(DbConstituents, x); }
 
     // GUI
-    QSize guiMainWindowSize() { return value(GuiMainWindowSize, QSize(1000, 800)).toSize(); }
+    QSize guiMainWindowSize() const { return value(GuiMainWindowSize, QSize(1000, 800)).toSize(); }
     void setGuiMainWindowSize(const QSize& size) { setValue(GuiMainWindowSize, size); }
-    QByteArray guiMainWindowLayout1() { return value(GuiMainWindowLayout1).toByteArray(); }
+    QByteArray guiMainWindowLayout1() const { return value(GuiMainWindowLayout1).toByteArray(); }
     void setGuiMainWindowLayout1(const QByteArray& layout) { setValue(GuiMainWindowLayout1, layout); }
-    QByteArray guiMainWindowLayout2() { return value(GuiMainWindowLayout2).toByteArray(); }
+    QByteArray guiMainWindowLayout2() const { return value(GuiMainWindowLayout2).toByteArray(); }
     void setGuiMainWindowLayout2(const QByteArray& layout) { setValue(GuiMainWindowLayout2, layout); }
-    QSize guiConstituentsDialogSize() { return value(GuiConstituentsDialogSize, QSize(1000, 996)).toSize(); }
+    QSize guiConstituentsDialogSize() const { return value(GuiConstituentsDialogSize, QSize(1000, 996)).toSize(); }
     void setGuiConstituentsDialogSize(const QSize& size) { setValue(GuiConstituentsDialogSize, size); }
+    QString dataDirName() const { return value(GuiDataDirName).toString(); }
+    void setDataDirName(const QString& dirname) { setValue(GuiDataDirName, dirname); }
 
   protected:
 

@@ -12,6 +12,8 @@
 #include "ampholines.h"
 #include "db.h"
 #include <QFileDialog>
+#include <QFileInfo>
+#include <QDir>
 #include <QSize>
 #include <QMessageBox>
 #include <QTimer>
@@ -109,10 +111,18 @@ void Simul6::stopEngine() {
 
 
 void Simul6::saveData() {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), "", 
+    QString dirname = MSETTINGS->dataDirName();
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), dirname,
         tr("Simul6 data [.simul6.json] (*.simul6.json)")
         );
     if (filename.isEmpty()) { return; }
+    filename = filename.trimmed();
+    MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
+    if (!filename.endsWith(".simul6.json", Qt::CaseInsensitive)) {
+        filename = filename.replace(QRegExp("\\.+$"),"");
+        filename += ".simul6.json";
+        }
+    PDEBUG << filename;
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
         SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
@@ -138,10 +148,12 @@ void Simul6::saveData() {
 
 
 void Simul6::loadData() {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Load simulation"), "", 
+    QString dirname = MSETTINGS->dataDirName();
+    QString filename = QFileDialog::getOpenFileName(this, tr("Load simulation"), dirname, 
         tr("Simul6 data (*.simul6.json)")
         );
     if (filename.isEmpty()) { return; }
+    MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
         SHOWMESSAGE(tr("Could not open file %1").arg(filename));
@@ -167,28 +179,8 @@ void Simul6::loadData() {
 
 void Simul6::createActions() {
     QMenu *menu = new QMenu(tr("Application"), this);
+    ui->menuBar->addMenu(menu);
     QAction *action;
-
-
-    action = new QAction(tr("Load data"), this);
-    menu->addAction(action);
-    connect(action, &QAction::triggered, [this]() {
-        loadData();
-    });
-
-
-    action = new QAction(tr("Save data"), this);
-    menu->addAction(action);
-    connect(action, &QAction::triggered, [this]() {
-        saveData();
-    });
-
-
-    action = new QAction(tr("Quit application"), this);
-    menu->addAction(action);
-    connect(action, &QAction::triggered, [this]() {
-        closeWindow();
-    });
 
     action = new QAction(tr("Preferences"), this);
     connect(action, &QAction::triggered, [this]() {
@@ -196,6 +188,27 @@ void Simul6::createActions() {
         preferences.exec();
     });
     menu->addAction(action);
+
+    action = new QAction(tr("Quit application"), this);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        closeWindow();
+    });
+
+
+    menu = new QMenu(tr("Data"), this);
+    ui->menuBar->addMenu(menu);
+    action = new QAction(tr("Load data"), this);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        loadData();
+    });
+
+    action = new QAction(tr("Save data"), this);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        saveData();
+    });
 
     action = new QAction(tr("Ampholines"), this);
     connect(action, &QAction::triggered, [this]() {
@@ -206,7 +219,16 @@ void Simul6::createActions() {
     });
     menu->addAction(action);
 
+
+    menu = new QMenu(tr("About"), this);
+    ui->menuBar->addSeparator();
     ui->menuBar->addMenu(menu);
+
+    action = new QAction(tr("About"), this);
+    connect(action, &QAction::triggered, [this]() {
+    });
+    menu->addAction(action);
+
 }
 
 
