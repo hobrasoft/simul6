@@ -17,8 +17,8 @@ public:
         Color, ///< Barva látky v grafu, zvoleno v sekvenci
         NegCount,
         PosCount,
-        SegCount,
         Concentrations, ///< Rozdělení koncentrací v segmentech, odděleno středníkem
+        SegCount,
         Ratio,
         LastCol
     };

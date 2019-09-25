@@ -1,5 +1,6 @@
 #include "mixcontrolmodel.h"
 #include "pdebug.h"
+#include "simul6.h"
 #include "json.h"
 
 #define ConstituentRole Qt::UserRole+1
@@ -32,12 +33,19 @@ void MixControlModel::add(const QList<Constituent>& constituents, const QList<Se
 }
 
 void MixControlModel::setConstituentAndSegments(const Constituent& constituent, const Segments& segments, int row) {
+    double caplen = Simul6::instance()->getCaplen();
+    double ratioSum = 0;
     QStringList ratio;
-    // QStringList len;
+    QStringList len;
     QStringList conc;
     for (int i=0; i<segments.segments.size(); i++) {
+        double ratio = segments.segments[i].ratio;
+        ratioSum += ratio;
+    }
+    for (int i=0; i<segments.segments.size(); i++) {
+        double ratioLen = (ratioSum > 0) ? 1000 * segments.segments[i].ratio * caplen / ratioSum : 0;
         ratio << QString("%1").arg(segments.segments[i].ratio, 0, 'f', 2);
-        // len   << QString("%1").arg(segments.segments[i].length, 0, 'f', 2);
+        len   << QString("%1").arg(ratioLen, 0, 'f', 2);
         conc  << QString("%1").arg(segments.segments[i].concentration, 0, 'f', 3);
     }
 
@@ -46,7 +54,7 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
     setData(index(row, Name), constituent.getName());
     setData(index(row, NegCount), constituent.getNegCount());
     setData(index(row, PosCount), constituent.getPosCount());
-    // setData(index(row, SegCount), len.join("; "));
+    setData(index(row, SegCount), len.join("; "));
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
 
