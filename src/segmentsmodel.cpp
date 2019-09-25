@@ -1,5 +1,5 @@
 #include "segmentsmodel.h"
-#include "settings.h"
+#include "simul6.h"
 #include "pdebug.h"
 
 SegmentsModel::SegmentsModel(QObject *parent)
@@ -73,6 +73,7 @@ void SegmentsModel::slotDataChanged(const QModelIndex& topLeft, const QModelInde
 
 
 void SegmentsModel::recalculate() {
+    double caplen = Simul6::instance()->getCaplen();
     double ratioSum = 0;
     for (int column = 0; column < columnCount(); column++) {
         double ratio = data(index(Ratio, column)).toDouble();
@@ -80,7 +81,7 @@ void SegmentsModel::recalculate() {
     }
     for (int column = 0; column < columnCount(); column++) {
         double ratio = data(index(Ratio, column)).toDouble();
-        double ratioLen = (ratioSum > 0) ? 1000*ratio*CAPLEN/ratioSum : 0;
+        double ratioLen = (ratioSum > 0) ? 1000*ratio*caplen/ratioSum : 0;
         setHeaderData(column, Qt::Horizontal, QString("%1").arg(ratioLen, 0, 'f', 2));
     }
 }

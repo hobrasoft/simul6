@@ -16,7 +16,7 @@ class SimulationProfile : public QGroupBox
 
 public:
     explicit SimulationProfile(QWidget *parent = nullptr);
-    ~SimulationProfile();
+   ~SimulationProfile();
 
     Engine *engine() const { return m_engine; }
 

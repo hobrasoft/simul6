@@ -82,6 +82,11 @@ void Simul6::runEngine() {
 }
 
 
+double Simul6::getCaplen() const {
+    return ui->f_computeControl->getCapLen()/1000.0;
+}
+
+
 void Simul6::initEngine() {
     ui->f_simulationProfile->createEngine(ui->f_computeControl->getNp());
     ui->f_simulationProfile->engine()->setTime(0);

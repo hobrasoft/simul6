@@ -5,6 +5,15 @@
 #include "simul6.h"
 #include "pdebug.h"
 
+
+SimulationProfile::~SimulationProfile() {
+    m_thread.quit();
+    m_thread.wait(900);
+    m_thread.terminate();
+    m_thread.wait(100);
+    delete ui;
+}
+
 SimulationProfile::SimulationProfile(QWidget *parent) :
     QGroupBox(parent),
     ui(new Ui::SimulationProfile)
@@ -44,7 +53,3 @@ void SimulationProfile::slotStop() {
     m_engine->stop();
 }
 
-SimulationProfile::~SimulationProfile()
-{
-    delete ui;
-}

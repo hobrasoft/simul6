@@ -19,6 +19,8 @@ public:
 
     const MixControlModel *mixControlModel() const;
 
+    double getCaplen() const;
+
 private slots:
     void init();
     void createActions();
