@@ -70,6 +70,19 @@ MixControl::MixControl(QWidget *parent) :
         action->setEnabled(ui->f_view->currentIndex().isValid());
     });
     ui->f_view->addAction(action);
+
+    connect(ui->f_view, &QAbstractItemView::doubleClicked, [this](const QModelIndex& index) {
+        int row = index.row();
+        ConstituentsDialog dialog;
+        dialog.setConstituent(m_model->constituent(row));
+        dialog.setSegments(m_model->segments(row));
+        if (QDialog::Accepted == dialog.exec()) {
+            Constituent c = dialog.constituent();
+            Segments s = dialog.segments();
+            m_model->setConstituentAndSegments(c, s, row);
+            resizeColumns();
+        }
+    });
 }
 
 
