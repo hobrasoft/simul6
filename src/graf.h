@@ -21,6 +21,8 @@ public slots:
     //void drawGraph(std::vector<std::vector<double> > *pData);
     //void drawGraph(Mix *pMix, std::vector<double> *pHpl);
     void drawGraph(const Engine *pEngine);
+    void init(const Engine *pEngine);
+
 private:
     QChart *m_chart;
     Db::Database *m_db;

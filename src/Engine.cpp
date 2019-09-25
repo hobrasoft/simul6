@@ -198,6 +198,7 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
     }
 
     gCalc();
+    emit mixChanged(this);
     emit drawGraph(this);
     qDebug() << "Engine::init() hotovo";
 }

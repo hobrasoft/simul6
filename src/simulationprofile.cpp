@@ -33,6 +33,7 @@ void SimulationProfile::createEngine(int np)
     m_engine = new Engine(np);
     m_engine->moveToThread(&m_thread);
 
+    connect(m_engine, &Engine::mixChanged, ui->f_graf, &Graf::init);
     connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);
     connect(m_engine, &Engine::timeChanged, this, &SimulationProfile::timeChanged);
     connect(m_engine, &Engine::errorChanged, this, &SimulationProfile::errorChanged);

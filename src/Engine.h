@@ -152,6 +152,7 @@ public:
 signals:
     //void drawGraph(Mix *pMix, std::vector<double> *pHpl);
     void drawGraph(const Engine *pEngine);
+    void mixChanged(const Engine *pEngine);
     void timeChanged(double);
     void errorChanged(double);
     void finished();
