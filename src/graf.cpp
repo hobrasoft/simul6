@@ -38,7 +38,9 @@ void Graf::init(const Engine *pEngine) {
     int id = 0;
     for (auto &s : pEngine->getMix().getSamples()) {
         QLineSeries *series = new QLineSeries(this);
-        series->setColor(ColorsGenerator::color(id));
+        QBrush brush = series->brush();
+        brush.setColor(ColorsGenerator::color(id));
+        series->setBrush(brush);
         series->setName(s.getName());
         series->setUseOpenGL(true);
         m_chart->addSeries(series);
