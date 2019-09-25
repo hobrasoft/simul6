@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include <QLineSeries>
+#include <QValueAxis>
 
 Graf::Graf(QWidget *parent) : QChartView(parent)
 {
@@ -17,7 +18,18 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 }
 
 
+void Graf::mouseReleaseEvent(QMouseEvent *event) { 
+    if (event->button() != Qt::RightButton) { 
+        QChartView::mouseReleaseEvent(event);
+        return; 
+        }
+    m_chart->zoomReset();
+    event->accept();
+}
+
+
 void Graf::init(const Engine *pEngine) {
+    double maximum = -99999;
     m_chart->removeAllSeries();
     pEngine->lock();
     size_t p = pEngine->getNp(); // points
@@ -30,6 +42,9 @@ void Graf::init(const Engine *pEngine) {
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
             series->append(QPointF(x * 1000.0, s.getA(0, i)));
+            if (s.getA(0, i) > maximum)  {
+                maximum = s.getA(0,i);
+                }
             x += inc_x;
             }
         }
@@ -50,6 +65,10 @@ void Graf::init(const Engine *pEngine) {
     m_chart->addSeries(series);
     m_chart->legend()->setVisible(false);
     m_chart->createDefaultAxes();
+    QList<QAbstractAxis *> axes = m_chart->axes(Qt::Vertical);
+    if (!axes.isEmpty()) {
+        qobject_cast<QValueAxis *>(axes[0])->setRange(0, maximum);
+        }
 }
 
 

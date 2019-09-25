@@ -6,6 +6,7 @@
 #include "db.h"
 #include <vector>
 #include <QChartView>
+#include <QMouseEvent>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -26,6 +27,7 @@ public slots:
 private:
     QChart *m_chart;
     Db::Database *m_db;
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 };
 
 #endif // GRAF_H
