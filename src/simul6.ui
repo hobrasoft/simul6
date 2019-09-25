@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>800</height>
+    <width>772</width>
+    <height>524</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,16 +25,6 @@
       </property>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="1" rowspan="2">
-         <widget class="MixControl" name="f_mixcontrol" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>9</horstretch>
-            <verstretch>10</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="ComputeControl" name="f_computeControl" native="true">
           <property name="sizePolicy">
@@ -45,12 +35,22 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="0" column="1">
          <widget class="InputParameters" name="f_parameters" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>9</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="MixControl" name="f_mixcontrol" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>9</horstretch>
+            <verstretch>10</verstretch>
            </sizepolicy>
           </property>
          </widget>
@@ -74,8 +74,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1000</width>
-     <height>34</height>
+     <width>772</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

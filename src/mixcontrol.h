@@ -18,6 +18,9 @@ public:
 
     const MixControlModel *model() const { return m_model; }
 
+public slots:
+    void resizeColumns();
+
 private:
     Ui::MixControl *ui;
 

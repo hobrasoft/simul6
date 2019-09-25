@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>320</width>
-    <height>272</height>
+    <width>278</width>
+    <height>262</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,17 +22,17 @@
   <property name="title">
    <string>Compute Control</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Capillary Length</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="0" column="1">
       <widget class="QDoubleSpinBox" name="f_caplen">
        <property name="suffix">
         <string> mm</string>
@@ -48,18 +48,14 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_7">
-     <item>
+     <item row="1" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Zone edge</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="1">
       <widget class="QDoubleSpinBox" name="f_bw">
        <property name="suffix">
         <string> mm</string>
@@ -69,18 +65,14 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item row="2" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
+     <item row="2" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Number of points</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="2" column="1">
       <widget class="QSpinBox" name="f_np">
        <property name="maximum">
         <number>100000</number>
@@ -90,18 +82,14 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item row="3" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
+     <item row="3" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Display each</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="3" column="1">
       <widget class="QDoubleSpinBox" name="f_timeinterval">
        <property name="suffix">
         <string> sec</string>
@@ -117,18 +105,14 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item row="4" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_6">
-     <item>
+     <item row="4" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Stop time</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="4" column="1">
       <widget class="QDoubleSpinBox" name="f_timestop">
        <property name="suffix">
         <string> sec</string>
@@ -144,11 +128,7 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item row="5" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
+     <item row="5" column="0">
       <widget class="QLabel" name="label">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -161,7 +141,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="5" column="1">
       <widget class="QLabel" name="f_time">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -176,7 +156,7 @@
      </item>
     </layout>
    </item>
-   <item row="6" column="0">
+   <item row="1" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -189,7 +169,7 @@
      </property>
     </spacer>
    </item>
-   <item row="7" column="0">
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="f_init">

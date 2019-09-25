@@ -172,6 +172,7 @@ void Simul6::loadData() {
     ui->f_parameters->setDt( ccontrol["dt"].toDouble() );
     ui->f_parameters->setOptimizeDt( ccontrol["optimize_dt"].toBool() );
     ui->f_parameters->setVoltage( ccontrol["voltage"].toDouble() );
+    ui->f_mixcontrol->resizeColumns();
 
     initEngine();
 }

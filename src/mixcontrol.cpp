@@ -3,6 +3,13 @@
 #include "constituentsdialog.h"
 #include <QAction>
 
+
+MixControl::~MixControl()
+{
+    delete ui;
+}
+
+
 MixControl::MixControl(QWidget *parent) :
     QGroupBox(parent),
     ui(new Ui::MixControl)
@@ -11,9 +18,8 @@ MixControl::MixControl(QWidget *parent) :
 
     m_model = new MixControlModel(this);
     ui->f_view->setModel(m_model);
-    for (int i=0; i<MixControlModel::LastCol; i++) {
-        ui->f_view->resizeColumnToContents(i);
-    }
+
+    resizeColumns();
 
     QAction *action;
     action = new QAction("Add", this);
@@ -28,6 +34,7 @@ MixControl::MixControl(QWidget *parent) :
             // QItemSelectionModel sm;
             // sm.select(index, QItemSelectionModel::Rows);
             // ui->f_view->setSelectionModel(&sm);
+            resizeColumns();
         }
     });
     ui->f_view->addAction(action);
@@ -56,6 +63,7 @@ MixControl::MixControl(QWidget *parent) :
             Constituent c = dialog.constituent();
             Segments s = dialog.segments();
             m_model->setConstituentAndSegments(c, s, row);
+            resizeColumns();
         }
     });
     connect(ui->f_view, &MyView::currentRowChanged, [this,action]() {
@@ -64,7 +72,10 @@ MixControl::MixControl(QWidget *parent) :
     ui->f_view->addAction(action);
 }
 
-MixControl::~MixControl()
-{
-    delete ui;
+
+void MixControl::resizeColumns() {
+    for (int i=0; i<MixControlModel::LastCol; i++) {
+        ui->f_view->resizeColumnToContents(i);
+        }
 }
+
