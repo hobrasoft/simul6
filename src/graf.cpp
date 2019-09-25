@@ -20,7 +20,6 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 void Graf::init(const Engine *pEngine) {
     m_chart->removeAllSeries();
     pEngine->lock();
-    auto hpl = pEngine->getHpl();
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
     for (auto &s : pEngine->getMix().getSamples()) {
@@ -34,20 +33,22 @@ void Graf::init(const Engine *pEngine) {
             x += inc_x;
             }
         }
-    pEngine->unlock();
 
     QLineSeries *series = new QLineSeries(this);
     series->setName(tr("pH"));
     double x = 0;
+    auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
         if (hpl[i] > 0) {
             series->append(QPointF(x * 1000.0, -log(hpl[i]) / log(10)));
             }
         x += inc_x;
         }
+    pEngine->unlock();
+
     m_chart->addSeries(series);
-    m_chart->createDefaultAxes();
     m_chart->legend()->setVisible(false);
+    m_chart->createDefaultAxes();
 }
 
 
@@ -58,7 +59,6 @@ void Graf::drawGraph(const Engine *pEngine)
         }
 
     pEngine->lock(); 
-    auto hpl = pEngine->getHpl();
     size_t p = pEngine->getNp(); // points
     QLineSeries *series;
 
@@ -68,11 +68,13 @@ void Graf::drawGraph(const Engine *pEngine)
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         double x = 0;
         QList<double> vlist;
+        QVector<QPointF> plist;
         for (unsigned int i = 0; i <= p; i++){
-            series->replace(i, QPointF(x * 1000.0, s.getA(0, i)));
+            plist << QPointF(x * 1000.0, s.getA(0, i));
             vlist << x;
             x += inc_x;
             }
+        series->replace(plist);
 
         Dbt::Graf gdata;
         gdata.time = pEngine->t;
@@ -85,12 +87,13 @@ void Graf::drawGraph(const Engine *pEngine)
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     double x = 0;
+    auto hpl = pEngine->getHpl();
+    QVector<QPointF> plist;
     for (unsigned int i = 0; i <= p; i++) {
-        if (hpl[i] > 0) {
-            series->replace(i, QPointF(x * 1000.0, -log(hpl[i]) / log(10)));
-            }
+        plist << QPointF(x * 1000.0, (hpl[i] > 0) ? -log(hpl[i]) : 0);
         x += inc_x;
         }
+    series->replace(plist);
     pEngine->unlock(); 
 
 }

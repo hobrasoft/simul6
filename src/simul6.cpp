@@ -72,13 +72,11 @@ const MixControlModel *Simul6::mixControlModel() const {
 
 
 void Simul6::engineFinished() {
-    ui->f_parameters->setEnabled(true);
     ui->f_computeControl->slotFinished();
 
 }
 
 void Simul6::runEngine() {
-    ui->f_parameters->setEnabled(false);
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
     ui->f_simulationProfile->slotRun();
@@ -106,7 +104,6 @@ void Simul6::initEngine() {
 
 
 void Simul6::stopEngine() {
-    ui->f_parameters->setEnabled(true);
     ui->f_simulationProfile->slotStop();
 }
 
