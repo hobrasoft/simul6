@@ -9,6 +9,7 @@
 #include <QDialog>
 #include "segmentsmodel.h"
 #include "Constituent.h"
+#include "msettings.h"
 #include "segments.h"
 
 namespace Ui {
@@ -21,6 +22,7 @@ class Ampholines;
 class Ampholines : public QDialog {
     Q_OBJECT
 public:
+   ~Ampholines();
     Ampholines(QWidget *parent);
 
     const QList<Constituent>& constituents() const { return m_constituents; }
@@ -29,6 +31,9 @@ public:
 private slots:
     void accept();
     void recalculate();
+
+    void readSettings();
+    void writeSettings();
 
 private:
     Ui::Ampholines *ui;

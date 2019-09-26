@@ -20,8 +20,12 @@ MixControlModel::MixControlModel(QObject *parent)
     setHeaderData(Ratio, Qt::Horizontal, tr("Ratio"));
 }
 
-QModelIndex MixControlModel::add(const Constituent& constituent, const Segments& segments) {
+QModelIndex MixControlModel::add(const Constituent& pConstituent, const Segments& segments) {
     insertRows(0, 1);
+    Constituent constituent = pConstituent;
+    if (constituent.color() == QColor()) {
+        constituent.setColor(ColorsGenerator::color());
+        }
     setConstituentAndSegments(constituent, segments, 0);
     return index(0, 0);
 }
@@ -58,7 +62,7 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
     setData(index(row, SegCount), len.join("; "));
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
-    setData(index(row, Color), QBrush(ColorsGenerator::color(rowCount())), Qt::BackgroundRole);
+    setData(index(row, Color), QBrush(constituent.color()), Qt::BackgroundRole);
 
 }
 

@@ -7,6 +7,7 @@
 #include <QString>
 #include <QDebug>
 #include <QVariantMap>
+#include <QColor>
 
 class Constituent
 {
@@ -14,6 +15,7 @@ private:
     bool m_valid;
     int m_id;
     QString m_name;
+    QColor  m_color;
 	double m_U;
 	int m_Z;
 	unsigned int m_negCount;
@@ -40,6 +42,7 @@ public:
     void setId(int x) { m_id = x; }
 	void setU(double pU) { m_U = pU; }
 	void setZ(int pZ) { m_Z = pZ; }
+	void setColor(const QColor& c) { m_color = c; }
 	void addNegU(double pValue);
 	void addPosU(double pValue);
 	void addNegPKa(double pValue);
@@ -55,6 +58,7 @@ public:
     double getU(int pCharge) const;
     int getZ() const { return m_Z; }
     double getL(const int pCharge) const;
+    QColor color() const { return m_color; }
 
 
     double getPKa(const int pCharge) const;

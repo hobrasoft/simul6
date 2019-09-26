@@ -36,19 +36,26 @@ void Graf::init(const Engine *pEngine) {
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
     int id = 0;
-    for (auto &s : pEngine->getMix().getSamples()) {
+    for (auto &sample : pEngine->getMix().getSamples()) {
         QLineSeries *series = new QLineSeries(this);
-        QBrush brush = series->brush();
-        brush.setColor(ColorsGenerator::color(id));
-        series->setBrush(brush);
-        series->setName(s.getName());
+        series->setName(sample.getName());
         series->setUseOpenGL(true);
+
+        // colors
+        QBrush brush = series->brush();
+        brush.setColor(sample.color());
+        QPen pen = series->pen();
+        pen.setColor(sample.color());
+        pen.setWidthF(1.6);
+        series->setPen(pen);
+        series->setBrush(brush);
+
         m_chart->addSeries(series);
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
-            series->append(QPointF(x * 1000.0, s.getA(0, i)));
-            if (s.getA(0, i) > maximum)  {
-                maximum = s.getA(0,i);
+            series->append(QPointF(x * 1000.0, sample.getA(0, i)));
+            if (sample.getA(0, i) > maximum)  {
+                maximum = sample.getA(0,i);
                 }
             x += inc_x;
             }

@@ -12,29 +12,32 @@
     "mix": [
         {
             "constituent": {
-                "name": "Amph0007",
-                "negCount": 1,
+                "color": "#09f564",
+                "name": "PHOSPHORIC ACID",
+                "negCount": 3,
                 "pKaNeg": [
-                    11
+                    12.67,
+                    7.21,
+                    2.16
                 ],
                 "pKaPos": [
-                    10
                 ],
-                "posCount": 1,
+                "posCount": 0,
                 "uNeg": [
-                    20
+                    71.5,
+                    61.400000000000006,
+                    34.60000000000001
                 ],
                 "uPos": [
-                    20
                 ]
             },
             "segments": [
                 {
-                    "concentration": 0,
+                    "concentration": 100,
                     "ratio": 1
                 },
                 {
-                    "concentration": 1,
+                    "concentration": 0,
                     "ratio": 1
                 },
                 {
@@ -45,20 +48,19 @@
         },
         {
             "constituent": {
-                "name": "Amph0006",
-                "negCount": 1,
+                "color": "#0909f5",
+                "name": "SODIUM",
+                "negCount": 0,
                 "pKaNeg": [
-                    10
                 ],
                 "pKaPos": [
-                    9
+                    13.7
                 ],
                 "posCount": 1,
                 "uNeg": [
-                    20
                 ],
                 "uPos": [
-                    20
+                    51.9
                 ]
             },
             "segments": [
@@ -67,182 +69,18 @@
                     "ratio": 1
                 },
                 {
-                    "concentration": 1,
+                    "concentration": 0,
                     "ratio": 1
                 },
                 {
-                    "concentration": 0,
+                    "concentration": 100,
                     "ratio": 1
                 }
             ]
         },
         {
             "constituent": {
-                "name": "Amph0005",
-                "negCount": 1,
-                "pKaNeg": [
-                    9
-                ],
-                "pKaPos": [
-                    8
-                ],
-                "posCount": 1,
-                "uNeg": [
-                    20
-                ],
-                "uPos": [
-                    20
-                ]
-            },
-            "segments": [
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 1,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                }
-            ]
-        },
-        {
-            "constituent": {
-                "name": "Amph0004",
-                "negCount": 1,
-                "pKaNeg": [
-                    8
-                ],
-                "pKaPos": [
-                    7
-                ],
-                "posCount": 1,
-                "uNeg": [
-                    20
-                ],
-                "uPos": [
-                    20
-                ]
-            },
-            "segments": [
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 1,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                }
-            ]
-        },
-        {
-            "constituent": {
-                "name": "Amph0003",
-                "negCount": 1,
-                "pKaNeg": [
-                    7
-                ],
-                "pKaPos": [
-                    6
-                ],
-                "posCount": 1,
-                "uNeg": [
-                    20
-                ],
-                "uPos": [
-                    20
-                ]
-            },
-            "segments": [
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 1,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                }
-            ]
-        },
-        {
-            "constituent": {
-                "name": "Amph0002",
-                "negCount": 1,
-                "pKaNeg": [
-                    6
-                ],
-                "pKaPos": [
-                    5
-                ],
-                "posCount": 1,
-                "uNeg": [
-                    20
-                ],
-                "uPos": [
-                    20
-                ]
-            },
-            "segments": [
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 1,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                }
-            ]
-        },
-        {
-            "constituent": {
-                "name": "Amph0001",
-                "negCount": 1,
-                "pKaNeg": [
-                    5
-                ],
-                "pKaPos": [
-                    4
-                ],
-                "posCount": 1,
-                "uNeg": [
-                    20
-                ],
-                "uPos": [
-                    20
-                ]
-            },
-            "segments": [
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 1,
-                    "ratio": 1
-                },
-                {
-                    "concentration": 0,
-                    "ratio": 1
-                }
-            ]
-        },
-        {
-            "constituent": {
+                "color": "#9bf509",
                 "name": "Amph0000",
                 "negCount": 1,
                 "pKaNeg": [
@@ -276,18 +114,21 @@
         },
         {
             "constituent": {
-                "name": "SODIUM",
-                "negCount": 0,
+                "color": "#09f5f5",
+                "name": "Amph0001",
+                "negCount": 1,
                 "pKaNeg": [
+                    5
                 ],
                 "pKaPos": [
-                    13.7
+                    4
                 ],
                 "posCount": 1,
                 "uNeg": [
+                    20
                 ],
                 "uPos": [
-                    51.9
+                    20
                 ]
             },
             "segments": [
@@ -296,42 +137,211 @@
                     "ratio": 1
                 },
                 {
-                    "concentration": 0,
+                    "concentration": 1,
                     "ratio": 1
                 },
                 {
-                    "concentration": 100,
+                    "concentration": 0,
                     "ratio": 1
                 }
             ]
         },
         {
             "constituent": {
-                "name": "PHOSPHORIC ACID",
-                "negCount": 3,
+                "color": "#f56009",
+                "name": "Amph0002",
+                "negCount": 1,
                 "pKaNeg": [
-                    12.67,
-                    7.21,
-                    2.16
+                    6
                 ],
                 "pKaPos": [
+                    5
                 ],
-                "posCount": 0,
+                "posCount": 1,
                 "uNeg": [
-                    71.5,
-                    61.400000000000006,
-                    34.60000000000001
+                    20
                 ],
                 "uPos": [
+                    20
                 ]
             },
             "segments": [
                 {
-                    "concentration": 100,
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 1,
                     "ratio": 1
                 },
                 {
                     "concentration": 0,
+                    "ratio": 1
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "color": "#09f509",
+                "name": "Amph0003",
+                "negCount": 1,
+                "pKaNeg": [
+                    7
+                ],
+                "pKaPos": [
+                    6
+                ],
+                "posCount": 1,
+                "uNeg": [
+                    20
+                ],
+                "uPos": [
+                    20
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 1,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "color": "#0964f5",
+                "name": "Amph0004",
+                "negCount": 1,
+                "pKaNeg": [
+                    8
+                ],
+                "pKaPos": [
+                    7
+                ],
+                "posCount": 1,
+                "uNeg": [
+                    20
+                ],
+                "uPos": [
+                    20
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 1,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "color": "#f5f509",
+                "name": "Amph0005",
+                "negCount": 1,
+                "pKaNeg": [
+                    9
+                ],
+                "pKaPos": [
+                    8
+                ],
+                "posCount": 1,
+                "uNeg": [
+                    20
+                ],
+                "uPos": [
+                    20
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 1,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "color": "#09f59b",
+                "name": "Amph0006",
+                "negCount": 1,
+                "pKaNeg": [
+                    10
+                ],
+                "pKaPos": [
+                    9
+                ],
+                "posCount": 1,
+                "uNeg": [
+                    20
+                ],
+                "uPos": [
+                    20
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 1,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "color": "#f50909",
+                "name": "Amph0007",
+                "negCount": 1,
+                "pKaNeg": [
+                    11
+                ],
+                "pKaPos": [
+                    10
+                ],
+                "posCount": 1,
+                "uNeg": [
+                    20
+                ],
+                "uPos": [
+                    20
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 1,
                     "ratio": 1
                 },
                 {

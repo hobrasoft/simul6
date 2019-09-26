@@ -5,6 +5,7 @@ SOURCES += \
  $$PWD/json.cpp \
  $$PWD/msettings.cpp \
  $$PWD/logger.cpp \
+ $$PWD/colorsgenerator.cpp \ 
 
 HEADERS += \
  $$PWD/json.h \
