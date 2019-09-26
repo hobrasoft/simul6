@@ -5,6 +5,7 @@
 #include "Constituent.h"
 #include "segments.h"
 
+
 class MixControlModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -13,7 +14,8 @@ public:
     explicit MixControlModel(QObject *parent = nullptr);
 
     enum Columns {
-        Name = 0,
+        Visible = 0,
+        Name,
         Color, ///< Barva látky v grafu, zvoleno v sekvenci
         NegCount,
         PosCount,
@@ -36,6 +38,8 @@ public:
 
     QVariantList json() const;
     void setJson(const QVariantList& json);
+
+    void toggleVisible(const QModelIndex&);
 
 private:
 };

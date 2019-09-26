@@ -7,10 +7,12 @@
 #define ConstituentRole Qt::UserRole+1
 #define SegmentsRole Qt::UserRole+2
 
+
 MixControlModel::MixControlModel(QObject *parent)
     : QStandardItemModel(parent)
 {
     insertColumns(0, LastCol);
+    setHeaderData(Visible, Qt::Horizontal, tr("👁"));
     setHeaderData(Name, Qt::Horizontal, tr("Name"));
     setHeaderData(Color, Qt::Horizontal, tr(""));
     setHeaderData(NegCount, Qt::Horizontal, tr("Neg"));
@@ -56,6 +58,7 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
 
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
     setData(index(row, 0), QVariant::fromValue(segments), SegmentsRole);
+    setData(index(row, Visible), constituent.visible());
     setData(index(row, Name), constituent.getName());
     setData(index(row, NegCount), constituent.getNegCount());
     setData(index(row, PosCount), constituent.getPosCount());
@@ -63,6 +66,22 @@ void MixControlModel::setConstituentAndSegments(const Constituent& constituent, 
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
     setData(index(row, Color), QBrush(constituent.color()), Qt::BackgroundRole);
+
+}
+
+
+void MixControlModel::toggleVisible(const QModelIndex& idx) {
+    if (idx.column() != Visible) { return; }
+    QModelIndex vidx = index(idx.row(), Visible);
+    int row = vidx.row();
+    bool visible = data(vidx).toBool();
+    bool negvisible = (visible) ? false : true;
+    
+    Constituent c = constituent(row);
+    c.setVisible(!visible);
+    setData(index(row, 0), QVariant::fromValue(c), ConstituentRole);
+
+    setData(vidx, negvisible);
 
 }
 

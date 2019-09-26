@@ -35,6 +35,7 @@ Constituent::Constituent(const QVariantMap& json) {
     m_valid = true;
     m_name = json["name"].toString();
     m_color = QColor(json["color"].toString());
+    m_visible = json.contains("visible") ? json["visible"].toBool() : true;
     m_negCount = 0;
     m_posCount = 0;
     QVariantList uNeg = json["uNeg"].toList();
@@ -89,6 +90,7 @@ QVariantMap Constituent::json() const {
     QVariantMap data;
     data["name"] = m_name;
     data["color"] = m_color.name(QColor::HexRgb);
+    data["visible"] = m_visible;
     data["negCount"] = m_negCount;
     data["posCount"] = m_posCount;
     data["uNeg"] = listuNeg;

@@ -1,6 +1,8 @@
 #include "mixcontrol.h"
+#include "mixcontroldelegate.h"
 #include "ui_mixcontrol.h"
 #include "constituentsdialog.h"
+#include "pdebug.h"
 #include <QAction>
 #include <QMessageBox>
 
@@ -17,10 +19,10 @@ MixControl::MixControl(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_modelReal = new MixControlModel(this);
-    m_model = new QSortFilterProxyModel(this);
-    m_model->setSourceModel(m_modelReal);
+    m_model = new MixControlModel(this);
     ui->f_view->setModel(m_model);
+
+    ui->f_view->setItemDelegate(new MixControlDelegate(this));
 
     resizeColumns();
 
@@ -54,6 +56,7 @@ MixControl::MixControl(QWidget *parent) :
     ui->f_view->addAction(action);
 
     connect(ui->f_view, &QAbstractItemView::doubleClicked, this, QOverload<const QModelIndex&>::of(&MixControl::editComponent));
+    connect(ui->f_view, &QAbstractItemView::clicked, m_model, &MixControlModel::toggleVisible);
 }
 
 
@@ -69,7 +72,7 @@ void MixControl::addComponent() {
     if (QDialog::Accepted == dialog.exec()) {
         Constituent c = dialog.constituent();
         Segments s = dialog.segments();
-        QModelIndex index = m_modelReal->add(c, s);
+        QModelIndex index = m_model->add(c, s);
         Q_UNUSED(index);
         // QItemSelectionModel sm;
         // sm.select(index, QItemSelectionModel::Rows);
@@ -85,14 +88,14 @@ void MixControl::editComponent() {
 
 
 void MixControl::editComponent(const QModelIndex& index) {
-    int row = m_model->mapToSource(index).row();
+    int row = index.row();
     ConstituentsDialog dialog;
-    dialog.setConstituent(m_modelReal->constituent(row));
-    dialog.setSegments(m_modelReal->segments(row));
+    dialog.setConstituent(m_model->constituent(row));
+    dialog.setSegments(m_model->segments(row));
     if (QDialog::Accepted == dialog.exec()) {
         Constituent c = dialog.constituent();
         Segments s = dialog.segments();
-        m_modelReal->setConstituentAndSegments(c, s, row);
+        m_model->setConstituentAndSegments(c, s, row);
         resizeColumns();
         }
 }

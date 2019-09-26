@@ -2,7 +2,6 @@
 #define MIXCONTROL_H
 
 #include <QGroupBox>
-#include <QSortFilterProxyModel>
 #include "mixcontrolmodel.h"
 
 namespace Ui {
@@ -17,7 +16,7 @@ public:
     explicit MixControl(QWidget *parent = nullptr);
     ~MixControl();
 
-    const MixControlModel *model() const { return m_modelReal; }
+    const MixControlModel *model() const { return m_model; }
 
 public slots:
     void resizeColumns();
@@ -32,8 +31,7 @@ private slots:
 private:
     Ui::MixControl *ui;
 
-    MixControlModel       *m_modelReal;
-    QSortFilterProxyModel *m_model;
+    MixControlModel *m_model;
 };
 
 #endif // MIXCONTROL_H

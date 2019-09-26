@@ -34,6 +34,7 @@ Simul6::Simul6(QWidget *parent) :
     ui(new Ui::Simul6)
 {
     m_instance = this;
+    m_lastId = 0;
     MSettings::instance(this);
     qDebug() << "Simul6";
     ui->setupUi(this);
@@ -63,6 +64,12 @@ void Simul6::init() {
     readSettings();
     // ImportSna import(this);
     // import.readData("/home/tycho/Desktop/TestSNA.sna");
+}
+
+
+int Simul6::nextId() {
+    m_lastId -= 1;
+    return m_lastId;
 }
 
 

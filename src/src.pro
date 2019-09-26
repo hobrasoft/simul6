@@ -65,6 +65,7 @@ SOURCES += \
     parametersmodel.cpp \
     mixcontrol.cpp \
     mixcontrolmodel.cpp \
+    mixcontroldelegate.cpp \
     segments.cpp \
     importsna.cpp \
     ampholines.cpp \
@@ -91,6 +92,7 @@ HEADERS += \
     parametersmodel.h \
     mixcontrol.h \
     mixcontrolmodel.h \
+    mixcontroldelegate.h \
     segments.h \
     importsna.h \
     ampholines.h \

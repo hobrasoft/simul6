@@ -49,6 +49,7 @@ void Graf::init(const Engine *pEngine) {
         pen.setWidthF(1.6);
         series->setPen(pen);
         series->setBrush(brush);
+        series->setVisible(sample.visible());
 
         m_chart->addSeries(series);
         double x = 0;
@@ -97,17 +98,18 @@ void Graf::drawGraph(const Engine *pEngine)
 
     int id = 0;
     double inc_x = pEngine->getCapLen() / p;
-    for (auto &s : pEngine->getMix().getSamples()) {
+    for (auto &sample : pEngine->getMix().getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         double x = 0;
         QList<double> vlist;
         QVector<QPointF> plist;
         for (unsigned int i = 0; i <= p; i++){
-            plist << QPointF(x * 1000.0, s.getA(0, i));
+            plist << QPointF(x * 1000.0, sample.getA(0, i));
             vlist << x;
             x += inc_x;
             }
         series->replace(plist);
+        series->setVisible(sample.visible());
 
         Dbt::Graf gdata;
         gdata.time = pEngine->t;
