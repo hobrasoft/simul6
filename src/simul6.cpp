@@ -71,6 +71,11 @@ const MixControlModel *Simul6::mixControlModel() const {
 }
 
 
+int Simul6::mixSize() const {
+    return ui->f_mixcontrol->model()->rowCount();
+}
+
+
 void Simul6::engineFinished() {
     ui->f_computeControl->slotFinished();
 

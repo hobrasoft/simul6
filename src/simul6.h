@@ -18,6 +18,7 @@ public:
     static Simul6 *instance();
 
     const MixControlModel *mixControlModel() const;
+    int mixSize() const;
 
     double getCaplen() const;
 

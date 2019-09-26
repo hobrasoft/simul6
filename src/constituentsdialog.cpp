@@ -2,9 +2,12 @@
 #include "constituentsmodel.h"
 #include "ui_constituentsdialog.h"
 #include "parametersmodel.h"
+#include "colorsgenerator.h"
+#include "simul6.h"
 #include "msettings.h"
 #include <QSortFilterProxyModel>
 #include <QRegExp>
+#include <QColorDialog>
 #include <QTimer>
 
 ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
@@ -35,7 +38,17 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
 
     connect(ui->f_databaseView, &MyView::currentRowChanged, this, &ConstituentsDialog::currentRowChanged);
     QTimer::singleShot(1, this, &ConstituentsDialog::readSettings);
+
+    connect(ui->f_colorSelect, &QAbstractButton::clicked, [this](bool){
+        m_color = QColorDialog::getColor(m_color, this);
+        ui->f_color->setStyleSheet("background: "+m_color.name(QColor::HexRgb));
+        });
+
+    m_color = ColorsGenerator::color(Simul6::instance()->mixSize());
+    ui->f_color->setStyleSheet("background: "+m_color.name(QColor::HexRgb));
+    
 }
+
 
 ConstituentsDialog::~ConstituentsDialog()
 {
@@ -43,12 +56,14 @@ ConstituentsDialog::~ConstituentsDialog()
     delete ui;
 }
 
+
 void ConstituentsDialog::enableGroupBoxes() {
     bool manually = ui->f_manuallyGroupBox->isChecked();
     ui->f_segmentsGroupBox->setEnabled(true);
     ui->f_databaseGroupBox->setEnabled(!manually);
     ui->f_parametersGroupBox->setEnabled(manually);
 }
+
 
 void ConstituentsDialog::modelLoaded() {
     ui->f_databaseView->resizeColumnToContents(ConstituentsModel::Id);
@@ -131,6 +146,7 @@ Constituent ConstituentsDialog::constituent() const {
 
     bool manually = ui->f_manuallyGroupBox->isChecked();
     Constituent constituent(ui->f_name->text());
+    constituent.setColor(m_color);
     constituent.setId((manually) ? -1 : m_id);
 
     for (;;) {
@@ -209,7 +225,9 @@ void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     QVariant pu2    = (posCount >= 2) ? constituent.getU(2)/Constituent::uFactor : QVariant();
     QVariant pu3    = (posCount >= 3) ? constituent.getU(3)/Constituent::uFactor : QVariant();
 
+    m_color = constituent.color().name();
     ui->f_name->setText(name);
+    ui->f_color->setStyleSheet("background: "+m_color.name(QColor::HexRgb));
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3), npka3);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2), npka2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1), npka1);

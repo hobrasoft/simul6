@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QSortFilterProxyModel>
+#include <QColor>
 #include "segmentsmodel.h"
 #include "parametersmodel.h"
 #include "constituentsmodel.h"
@@ -39,6 +40,7 @@ private:
     Ui::ConstituentsDialog *ui;
 
     int m_id;
+    QColor m_color;
     SegmentsModel *m_segmentsModel;
     ParametersModel *m_parametersModel;
     ConstituentsModel *m_constituentsModel;
