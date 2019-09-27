@@ -353,10 +353,10 @@ void Engine::der()
                     aV += s.getDif() * s.getA(j, i) * j;
                 }
             }
-
-            aV += c0 * hpl[i] * difHpl - c0 * oH[i] * difOHmin;
-            difPot[i] = aV;
         }
+        aV += c0 * hpl[i] * difHpl - c0 * oH[i] * difOHmin;
+        difPot[i] = aV;
+
     }
 /*konec pragmy*/
 
