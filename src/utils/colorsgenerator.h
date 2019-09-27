@@ -15,6 +15,19 @@ public:
         int hi = ((int)h)%255;
         return QColor::fromHsv(hi, 245, 245, 255);
         }
+
+    static QColor color() {
+        QColor c = color(lastIndex);
+        lastIndex += 1;
+        return c;
+        }
+
+    static void reset() {
+        lastIndex = 0;
+        }
+
+private:
+    static int lastIndex;
 };
 
 #endif

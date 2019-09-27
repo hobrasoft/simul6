@@ -7,6 +7,13 @@
 #include "pdebug.h"
 #include "ui_ampholines.h"
 
+
+Ampholines::~Ampholines() {
+    writeSettings();
+    delete ui;
+}
+
+
 Ampholines::Ampholines(QWidget *parent) : QDialog(parent), ui(new Ui::Ampholines) {
     ui->setupUi(this);
 
@@ -21,6 +28,7 @@ Ampholines::Ampholines(QWidget *parent) : QDialog(parent), ui(new Ui::Ampholines
     connect(ui->f_high_pKAn, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Ampholines::recalculate);
     connect(ui->f_number,    QOverload<int>::of(&QSpinBox::valueChanged), this, &Ampholines::recalculate);
 
+    readSettings();
 }
 
 
@@ -54,5 +62,16 @@ void Ampholines::accept() {
         }
     QDialog::accept();
 }
+
+
+void Ampholines::readSettings() {
+    resize(MSETTINGS->guiAmpholinesWindowSize());
+}
+
+
+void Ampholines::writeSettings() {
+    MSETTINGS->setGuiAmpholinesWindowSize(size());
+}
+
 
 

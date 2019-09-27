@@ -47,6 +47,9 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::dtChanged, ui->f_parameters, &InputParameters::showDt);
     connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showcurDen);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
+
+    connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
+
     QTimer::singleShot(0, this, &Simul6::init);
 }
 
@@ -68,6 +71,11 @@ void Simul6::init() {
 
 const MixControlModel *Simul6::mixControlModel() const {
     return ui->f_mixcontrol->model();
+}
+
+
+int Simul6::mixSize() const {
+    return ui->f_mixcontrol->model()->rowCount();
 }
 
 

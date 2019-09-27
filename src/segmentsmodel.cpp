@@ -11,6 +11,7 @@ SegmentsModel::SegmentsModel(QObject *parent)
     connect(this, &QAbstractItemModel::dataChanged, this, &SegmentsModel::slotDataChanged);
 }
 
+
 void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
     //PDEBUG << segmentsNumber;
     m_segmentsNumber = segmentsNumber;

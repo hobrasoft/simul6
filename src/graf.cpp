@@ -1,10 +1,9 @@
 #include "graf.h"
 #include "omp.h"
 #include "pdebug.h"
-#include "colorsgenerator.h"
+#include "constituentseries.h"
 #include <iostream>
 #include <cmath>
-#include <QLineSeries>
 #include <QValueAxis>
 
 Graf::Graf(QWidget *parent) : QChartView(parent)
@@ -36,19 +35,15 @@ void Graf::init(const Engine *pEngine) {
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
     int id = 0;
-    for (auto &s : pEngine->getMix().getSamples()) {
-        QLineSeries *series = new QLineSeries(this);
-        QBrush brush = series->brush();
-        brush.setColor(ColorsGenerator::color(id));
-        series->setBrush(brush);
-        series->setName(s.getName());
-        series->setUseOpenGL(true);
+    for (auto &sample : pEngine->getMix().getSamples()) {
+        QLineSeries *series = new ConstituentSeries(sample, this);
+
         m_chart->addSeries(series);
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
-            series->append(QPointF(x * 1000.0, s.getA(0, i)));
-            if (s.getA(0, i) > maximum)  {
-                maximum = s.getA(0,i);
+            series->append(QPointF(x * 1000.0, sample.getA(0, i)));
+            if (sample.getA(0, i) > maximum)  {
+                maximum = sample.getA(0,i);
                 }
             x += inc_x;
             }
@@ -78,6 +73,19 @@ void Graf::init(const Engine *pEngine) {
 }
 
 
+void Graf::setVisible(int id, bool visible) {
+    PDEBUG << id << visible;
+    QList<QAbstractSeries *> list = m_chart->series();
+    for (int i=0; i<list.size(); i++) {
+        ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
+        if (series->internalId() == id) {
+            series->setVisible(visible);
+            return;
+            }
+        }
+}
+
+
 void Graf::drawGraph(const Engine *pEngine)
 {
     if (m_db != nullptr && !m_db->isOpen()) {
@@ -90,17 +98,18 @@ void Graf::drawGraph(const Engine *pEngine)
 
     int id = 0;
     double inc_x = pEngine->getCapLen() / p;
-    for (auto &s : pEngine->getMix().getSamples()) {
+    for (auto &sample : pEngine->getMix().getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         double x = 0;
         QList<double> vlist;
         QVector<QPointF> plist;
         for (unsigned int i = 0; i <= p; i++){
-            plist << QPointF(x * 1000.0, s.getA(0, i));
+            plist << QPointF(x * 1000.0, sample.getA(0, i));
             vlist << x;
             x += inc_x;
             }
         series->replace(plist);
+        series->setVisible(sample.visible());
 
         Dbt::Graf gdata;
         gdata.time = pEngine->t;

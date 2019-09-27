@@ -57,6 +57,7 @@ SOURCES += \
     Vec2d.cpp \
     pch.cpp \
     graf.cpp \
+    constituentseries.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
     constituentsdialog.cpp \
@@ -65,6 +66,7 @@ SOURCES += \
     parametersmodel.cpp \
     mixcontrol.cpp \
     mixcontrolmodel.cpp \
+    mixcontroldelegate.cpp \
     segments.cpp \
     importsna.cpp \
     ampholines.cpp \
@@ -82,6 +84,7 @@ HEADERS += \
     Vec2d.h \
     pch.h \
     graf.h \
+    constituentseries.h \
     inputparameters.h \
     constituentsmodel.h \
     settings.h \
@@ -91,6 +94,7 @@ HEADERS += \
     parametersmodel.h \
     mixcontrol.h \
     mixcontrolmodel.h \
+    mixcontroldelegate.h \
     segments.h \
     importsna.h \
     ampholines.h \

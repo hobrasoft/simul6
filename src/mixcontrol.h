@@ -18,8 +18,18 @@ public:
 
     const MixControlModel *model() const { return m_model; }
 
+signals:
+    void visibilityChanged(int id, bool visible);
+
 public slots:
     void resizeColumns();
+
+private slots:
+    void editComponent();
+    void editComponent(const QModelIndex&);
+    void removeComponent();
+    void addComponent();
+    void removeAll();
 
 private:
     Ui::MixControl *ui;
