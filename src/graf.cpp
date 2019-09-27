@@ -1,10 +1,9 @@
 #include "graf.h"
 #include "omp.h"
 #include "pdebug.h"
-#include "colorsgenerator.h"
+#include "constituentseries.h"
 #include <iostream>
 #include <cmath>
-#include <QLineSeries>
 #include <QValueAxis>
 
 Graf::Graf(QWidget *parent) : QChartView(parent)
@@ -37,19 +36,7 @@ void Graf::init(const Engine *pEngine) {
     double inc_x = pEngine->getCapLen() / p;
     int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
-        QLineSeries *series = new QLineSeries(this);
-        series->setName(sample.getName());
-        series->setUseOpenGL(true);
-
-        // colors
-        QBrush brush = series->brush();
-        brush.setColor(sample.color());
-        QPen pen = series->pen();
-        pen.setColor(sample.color());
-        pen.setWidthF(1.6);
-        series->setPen(pen);
-        series->setBrush(brush);
-        series->setVisible(sample.visible());
+        QLineSeries *series = new ConstituentSeries(sample, this);
 
         m_chart->addSeries(series);
         double x = 0;
@@ -82,6 +69,19 @@ void Graf::init(const Engine *pEngine) {
     QList<QAbstractAxis *> axes = m_chart->axes(Qt::Vertical);
     if (!axes.isEmpty()) {
         qobject_cast<QValueAxis *>(axes[0])->setRange(0, maximum);
+        }
+}
+
+
+void Graf::setVisible(int id, bool visible) {
+    PDEBUG << id << visible;
+    QList<QAbstractSeries *> list = m_chart->series();
+    for (int i=0; i<list.size(); i++) {
+        ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
+        if (series->internalId() == id) {
+            series->setVisible(visible);
+            return;
+            }
         }
 }
 

@@ -23,6 +23,7 @@ public slots:
     //void drawGraph(Mix *pMix, std::vector<double> *pHpl);
     void drawGraph(const Engine *pEngine);
     void init(const Engine *pEngine);
+    void setVisible(int id, bool visible);
 
 private:
     QChart *m_chart;

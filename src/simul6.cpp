@@ -34,7 +34,6 @@ Simul6::Simul6(QWidget *parent) :
     ui(new Ui::Simul6)
 {
     m_instance = this;
-    m_lastId = 0;
     MSettings::instance(this);
     qDebug() << "Simul6";
     ui->setupUi(this);
@@ -48,6 +47,9 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::dtChanged, ui->f_parameters, &InputParameters::showDt);
     connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showcurDen);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
+
+    connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
+
     QTimer::singleShot(0, this, &Simul6::init);
 }
 
@@ -64,12 +66,6 @@ void Simul6::init() {
     readSettings();
     // ImportSna import(this);
     // import.readData("/home/tycho/Desktop/TestSNA.sna");
-}
-
-
-int Simul6::nextId() {
-    m_lastId -= 1;
-    return m_lastId;
 }
 
 

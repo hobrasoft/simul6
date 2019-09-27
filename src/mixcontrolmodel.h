@@ -41,6 +41,9 @@ public:
 
     void toggleVisible(const QModelIndex&);
 
+signals:
+    void visibilityChanged(int id, bool visible);
+
 private:
 };
 

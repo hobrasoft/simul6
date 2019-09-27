@@ -18,6 +18,9 @@ public:
 
     const MixControlModel *model() const { return m_model; }
 
+signals:
+    void visibilityChanged(int id, bool visible);
+
 public slots:
     void resizeColumns();
 

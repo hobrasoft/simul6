@@ -12,13 +12,15 @@ const double Constituent::uFactor = 1e-9;
 
 Constituent::Constituent() :
     m_valid(false),
-    m_id(-1)
+    m_id(-1),
+    m_internalId(0)
 {
 }
 
 Constituent::Constituent(const QString& pName, const double pU, const int pZ) :
     m_valid(true),
     m_id(-1),
+    m_internalId(0),
 	m_name(pName), 
 	m_U(pU), 
 	m_Z(pZ),
@@ -31,6 +33,7 @@ Constituent::Constituent(const QString& pName, const double pU, const int pZ) :
 
 Constituent::Constituent(const QVariantMap& json) {
     m_id = -1;
+    m_internalId = 0;
     m_U = 0; m_Z = 0;
     m_valid = true;
     m_name = json["name"].toString();

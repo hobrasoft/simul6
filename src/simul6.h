@@ -22,8 +22,6 @@ public:
 
     double getCaplen() const;
 
-    int nextId();
-
 private slots:
     void init();
     void createActions();
@@ -44,7 +42,6 @@ private:
     static Simul6 *m_instance;
     Ui::Simul6 *ui;
     void closeEvent(QCloseEvent *) override;
-    int m_lastId;
 };
 
 #endif // SIMUL6_H

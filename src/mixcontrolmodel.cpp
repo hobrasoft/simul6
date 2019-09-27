@@ -2,6 +2,7 @@
 #include "pdebug.h"
 #include "simul6.h"
 #include "colorsgenerator.h"
+#include "idgenerator.h"
 #include "json.h"
 
 #define ConstituentRole Qt::UserRole+1
@@ -27,6 +28,9 @@ QModelIndex MixControlModel::add(const Constituent& pConstituent, const Segments
     Constituent constituent = pConstituent;
     if (constituent.color() == QColor()) {
         constituent.setColor(ColorsGenerator::color());
+        }
+    if (constituent.getInternalId() == 0) {
+        constituent.setInternalId(IdGenerator::nextId());
         }
     setConstituentAndSegments(constituent, segments, 0);
     return index(0, 0);
@@ -82,6 +86,10 @@ void MixControlModel::toggleVisible(const QModelIndex& idx) {
     setData(index(row, 0), QVariant::fromValue(c), ConstituentRole);
 
     setData(vidx, negvisible);
+
+    emit visibilityChanged(c.getInternalId(), negvisible);
+
+    PDEBUG << c.getInternalId();
 
 }
 

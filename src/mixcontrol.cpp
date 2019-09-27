@@ -21,8 +21,8 @@ MixControl::MixControl(QWidget *parent) :
 
     m_model = new MixControlModel(this);
     ui->f_view->setModel(m_model);
-
     ui->f_view->setItemDelegate(new MixControlDelegate(this));
+    connect(m_model, &MixControlModel::visibilityChanged, this, &MixControl::visibilityChanged);
 
     resizeColumns();
 

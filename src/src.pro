@@ -57,6 +57,7 @@ SOURCES += \
     Vec2d.cpp \
     pch.cpp \
     graf.cpp \
+    constituentseries.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
     constituentsdialog.cpp \
@@ -83,6 +84,7 @@ HEADERS += \
     Vec2d.h \
     pch.h \
     graf.h \
+    constituentseries.h \
     inputparameters.h \
     constituentsmodel.h \
     settings.h \
