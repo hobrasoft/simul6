@@ -4,6 +4,7 @@
  * @author Petr Bravenec <petr.bravenec@hobrasoft.cz>
  */
 #include "ampholines.h"
+#include "segmentsdelegate.h"
 #include "pdebug.h"
 #include "ui_ampholines.h"
 
@@ -20,6 +21,7 @@ Ampholines::Ampholines(QWidget *parent) : QDialog(parent), ui(new Ui::Ampholines
     m_segmentsModel = new SegmentsModel(this);
     m_segmentsModel->setSegmentsNumber(ui->f_segmentsNumber->value());
     ui->f_segmentsView->setModel(m_segmentsModel);
+    ui->f_segmentsView->setItemDelegate(new SegmentsDelegate(this));
     connect(ui->f_segmentsNumber, SIGNAL(valueChanged(int)), m_segmentsModel, SLOT(setSegmentsNumber(int)));
 
 
