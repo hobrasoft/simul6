@@ -1,6 +1,6 @@
 TEMPLATE = aux
 TARGET =
-CONFIG += no_link target_predeps staticlibA
+CONFIG += no_link target_predeps staticlib
 
 TEMPNAME = $${QMAKE_QMAKE}
 QTPATH = $$system_path($$dirname(TEMPNAME))
