@@ -5,9 +5,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    qDebug() << "main0";
-    a.setApplicationName("Simul6b");
-    a.setOrganizationName("natur.cuni.cz");
+    a.setApplicationName(APP_NAME);
+    a.setApplicationVersion(APP_VERSION);
+    a.setOrganizationDomain(ORGANIZATION_DOMAIN);
     Simul6::instance()->show();
     return a.exec();
 }

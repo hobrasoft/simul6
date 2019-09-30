@@ -34,6 +34,7 @@ msvc {
     LIBS += -lgomp
 }
 
+include(../version.pri)
 include(../global.pri)
 include(../data/data.pri)
 include(../images/images.pri)
@@ -43,6 +44,10 @@ include(database/database.pri)
 
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
+
+DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
+DEFINES += APP_NAME=\\\"$$APP_NAME\\\"
+DEFINES += ORGANIZATION_DOMAIN=\\\"$$ORGANIZATION_DOMAIN\\\"
 
 SOURCES += \
     main.cpp \
@@ -98,7 +103,6 @@ HEADERS += \
     segments.h \
     importsna.h \
     ampholines.h \
-    version.h \
     myview.h
 
 FORMS += \
