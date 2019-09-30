@@ -13,6 +13,8 @@ QMAKE_EXTRA_TARGETS += first
 include(../version.pri)
 first.commands += \
     powershell -Command \
+        "\"Copy-Item\"" -Path $${PWD}\\simul6b.nsi -Destination $${OUT_PWD} & \
+    powershell -Command \
         \"(gc $$PWD/NSIS.definitions.nsh.in) \
         -replace \\\"\"@APP_NAME@\"\\\", \\\"$$APP_NAME\\\" \
         -replace \\\"\"@APP_VERSION@\"\\\", \\\"$$APP_VERSION\\\" \
@@ -29,5 +31,9 @@ first.commands += \
         "\"Copy-Item\"" -Path $${GCCPATH}\\libstdc++-6.dll -Destination $${BINPATH} & \
     \"$$QTPATH\windeployqt.exe\" $${BINPATH} & \
     \"$$MAKENSIS\" simul6b.nsi
+
+DISTFILES += \
+    NSIS.definitions.nsh.in \
+    simul6b.nsi
 
 
