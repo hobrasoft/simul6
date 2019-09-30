@@ -1,6 +1,7 @@
 #include "constituentsdialog.h"
 #include "constituentsmodel.h"
 #include "ui_constituentsdialog.h"
+#include "segmentsdelegate.h"
 #include "parametersmodel.h"
 #include "colorsgenerator.h"
 #include "simul6.h"
@@ -31,6 +32,7 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     m_segmentsModel = new SegmentsModel(this);
     m_segmentsModel->setSegmentsNumber(ui->f_segmentsNumber->value());
     ui->f_segmentsView->setModel(m_segmentsModel);
+    ui->f_segmentsView->setItemDelegate(new SegmentsDelegate(this));
     connect(ui->f_segmentsNumber, SIGNAL(valueChanged(int)), m_segmentsModel, SLOT(setSegmentsNumber(int)));
 
     m_parametersModel = new ParametersModel(this);

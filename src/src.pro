@@ -67,6 +67,7 @@ SOURCES += \
     constituentsmodel.cpp \
     constituentsdialog.cpp \
     segmentsmodel.cpp \
+    segmentsdelegate.cpp \
     preferences.cpp \
     parametersmodel.cpp \
     mixcontrol.cpp \
@@ -95,6 +96,7 @@ HEADERS += \
     settings.h \
     constituentsdialog.h \
     segmentsmodel.h \
+    segmentsdelegate.h \
     preferences.h \
     parametersmodel.h \
     mixcontrol.h \
