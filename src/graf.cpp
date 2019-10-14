@@ -29,7 +29,7 @@ void Graf::mouseReleaseEvent(QMouseEvent *event) {
 
 
 void Graf::init(const Engine *pEngine) {
-    double maximum = -99999;
+    double maximum = 0;
     m_chart->removeAllSeries();
     pEngine->lock();
     size_t p = pEngine->getNp(); // points
@@ -57,18 +57,33 @@ void Graf::init(const Engine *pEngine) {
     auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
         if (hpl[i] > 0) {
-            series->append(QPointF(x * 1000.0, -log(hpl[i]) / log(10)));
+            double pH = -log(hpl[i]) / log(10);
+            if (pH > maximum) { 
+                maximum = pH;
+                }
+            series->append(QPointF(x * 1000.0, pH));
             }
         x += inc_x;
         }
     pEngine->unlock();
+    maximum = 10*floor(1+maximum/10);
+    double tickInterval \
+        = (maximum <= 0.5) ? 0.01 
+        : (maximum <= 5.0) ? 0.1
+        : (maximum <= 50.) ? 1.0
+        : (maximum <= 500.) ? 10.0  
+        : 100;
 
     m_chart->addSeries(series);
     m_chart->legend()->setVisible(false);
     m_chart->createDefaultAxes();
     QList<QAbstractAxis *> axes = m_chart->axes(Qt::Vertical);
     if (!axes.isEmpty()) {
-        qobject_cast<QValueAxis *>(axes[0])->setRange(0, maximum);
+        QValueAxis *axis = qobject_cast<QValueAxis *>(axes[0]);
+        axis->setRange(-0.09 * maximum, 1.09 * maximum);
+        axis->setTickAnchor(0);
+        axis->setTickInterval(tickInterval);
+        axis->setTickType(QValueAxis::TicksDynamic);
         }
 }
 
@@ -125,7 +140,8 @@ void Graf::drawGraph(const Engine *pEngine)
     auto hpl = pEngine->getHpl();
     QVector<QPointF> plist;
     for (unsigned int i = 0; i <= p; i++) {
-        plist << QPointF(x * 1000.0, (hpl[i] > 0) ? -log(hpl[i]) : 0);
+        double pH = (hpl[i] > 0) ? (-log(hpl[i]) / log(10)) : 0;
+        plist << QPointF(x * 1000.0, pH);
         x += inc_x;
         }
     series->replace(plist);
