@@ -74,6 +74,7 @@ SOURCES += \
     mixcontrolmodel.cpp \
     mixcontroldelegate.cpp \
     simulationprogressdialog.cpp \
+    saveprogress.cpp \
     segments.cpp \
     importsna.cpp \
     ampholines.cpp \
@@ -104,6 +105,7 @@ HEADERS += \
     mixcontrolmodel.h \
     mixcontroldelegate.h \
     simulationprogressdialog.h \
+    saveprogress.h \
     segments.h \
     importsna.h \
     ampholines.h \

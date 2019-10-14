@@ -11,6 +11,7 @@
 #include "pdebug.h"
 #include "ampholines.h"
 #include "simulationprogressdialog.h"
+#include "saveprogress.h"
 #include "about.h"
 #include "db.h"
 #include <QFileDialog>
@@ -38,12 +39,16 @@ Simul6::Simul6(QWidget *parent) :
     MSettings::instance(this);
     qDebug() << "Simul6";
     ui->setupUi(this);
+    SaveProgress::instance(this);
     createActions();
     connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
+    connect(ui->f_computeControl, &ComputeControl::init, SAVEPROGRESS, &SaveProgress::init);
+    connect(ui->f_computeControl, &ComputeControl::init, ui->f_computeControl, &ComputeControl::resetSaveProgressChecked);
     connect(ui->f_computeControl, &ComputeControl::run, this, &Simul6::runEngine);
     connect(ui->f_computeControl, &ComputeControl::stop, this, &Simul6::stopEngine);
 
     connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, ui->f_computeControl, &ComputeControl::showTime);
+    connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, SAVEPROGRESS, &SaveProgress::slotTimeChanged);
     connect(ui->f_simulationProfile, &SimulationProfile::errorChanged, ui->f_parameters, &InputParameters::showError);
     connect(ui->f_simulationProfile, &SimulationProfile::dtChanged, ui->f_parameters, &InputParameters::showDt);
     connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showcurDen);
@@ -84,6 +89,12 @@ void Simul6::engineFinished() {
     ui->f_computeControl->slotFinished();
 
 }
+
+
+const Engine *Simul6::engine() const {
+    return ui->f_simulationProfile->engine();
+}
+
 
 void Simul6::runEngine() {
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
@@ -135,7 +146,14 @@ void Simul6::saveData() {
         SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
         return;
         }
+    file.write(JSON::json(data()));
+    file.close();
+}
+
+
+QVariantMap Simul6::data() const {
     QVariantMap data;
+    if (mixControlModel() == nullptr) { return data; }
     data["mix"] = mixControlModel()->json();
 
     QVariantMap ccontrol;
@@ -148,9 +166,7 @@ void Simul6::saveData() {
     ccontrol["optimize_dt"] = ui->f_parameters->optimizeDt();
     ccontrol["voltage"] = ui->f_parameters->getVoltage();
     data["compute_control"] = ccontrol;
-
-    file.write(JSON::json(data));
-    file.close();
+    return data;
 }
 
 
@@ -224,6 +240,7 @@ void Simul6::createActions() {
         SimulationProgressDialog d(this);
         if (QDialog::Accepted != d.exec()) { return; }
         ui->f_computeControl->setSaveProgressChecked(true);
+        SAVEPROGRESS->setActive(true);
     });
     connect(ui->f_computeControl, &ComputeControl::saveProgressChecked, action, &QAction::trigger);
 

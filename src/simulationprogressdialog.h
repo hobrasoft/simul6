@@ -22,6 +22,11 @@ class SimulationProgressDialog : public QDialog {
     SimulationProgressDialog(QWidget *parent);
    ~SimulationProgressDialog();
 
+  private slots:
+    void selectFile();
+    void changeExtension();
+    void accept();
+
   private:
     Ui::SimulationProgressDialog *ui;
 };

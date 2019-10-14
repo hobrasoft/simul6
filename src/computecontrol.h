@@ -39,6 +39,7 @@ public slots:
     void showTime(double);
     void slotFinished();
     void setSaveProgressChecked(bool x);
+    void resetSaveProgressChecked() { setSaveProgressChecked(false); }
 
 private slots:
     void slotRunClicked();

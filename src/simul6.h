@@ -9,6 +9,8 @@ namespace Ui {
 class Simul6;
 }
 
+class Engine;
+
 class Simul6 : public QMainWindow
 {
     Q_OBJECT
@@ -21,6 +23,10 @@ public:
     int mixSize() const;
 
     double getCaplen() const;
+
+    QVariantMap data() const;
+
+    const Engine *engine() const;
 
 private slots:
     void init();
