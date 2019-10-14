@@ -222,8 +222,10 @@ void Simul6::createActions() {
     menu->addAction(action);
     connect(action, &QAction::triggered, [this]() {
         SimulationProgressDialog d(this);
-        d.exec();
+        if (QDialog::Accepted != d.exec()) { return; }
+        ui->f_computeControl->setSaveProgressChecked(true);
     });
+    connect(ui->f_computeControl, &ComputeControl::saveProgressChecked, action, &QAction::trigger);
 
     action = new QAction(tr("Ampholines"), this);
     connect(action, &QAction::triggered, [this]() {

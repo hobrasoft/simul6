@@ -33,10 +33,12 @@ signals:
     void init();
     void run();
     void stop();
+    void saveProgressChecked();
 
 public slots:
     void showTime(double);
     void slotFinished();
+    void setSaveProgressChecked(bool x);
 
 private slots:
     void slotRunClicked();

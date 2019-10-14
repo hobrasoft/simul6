@@ -12,6 +12,9 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_run, &QPushButton::clicked, this, &ComputeControl::slotRunClicked);
     connect(ui->f_stop, &QPushButton::clicked, this, &ComputeControl::slotStopClicked);
     connect(ui->f_init, &QPushButton::clicked, this, &ComputeControl::slotInitClicked);
+    connect(ui->f_saveprogress, &QAbstractButton::clicked, [this]() {
+        if (ui->f_saveprogress->isChecked()) { emit saveProgressChecked(); }
+        });
 }
 
 ComputeControl::~ComputeControl()
@@ -22,6 +25,11 @@ ComputeControl::~ComputeControl()
 
 void ComputeControl::showTime(double time) {
     ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
+}
+
+
+void ComputeControl::setSaveProgressChecked(bool x) {
+    ui->f_saveprogress->setChecked(x);
 }
 
 
