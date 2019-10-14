@@ -66,12 +66,16 @@ void Graf::init(const Engine *pEngine) {
         x += inc_x;
         }
     pEngine->unlock();
-    maximum = 10*floor(1+maximum/10);
+    // maximum = 10*floor(1+maximum/10);
     double tickInterval \
-        = (maximum <= 0.5) ? 0.01 
-        : (maximum <= 5.0) ? 0.1
-        : (maximum <= 50.) ? 1.0
-        : (maximum <= 500.) ? 10.0  
+        = (maximum <= 0.3) ? 0.01 
+        : (maximum <= 2.0) ? 0.2
+        : (maximum <= 3.0) ? 0.5
+        : (maximum <= 10.) ? 1.0
+        : (maximum <= 20.) ? 2.0
+        : (maximum <= 50.) ? 5.0
+        : (maximum <= 200.) ? 10.0  
+        : (maximum <= 300.) ? 50.0  
         : 100;
 
     m_chart->addSeries(series);
