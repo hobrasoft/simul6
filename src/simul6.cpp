@@ -10,6 +10,7 @@
 #include "importsna.h"
 #include "pdebug.h"
 #include "ampholines.h"
+#include "simulationprogressdialog.h"
 #include "about.h"
 #include "db.h"
 #include <QFileDialog>
@@ -215,6 +216,13 @@ void Simul6::createActions() {
     menu->addAction(action);
     connect(action, &QAction::triggered, [this]() {
         saveData();
+    });
+
+    action = new QAction(tr("Save simulation progress"), this);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        SimulationProgressDialog d(this);
+        d.exec();
     });
 
     action = new QAction(tr("Ampholines"), this);

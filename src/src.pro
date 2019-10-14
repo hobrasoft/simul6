@@ -73,6 +73,7 @@ SOURCES += \
     mixcontrol.cpp \
     mixcontrolmodel.cpp \
     mixcontroldelegate.cpp \
+    simulationprogressdialog.cpp \
     segments.cpp \
     importsna.cpp \
     ampholines.cpp \
@@ -102,6 +103,7 @@ HEADERS += \
     mixcontrol.h \
     mixcontrolmodel.h \
     mixcontroldelegate.h \
+    simulationprogressdialog.h \
     segments.h \
     importsna.h \
     ampholines.h \
@@ -116,6 +118,7 @@ FORMS += \
     preferences.ui \
     mixcontrol.ui \
     ampholines.ui \
+    simulationprogressdialog.ui \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

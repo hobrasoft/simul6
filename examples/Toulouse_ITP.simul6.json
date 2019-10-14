@@ -1,0 +1,282 @@
+{
+    "compute_control": {
+        "caplen": 0.025,
+        "display_interval": 1,
+        "dt": 0.02,
+        "number_of_points": 2000,
+        "optimize_dt": false,
+        "stop_time": 80,
+        "voltage": -100,
+        "zone_edge": 0.0005
+    },
+    "mix": [
+        {
+            "constituent": {
+                "name": "term",
+                "negCount": 0,
+                "pKaNeg": [
+                ],
+                "pKaPos": [
+                    13.7
+                ],
+                "posCount": 1,
+                "uNeg": [
+                ],
+                "uPos": [
+                    15.000000000000002
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 10,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "name": "S5",
+                "negCount": 0,
+                "pKaNeg": [
+                ],
+                "pKaPos": [
+                    13.7
+                ],
+                "posCount": 1,
+                "uNeg": [
+                ],
+                "uPos": [
+                    18.000000000000004
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 4,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "name": "S4",
+                "negCount": 0,
+                "pKaNeg": [
+                ],
+                "pKaPos": [
+                    13.7
+                ],
+                "posCount": 1,
+                "uNeg": [
+                ],
+                "uPos": [
+                    26
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 4,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "name": "S3",
+                "negCount": 0,
+                "pKaNeg": [
+                ],
+                "pKaPos": [
+                    13.7
+                ],
+                "posCount": 1,
+                "uNeg": [
+                ],
+                "uPos": [
+                    35
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 4,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "name": "S2",
+                "negCount": 0,
+                "pKaNeg": [
+                ],
+                "pKaPos": [
+                    13.7
+                ],
+                "posCount": 1,
+                "uNeg": [
+                ],
+                "uPos": [
+                    45.00000000000001
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 4,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "name": "S1",
+                "negCount": 0,
+                "pKaNeg": [
+                ],
+                "pKaPos": [
+                    13.7
+                ],
+                "posCount": 1,
+                "uNeg": [
+                ],
+                "uPos": [
+                    57
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 4,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 5
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "name": "POTASSIUM",
+                "negCount": 0,
+                "pKaNeg": [
+                ],
+                "pKaPos": [
+                    13
+                ],
+                "posCount": 1,
+                "uNeg": [
+                ],
+                "uPos": [
+                    76.2
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 0,
+                    "ratio": 1
+                },
+                {
+                    "concentration": 10,
+                    "ratio": 5
+                },
+                {
+                    "concentration": 10,
+                    "ratio": 5
+                }
+            ]
+        },
+        {
+            "constituent": {
+                "name": "ACETIC ACID",
+                "negCount": 1,
+                "pKaNeg": [
+                    4.756
+                ],
+                "pKaPos": [
+                ],
+                "posCount": 0,
+                "uNeg": [
+                    42.400000000000006
+                ],
+                "uPos": [
+                ]
+            },
+            "segments": [
+                {
+                    "concentration": 20,
+                    "ratio": 1
+                }
+            ]
+        }
+    ]
+}
