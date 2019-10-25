@@ -603,8 +603,8 @@ void Engine::runPrivate() {
         timeDisplay += timeInterval;
     }
 
+    emit timeChanged(t);
     if (m_sendSignals) {
-        emit timeChanged(t);
         emit errorChanged(errMax);
         emit dtChanged(dt);
         emit curDenChanged(curDen);

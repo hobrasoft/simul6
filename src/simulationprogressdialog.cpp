@@ -24,6 +24,7 @@ SimulationProgressDialog::SimulationProgressDialog(QWidget *parent) :
     ui->f_interval->setValue(SAVEPROGRESS->interval());
     ui->f_format_csv->setChecked((SAVEPROGRESS->format() == SaveProgress::Csv));
     ui->f_format_json->setChecked((SAVEPROGRESS->format() == SaveProgress::Json));
+    ui->f_directory->setText(MSETTINGS->exportDirName());
 
     connect(ui->f_filename_select, &QAbstractButton::clicked, this, &SimulationProgressDialog::selectFile);
     connect(ui->f_format_csv, &QAbstractButton::clicked, this, &SimulationProgressDialog::changeExtension);
@@ -52,7 +53,7 @@ void SimulationProgressDialog::changeExtension() {
 
 
 void SimulationProgressDialog::selectFile() {
-    QString dirname = MSETTINGS->dataDirName();
+    QString dirname = MSETTINGS->exportDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), dirname,
         (ui->f_format_json->isChecked())
             ? tr("Simul6 data [.simul6.json] (*.simul6.json);;csv (*.csv)")
@@ -60,7 +61,8 @@ void SimulationProgressDialog::selectFile() {
         );
     if (filename.isEmpty()) { return; }
     filename = filename.trimmed();
-    MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
+    ui->f_directory->setText(QFileInfo(filename).absoluteDir().absolutePath());
+    MSETTINGS->setExportDirName(QFileInfo(filename).absoluteDir().absolutePath());
 
     if (!filename.endsWith(".simul6.json", Qt::CaseInsensitive) && ui->f_format_json->isChecked()) {
         filename = filename.replace(QRegExp("\\.+$"),"");
@@ -94,9 +96,11 @@ void SimulationProgressDialog::selectFile() {
 
 
 void SimulationProgressDialog::accept() {
-    SAVEPROGRESS->setFilename(ui->f_filename->text());
+    QString filename = QFileInfo(ui->f_directory->text().trimmed()).fileName();
+    QString filepath = QDir(ui->f_directory->text()).absoluteFilePath(filename);
+    SAVEPROGRESS->setFormat((ui->f_format_csv->isChecked()) ? SaveProgress::Csv : SaveProgress::Json); // must be first!
+    SAVEPROGRESS->setFilename(filepath);
     SAVEPROGRESS->setInterval(ui->f_interval->value());
-    SAVEPROGRESS->setFormat((ui->f_format_csv->isChecked()) ? SaveProgress::Csv : SaveProgress::Json);
     QDialog::accept();
 }
 

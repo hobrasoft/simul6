@@ -47,6 +47,7 @@ class MSettings : public QSettings {
     static constexpr const char *GuiMainWindowLayout2    = "gui/mainwindow-layout2";
     static constexpr const char *GuiConstituentsDialogSize       = "gui/constituents-dialog-size";
     static constexpr const char *GuiDataDirName          = "gui/data-dir-name";
+    static constexpr const char *GuiExportDirName        = "gui/export-dir-name";
     static constexpr const char *GuiAmpholinesWindowSize = "gui/ampholines-window-size";
 
     // Logování
@@ -70,6 +71,8 @@ class MSettings : public QSettings {
     void setGuiConstituentsDialogSize(const QSize& size) { setValue(GuiConstituentsDialogSize, size); }
     QString dataDirName() const { return value(GuiDataDirName).toString(); }
     void setDataDirName(const QString& dirname) { setValue(GuiDataDirName, dirname); }
+    QString exportDirName() const { return value(GuiExportDirName).toString(); }
+    void setExportDirName(const QString& dirname) { setValue(GuiExportDirName, dirname); }
     QSize guiAmpholinesWindowSize() const { return value(GuiAmpholinesWindowSize, QSize(800, 600)).toSize(); }
     void setGuiAmpholinesWindowSize(const QSize& size) { setValue(GuiAmpholinesWindowSize, size); }
 

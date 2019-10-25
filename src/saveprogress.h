@@ -29,6 +29,7 @@ class SaveProgress : public QObject {
 
   public slots:
     void slotTimeChanged(double);
+    void slotFinished();
     void setFilename(const QString&);
     void setInterval(double);
     void setActive(bool);

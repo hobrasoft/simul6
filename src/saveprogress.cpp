@@ -33,6 +33,17 @@ SaveProgress *SaveProgress::instance(Simul6 *parent) {
 
 void SaveProgress::setFilename(const QString& filename) {
     m_filename = filename;
+
+    if (m_format == Csv && !m_filename.endsWith(".csv", Qt::CaseInsensitive)) {
+        m_filename = filename + ".csv";
+        return;
+        }
+
+    if (m_format == Json && !m_filename.endsWith(".simul6.json", Qt::CaseInsensitive)) {
+        m_filename = filename + ".simul6.json";
+        return;
+        }
+
 }
 
 
@@ -52,7 +63,7 @@ void SaveProgress::setFormat(Format format) {
 
 
 void SaveProgress::init() {
-    m_savedTime= 0;
+    m_savedTime = 0;
     m_data.clear();
     m_filename.clear();
     m_active = false;
@@ -60,8 +71,14 @@ void SaveProgress::init() {
 }
 
 
+void SaveProgress::slotFinished() {
+    m_savedTime = -10000;
+    slotTimeChanged(m_simul6->engine()->getTime());
+}
+
+
 void SaveProgress::slotTimeChanged(double time) {
-    PDEBUG << time << m_active << (m_savedTime + m_interval <= time);
+    // PDEBUG << time << m_active << (m_savedTime + m_interval <= time);
     if (!m_active) { return; }
     if (m_savedTime + m_interval > time) {
         return; 
@@ -78,7 +95,7 @@ void SaveProgress::slotTimeChanged(double time) {
 
 
 void SaveProgress::saveJson(double time) {
-    PDEBUG << time << "saving";
+    // PDEBUG << time << "saving";
 
     const Engine *engine = m_simul6->engine();
     engine->lock();
@@ -121,7 +138,10 @@ void SaveProgress::saveCsv(double time) {
     QString filename = m_filename;
     filename = filename.replace(QRegExp("\\.csv$", Qt::CaseInsensitive), timestamp+".csv");
     QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)) { return; }
+    if (!file.open(QIODevice::WriteOnly)) { 
+        PDEBUG << "Could not open" << filename;
+        return; 
+        }
 
     const Engine *engine = m_simul6->engine();
     engine->lock();
