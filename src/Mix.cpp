@@ -47,7 +47,7 @@ size_t Mix::size()
     return samples.size();
 }
 
-const Sample &Mix::getSample(unsigned int pIndex)
+const Sample &Mix::getSample(unsigned int pIndex) const
 {
 	return samples[pIndex];
 }

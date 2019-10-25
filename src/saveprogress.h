@@ -39,6 +39,9 @@ class SaveProgress : public QObject {
     SaveProgress(Simul6 *parent);
     static SaveProgress *m_instance;
 
+    void saveJson(double time);
+    void saveCsv(double time);
+
     bool    m_active;
     QString m_filename;
     double  m_interval;

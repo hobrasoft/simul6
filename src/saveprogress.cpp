@@ -9,6 +9,7 @@
 #include "Engine.h"
 #include "messagedialog.h"
 #include "json.h"
+#include <math.h>
 
 SaveProgress *SaveProgress::m_instance = nullptr;
 
@@ -67,6 +68,16 @@ void SaveProgress::slotTimeChanged(double time) {
         }
     m_savedTime = time;
 
+    if (m_format == Json) {
+        saveJson(time);
+        }
+    if (m_format == Csv) {
+        saveCsv(time);
+        }
+}
+
+
+void SaveProgress::saveJson(double time) {
     PDEBUG << time << "saving";
 
     const Engine *engine = m_simul6->engine();
@@ -99,12 +110,49 @@ void SaveProgress::slotTimeChanged(double time) {
     m_data["simulation"] = simulations;
 
     QFile file(m_filename);
-    if (!file.open(QIODevice::WriteOnly)) {
-        SHOWMESSAGE(tr("Could not open or create file %1").arg(m_filename));
-        return;
-        }
+    if (!file.open(QIODevice::WriteOnly)) { return; }
     file.write(JSON::json(m_data));
     file.close();
+}
+
+
+void SaveProgress::saveCsv(double time) {
+    QString timestamp = QString("%1").arg(time, 6, 'f', 2, QChar('0'));
+    QString filename = m_filename;
+    filename = filename.replace(QRegExp("\\.csv$", Qt::CaseInsensitive), timestamp+".csv");
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)) { return; }
+
+    const Engine *engine = m_simul6->engine();
+    engine->lock();
+    double caplen = engine->getCapLen();
+    size_t p = engine->getNp(); // points
+    QStringList header;
+    header << "\"len\"";
+    header << "\"pH\"";
+    for (auto &sample : engine->getMix().getSamples()) {
+        header << "\""+sample.getName()+"\"";
+        }
+    file.write(header.join(" ").toUtf8());
+    file.write("\n");
+
+    unsigned int constituentsCount = engine->getMix().getSamples().size();
+    for (unsigned int i = 0; i<= p; i++) {
+        QStringList line;
+        double len = caplen * ((double)i) / ((double)p);
+        double pH = engine->getHpl()[i];
+        pH = (pH > 0) ? -log(pH) / log(10) : 0;
+        line << QString("%1").arg(len);
+        line << QString("%1").arg(pH);
+        for (unsigned int c = 0; c<constituentsCount; c++) {
+            line << QString("%1").arg(engine->getMix().getSample(c).getA(0, i));
+            }
+        file.write(line.join(" ").toUtf8());
+        file.write("\n");
+        }
+    
+    file.close();
+    engine->unlock();
 
 }
 
