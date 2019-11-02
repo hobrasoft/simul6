@@ -16,8 +16,8 @@ SaveProgress *SaveProgress::m_instance = nullptr;
 SaveProgress::SaveProgress(Simul6 *parent) : QObject(parent) {
     m_instance = this;
     m_simul6 = parent;
-    m_format = Json;
-    m_interval = 1;
+    m_format = Csv;
+    m_interval = 10.0;
     init();
 }
 

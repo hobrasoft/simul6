@@ -7,6 +7,7 @@
 #include "ui_simulationprogressdialog.h"
 #include "saveprogress.h"
 #include "msettings.h"
+#include "pdebug.h"
 #include <QFileDialog>
 
 SimulationProgressDialog::~SimulationProgressDialog() {
@@ -25,6 +26,7 @@ SimulationProgressDialog::SimulationProgressDialog(QWidget *parent) :
     ui->f_format_csv->setChecked((SAVEPROGRESS->format() == SaveProgress::Csv));
     ui->f_format_json->setChecked((SAVEPROGRESS->format() == SaveProgress::Json));
     ui->f_directory->setText(MSETTINGS->exportDirName());
+    ui->f_accept->setEnabled(!ui->f_filename->text().isEmpty());
 
     connect(ui->f_filename_select, &QAbstractButton::clicked, this, &SimulationProgressDialog::selectFile);
     connect(ui->f_format_csv, &QAbstractButton::clicked, this, &SimulationProgressDialog::changeExtension);
@@ -96,8 +98,9 @@ void SimulationProgressDialog::selectFile() {
 
 
 void SimulationProgressDialog::accept() {
-    QString filename = QFileInfo(ui->f_directory->text().trimmed()).fileName();
+    QString filename = QFileInfo(ui->f_filename->text().trimmed()).fileName();
     QString filepath = QDir(ui->f_directory->text()).absoluteFilePath(filename);
+    // PDEBUG << filename << filepath << ui->f_directory->text();
     SAVEPROGRESS->setFormat((ui->f_format_csv->isChecked()) ? SaveProgress::Csv : SaveProgress::Json); // must be first!
     SAVEPROGRESS->setFilename(filepath);
     SAVEPROGRESS->setInterval(ui->f_interval->value());

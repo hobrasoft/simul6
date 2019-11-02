@@ -24,7 +24,7 @@ class SaveProgress : public QObject {
 
     const QString& filename() const { return m_filename; }
     bool   active() const { return m_active; }
-    double interval() const { return m_active; }
+    double interval() const { return m_interval; }
     Format format() const { return m_format; }
 
   public slots:
