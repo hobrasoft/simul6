@@ -37,6 +37,9 @@
          <property name="text">
           <string>csv</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -88,7 +91,7 @@
         <double>100.000000000000000</double>
        </property>
        <property name="value">
-        <double>1.000000000000000</double>
+        <double>10.000000000000000</double>
        </property>
       </widget>
      </item>
