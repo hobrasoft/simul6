@@ -148,7 +148,7 @@ void SaveProgress::saveCsv(double time) {
     double caplen = engine->getCapLen();
     size_t p = engine->getNp(); // points
     QStringList header;
-    header << "\"len\"";
+    header << "\"length\"";
     header << "\"pH\"";
     for (auto &sample : engine->getMix().getSamples()) {
         header << "\""+sample.getName()+"\"";

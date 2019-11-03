@@ -104,7 +104,7 @@
      <item>
       <widget class="QLabel" name="f_authors">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bohuslav Gaš&lt;br/&gt;Petr Bravenec&lt;br/&gt;Michal Malý&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bohuslav Gaš&lt;br/&gt;Petr Bravenec&lt;br/&gt;Pavel Gaš&lt;br/&gt;Michal Malý&lt;br/&gt;Vlastimil Hruška&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
