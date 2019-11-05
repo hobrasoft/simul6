@@ -577,6 +577,9 @@ void Engine::run()
     intervalCounter = 0;
     m_running = true;
     QTimer::singleShot(0, this, &Engine::runPrivate);
+    if (t == 0) {
+        emit timeChanged(t);
+        }
 }
 
 
