@@ -63,7 +63,7 @@ void SaveProgress::setFormat(Format format) {
 
 
 void SaveProgress::init() {
-    m_savedTime = 0;
+    m_savedTime = -1000;
     m_data.clear();
     m_filename.clear();
     m_active = false;
