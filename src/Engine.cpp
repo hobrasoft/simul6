@@ -133,8 +133,8 @@ void Engine::initVectors()
 {
     //cout << "Initializing vectors for size: " << getNm() << " elements" << endl;
     hpl.resize(np + 1, 1e-14); // make the number as constant
-    derHpl.resize(np + 1, 0);
-    derOH.resize(np + 1, 0);
+//    derHpl.resize(np + 1, 0);
+//    derOH.resize(np + 1, 0);
     kapa.resize(np + 1, 0);
     oH.resize(np + 1, 0);
     e.resize(np + 1, 0);
@@ -197,7 +197,26 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
     }
 
+//Calculation of pH
     gCalc();
+
+//Calculation of conductivity
+    for (int i = 0; i <= np; i++) {
+        double aV;
+        aV = 0;
+        oH[i] = kw / hpl[i];
+        for (auto &s : mix.getSamples()) {
+            for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
+                if (j != 0) {
+                    aV += s.getU(j) * s.getA(j, i) * abs(j);
+                }
+            }
+        }
+        aV =(aV + c0 * uHpl * hpl[i] + c0 * uOHmin * oH[i]) * farc;
+        kapa[i] = aV;
+    }
+
+//Drawing
     emit mixChanged(this);
     emit drawGraph(this);
     qDebug() << "Engine::init() hotovo";
