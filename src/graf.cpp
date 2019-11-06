@@ -86,7 +86,7 @@ void Graf::init(const Engine *pEngine) {
     x = 0;
     auto kapa = pEngine->getKapa();
     for (unsigned int i = 0; i <= p; i++){
-        series->append(QPointF(x * 1000.0, kapa[i]));
+        series->append(QPointF(x * 1000.0, kapa[i]*100.0));
         x += inc_x;
         }
     m_chart->addSeries(series);
@@ -218,7 +218,7 @@ void Graf::drawGraph(const Engine *pEngine)
     auto kapa = pEngine->getKapa();
     plist.clear();;
     for (unsigned int i = 0; i <= p; i++) {
-        plist << QPointF(x * 1000.0, kapa[i]);
+        plist << QPointF(x * 1000.0, kapa[i]*100.0);
         x += inc_x;
         }
     series->replace(plist);
