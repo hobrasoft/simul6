@@ -26,6 +26,8 @@ public slots:
     void slotRun();
     void slotStop();
     void setVisible(int id, bool visible);
+    void setVisiblePh(bool visible);
+    void setVisibleKapa(bool visible);
 
 signals:
     void timeChanged(double);

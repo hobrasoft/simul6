@@ -29,11 +29,16 @@ public:
     void   setTimeInterval(double);
     void   setTimeStop(double);
 
+    bool   showPh() const;
+    bool   showKapa() const;
+
 signals:
     void init();
     void run();
     void stop();
     void saveProgressChecked();
+    void visibilityChangedPh(bool);
+    void visibilityChangedKapa(bool);
 
 public slots:
     void showTime(double);

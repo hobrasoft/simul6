@@ -24,11 +24,15 @@ public slots:
     void drawGraph(const Engine *pEngine);
     void init(const Engine *pEngine);
     void setVisible(int id, bool visible);
+    void setVisiblePh(bool visible);
+    void setVisibleKapa(bool visible);
 
 private:
     QChart *m_chart;
     Db::Database *m_db;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    bool m_visiblePh;
+    bool m_visibleKapa;
 };
 
 #endif // GRAF_H

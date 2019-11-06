@@ -30,6 +30,16 @@ void SimulationProfile::setVisible(int id, bool visible) {
 }
 
 
+void SimulationProfile::setVisiblePh(bool visible) {
+    ui->f_graf->setVisiblePh(visible);
+}
+
+
+void SimulationProfile::setVisibleKapa(bool visible) {
+    ui->f_graf->setVisibleKapa(visible);
+}
+
+
 void SimulationProfile::createEngine(int np) 
 {
     if (m_engine != nullptr) {

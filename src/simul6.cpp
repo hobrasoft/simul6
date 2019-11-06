@@ -56,6 +56,8 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
 
     connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
+    connect(ui->f_computeControl, &ComputeControl::visibilityChangedPh, ui->f_simulationProfile, &SimulationProfile::setVisiblePh);
+    connect(ui->f_computeControl, &ComputeControl::visibilityChangedKapa, ui->f_simulationProfile, &SimulationProfile::setVisibleKapa);
 
     QTimer::singleShot(0, this, &Simul6::init);
 }
@@ -239,7 +241,10 @@ void Simul6::createActions() {
     menu->addAction(action);
     connect(action, &QAction::triggered, [this]() {
         SimulationProgressDialog d(this);
-        if (QDialog::Accepted != d.exec()) { return; }
+        if (QDialog::Accepted != d.exec()) { 
+            ui->f_computeControl->setSaveProgressChecked(false);
+            return; 
+            }
         ui->f_computeControl->setSaveProgressChecked(true);
         SAVEPROGRESS->setActive(true);
     });
