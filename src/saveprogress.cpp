@@ -150,6 +150,7 @@ void SaveProgress::saveCsv(double time) {
     QStringList header;
     header << "\"length\"";
     header << "\"pH\"";
+    header << "\"cond\"";
     for (auto &sample : engine->getMix().getSamples()) {
         header << "\""+sample.getName()+"\"";
         }
@@ -161,9 +162,11 @@ void SaveProgress::saveCsv(double time) {
         QStringList line;
         double len = caplen * ((double)i) / ((double)p);
         double pH = engine->getHpl()[i];
+        double cond = engine->getKapa()[i]*100.0;
         pH = (pH > 0) ? -log(pH) / log(10) : 0;
         line << QString("%1").arg(len);
         line << QString("%1").arg(pH);
+        line << QString("%1").arg(cond);
         for (unsigned int c = 0; c<constituentsCount; c++) {
             line << QString("%1").arg(engine->getMix().getSample(c).getA(0, i));
             }
