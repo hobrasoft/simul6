@@ -15,6 +15,8 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_saveprogress, &QAbstractButton::clicked, [this]() {
         if (ui->f_saveprogress->isChecked()) { emit saveProgressChecked(); }
         });
+    connect(ui->f_show_kapa, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedKapa);
+    connect(ui->f_show_ph, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedPh);
 }
 
 ComputeControl::~ComputeControl()
@@ -25,6 +27,16 @@ ComputeControl::~ComputeControl()
 
 void ComputeControl::showTime(double time) {
     ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
+}
+
+
+bool ComputeControl::showKapa() const {
+    return ui->f_show_kapa->isChecked();
+}
+
+
+bool ComputeControl::showPh() const {
+    return ui->f_show_ph->isChecked();
 }
 
 

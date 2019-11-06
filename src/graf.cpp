@@ -12,6 +12,8 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     setRubberBand(QChartView::RectangleRubberBand);
     m_chart = new QChart();
     setChart(m_chart);
+    m_visiblePh = true;
+    m_visibleKapa = true;
 
     m_db = nullptr;
     // m_db = new Db::Database("abcd.simul6.sqlite3", this);
@@ -62,6 +64,7 @@ void Graf::init(const Engine *pEngine) {
     QLineSeries *series = new QLineSeries(this);
     series->setName(tr("pH"));
     series->setUseOpenGL(true);
+    series->setVisible(m_visiblePh);
     double x = 0;
     auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
@@ -74,9 +77,21 @@ void Graf::init(const Engine *pEngine) {
             }
         x += inc_x;
         }
-    pEngine->unlock();
-
     m_chart->addSeries(series);
+
+    series = new QLineSeries(this);
+    series->setName(tr("κ"));
+    series->setUseOpenGL(true);
+    series->setVisible(m_visibleKapa);
+    x = 0;
+    auto kapa = pEngine->getKapa();
+    for (unsigned int i = 0; i <= p; i++){
+        series->append(QPointF(x * 1000.0, kapa[i]));
+        x += inc_x;
+        }
+    m_chart->addSeries(series);
+
+    pEngine->unlock();
     m_chart->legend()->setVisible(false);
 
     double ytickInterval \
@@ -135,6 +150,23 @@ void Graf::setVisible(int id, bool visible) {
 }
 
 
+void Graf::setVisiblePh(bool visible) {
+    m_visiblePh = visible;
+    QList<QAbstractSeries *> list = m_chart->series();
+    int i = list.size()-2;
+    if (i<0) { return; }
+    list[i]->setVisible(visible);
+}
+
+
+void Graf::setVisibleKapa(bool visible) {
+    m_visibleKapa = visible;
+    QList<QAbstractSeries *> list = m_chart->series();
+    int i = list.size()-1;
+    if (i<0) { return; }
+    list[i]->setVisible(visible);
+}
+
 void Graf::drawGraph(const Engine *pEngine)
 {
     if (m_db != nullptr && !m_db->isOpen()) {
@@ -179,6 +211,19 @@ void Graf::drawGraph(const Engine *pEngine)
         x += inc_x;
         }
     series->replace(plist);
+    id += 1;
+
+    x = 0;
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    auto kapa = pEngine->getKapa();
+    plist.clear();;
+    for (unsigned int i = 0; i <= p; i++) {
+        plist << QPointF(x * 1000.0, kapa[i]);
+        x += inc_x;
+        }
+    series->replace(plist);
+
+
     pEngine->unlock(); 
 
 }
