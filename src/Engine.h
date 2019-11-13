@@ -83,10 +83,12 @@ public:
     double errL;  // Lovest error along x-axix
     double errH;  // Highest error along x-axix
     double errMax; // Max error along x-axix
+    double error;
     double timeInterval; // how often to display
     double timeDisplay; // time to display
     double timeStop;  // when to stop calculation
     double intervalCounter;  // for measuring time elapsed
+
 
     // 2-dimensional arrays
     //vector<vector<vector<double> > > a;
@@ -110,7 +112,7 @@ public:
     std::vector<double> kapa; // Conductivity
     std::vector<double> oH;
     std::vector<double> e;
-    std::vector<double> error;
+//    std::vector<double> error;
     std::vector<double> difPot;
 
     Mix mix;

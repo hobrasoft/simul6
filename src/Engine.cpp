@@ -138,7 +138,7 @@ void Engine::initVectors()
     kapa.resize(np + 1, 0);
     oH.resize(np + 1, 0);
     e.resize(np + 1, 0);
-    error.resize(np + 1);
+//    error.resize(np + 1);
     difPot.resize(np + 1, 0);
 }
 
@@ -551,16 +551,16 @@ void Engine::cashkarp()
             s.setA(0, i, s.getV(i) + W51 * s.getQ1(i) + W53 * s.getQ3(i) + W54 * s.getQ4(i) + W56 * s.getQ6(i));
         }
 
-        error[i] = 0;
+        error = 0;
 
         for (auto &s : mix.getSamples()) {
-            error[i] = error[i] + s.getQ1(i)*(W51-W41) + s.getQ3(i)*(W53-W43)
+            error = error + s.getQ1(i)*(W51-W41) + s.getQ3(i)*(W53-W43)
                     + s.getQ4(i)*(W54-W44) - s.getQ5(i)*W45 + s.getQ6(i)*(W56-W46);
         }
 
-        error[i] = abs(error[i]);
+        error = abs(error);
 
-        if (error[i] > errMax) errMax = error[i];
+        if (error > errMax) errMax = error;
     }
 
     gCalc();
