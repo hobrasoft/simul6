@@ -186,9 +186,6 @@ void Simul6::loadData() {
         return;
         }
     QVariant data = JSON::data(file.readAll());
-    MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
-    model->setJson(data.toMap()["mix"].toList());
-
     QVariantMap ccontrol = data.toMap()["compute_control"].toMap();
     ui->f_computeControl->setCaplen(1000.0 * ccontrol["caplen"].toDouble());
     ui->f_computeControl->setBWmeters( ccontrol["zone_edge"].toDouble() );
@@ -199,6 +196,9 @@ void Simul6::loadData() {
     ui->f_parameters->setOptimizeDt( ccontrol["optimize_dt"].toBool() );
     ui->f_parameters->setVoltage( ccontrol["voltage"].toDouble() );
     ui->f_mixcontrol->resizeColumns();
+
+    MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
+    model->setJson(data.toMap()["mix"].toList());
 
     initEngine();
 }

@@ -94,6 +94,9 @@ void Graf::init(const Engine *pEngine) {
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
 
+    QValueAxis *axisY = new QValueAxis(this);
+    axisY->setRange(-0.09 * maximum, 1.09 * maximum);
+    #if QT_VERSION > 0x050c00
     double ytickInterval \
         = (maximum <= 0.3) ? 0.01 
         : (maximum <= 2.0) ? 0.2
@@ -104,14 +107,16 @@ void Graf::init(const Engine *pEngine) {
         : (maximum <= 200.) ? 10.0  
         : (maximum <= 300.) ? 50.0  
         : 100;
-    QValueAxis *axisY = new QValueAxis(this);
-    axisY->setRange(-0.09 * maximum, 1.09 * maximum);
     axisY->setTickAnchor(0);
     axisY->setTickInterval(ytickInterval);
     axisY->setTickType(QValueAxis::TicksDynamic);
+    #endif
     m_chart->addAxis(axisY, Qt::AlignLeft);
 
     double mcaplen = 1000 * pEngine->getCapLen();
+    QValueAxis *axisX = new QValueAxis(this);
+    axisX->setRange(0, mcaplen);
+    #if QT_VERSION > 0x050c00
     double xtickInterval \
         = (mcaplen < 2) ? 0.1
         : (mcaplen < 3) ? 0.5
@@ -121,11 +126,10 @@ void Graf::init(const Engine *pEngine) {
         : (mcaplen < 200) ? 10.0
         : (mcaplen < 300) ? 50.0
         : 100;
-    QValueAxis *axisX = new QValueAxis(this);
-    axisX->setRange(0, mcaplen);
     axisX->setTickAnchor(0);
     axisX->setTickInterval(xtickInterval);
     axisX->setTickType(QValueAxis::TicksDynamic);
+    #endif
     m_chart->addAxis(axisX, Qt::AlignBottom);
 
     QList<QAbstractSeries *> serieslist = m_chart->series();
