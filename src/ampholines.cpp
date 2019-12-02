@@ -31,6 +31,7 @@ Ampholines::Ampholines(QWidget *parent) : QDialog(parent), ui(new Ui::Ampholines
     connect(ui->f_number,    QOverload<int>::of(&QSpinBox::valueChanged), this, &Ampholines::recalculate);
 
     readSettings();
+    recalculate();
 }
 
 
@@ -52,7 +53,7 @@ void Ampholines::accept() {
     for (int i=0; i<ui->f_number->value(); i++) {
         double pKAp = low_pKAp + i * delta;
         double pKAn = low_pKAn + i * delta;
-        QString name = QString("%1%2").arg(ui->f_name->text()).arg(i, 4, 10, QChar('0'));
+        QString name = QString("%1%2").arg(ui->f_name->text()).arg(pKAp + delta/2, 6, 'f', 3, QChar('0'));
         PDEBUG << name << pKAn << pKAp << Un << Up;
         Constituent constituent(name);
         constituent.addNegPKa(pKAn);
