@@ -82,14 +82,14 @@ void MixControlModel::toggleVisible(const QModelIndex& idx) {
     bool negvisible = (visible) ? false : true;
     
     Constituent c = constituent(row);
-    c.setVisible(!visible);
+    c.setVisible(negvisible);
     setData(index(row, 0), QVariant::fromValue(c), ConstituentRole);
 
     setData(vidx, negvisible);
 
     emit visibilityChanged(c.getInternalId(), negvisible);
 
-    PDEBUG << c.getInternalId();
+    PDEBUG << c.getInternalId() << c.visible() << negvisible << constituent(row).visible();
 
 }
 

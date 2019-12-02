@@ -6,6 +6,9 @@
 #include <cmath>
 #include <QValueAxis>
 
+#define PH_COLOR    "#0000ff"
+#define KAPPA_COLOR "#000000"
+
 Graf::Graf(QWidget *parent) : QChartView(parent)
 {
     setRenderHint(QPainter::Antialiasing);
@@ -65,6 +68,13 @@ void Graf::init(const Engine *pEngine) {
     series->setName(tr("pH"));
     series->setUseOpenGL(true);
     series->setVisible(m_visiblePh);
+    QBrush phbrush = series->brush();
+    phbrush.setColor(PH_COLOR);
+    QPen phpen = series->pen();
+    phpen.setColor(PH_COLOR);
+    phpen.setWidthF(1.6);
+    series->setPen(phpen);
+    series->setBrush(phbrush);
     double x = 0;
     auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
@@ -83,6 +93,13 @@ void Graf::init(const Engine *pEngine) {
     series->setName(tr("κ"));
     series->setUseOpenGL(true);
     series->setVisible(m_visibleKapa);
+    QBrush kappabrush = series->brush();
+    kappabrush.setColor(KAPPA_COLOR);
+    QPen kappapen = series->pen();
+    kappapen.setColor(KAPPA_COLOR);
+    kappapen.setWidthF(1.6);
+    series->setPen(kappapen);
+    series->setBrush(kappabrush);
     x = 0;
     auto kapa = pEngine->getKapa();
     for (unsigned int i = 0; i <= p; i++){
