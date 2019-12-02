@@ -7,6 +7,7 @@
 #include <vector>
 #include <QChartView>
 #include <QMouseEvent>
+#include <QPointF>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -27,12 +28,17 @@ public slots:
     void setVisiblePh(bool visible);
     void setVisibleKapa(bool visible);
 
+private slots:
+    void seriesClicked(const QPointF&);
+
 private:
     QChart *m_chart;
     Db::Database *m_db;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     bool m_visiblePh;
     bool m_visibleKapa;
+
+    const Engine *m_engine;
 };
 
 #endif // GRAF_H

@@ -62,6 +62,7 @@ SOURCES += \
     Vec2d.cpp \
     pch.cpp \
     graf.cpp \
+    grafdetail.cpp \
     constituentseries.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
@@ -92,6 +93,7 @@ HEADERS += \
     Vec2d.h \
     pch.h \
     graf.h \
+    grafdetail.h \
     constituentseries.h \
     inputparameters.h \
     constituentsmodel.h \
@@ -119,6 +121,7 @@ FORMS += \
     constituentsdialog.ui \
     preferences.ui \
     mixcontrol.ui \
+    grafdetail.ui \
     ampholines.ui \
     simulationprogressdialog.ui \
 

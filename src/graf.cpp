@@ -2,6 +2,7 @@
 #include "omp.h"
 #include "pdebug.h"
 #include "constituentseries.h"
+#include "grafdetail.h"
 #include <iostream>
 #include <cmath>
 #include <QValueAxis>
@@ -17,6 +18,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     setChart(m_chart);
     m_visiblePh = true;
     m_visibleKapa = true;
+    m_engine = nullptr;
 
     m_db = nullptr;
     // m_db = new Db::Database("abcd.simul6.sqlite3", this);
@@ -44,6 +46,7 @@ void Graf::init(const Engine *pEngine) {
     for (int i=0; i<axislistY.size(); i++) {
         m_chart->removeAxis(axislistY[i]);
         }
+    m_engine = pEngine;
     pEngine->lock();
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
@@ -51,6 +54,7 @@ void Graf::init(const Engine *pEngine) {
     int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
         QLineSeries *series = new ConstituentSeries(sample, this);
+        connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
         m_chart->addSeries(series);
 
         double x = 0;
@@ -246,6 +250,25 @@ void Graf::drawGraph(const Engine *pEngine)
 
 
     pEngine->unlock(); 
+
+}
+
+
+void Graf::seriesClicked(const QPointF& point) {
+    PDEBUG << point << sender();
+    QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
+    if (s1 == nullptr) { return; }
+
+    ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
+    if (s2 != nullptr && m_engine != nullptr) {
+        double caplen = m_engine->getCapLen() * 1000.0;
+        int np = m_engine->getNp();
+        int node = np * point.x() / caplen;
+        // PDEBUG << point << m_chart->mapToItem(
+        GrafDetail *x = new GrafDetail(this, s2->name(), point, node);
+        x->move(200, 200);
+        x->show();
+        }
 
 }
 
