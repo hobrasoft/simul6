@@ -19,9 +19,12 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_visiblePh = true;
     m_visibleKapa = true;
     m_engine = nullptr;
+    m_axis_x = nullptr;
+    m_axis_y = nullptr;
 
     m_db = nullptr;
     // m_db = new Db::Database("abcd.simul6.sqlite3", this);
+    connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
 }
 
 
@@ -36,7 +39,6 @@ void Graf::mouseReleaseEvent(QMouseEvent *event) {
 
 
 void Graf::init(const Engine *pEngine) {
-    double maximum = 0;
     m_chart->removeAllSeries();
     QList<QAbstractAxis *> axislistX = m_chart->axes(Qt::Horizontal);
     for (int i=0; i<axislistX.size(); i++) {
@@ -60,9 +62,6 @@ void Graf::init(const Engine *pEngine) {
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
             series->append(QPointF(x * 1000.0, sample.getA(0, i)));
-            if (sample.getA(0, i) > maximum)  {
-                maximum = sample.getA(0,i);
-                }
             x += inc_x;
             }
         id += 1;
@@ -85,9 +84,6 @@ void Graf::init(const Engine *pEngine) {
     for (unsigned int i = 0; i <= p; i++){
         if (hpl[i] > 0) {
             double pH = -log(hpl[i]) / log(10);
-            if (pH > maximum) { 
-                maximum = pH;
-                }
             series->append(QPointF(x * 1000.0, pH));
             }
         x += inc_x;
@@ -117,8 +113,52 @@ void Graf::init(const Engine *pEngine) {
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
 
-    QValueAxis *axisY = new QValueAxis(this);
-    axisY->setRange(-0.09 * maximum, 1.09 * maximum);
+    m_axis_y = new QValueAxis(this);
+    m_chart->addAxis(m_axis_y, Qt::AlignLeft);
+
+    m_axis_x = new QValueAxis(this);
+    m_chart->addAxis(m_axis_x, Qt::AlignBottom);
+
+    QList<QAbstractSeries *> serieslist = m_chart->series();
+    for (int i=0; i<serieslist.size(); i++) {
+        serieslist[i]->attachAxis(m_axis_y);
+        serieslist[i]->attachAxis(m_axis_x);
+        }
+
+    autoscale();
+}
+
+
+void Graf::autoscale() {
+    double maximum = 0;
+    m_engine->lock();
+    size_t p = m_engine->getNp();
+    auto hpl = m_engine->getHpl();
+    auto mix = m_engine->getMix();
+    double mcaplen = 1000 * m_engine->getCapLen();
+    m_engine->unlock();
+
+    for (auto &sample : mix.getSamples()) {
+        PDEBUG << sample.getName() << sample.visible();
+        if (!sample.visible()) { continue; }
+        for (unsigned int i = 0; i <= p; i++){
+            if (sample.getA(0, i) > maximum)  {
+                maximum = sample.getA(0,i);
+                }
+            }
+        }
+
+    for (unsigned int i = 0; m_visiblePh && i <= p; i++){
+        if (hpl[i] > 0) {
+            double pH = -log(hpl[i]) / log(10);
+            if (pH > maximum) { 
+                maximum = pH;
+                }
+            }
+        }
+
+    PDEBUG << maximum << -0.09*maximum << 1.09*maximum;
+    m_axis_y->setRange(-0.09 * maximum, 1.09 * maximum);
     #if QT_VERSION > 0x050c00
     double ytickInterval \
         = (maximum <= 0.3) ? 0.01 
@@ -130,15 +170,12 @@ void Graf::init(const Engine *pEngine) {
         : (maximum <= 200.) ? 10.0  
         : (maximum <= 300.) ? 50.0  
         : 100;
-    axisY->setTickAnchor(0);
-    axisY->setTickInterval(ytickInterval);
-    axisY->setTickType(QValueAxis::TicksDynamic);
+    m_axis_y->setTickAnchor(0);
+    m_axis_y->setTickInterval(ytickInterval);
+    m_axis_y->setTickType(QValueAxis::TicksDynamic);
     #endif
-    m_chart->addAxis(axisY, Qt::AlignLeft);
 
-    double mcaplen = 1000 * pEngine->getCapLen();
-    QValueAxis *axisX = new QValueAxis(this);
-    axisX->setRange(0, mcaplen);
+    m_axis_x->setRange(0, mcaplen);
     #if QT_VERSION > 0x050c00
     double xtickInterval \
         = (mcaplen < 2) ? 0.1
@@ -149,17 +186,10 @@ void Graf::init(const Engine *pEngine) {
         : (mcaplen < 200) ? 10.0
         : (mcaplen < 300) ? 50.0
         : 100;
-    axisX->setTickAnchor(0);
-    axisX->setTickInterval(xtickInterval);
-    axisX->setTickType(QValueAxis::TicksDynamic);
+    m_axis_x->setTickAnchor(0);
+    m_axis_x->setTickInterval(xtickInterval);
+    m_axis_x->setTickType(QValueAxis::TicksDynamic);
     #endif
-    m_chart->addAxis(axisX, Qt::AlignBottom);
-
-    QList<QAbstractSeries *> serieslist = m_chart->series();
-    for (int i=0; i<serieslist.size(); i++) {
-        serieslist[i]->attachAxis(axisY);
-        serieslist[i]->attachAxis(axisX);
-        }
 
 }
 
@@ -169,8 +199,10 @@ void Graf::setVisible(int id, bool visible) {
     QList<QAbstractSeries *> list = m_chart->series();
     for (int i=0; i<list.size(); i++) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
+        PDEBUG << series->internalId() << id;
         if (series->internalId() == id) {
             series->setVisible(visible);
+            autoscale();
             return;
             }
         }
@@ -183,6 +215,7 @@ void Graf::setVisiblePh(bool visible) {
     int i = list.size()-2;
     if (i<0) { return; }
     list[i]->setVisible(visible);
+    autoscale();
 }
 
 
@@ -192,7 +225,9 @@ void Graf::setVisibleKapa(bool visible) {
     int i = list.size()-1;
     if (i<0) { return; }
     list[i]->setVisible(visible);
+    autoscale();
 }
+
 
 void Graf::drawGraph(const Engine *pEngine)
 {
@@ -249,10 +284,16 @@ void Graf::drawGraph(const Engine *pEngine)
         x += inc_x;
         }
     series->replace(plist);
-
-
     pEngine->unlock(); 
+}
 
+
+void Graf::subselected(const QRectF& rect) {
+    Q_UNUSED(rect);
+    if (m_axis_x == nullptr) { return; }
+    if (m_axis_y == nullptr) { return; }
+    // m_axis_x->applyNiceNumbers();
+    // m_axis_y->applyNiceNumbers();
 }
 
 

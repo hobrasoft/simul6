@@ -8,6 +8,8 @@
 #include <QChartView>
 #include <QMouseEvent>
 #include <QPointF>
+#include <QRectF>
+#include <QValueAxis>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -30,6 +32,8 @@ public slots:
 
 private slots:
     void seriesClicked(const QPointF&);
+    void autoscale();
+    void subselected(const QRectF&);
 
 private:
     QChart *m_chart;
@@ -37,6 +41,9 @@ private:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     bool m_visiblePh;
     bool m_visibleKapa;
+
+    QValueAxis *m_axis_x;
+    QValueAxis *m_axis_y;
 
     const Engine *m_engine;
 };
