@@ -69,6 +69,7 @@ void Graf::init(const Engine *pEngine) {
         }
 
     QLineSeries *series = new QLineSeries(this);
+    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("pH"));
     series->setUseOpenGL(true);
     series->setVisible(m_visiblePh);
@@ -94,6 +95,7 @@ void Graf::init(const Engine *pEngine) {
     m_chart->addSeries(series);
 
     series = new QLineSeries(this);
+    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("κ"));
     series->setUseOpenGL(true);
     series->setVisible(m_visibleKapa);
@@ -258,16 +260,35 @@ void Graf::seriesClicked(const QPointF& point) {
     PDEBUG << point << sender();
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
+    if (m_engine == nullptr) { return; }
+    double caplen = m_engine->getCapLen() * 1000.0;
+    int np = m_engine->getNp();
+    int node = np * point.x() / caplen;
+    int x = 200;
+    int y = 200;
 
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
-    if (s2 != nullptr && m_engine != nullptr) {
-        double caplen = m_engine->getCapLen() * 1000.0;
-        int np = m_engine->getNp();
-        int node = np * point.x() / caplen;
+    if (s2 != nullptr) {
         // PDEBUG << point << m_chart->mapToItem(
-        GrafDetail *x = new GrafDetail(this, s2->name(), point, node);
-        x->move(200, 200);
-        x->show();
+        GrafDetail *d = new GrafDetail(this, s2->name(), point, node);
+        d->move(x, y);
+        d->show();
+        return;
+        }
+
+    int seriescount = m_chart->series().size();
+    if (s1 == m_chart->series()[seriescount-2]) {
+        GrafDetail *d = new GrafDetail(this, tr("pH"), point, node);
+        d->move(x, y);
+        d->show();
+        return;
+        }
+
+    if (s1 == m_chart->series()[seriescount-1]) {
+        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), point, node);
+        d->move(x, y);
+        d->show();
+        return;
         }
 
 }
