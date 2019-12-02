@@ -305,21 +305,19 @@ void Graf::subselected(const QRectF& rect) {
 
 
 void Graf::seriesClicked(const QPointF& point) {
-    PDEBUG << point << sender();
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
     if (m_engine == nullptr) { return; }
     double caplen = m_engine->getCapLen() * 1000.0;
     int np = m_engine->getNp();
     int node = np * point.x() / caplen;
-    int x = 200;
-    int y = 200;
+    QPoint position = mapToGlobal(QPoint(15,15));
 
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
     if (s2 != nullptr) {
         // PDEBUG << point << m_chart->mapToItem(
         GrafDetail *d = new GrafDetail(this, s2->name(), point, node);
-        d->move(x, y);
+        d->move(position);
         d->show();
         return;
         }
@@ -327,14 +325,14 @@ void Graf::seriesClicked(const QPointF& point) {
     int seriescount = m_chart->series().size();
     if (s1 == m_chart->series()[seriescount-2]) {
         GrafDetail *d = new GrafDetail(this, tr("pH"), point, node);
-        d->move(x, y);
+        d->move(position);
         d->show();
         return;
         }
 
     if (s1 == m_chart->series()[seriescount-1]) {
         GrafDetail *d = new GrafDetail(this, tr("Conductivity"), point, node);
-        d->move(x, y);
+        d->move(position);
         d->show();
         return;
         }
