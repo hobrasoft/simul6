@@ -26,6 +26,9 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
 
 
 void SimulationProfile::setVisible(int id, bool visible) {
+    if (m_engine != nullptr) {
+        m_engine->setVisible(id, visible);
+        }
     ui->f_graf->setVisible(id, visible);
 }
 

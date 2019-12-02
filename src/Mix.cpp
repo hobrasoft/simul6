@@ -17,6 +17,17 @@ Mix::~Mix()
 	}*/
 }
 
+
+void Mix::setVisible(int id, bool visible) {
+    for (auto &sample : samples) {
+        if (sample.getInternalId() == id) {
+            sample.setVisible(visible);
+            }
+        }
+    
+}
+
+
 Sample &Mix::addSample(const Sample &sample)
 {
 	//Sample *s = new Sample(pConstituent, areas);

@@ -17,7 +17,7 @@ public:
     Mix();
 	~Mix();
 	Sample &addSample(const Sample&);
-    // Sample &addConstituent(const QString& pName, const double pU, const int pZ);
+    void setVisible(int id, bool visible);
     const Sample &getSample(unsigned int pIndex) const;
     const std::vector<Sample> &getSamples() const { return samples; }
     std::vector<Sample> &getSamples() { return samples; }

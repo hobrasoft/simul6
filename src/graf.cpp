@@ -132,9 +132,10 @@ void Graf::init(const Engine *pEngine) {
 void Graf::autoscale() {
     double maximum = 0;
     m_engine->lock();
-    size_t p = m_engine->getNp();
-    auto hpl = m_engine->getHpl();
-    auto mix = m_engine->getMix();
+    size_t p  = m_engine->getNp();
+    auto hpl  = m_engine->getHpl();
+    auto mix  = m_engine->getMix();
+    auto kapa = m_engine->getKapa();
     double mcaplen = 1000 * m_engine->getCapLen();
     m_engine->unlock();
 
@@ -148,12 +149,18 @@ void Graf::autoscale() {
             }
         }
 
-    for (unsigned int i = 0; m_visiblePh && i <= p; i++){
+    for (unsigned int i = 0; m_visiblePh && i <= p; i++) {
         if (hpl[i] > 0) {
             double pH = -log(hpl[i]) / log(10);
             if (pH > maximum) { 
                 maximum = pH;
                 }
+            }
+        }
+
+    for (unsigned int i = 0; m_visibleKapa && i <= p; i++) {
+        if (kapa[i] * 100 > maximum) {
+            maximum = kapa[i] * 100.0;
             }
         }
 

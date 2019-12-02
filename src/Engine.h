@@ -168,6 +168,7 @@ public slots:
     void stop();
     void lock() const;
     void unlock() const;
+    void setVisible(int id, bool visible);
 
 private slots:
     void runPrivate();

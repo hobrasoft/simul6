@@ -572,6 +572,13 @@ void Engine::cashkarp()
 }
 
 
+void Engine::setVisible(int id, bool visible) {
+    lock();
+    mix.setVisible(id, visible);
+    unlock();
+}
+
+
 void Engine::stop() {
     qDebug() << "Engine::stop()";
     m_running = false;
