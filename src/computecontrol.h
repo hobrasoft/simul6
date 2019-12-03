@@ -31,6 +31,7 @@ public:
 
     bool   showPh() const;
     bool   showKapa() const;
+    bool   showE() const;
 
 signals:
     void init();
@@ -39,6 +40,7 @@ signals:
     void saveProgressChecked();
     void visibilityChangedPh(bool);
     void visibilityChangedKapa(bool);
+    void visibilityChangedE(bool);
 
 public slots:
     void showTime(double);

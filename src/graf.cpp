@@ -164,7 +164,6 @@ void Graf::autoscale() {
     m_engine->unlock();
 
     for (auto &sample : mix.getSamples()) {
-        // PDEBUG << sample.getName() << sample.visible();
         if (!sample.visible()) { continue; }
         for (unsigned int i = 0; i <= p; i++){
             if (sample.getA(0, i) > maximum)  {
@@ -194,7 +193,6 @@ void Graf::autoscale() {
             }
         }
 
-    // PDEBUG << maximum << -0.09*maximum << 1.09*maximum;
     m_axis_y->setRange(-0.09 * maximum, 1.09 * maximum);
     #if QT_VERSION > 0x050c00
     double ytickInterval \
@@ -232,11 +230,9 @@ void Graf::autoscale() {
 
 
 void Graf::setVisible(int id, bool visible) {
-    // PDEBUG << id << visible;
     QList<QAbstractSeries *> list = m_chart->series();
     for (int i=0; i<list.size(); i++) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
-        // PDEBUG << series->internalId() << id;
         if (series->internalId() == id) {
             series->setVisible(visible);
             autoscale();
@@ -258,6 +254,16 @@ void Graf::setVisiblePh(bool visible) {
 
 void Graf::setVisibleKapa(bool visible) {
     m_visibleKapa = visible;
+    QList<QAbstractSeries *> list = m_chart->series();
+    int i = list.size()-1;
+    if (i<0) { return; }
+    list[i]->setVisible(visible);
+    autoscale();
+}
+
+
+void Graf::setVisibleE(bool visible) {
+    m_visibleE = visible;
     QList<QAbstractSeries *> list = m_chart->series();
     int i = list.size()-1;
     if (i<0) { return; }
@@ -329,7 +335,6 @@ void Graf::drawGraph(const Engine *pEngine)
     plist.clear();;
     for (unsigned int i = 0; i <= p; i++) {
         plist << QPointF(x * 1000.0, fabs(efield[i]/1000.0));
-        PDEBUG << x << fabs(efield[i]/1000.0);
         x += inc_x;
         }
     series->replace(plist);
@@ -360,7 +365,6 @@ void Graf::seriesClicked(const QPointF& point) {
 
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
     if (s2 != nullptr) {
-        // PDEBUG << point << m_chart->mapToItem(
         GrafDetail *d = new GrafDetail(this, s2->name(), point, node);
         d->move(position);
         d->show();
