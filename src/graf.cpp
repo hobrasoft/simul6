@@ -3,6 +3,7 @@
 #include "pdebug.h"
 #include "constituentseries.h"
 #include "grafdetail.h"
+#include "msettings.h"
 #include <iostream>
 #include <cmath>
 #include <math.h>
@@ -14,7 +15,9 @@
 
 Graf::Graf(QWidget *parent) : QChartView(parent)
 {
-    setRenderHint(QPainter::Antialiasing);
+    if (MSETTINGS->guiChartAntialiasing()) {
+        setRenderHint(QPainter::Antialiasing);
+        }
     setRubberBand(QChartView::RectangleRubberBand);
     m_chart = new QChart();
     setChart(m_chart);

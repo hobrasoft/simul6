@@ -49,6 +49,7 @@ class MSettings : public QSettings {
     static constexpr const char *GuiDataDirName          = "gui/data-dir-name";
     static constexpr const char *GuiExportDirName        = "gui/export-dir-name";
     static constexpr const char *GuiAmpholinesWindowSize = "gui/ampholines-window-size";
+    static constexpr const char *GuiChartAntialiasing    = "gui/chart-antialiasing";
 
     static constexpr const char *DbConstituentsDefault   = "://data/constituents.json";
 
@@ -77,6 +78,8 @@ class MSettings : public QSettings {
     void setExportDirName(const QString& dirname) { setValue(GuiExportDirName, dirname); }
     QSize guiAmpholinesWindowSize() const { return value(GuiAmpholinesWindowSize, QSize(800, 600)).toSize(); }
     void setGuiAmpholinesWindowSize(const QSize& size) { setValue(GuiAmpholinesWindowSize, size); }
+    bool guiChartAntialiasing() const { return value(GuiChartAntialiasing, true).toBool(); }
+    void setGuiChartAntialiasing(bool x) { setValue(GuiChartAntialiasing, x); }
 
   protected:
 
