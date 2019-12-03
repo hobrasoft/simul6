@@ -650,7 +650,7 @@ void Engine::runPrivate() {
     unlock();
 
     if (t >= timeDisplay) {
-        qDebug() << "Engine::runPrivate()" << t;
+        // qDebug() << "Engine::runPrivate()" << t;
         emit drawGraph(this);
         timeDisplay += timeInterval;
     }
