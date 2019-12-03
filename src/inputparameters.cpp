@@ -1,5 +1,6 @@
 #include "inputparameters.h"
 #include "ui_inputparameters.h"
+#include "pdebug.h"
 
 InputParameters::InputParameters(QWidget *parent) :
     QGroupBox(parent),
@@ -16,6 +17,16 @@ InputParameters::~InputParameters()
 {
     delete ui;
 }
+
+
+void InputParameters::setConstantVoltage(bool x) {
+    PDEBUG << x;
+    ui->f_constant_current->setChecked(!x);
+    ui->f_constant_voltage->setChecked(x);
+    ui->f_current->setEnabled(!x);
+    ui->f_voltage->setEnabled(x);
+}
+
 
 void InputParameters::voltageCheckboxChanged() {
     bool checked = ui->f_constant_voltage->isChecked();

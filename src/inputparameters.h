@@ -25,6 +25,7 @@ public:
     void   setOptimizeDt(bool);
     void   setVoltage(double);
     void   setCurrent(double);
+    void   setConstantVoltage(bool);
 
 public slots:
     void showError(double);

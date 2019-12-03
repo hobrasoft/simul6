@@ -171,6 +171,8 @@ QVariantMap Simul6::data() const {
     ccontrol["dt"] = ui->f_parameters->getDt();
     ccontrol["optimize_dt"] = ui->f_parameters->optimizeDt();
     ccontrol["voltage"] = ui->f_parameters->getVoltage();
+    ccontrol["curden"] = ui->f_parameters->getCurrent();
+    ccontrol["constant_voltage"] = ui->f_parameters->getConstantVoltage();
     data["compute_control"] = ccontrol;
     return data;
 }
@@ -199,6 +201,8 @@ void Simul6::loadData() {
     ui->f_parameters->setDt( ccontrol["dt"].toDouble() );
     ui->f_parameters->setOptimizeDt( ccontrol["optimize_dt"].toBool() );
     ui->f_parameters->setVoltage( ccontrol["voltage"].toDouble() );
+    ui->f_parameters->setCurrent( ccontrol["curden"].toDouble() );
+    ui->f_parameters->setConstantVoltage( ccontrol.contains("constant_voltage") ? ccontrol["constant_voltage"].toBool() : true );
     ui->f_mixcontrol->resizeColumns();
 
     MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
