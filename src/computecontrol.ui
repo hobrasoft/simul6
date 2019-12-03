@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ComputeControl</class>
- <widget class="QGroupBox" name="ComputeControl">
+ <widget class="QWidget" name="ComputeControl">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>336</width>
-    <height>396</height>
+    <height>276</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,12 +17,21 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>GroupBox</string>
-  </property>
-  <property name="title">
-   <string>Compute Control</string>
+   <string>Compute control</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>

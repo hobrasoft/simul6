@@ -3,7 +3,7 @@
 #include <omp.h>
 
 ComputeControl::ComputeControl(QWidget *parent) :
-    QGroupBox(parent),
+    QWidget(parent),
     ui(new Ui::ComputeControl)
 {
     ui->setupUi(this);

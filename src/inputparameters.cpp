@@ -3,7 +3,7 @@
 #include "pdebug.h"
 
 InputParameters::InputParameters(QWidget *parent) :
-    QGroupBox(parent),
+    QWidget(parent),
     ui(new Ui::InputParameters)
 {
     ui->setupUi(this);

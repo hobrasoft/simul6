@@ -268,6 +268,13 @@ void Simul6::createActions() {
     menu->addAction(action);
 
 
+    menu = new QMenu(tr("View"), this);
+    menu->addAction(ui->f_dock_computeControl->toggleViewAction());
+    menu->addAction(ui->f_dock_inputParams->toggleViewAction());
+    menu->addAction(ui->f_dock_composition->toggleViewAction());
+    ui->menuBar->addMenu(menu);
+
+
     menu = new QMenu(tr("About"), this);
     ui->menuBar->addSeparator();
     ui->menuBar->addMenu(menu);
@@ -304,7 +311,6 @@ void Simul6::readSettings() {
     resize(MSETTINGS->guiMainWindowSize());
 
     restoreState(MSETTINGS->guiMainWindowLayout1(), 1);
-    ui->f_splitter1->restoreState(MSETTINGS->guiMainWindowLayout2());
 }
 
 
@@ -312,6 +318,5 @@ void Simul6::writeSettings() {
     PDEBUG;
     MSETTINGS->setGuiMainWindowSize(size());
     MSETTINGS->setGuiMainWindowLayout1(saveState(1));
-    MSETTINGS->setGuiMainWindowLayout2(ui->f_splitter1->saveState());
 }
 

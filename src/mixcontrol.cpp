@@ -14,7 +14,7 @@ MixControl::~MixControl()
 
 
 MixControl::MixControl(QWidget *parent) :
-    QGroupBox(parent),
+    QWidget(parent),
     ui(new Ui::MixControl)
 {
     ui->setupUi(this);

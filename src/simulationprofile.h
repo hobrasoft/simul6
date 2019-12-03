@@ -1,7 +1,7 @@
 #ifndef SIMULATIONPROFILE_H
 #define SIMULATIONPROFILE_H
 
-#include <QGroupBox>
+#include <QWidget>
 #include <QThread>
 #include "mixcontrolmodel.h"
 #include "Engine.h"
@@ -10,7 +10,7 @@ namespace Ui {
 class SimulationProfile;
 }
 
-class SimulationProfile : public QGroupBox
+class SimulationProfile : public QWidget
 {
     Q_OBJECT
 

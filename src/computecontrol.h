@@ -1,13 +1,13 @@
 #ifndef COMPUTECONTROL_H
 #define COMPUTECONTROL_H
 
-#include <QGroupBox>
+#include <QWidget>
 
 namespace Ui {
 class ComputeControl;
 }
 
-class ComputeControl : public QGroupBox
+class ComputeControl : public QWidget
 {
     Q_OBJECT
 

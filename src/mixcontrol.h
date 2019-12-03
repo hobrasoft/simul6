@@ -1,14 +1,14 @@
 #ifndef MIXCONTROL_H
 #define MIXCONTROL_H
 
-#include <QGroupBox>
+#include <QWidget>
 #include "mixcontrolmodel.h"
 
 namespace Ui {
 class MixControl;
 }
 
-class MixControl : public QGroupBox
+class MixControl : public QWidget 
 {
     Q_OBJECT
 

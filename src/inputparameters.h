@@ -1,13 +1,13 @@
 #ifndef INPUTPARAMETERS_H
 #define INPUTPARAMETERS_H
 
-#include <QGroupBox>
+#include <QWidget>
 
 namespace Ui {
 class InputParameters;
 }
 
-class InputParameters : public QGroupBox
+class InputParameters : public QWidget
 {
     Q_OBJECT
 

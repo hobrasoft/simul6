@@ -15,7 +15,7 @@ SimulationProfile::~SimulationProfile() {
 }
 
 SimulationProfile::SimulationProfile(QWidget *parent) :
-    QGroupBox(parent),
+    QWidget(parent),
     ui(new Ui::SimulationProfile)
 {
     ui->setupUi(this);

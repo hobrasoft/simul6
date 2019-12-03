@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SimulationProfile</class>
- <widget class="QGroupBox" name="SimulationProfile">
+ <widget class="QWidget" name="SimulationProfile">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,12 +15,6 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
-  </property>
-  <property name="windowTitle">
-   <string>Simulation</string>
-  </property>
-  <property name="title">
-   <string>Simulation</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
