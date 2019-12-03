@@ -219,6 +219,8 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 //Drawing
     emit mixChanged(this);
     emit drawGraph(this);
+    emit curDenChanged(curDen);
+    emit voltageChanged(voltage);
     qDebug() << "Engine::init() hotovo";
 }
 
