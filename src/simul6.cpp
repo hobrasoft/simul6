@@ -20,6 +20,7 @@
 #include <QSize>
 #include <QMessageBox>
 #include <QTimer>
+#include <omp.h>
 
 Simul6 *Simul6::m_instance = nullptr;
 
@@ -221,6 +222,7 @@ void Simul6::createActions() {
     connect(action, &QAction::triggered, [this]() {
         Preferences preferences(this);
         preferences.exec();
+        loadPreferences();
     });
     menu->addAction(action);
 
@@ -305,6 +307,17 @@ void Simul6::readSettings() {
 
     restoreState(MSETTINGS->guiMainWindowLayout1(), 1);
     ui->f_splitter1->restoreState(MSETTINGS->guiMainWindowLayout2());
+    loadPreferences();
+}
+
+
+void Simul6::loadPreferences() {
+    if (MSETTINGS->parallel()) {
+        int max = omp_get_max_threads();
+        omp_set_num_threads(max);
+      } else {
+        omp_set_num_threads(1);
+        }
 }
 
 

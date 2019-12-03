@@ -49,6 +49,7 @@ class MSettings : public QSettings {
     static constexpr const char *GuiDataDirName          = "gui/data-dir-name";
     static constexpr const char *GuiExportDirName        = "gui/export-dir-name";
     static constexpr const char *GuiAmpholinesWindowSize = "gui/ampholines-window-size";
+    static constexpr const char *Parallel                = "gui/parallel";
 
     // Logování
     bool    logAll() const { return value(LogAll, true).toBool(); }
@@ -75,6 +76,9 @@ class MSettings : public QSettings {
     void setExportDirName(const QString& dirname) { setValue(GuiExportDirName, dirname); }
     QSize guiAmpholinesWindowSize() const { return value(GuiAmpholinesWindowSize, QSize(800, 600)).toSize(); }
     void setGuiAmpholinesWindowSize(const QSize& size) { setValue(GuiAmpholinesWindowSize, size); }
+
+    bool parallel() const { return value(Parallel, true).toBool(); }
+    void setParallel(bool x) { setValue(Parallel, x); }
 
   protected:
 
