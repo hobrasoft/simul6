@@ -385,7 +385,12 @@ void Engine::der()
     for (int i = 1; i <= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
     Resist = Resist + 1/kapa[0] + 1/kapa[np];
     Resist = Resist * dx / 3;
-    curDen = voltage / Resist;
+
+    if (m_constantvoltage) {
+        curDen = voltage / Resist;;
+    } else {
+        voltage = curDen * Resist;;
+    }
 
     for (int i = 1; i <= np - 1; i++) {
         e[i] = ( -difPot[i - 1] + difPot[i + 1]) / 2 / dx;
