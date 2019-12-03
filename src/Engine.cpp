@@ -145,6 +145,7 @@ void Engine::initVectors()
 
 void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segments>& psegments)
 {
+    double Resist;
     Q_ASSERT(pconstituents.size() == psegments.size());
     qDebug() << "Engine::init()";
     m_initialized = true;
@@ -215,6 +216,21 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
         aV =(aV + c0 * uHpl * hpl[i] + c0 * uOHmin * oH[i]) * farc;
         kapa[i] = aV;
     }
+
+
+//Calculation of curden/voltage
+    Resist = 0;
+    for (int i = 1; i <= np/2 - 1; i++) Resist = Resist + 2/kapa[2*i];
+    for (int i = 1; i <= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
+    Resist = Resist + 1/kapa[0] + 1/kapa[np];
+    Resist = Resist * dx / 3;
+
+    if (m_constantvoltage) {
+        curDen = voltage / Resist;
+    } else {
+        voltage = curDen * Resist;
+    }
+
 
 //Drawing
     emit mixChanged(this);
@@ -389,9 +405,9 @@ void Engine::der()
     Resist = Resist * dx / 3;
 
     if (m_constantvoltage) {
-        curDen = voltage / Resist;;
+        curDen = voltage / Resist;
     } else {
-        voltage = curDen * Resist;;
+        voltage = curDen * Resist;
     }
 
     for (int i = 1; i <= np - 1; i++) {
