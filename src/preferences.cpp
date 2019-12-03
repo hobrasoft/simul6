@@ -19,8 +19,12 @@ Preferences::Preferences(QWidget *parent) :
                                      );
         if (!filename.isEmpty()) {
             ui->f_db_filename->setText(filename);
-        }
-    });
+            }
+        });
+
+    connect(ui->f_set_builtin_db, &QPushButton::clicked, [this]() {
+        ui->f_db_filename->setText(MSettings::DbConstituentsDefault);
+        });
 }
 
 Preferences::~Preferences()

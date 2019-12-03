@@ -50,6 +50,8 @@ class MSettings : public QSettings {
     static constexpr const char *GuiExportDirName        = "gui/export-dir-name";
     static constexpr const char *GuiAmpholinesWindowSize = "gui/ampholines-window-size";
 
+    static constexpr const char *DbConstituentsDefault   = "://data/constituents.json";
+
     // Logování
     bool    logAll() const { return value(LogAll, true).toBool(); }
     QString logInclude() const { return value(LogInclude).toString(); }
@@ -57,7 +59,7 @@ class MSettings : public QSettings {
     QString logFile() const { return value(LogFile).toString(); }
 
     // DB
-    QString dbConstituents() const { return value(DbConstituents, "://data/constituents.json").toString(); }
+    QString dbConstituents() const { return value(DbConstituents, DbConstituentsDefault).toString(); }
     void setDbConstituents(const QString& x) { setValue(DbConstituents, x); }
 
     // GUI
