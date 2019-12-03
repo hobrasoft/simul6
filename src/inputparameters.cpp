@@ -31,6 +31,11 @@ void InputParameters::currentCheckboxChanged() {
     ui->f_current->setEnabled(checked);
 }
 
+
+bool InputParameters::getConstantVoltage() const {
+    return ui->f_constant_voltage->isChecked();
+}
+
 void InputParameters::enableInputs() {
     ui->f_dt->setEnabled(!ui->f_optimize_dt->isChecked());
 }

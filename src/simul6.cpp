@@ -53,7 +53,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::errorChanged, ui->f_parameters, &InputParameters::showError);
     connect(ui->f_simulationProfile, &SimulationProfile::dtChanged, ui->f_parameters, &InputParameters::showDt);
     connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showCurrent);
-    connect(ui->f_simulationProfile, &SimulationProfile::curVoltageChanged, ui->f_parameters, &InputParameters::showVoltage);
+    connect(ui->f_simulationProfile, &SimulationProfile::voltageChanged, ui->f_parameters, &InputParameters::showVoltage);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
 
     connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
@@ -122,6 +122,8 @@ void Simul6::initEngine() {
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
     ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
     ui->f_simulationProfile->engine()->setVoltage(ui->f_parameters->getVoltage());
+    ui->f_simulationProfile->engine()->setCurDen(ui->f_parameters->getCurrent());
+    ui->f_simulationProfile->engine()->setConstantVoltage(ui->f_parameters->getConstantVoltage());
     ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
     ui->f_simulationProfile->engine()->setMix(mixControlModel()->constituents(), mixControlModel()->segments()); // Nakrmí nový engine směsí
 }

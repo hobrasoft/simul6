@@ -164,7 +164,7 @@ signals:
     void finished();
     void dtChanged(double);
     void curDenChanged(double);
-    void curVoltageChanged(double);
+    void voltageChanged(double);
 
 public slots:
     void run();

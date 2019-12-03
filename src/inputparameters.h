@@ -19,6 +19,7 @@ public:
     double getCurrent() const;
     double getDt() const;
     bool optimizeDt() const;
+    bool getConstantVoltage() const;
 
     void   setDt(double);
     void   setOptimizeDt(bool);

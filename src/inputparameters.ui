@@ -172,6 +172,9 @@
      <property name="suffix">
       <string> A/m²</string>
      </property>
+     <property name="minimum">
+      <double>-100000.000000000000000</double>
+     </property>
      <property name="maximum">
       <double>100000.000000000000000</double>
      </property>

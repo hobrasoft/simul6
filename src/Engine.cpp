@@ -642,6 +642,7 @@ void Engine::runPrivate() {
         emit errorChanged(errMax);
         emit dtChanged(dt);
         emit curDenChanged(curDen);
+        emit voltageChanged(voltage);
         intervalCounter += 500;
         m_sendSignals = false;
     }
