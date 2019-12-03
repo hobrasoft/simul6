@@ -212,7 +212,7 @@
      <item row="7" column="1">
       <widget class="QCheckBox" name="f_show_ph">
        <property name="text">
-        <string>Show ph</string>
+        <string>Show pH</string>
        </property>
        <property name="checked">
         <bool>true</bool>
