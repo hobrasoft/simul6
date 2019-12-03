@@ -59,6 +59,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedPh, ui->f_simulationProfile, &SimulationProfile::setVisiblePh);
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedKapa, ui->f_simulationProfile, &SimulationProfile::setVisibleKapa);
+    connect(ui->f_computeControl, &ComputeControl::visibilityChangedE, ui->f_simulationProfile, &SimulationProfile::setVisibleE);
 
     QTimer::singleShot(0, this, &Simul6::init);
 }

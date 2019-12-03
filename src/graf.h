@@ -27,6 +27,7 @@ public slots:
     void setVisible(int id, bool visible);
     void setVisiblePh(bool visible);
     void setVisibleKapa(bool visible);
+    void setVisibleE(bool visible);
 
 private slots:
     void seriesClicked(const QPointF&);

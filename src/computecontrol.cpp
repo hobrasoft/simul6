@@ -19,6 +19,7 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_parallel, &QAbstractButton::clicked, this, &ComputeControl::setParallelComputation);
     connect(ui->f_show_kapa, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedKapa);
     connect(ui->f_show_ph, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedPh);
+    connect(ui->f_show_e, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedE);
     setParallelComputation();
 }
 
@@ -49,6 +50,11 @@ bool ComputeControl::showKapa() const {
 
 bool ComputeControl::showPh() const {
     return ui->f_show_ph->isChecked();
+}
+
+
+bool ComputeControl::showE() const {
+    return ui->f_show_e->isChecked();
 }
 
 
