@@ -50,6 +50,7 @@ private slots:
     void slotRunClicked();
     void slotStopClicked();
     void slotInitClicked();
+    void setParallelComputation();
 
 private:
     Ui::ComputeControl *ui;

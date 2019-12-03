@@ -42,7 +42,6 @@ private slots:
 
     void readSettings();
     void writeSettings();
-    void loadPreferences();
 
 private:
     explicit Simul6(QWidget *parent = nullptr);

@@ -1,5 +1,6 @@
 #include "computecontrol.h"
 #include "ui_computecontrol.h"
+#include <omp.h>
 
 ComputeControl::ComputeControl(QWidget *parent) :
     QGroupBox(parent),
@@ -15,8 +16,10 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_saveprogress, &QAbstractButton::clicked, [this]() {
         if (ui->f_saveprogress->isChecked()) { emit saveProgressChecked(); }
         });
+    connect(ui->f_parallel, &QAbstractButton::clicked, this, &ComputeControl::setParallelComputation);
     connect(ui->f_show_kapa, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedKapa);
     connect(ui->f_show_ph, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedPh);
+    setParallelComputation();
 }
 
 ComputeControl::~ComputeControl()
@@ -24,6 +27,15 @@ ComputeControl::~ComputeControl()
     delete ui;
 }
 
+
+void ComputeControl::setParallelComputation() {
+    if (ui->f_parallel->isChecked()) { 
+        int max = omp_get_max_threads();
+        omp_set_num_threads(max);
+      } else {
+        omp_set_num_threads(1);
+        }
+}
 
 void ComputeControl::showTime(double time) {
     ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
