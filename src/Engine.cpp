@@ -231,6 +231,10 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
         voltage = curDen * Resist;
     }
 
+    for (int i = 0; i <= np; i++) {
+        e[i] = curDen / kapa[i];
+    }
+
 
 //Drawing
     emit mixChanged(this);
