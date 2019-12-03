@@ -5,8 +5,10 @@
 #include "grafdetail.h"
 #include <iostream>
 #include <cmath>
+#include <math.h>
 #include <QValueAxis>
 
+#define E_COLOR     "#00ff00"
 #define PH_COLOR    "#0000ff"
 #define KAPPA_COLOR "#000000"
 
@@ -18,6 +20,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     setChart(m_chart);
     m_visiblePh = true;
     m_visibleKapa = true;
+    m_visibleE = true;
     m_engine = nullptr;
     m_axis_x = nullptr;
     m_axis_y = nullptr;
@@ -110,6 +113,26 @@ void Graf::init(const Engine *pEngine) {
         }
     m_chart->addSeries(series);
 
+    series = new QLineSeries(this);
+    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    series->setName(tr("Electric field"));
+    series->setUseOpenGL(true);
+    series->setVisible(m_visibleE);
+    QBrush efieldbrush = series->brush();
+    efieldbrush.setColor(E_COLOR);
+    QPen efieldpen = series->pen();
+    efieldpen.setColor(E_COLOR);
+    efieldpen.setWidthF(1.6);
+    series->setPen(efieldpen);
+    series->setBrush(efieldbrush);
+    x = 0;
+    auto efield = pEngine->getE();
+    for (unsigned int i = 0; i <= p; i++){
+        series->append(QPointF(x * 1000.0, fabs(efield[i]/1000.0)));
+        x += inc_x;
+        }
+    m_chart->addSeries(series);
+
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
 
@@ -132,10 +155,11 @@ void Graf::init(const Engine *pEngine) {
 void Graf::autoscale() {
     double maximum = 0;
     m_engine->lock();
-    size_t p  = m_engine->getNp();
-    auto hpl  = m_engine->getHpl();
-    auto mix  = m_engine->getMix();
-    auto kapa = m_engine->getKapa();
+    size_t p    = m_engine->getNp();
+    auto hpl    = m_engine->getHpl();
+    auto mix    = m_engine->getMix();
+    auto kapa   = m_engine->getKapa();
+    auto efield = m_engine->getE();
     double mcaplen = 1000 * m_engine->getCapLen();
     m_engine->unlock();
 
@@ -161,6 +185,12 @@ void Graf::autoscale() {
     for (unsigned int i = 0; m_visibleKapa && i <= p; i++) {
         if (kapa[i] * 100 > maximum) {
             maximum = kapa[i] * 100.0;
+            }
+        }
+
+    for (unsigned int i = 0; m_visibleE && i <= p; i++) {
+        if (fabs(efield[i] / 1000.0) > maximum) {
+            maximum = fabs(efield[i] / 1000.0);
             }
         }
 
@@ -291,6 +321,21 @@ void Graf::drawGraph(const Engine *pEngine)
         x += inc_x;
         }
     series->replace(plist);
+    id += 1;
+
+    x = 0;
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    auto efield = pEngine->getE();
+    plist.clear();;
+    for (unsigned int i = 0; i <= p; i++) {
+        plist << QPointF(x * 1000.0, fabs(efield[i]/1000.0));
+        PDEBUG << x << fabs(efield[i]/1000.0);
+        x += inc_x;
+        }
+    series->replace(plist);
+    id += 1;
+
+
     pEngine->unlock(); 
 }
 
@@ -323,15 +368,22 @@ void Graf::seriesClicked(const QPointF& point) {
         }
 
     int seriescount = m_chart->series().size();
-    if (s1 == m_chart->series()[seriescount-2]) {
+    if (s1 == m_chart->series()[seriescount-3]) {
         GrafDetail *d = new GrafDetail(this, tr("pH"), point, node);
         d->move(position);
         d->show();
         return;
         }
 
+    if (s1 == m_chart->series()[seriescount-2]) {
+        GrafDetail *d = new GrafDetail(this, tr("Conductivity [1e-2 S/m]"), point, node);
+        d->move(position);
+        d->show();
+        return;
+        }
+
     if (s1 == m_chart->series()[seriescount-1]) {
-        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), point, node);
+        GrafDetail *d = new GrafDetail(this, tr("Electric field [kV/m]"), point, node);
         d->move(position);
         d->show();
         return;

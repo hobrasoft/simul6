@@ -142,6 +142,7 @@ public:
 	double getDx() const { return dx; }
     const std::vector<double>& getHpl() const { return hpl; }
     const std::vector<double>& getKapa() const { return kapa; }
+    const std::vector<double>& getE() const { return e; }
 	const Mix &getMix() const;
     
     void setMix(const QList<Constituent>&, const QList<Segments>&);

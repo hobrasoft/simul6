@@ -22,8 +22,6 @@ public:
 signals:
 
 public slots:
-    //void drawGraph(std::vector<std::vector<double> > *pData);
-    //void drawGraph(Mix *pMix, std::vector<double> *pHpl);
     void drawGraph(const Engine *pEngine);
     void init(const Engine *pEngine);
     void setVisible(int id, bool visible);
@@ -41,6 +39,7 @@ private:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     bool m_visiblePh;
     bool m_visibleKapa;
+    bool m_visibleE;
 
     QValueAxis *m_axis_x;
     QValueAxis *m_axis_y;
