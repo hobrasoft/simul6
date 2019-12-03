@@ -140,7 +140,7 @@ void Graf::autoscale() {
     m_engine->unlock();
 
     for (auto &sample : mix.getSamples()) {
-        PDEBUG << sample.getName() << sample.visible();
+        // PDEBUG << sample.getName() << sample.visible();
         if (!sample.visible()) { continue; }
         for (unsigned int i = 0; i <= p; i++){
             if (sample.getA(0, i) > maximum)  {
@@ -164,7 +164,7 @@ void Graf::autoscale() {
             }
         }
 
-    PDEBUG << maximum << -0.09*maximum << 1.09*maximum;
+    // PDEBUG << maximum << -0.09*maximum << 1.09*maximum;
     m_axis_y->setRange(-0.09 * maximum, 1.09 * maximum);
     #if QT_VERSION > 0x050c00
     double ytickInterval \
@@ -202,11 +202,11 @@ void Graf::autoscale() {
 
 
 void Graf::setVisible(int id, bool visible) {
-    PDEBUG << id << visible;
+    // PDEBUG << id << visible;
     QList<QAbstractSeries *> list = m_chart->series();
     for (int i=0; i<list.size(); i++) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
-        PDEBUG << series->internalId() << id;
+        // PDEBUG << series->internalId() << id;
         if (series->internalId() == id) {
             series->setVisible(visible);
             autoscale();

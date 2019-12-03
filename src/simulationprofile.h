@@ -33,6 +33,7 @@ signals:
     void timeChanged(double);
     void errorChanged(double);
     void curDenChanged(double);
+    void curVoltageChanged(double);
     void dtChanged(double);
     void finished();
 

@@ -52,7 +52,8 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::finished, SAVEPROGRESS, &SaveProgress::slotFinished);
     connect(ui->f_simulationProfile, &SimulationProfile::errorChanged, ui->f_parameters, &InputParameters::showError);
     connect(ui->f_simulationProfile, &SimulationProfile::dtChanged, ui->f_parameters, &InputParameters::showDt);
-    connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showcurDen);
+    connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showCurrent);
+    connect(ui->f_simulationProfile, &SimulationProfile::curVoltageChanged, ui->f_parameters, &InputParameters::showVoltage);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
 
     connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
@@ -178,6 +179,7 @@ void Simul6::loadData() {
     QString filename = QFileDialog::getOpenFileName(this, tr("Load simulation"), dirname, 
         tr("Simul6 data (*.simul6.json)")
         );
+    setWindowTitle(tr("Simul: ") + filename);
     if (filename.isEmpty()) { return; }
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
     QFile file(filename);

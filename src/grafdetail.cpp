@@ -15,3 +15,7 @@ GrafDetail::GrafDetail(QWidget *parent, const QString& name, const QPointF& poin
     // setStyleSheet("background: white; border-style: solid; border-width: 3px; border-color: black;");
 }
 
+GrafDetail::~GrafDetail() {
+    delete ui;
+}
+

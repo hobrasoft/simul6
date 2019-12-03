@@ -8,11 +8,27 @@ InputParameters::InputParameters(QWidget *parent) :
     ui->setupUi(this);
     enableInputs();
     connect(ui->f_optimize_dt, &QCheckBox::stateChanged, this, &InputParameters::enableInputs);
+    connect(ui->f_constant_voltage, &QCheckBox::stateChanged, this, &InputParameters::voltageCheckboxChanged);
+    connect(ui->f_constant_current, &QCheckBox::stateChanged, this, &InputParameters::currentCheckboxChanged);
 }
 
 InputParameters::~InputParameters()
 {
     delete ui;
+}
+
+void InputParameters::voltageCheckboxChanged() {
+    bool checked = ui->f_constant_voltage->isChecked();
+    ui->f_constant_current->setChecked(!checked);
+    ui->f_current->setEnabled(!checked);
+    ui->f_voltage->setEnabled(checked);
+}
+
+void InputParameters::currentCheckboxChanged() {
+    bool checked = ui->f_constant_current->isChecked();
+    ui->f_constant_voltage->setChecked(!checked);
+    ui->f_voltage->setEnabled(!checked);
+    ui->f_current->setEnabled(checked);
 }
 
 void InputParameters::enableInputs() {
@@ -23,8 +39,12 @@ void InputParameters::showError(double time) {
     ui->f_error->setText(QString("%1").arg(time, 0, 'e', 3));
 }
 
-void InputParameters::showcurDen(double curDen) {
-    ui->f_curDen->setText(QString("%1").arg(curDen, 0, 'g', 4));
+void InputParameters::showCurrent(double current) {
+    ui->f_current->setValue(current);
+}
+
+void InputParameters::showVoltage(double voltage) {
+    ui->f_voltage->setValue(voltage);
 }
 
 void InputParameters::showDt(double dt) {
@@ -33,6 +53,10 @@ void InputParameters::showDt(double dt) {
 
 double InputParameters::getVoltage() const {
     return ui->f_voltage->value();
+}
+
+double InputParameters::getCurrent() const {
+    return ui->f_current->value();
 }
 
 double InputParameters::getDt() const {
@@ -53,6 +77,10 @@ void InputParameters::setOptimizeDt(bool x) {
 
 void InputParameters::setVoltage(double x) {
     ui->f_voltage->setValue(x);
+}
+
+void InputParameters::setCurrent(double x) {
+    ui->f_current->setValue(x);
 }
 
 

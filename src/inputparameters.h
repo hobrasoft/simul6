@@ -15,22 +15,27 @@ public:
     explicit InputParameters(QWidget *parent = nullptr);
     ~InputParameters();
 
-    //double current() const;
     double getVoltage() const;
+    double getCurrent() const;
     double getDt() const;
     bool optimizeDt() const;
 
     void   setDt(double);
     void   setOptimizeDt(bool);
     void   setVoltage(double);
+    void   setCurrent(double);
 
 public slots:
     void showError(double);
-    void showcurDen(double);
+    void showCurrent(double);
+    void showVoltage(double);
     void showDt(double);
 
 private slots:
     void enableInputs();
+
+    void voltageCheckboxChanged();
+    void currentCheckboxChanged();
 
 private:
     Ui::InputParameters *ui;

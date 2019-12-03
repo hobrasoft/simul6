@@ -19,6 +19,7 @@ class GrafDetail : public QWidget {
     Q_OBJECT
   public:
     GrafDetail(QWidget *parent, const QString& name, const QPointF& point, int node);
+   ~GrafDetail();
 
   private:
     Ui::GrafDetail *ui;

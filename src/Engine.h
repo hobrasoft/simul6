@@ -126,6 +126,7 @@ public:
 	void setDt(double pDt) { dt = pDt; }
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
     void setVoltage(double pVoltage) { voltage = pVoltage; }
+    void setConstantVoltage(bool x) { m_constantvoltage = x; }
     void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
     double getCapLen() const { return capLen; }
     void setTimeStop(double pTimeStop) { timeStop = pTimeStop; }
@@ -152,6 +153,7 @@ public:
     bool m_running;
     bool m_sendSignals;
     bool m_optimizeDt;
+    bool m_constantvoltage;
 
 signals:
     //void drawGraph(Mix *pMix, std::vector<double> *pHpl);
@@ -162,6 +164,7 @@ signals:
     void finished();
     void dtChanged(double);
     void curDenChanged(double);
+    void curVoltageChanged(double);
 
 public slots:
     void run();
