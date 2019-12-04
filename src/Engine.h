@@ -150,6 +150,7 @@ public:
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();
     void initVectors();
+    void init();
 
     bool m_initialized;
     bool m_running;

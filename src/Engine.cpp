@@ -146,7 +146,6 @@ void Engine::initVectors()
 void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segments>& psegments)
 {
     Q_ASSERT(pconstituents.size() == psegments.size());
-    qDebug() << "Engine::init()";
     m_initialized = true;
     t = 0;
 
@@ -197,6 +196,11 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
     }
 
+    init();
+}
+
+
+void Engine::init() {
 //Calculation of pH
     gCalc();
 
@@ -246,6 +250,23 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
 void Engine::setStep(const QVariantMap& data) {
     PDEBUG;
+    const QVariantList& constituents = data["constituents"].toList();
+    t = data["time"].toDouble();
+    int sampleIndex = constituents.size();
+    for (auto &sample : mix.getSamples()) {
+        sampleIndex -= 1;
+        const QVariantMap& constituent = constituents[sampleIndex].toMap();
+        const QVariantList& concentrations = constituent["concentrations"].toList();
+        for (int i = 0; i<= np; i++) {
+            Q_ASSERT( i >= 0);
+            Q_ASSERT( i < concentrations.size() );
+            Q_ASSERT( sampleIndex < constituents.size() );
+            Q_ASSERT( sampleIndex >= 0);
+            PDEBUG << sample.getName() << i << concentrations[i].toDouble();
+            sample.setA(0, i, concentrations[i].toDouble());
+            }
+        }
+    init();
 }
 
 

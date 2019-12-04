@@ -114,6 +114,8 @@ double Simul6::getCaplen() const {
 
 
 void Simul6::initEngine() {
+    ui->f_replay->clear();
+    ui->f_dock_replay->setVisible(false);
     ui->f_simulationProfile->createEngine(ui->f_computeControl->getNp());
     ui->f_simulationProfile->engine()->setTime(0);
     ui->f_simulationProfile->engine()->setErrH(1e-7); //this must be set carefully to ensure stability of computation with optimization of dt

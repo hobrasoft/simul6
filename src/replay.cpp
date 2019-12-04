@@ -55,6 +55,7 @@ void Replay::setData(const QVariantList& data) {
     m_replay = false;
     m_data = data;
     m_step = 0;
+    ui->f_slider->setValue(0);
     ui->f_slider->setRange(0, data.size()-1);
     ui->f_step_number->setText("1");
     ui->f_size->setText(QString("%1").arg(data.size()-1));
