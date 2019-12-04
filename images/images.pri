@@ -1,6 +1,6 @@
 DEPENDPATH += $$PWD
 
-RC_ICONS = appicon.ico
+RC_ICONS = $$PWD/appicon.ico
 
 RESOURCES += \
  $$PWD/images.qrc \
