@@ -252,7 +252,7 @@ void Engine::init() {
 
 
 void Engine::setStep(const QVariantMap& data) {
-    PDEBUG;
+    // PDEBUG;
     const QVariantList& constituents = data["constituents"].toList();
     t = data["time"].toDouble();
     int sampleIndex = constituents.size();
@@ -261,11 +261,6 @@ void Engine::setStep(const QVariantMap& data) {
         const QVariantMap& constituent = constituents[sampleIndex].toMap();
         const QVariantList& concentrations = constituent["concentrations"].toList();
         for (int i = 0; i<= np; i++) {
-            Q_ASSERT( i >= 0);
-            Q_ASSERT( i < concentrations.size() );
-            Q_ASSERT( sampleIndex < constituents.size() );
-            Q_ASSERT( sampleIndex >= 0);
-            PDEBUG << sample.getName() << i << concentrations[i].toDouble();
             sample.setA(0, i, concentrations[i].toDouble());
             }
         }

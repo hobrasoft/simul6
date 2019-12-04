@@ -24,6 +24,10 @@ Replay::Replay(QWidget *parent) : QWidget(parent) {
     connect(action, &QAction::triggered, this, &Replay::toBegin);
 
     action = new QAction("⏯", this);
+    ui->f_step->setDefaultAction(action);
+    connect(action, &QAction::triggered, this, &Replay::nextStep);
+
+    action = new QAction("▶", this);
     ui->f_play->setDefaultAction(action);
     connect(action, &QAction::triggered, this, &Replay::play);
 

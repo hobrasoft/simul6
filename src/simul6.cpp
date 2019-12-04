@@ -102,6 +102,8 @@ const Engine *Simul6::engine() const {
 
 
 void Simul6::runEngine() {
+    ui->f_replay->clear();
+    ui->f_dock_replay->setVisible(false);
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
     ui->f_simulationProfile->slotRun();
