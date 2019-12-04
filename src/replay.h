@@ -27,6 +27,7 @@ class Replay : public QWidget {
   private slots:
     void toBegin();
     void toEnd();
+    void prevStep();
     void nextStep();
     void play();
     void setStep(int);
@@ -39,6 +40,7 @@ class Replay : public QWidget {
     Engine *m_engine;
     QVariantList m_data;
     QTimer *m_timer;
+    QAction *m_actionPlay;
 };
 
 #endif

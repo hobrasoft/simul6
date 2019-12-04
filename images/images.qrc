@@ -1,6 +1,17 @@
 <RCC>
+
 <qresource prefix="/images">
 <file>logo.png</file>
 </qresource>
+
+<qresource prefix="/icons">
+<file>begin.svg</file>
+<file>end.svg</file>
+<file>play.svg</file>
+<file>stop.svg</file>
+<file>step.svg</file>
+<file>back.svg</file>
+</qresource>
+
 </RCC>
 

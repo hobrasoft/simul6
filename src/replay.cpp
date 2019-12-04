@@ -6,6 +6,7 @@
 #include "replay.h"
 #include "Engine.h"
 #include <QAction>
+#include <QIcon>
 #include "pdebug.h"
 
 Replay::~Replay() {
@@ -19,19 +20,24 @@ Replay::Replay(QWidget *parent) : QWidget(parent) {
     m_replay = false;
 
     QAction *action;
-    action = new QAction("⏮", this);
+    action = new QAction(QIcon("://icons/begin.svg"), tr("Begin"), this);
     ui->f_toBegin->setDefaultAction(action);
     connect(action, &QAction::triggered, this, &Replay::toBegin);
 
-    action = new QAction("⏯", this);
+    action = new QAction(QIcon("://icons/back.svg"), tr("Back"), this);
+    ui->f_back->setDefaultAction(action);
+    connect(action, &QAction::triggered, this, &Replay::prevStep);
+
+    action = new QAction(QIcon("://icons/step.svg"), tr("Step"), this);
     ui->f_step->setDefaultAction(action);
     connect(action, &QAction::triggered, this, &Replay::nextStep);
 
-    action = new QAction("▶", this);
+    action = new QAction(QIcon("://icons/play.svg"), tr("Play"), this);
     ui->f_play->setDefaultAction(action);
     connect(action, &QAction::triggered, this, &Replay::play);
+    m_actionPlay = action;
 
-    action = new QAction("⏭", this);
+    action = new QAction(QIcon("://icons/end.svg"), tr("End"), this);
     ui->f_toEnd->setDefaultAction(action);
     connect(action, &QAction::triggered, this, &Replay::toEnd);
 
@@ -63,6 +69,7 @@ void Replay::setData(const QVariantList& data) {
     ui->f_slider->setRange(0, data.size()-1);
     ui->f_step_number->setText("1");
     ui->f_size->setText(QString("%1").arg(data.size()-1));
+    m_actionPlay->setIcon(QIcon("://icons/play.svg"));
 }
 
 
@@ -81,6 +88,26 @@ void Replay::nextStep() {
         ui->f_toBegin->setEnabled(!m_replay);
         ui->f_toEnd->setEnabled(!m_replay);
         ui->f_slider->setEnabled(!m_replay);
+        ui->f_step->setEnabled(!m_replay);
+        ui->f_back->setEnabled(!m_replay);
+        m_actionPlay->setIcon(QIcon("://icons/play.svg"));
+        }
+    ui->f_slider->setValue(m_step); // invokes setStep
+}
+
+
+void Replay::prevStep() {
+    PDEBUG;
+    m_step -= 1;
+    if (m_step < 0) {
+        m_step = m_data.size() - 1;
+        m_replay = false;
+        ui->f_toBegin->setEnabled(!m_replay);
+        ui->f_toEnd->setEnabled(!m_replay);
+        ui->f_slider->setEnabled(!m_replay);
+        ui->f_step->setEnabled(!m_replay);
+        ui->f_back->setEnabled(!m_replay);
+        m_actionPlay->setIcon(QIcon("://icons/play.svg"));
         }
     ui->f_slider->setValue(m_step); // invokes setStep
 }
@@ -120,14 +147,18 @@ void Replay::play() {
     PDEBUG;
     if (m_replay) {
         m_replay = false;
+        m_actionPlay->setIcon(QIcon("://icons/play.svg"));
         m_timer->stop();
       } else {
         m_replay = true;
+        m_actionPlay->setIcon(QIcon("://icons/stop.svg"));
         m_timer->start();
         }
     ui->f_toBegin->setEnabled(!m_replay);
     ui->f_toEnd->setEnabled(!m_replay);
     ui->f_slider->setEnabled(!m_replay);
+    ui->f_step->setEnabled(!m_replay);
+    ui->f_back->setEnabled(!m_replay);
 }
 
 
