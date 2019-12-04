@@ -79,6 +79,7 @@ SOURCES += \
     segments.cpp \
     importsna.cpp \
     ampholines.cpp \
+    replay.cpp \
     myview.cpp
 
 HEADERS += \
@@ -111,6 +112,7 @@ HEADERS += \
     segments.h \
     importsna.h \
     ampholines.h \
+    replay.h \
     myview.h
 
 FORMS += \
@@ -123,6 +125,7 @@ FORMS += \
     mixcontrol.ui \
     grafdetail.ui \
     ampholines.ui \
+    replay.ui \
     simulationprogressdialog.ui \
 
 # Default rules for deployment.

@@ -75,8 +75,7 @@ Simul6 *Simul6::instance() {
 
 void Simul6::init() {
     readSettings();
-    // ImportSna import(this);
-    // import.readData("/home/tycho/Desktop/TestSNA.sna");
+    ui->f_dock_replay->setVisible(false);
 }
 
 
@@ -273,6 +272,7 @@ void Simul6::createActions() {
     menu->addAction(ui->f_dock_computeControl->toggleViewAction());
     menu->addAction(ui->f_dock_inputParams->toggleViewAction());
     menu->addAction(ui->f_dock_composition->toggleViewAction());
+    menu->addAction(ui->f_dock_replay->toggleViewAction());
     ui->menuBar->addMenu(menu);
 
 

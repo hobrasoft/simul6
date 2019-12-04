@@ -133,6 +133,33 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="f_dock_replay">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="floating">
+    <bool>true</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
+   <property name="windowTitle">
+    <string>Replay</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QGridLayout" name="gridLayout_5">
+     <item row="0" column="0">
+      <widget class="Replay" name="widget" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -158,6 +185,12 @@
    <class>MixControl</class>
    <extends>QWidget</extends>
    <header>mixcontrol.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Replay</class>
+   <extends>QWidget</extends>
+   <header>replay.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

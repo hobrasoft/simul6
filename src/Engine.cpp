@@ -244,6 +244,12 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
     qDebug() << "Engine::init() hotovo";
 }
 
+
+void Engine::setStep(const QVariantMap& data) {
+    
+}
+
+
 void Engine::gCalc()
 {
 
