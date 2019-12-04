@@ -248,7 +248,7 @@ void Graf::setVisible(int id, bool visible) {
 void Graf::setVisiblePh(bool visible) {
     m_visiblePh = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-2;
+    int i = list.size()-3;
     if (i<0) { return; }
     list[i]->setVisible(visible);
     autoscale();
@@ -258,7 +258,7 @@ void Graf::setVisiblePh(bool visible) {
 void Graf::setVisibleKapa(bool visible) {
     m_visibleKapa = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-1;
+    int i = list.size()-2;
     if (i<0) { return; }
     list[i]->setVisible(visible);
     autoscale();
