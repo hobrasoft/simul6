@@ -39,6 +39,7 @@ Simul6::Simul6(QWidget *parent) :
     MSettings::instance(this);
     qDebug() << "Simul6";
     ui->setupUi(this);
+    setWindowIcon(QIcon("://icons/appicon.svg"));
     SaveProgress::instance(this);
     createActions();
     connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);

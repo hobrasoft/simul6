@@ -5,6 +5,7 @@
 </qresource>
 
 <qresource prefix="/icons">
+<file>appicon.svg</file>
 <file>begin.svg</file>
 <file>end.svg</file>
 <file>play.svg</file>
