@@ -145,7 +145,6 @@ void Engine::initVectors()
 
 void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segments>& psegments)
 {
-    double Resist;
     Q_ASSERT(pconstituents.size() == psegments.size());
     qDebug() << "Engine::init()";
     m_initialized = true;
@@ -219,7 +218,7 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
 
 //Calculation of curden/voltage
-    Resist = 0;
+    double Resist = 0;
     for (int i = 1; i <= np/2 - 1; i++) Resist = Resist + 2/kapa[2*i];
     for (int i = 1; i <= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
     Resist = Resist + 1/kapa[0] + 1/kapa[np];
@@ -246,7 +245,7 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
 
 void Engine::setStep(const QVariantMap& data) {
-    
+    PDEBUG;
 }
 
 

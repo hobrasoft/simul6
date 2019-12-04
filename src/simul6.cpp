@@ -76,6 +76,7 @@ Simul6 *Simul6::instance() {
 void Simul6::init() {
     readSettings();
     ui->f_dock_replay->setVisible(false);
+    ui->f_replay->clear();
 }
 
 
@@ -158,6 +159,7 @@ void Simul6::saveData() {
 
 
 QVariantMap Simul6::data() const {
+    PDEBUG;
     QVariantMap data;
     if (mixControlModel() == nullptr) { return data; }
     data["mix"] = mixControlModel()->json();
@@ -209,6 +211,16 @@ void Simul6::loadData() {
     model->setJson(data.toMap()["mix"].toList());
 
     initEngine();
+    SAVEPROGRESS->init();
+
+    if (data.toMap().contains("simulation")) {
+        ui->f_dock_replay->setVisible(true);
+        ui->f_replay->setEngine(ui->f_simulationProfile->engine());
+        ui->f_replay->setData(data.toMap()["simulation"].toList());
+      } else {
+        ui->f_replay->clear();
+        ui->f_dock_replay->setVisible(false);
+        }
 }
 
 

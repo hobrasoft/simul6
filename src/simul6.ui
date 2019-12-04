@@ -155,7 +155,7 @@
    <widget class="QWidget" name="dockWidgetContents_4">
     <layout class="QGridLayout" name="gridLayout_5">
      <item row="0" column="0">
-      <widget class="Replay" name="widget" native="true"/>
+      <widget class="Replay" name="f_replay" native="true"/>
      </item>
     </layout>
    </widget>
