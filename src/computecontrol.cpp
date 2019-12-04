@@ -1,5 +1,6 @@
 #include "computecontrol.h"
 #include "ui_computecontrol.h"
+#include "pdebug.h"
 #include <omp.h>
 
 ComputeControl::ComputeControl(QWidget *parent) :
@@ -7,6 +8,7 @@ ComputeControl::ComputeControl(QWidget *parent) :
     ui(new Ui::ComputeControl)
 {
     ui->setupUi(this);
+    m_maxThreads = omp_get_max_threads();
     connect(ui->f_init, &QPushButton::clicked, this, &ComputeControl::init);
     connect(ui->f_run, &QPushButton::clicked, this, &ComputeControl::run);
     connect(ui->f_stop, &QPushButton::clicked, this, &ComputeControl::stop);
@@ -31,8 +33,7 @@ ComputeControl::~ComputeControl()
 
 void ComputeControl::setParallelComputation() {
     if (ui->f_parallel->isChecked()) { 
-        int max = omp_get_max_threads();
-        omp_set_num_threads(max);
+        omp_set_num_threads(m_maxThreads);
       } else {
         omp_set_num_threads(1);
         }

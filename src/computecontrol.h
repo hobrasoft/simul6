@@ -56,6 +56,7 @@ private slots:
 
 private:
     Ui::ComputeControl *ui;
+    int m_maxThreads;
 };
 
 #endif // COMPUTECONTROL_H
