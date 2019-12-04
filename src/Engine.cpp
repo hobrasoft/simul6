@@ -202,6 +202,9 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
 void Engine::init() {
 //Calculation of pH
+    for (int i = 0; i <= np; i++){
+        hpl[i] = 1E-14;
+    }
     gCalc();
 
 //Calculation of conductivity
