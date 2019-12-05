@@ -40,7 +40,6 @@ include(../data/data.pri)
 include(../images/images.pri)
 include(utils/utils.pri)
 include(widgets/widgets.pri)
-include(database/database.pri)
 
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD

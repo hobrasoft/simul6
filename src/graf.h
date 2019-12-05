@@ -3,7 +3,6 @@
 
 #include "Mix.h"
 #include "Engine.h"
-#include "db.h"
 #include <vector>
 #include <QChartView>
 #include <QMouseEvent>
@@ -36,7 +35,6 @@ private slots:
 
 private:
     QChart *m_chart;
-    Db::Database *m_db;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     bool m_visiblePh;
     bool m_visibleKapa;

@@ -28,8 +28,6 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_axis_x = nullptr;
     m_axis_y = nullptr;
 
-    m_db = nullptr;
-    // m_db = new Db::Database("abcd.simul6.sqlite3", this);
     connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
 }
 
@@ -277,10 +275,6 @@ void Graf::setVisibleE(bool visible) {
 
 void Graf::drawGraph(const Engine *pEngine)
 {
-    if (m_db != nullptr && !m_db->isOpen()) {
-        m_db->open();
-        }
-
     pEngine->lock(); 
     size_t p = pEngine->getNp(); // points
     QLineSeries *series;
@@ -299,13 +293,6 @@ void Graf::drawGraph(const Engine *pEngine)
             }
         series->replace(plist);
         series->setVisible(sample.visible());
-
-        Dbt::Graf gdata;
-        gdata.time = pEngine->t;
-        gdata.id = id;
-        gdata.values_array = vlist;
-        if (m_db != nullptr) { m_db->save(gdata); }
-
         id += 1;
         }
 
