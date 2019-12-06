@@ -13,7 +13,6 @@
 #include "simulationprogressdialog.h"
 #include "saveprogress.h"
 #include "about.h"
-#include "db.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QDir>
