@@ -29,6 +29,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_axis_y = nullptr;
 
     connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
+
 }
 
 
@@ -336,11 +337,51 @@ void Graf::drawGraph(const Engine *pEngine)
 
 
 void Graf::subselected(const QRectF& rect) {
-    Q_UNUSED(rect);
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
     // m_axis_x->applyNiceNumbers();
     // m_axis_y->applyNiceNumbers();
+
+    #if QT_VERSION > 0x050c00
+    QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
+    QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
+    QRectF rext(topLeft, bottomRight);
+    PDEBUG << rect << rext;
+    double minimum_x = rext.x();
+    double minimum_y = rext.y();
+    double width     = fabs(rext.width());
+    double height    = fabs(rext.height());
+    double xtickInterval \
+        = (width <= 0.3) ? 0.01 
+        : (width <= 2.0) ? 0.2
+        : (width <= 3.0) ? 0.5
+        : (width <= 10.) ? 1.0
+        : (width <= 20.) ? 2.0
+        : (width <= 50.) ? 5.0
+        : (width <= 200.) ? 10.0  
+        : (width <= 300.) ? 50.0  
+        : 100;
+    double xtickAnchor = floor(minimum_x/xtickInterval)*xtickInterval;
+    m_axis_x->setTickAnchor(xtickAnchor);
+    m_axis_x->setTickInterval(xtickInterval);
+    m_axis_x->setTickType(QValueAxis::TicksDynamic);
+
+    double ytickInterval \
+        = (height <= 0.3) ? 0.01 
+        : (height <= 2.0) ? 0.2
+        : (height <= 3.0) ? 0.5
+        : (height <= 10.) ? 1.0
+        : (height <= 20.) ? 2.0
+        : (height <= 50.) ? 5.0
+        : (height <= 200.) ? 10.0  
+        : (height <= 300.) ? 50.0  
+        : 100;
+    double ytickAnchor = floor(minimum_y/ytickInterval)*ytickInterval;
+    m_axis_y->setTickAnchor(ytickAnchor);
+    m_axis_y->setTickInterval(ytickInterval);
+    m_axis_y->setTickType(QValueAxis::TicksDynamic);
+
+    #endif
 }
 
 
