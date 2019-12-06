@@ -31,7 +31,7 @@ public slots:
 private slots:
     void seriesClicked(const QPointF&);
     void autoscale();
-    void subselected(const QRectF&);
+    void subselected();
 
 private:
     QChart *m_chart;

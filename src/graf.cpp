@@ -29,6 +29,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_axis_y = nullptr;
 
     connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
+    connect(m_chart, &QChart::geometryChanged, this, &Graf::subselected);
 
 }
 
@@ -336,17 +337,16 @@ void Graf::drawGraph(const Engine *pEngine)
 }
 
 
-void Graf::subselected(const QRectF& rect) {
+void Graf::subselected() {
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
-    // m_axis_x->applyNiceNumbers();
-    // m_axis_y->applyNiceNumbers();
+    QRectF rect = m_chart->geometry(); // m_chart->plotArea();
 
     #if QT_VERSION > 0x050c00
     QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
     QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
     QRectF rext(topLeft, bottomRight);
-    PDEBUG << rect << rext;
+    // PDEBUG << rect << rext;
     double minimum_x = rext.x();
     double minimum_y = rext.y();
     double width     = fabs(rext.width());
