@@ -20,6 +20,7 @@ private:
     std::vector<double> v;
     std::vector<double> pd;
     std::vector<double> q1, q2, q3, q4, q5, q6;
+    Vec2d u;
 
     unsigned int getChargeIndex(const int pCharge) const;
 
@@ -73,6 +74,8 @@ public:
     double getQ4(const unsigned int pI) const { return q4[pI]; }
     double getQ5(const unsigned int pI) const { return q5[pI]; }
     double getQ6(const unsigned int pI) const { return q6[pI]; }
+    // u 2d vector
+    double getU(const int pCharge, const unsigned int pI) const;
 
 };
 

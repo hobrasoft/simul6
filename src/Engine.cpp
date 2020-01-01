@@ -186,6 +186,7 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
                 sample.setA(0, i, concentration);
             }
 
+            //Here it should be expected filling u[j, i] according values in segments
 
             // Úplně na konci!
             prevConcentration = concentration;
@@ -215,7 +216,7 @@ void Engine::init() {
         for (auto &s : mix.getSamples()) {
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
                 if (j != 0) {
-                    aV += s.getU(j) * s.getA(j, i) * abs(j);
+                    aV += s.getU(j, i) * s.getA(j, i) * abs(j);
                 }
             }
         }
@@ -402,7 +403,7 @@ void Engine::der()
         for (auto &s : mix.getSamples()) {
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
                 if (j != 0) {
-                    aV += s.getU(j) * s.getA(j, i) * abs(j);
+                    aV += s.getU(j, i) * s.getA(j, i) * abs(j);
                 }
             }
         }
@@ -455,7 +456,7 @@ void Engine::der()
             aV = 0;
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
                 if (j != 0) {
-                    aV += s.getU(j) * s.getA(j, i) * j / abs(j);
+                    aV += s.getU(j, i) * s.getA(j, i) * j / abs(j);
                 }
             }
             s.setPd(i, aV * e[i]);

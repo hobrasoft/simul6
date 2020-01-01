@@ -33,9 +33,16 @@ Sample::Sample(const Constituent &pConstituent, const unsigned int pAreas, const
     q3(pNp + 1),
     q4(pNp + 1),
     q5(pNp + 1),
-    q6(pNp + 1)
+    q6(pNp + 1),
+    u(CHARGE_BLOCK_SIZE, pNp)
 {
-    //std::cout << "Sample constructor" << std::endl;
+    // Temporary piece of code used to populate mobilities for each combination of charge and axial coordinate
+    // To be replaced once UI component for segments filling is introduced
+    for (int j = getNegCharge(); j <= getPosCharge(); j++) {
+        for (int i = 0; i <= pNp; i++) {
+            u.set(j, i, pConstituent.getU(j));
+        }
+    }
 }
 
 Sample::~Sample()
@@ -132,5 +139,10 @@ void Sample::addDerH(const int pCharge, const double pValue, const unsigned int 
 double Sample::getDerH(const int pCharge, const unsigned int pI) const
 {
     return derH[getHIdx(pCharge, pI)];
+}
+
+double Sample::getU(const int pCharge, const unsigned int pI) const
+{
+    return u.get(pCharge, pI);
 }
 
