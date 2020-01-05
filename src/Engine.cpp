@@ -177,7 +177,7 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
                     double concentration_bw = 
                         prevConcentration +
                         (concentration - prevConcentration) *
-                        (erf(-2 + static_cast<double>(i-segmentBegin) / bw * 4) + 1) / 2;
+                        (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2;
                     // PDEBUG << i << concentration_bw << concentration << prevConcentration; 
                     sample.setA(0, i, concentration_bw);
                     continue;
