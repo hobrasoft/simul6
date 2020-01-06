@@ -280,33 +280,35 @@ void Engine::gCalc()
         do {
             hPlusIn = hPlus;
 
+            double hPlusPow [5];
+            hPlusPow [0]=1;
+            for (int j = 1; j<=4;j++){
+                hPlusPow[j]=hPlusPow[j-1]*hPlus;
+            }
+
+
             for (auto &s : mix.getSamples()) {
-                s.setH(0, 1, i);
 
-                double hTemp = 1;
+                double temp=1;
                 for (int j = 1; j <= s.getPosCharge(); j++) {
-                    hTemp = hTemp * hPlus;
-                    s.addH(0, s.getL(j) * hTemp, i);
-                }
+                      temp+=s.getL(j) * hPlusPow[j];
 
-                hTemp = 1;
+                    }
                 for (int j = -1; j >= s.getNegCharge(); j--) {
-                    hTemp = hTemp * hPlus;
-                    s.addH(0, s.getL(j) / hTemp, i);
-                }
+                        temp+=s.getL(j) / hPlusPow[-j];
 
-                s.setH(0, 1 / s.getH(0, i), i);
-                hTemp = 1;
+                    }
+
+
+                s.setH(0, 1 / temp, i);
                 for (int j = 1; j <= s.getPosCharge(); j++) {
-                    hTemp = hTemp * hPlus;
-                    s.setH(j, s.getH(0, i) * s.getL(j) * hTemp, i);
-                }
 
-                hTemp = 1;
+                     s.setH(j, s.getL(j) * hPlusPow[j]/temp , i);
+                    }
                 for (int j = -1; j >= s.getNegCharge(); j--) {
-                    hTemp = hTemp * hPlus;
-                    s.setH(j, s.getH(0, i) * s.getL(j) / hTemp, i);
-                }
+                    s.setH(j, s.getL(j) / hPlusPow[-j]/temp , i);
+
+                    }
 
                 s.setHc(0, i);
                 for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
@@ -323,33 +325,26 @@ void Engine::gCalc()
 
             // Der G
             for (auto &s : mix.getSamples()) {
-                s.setDerH(0, 0, i);
 
-                double hTemp = -1 / hPlus;
+                double temp = 0;
                 for (int j = 1; j <= s.getPosCharge(); j++) {
-                    hTemp = hTemp * hPlus;
-                    s.addDerH(0, s.getL(j) * hTemp * j, i);
-                }
+                    temp-=s.getL(j) * hPlusPow[j-1] * j;
 
-                hTemp = -1 / hPlus;
-                for (int j = -1; j >= s.getNegCharge(); j--) {
-                    hTemp = hTemp / hPlus;
-                    s.addDerH(0, s.getL(j) * hTemp * j, i);
-                }
+                    }
+               for (int j = -1; j >= s.getNegCharge(); j--) {
+                   temp-=s.getL(j) / hPlusPow[-j+1] * j;
 
-                s.setDerH(0, s.getDerH(0, i) * s.getH(0, i) * s.getH(0, i), i);
+                    }
 
-                hTemp = 1;
+               temp*=s.getH(0, i) * s.getH(0, i);
+               s.setDerH(0, temp, i);
                 for (int j = 1; j <= s.getPosCharge(); j++) {
-                    hTemp = hTemp * hPlus;
-                    s.setDerH(j, s.getL(j) * (s.getDerH(0, i) * hTemp + s.getH(0, i) * hTemp / hPlus * j), i);
-                }
+                      s.setDerH(j, s.getL(j) * (temp * hPlusPow[j] + s.getH(0, i) * hPlusPow[j-1] * j), i);
+                    }
 
-                hTemp = 1;
                 for (int j = -1; j >= s.getNegCharge(); j-- ) {
-                    hTemp = hTemp * hPlus;
-                    s.setDerH(j, s.getL(j) * (s.getDerH(0, i) / hTemp + s.getH(0, i) / hTemp / hPlus * j), i);
-                }
+                    s.setDerH(j, s.getL(j) * (temp / hPlusPow[-j] + s.getH(0, i) / hPlusPow[-j+1] * j), i);
+                    }
 
                 s.setDerHc(0, i);
 
@@ -362,7 +357,7 @@ void Engine::gCalc()
             for (auto &s : mix.getSamples()) {
                 derG += s.getDerHc(i) * s.getA(0, i);
             }
-            derG += c0 + Engine::kw / hPlus / hPlus * c0;
+            derG += c0 + Engine::kw / hPlusPow[2] * c0;
 
             hPlus -= g / derG;
 
@@ -385,9 +380,10 @@ void Engine::gCalc()
 
         hpl[i] = hPlus;
     }
-/*konec pragmy*/
+
 
 }
+
 
 void Engine::der()
 {
