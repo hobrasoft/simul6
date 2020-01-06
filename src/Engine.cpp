@@ -203,22 +203,22 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
 void Engine::init() {
 //Calculation of pH
+   #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++){
         hpl[i] = 1E-14;
     }
     gCalc();
 
 //Calculation of conductivity
+    #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
         double aV;
         aV = 0;
         oH[i] = kw / hpl[i];
         for (auto &s : mix.getSamples()) {
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
-                if (j != 0) {
                     aV += s.getU(j, i) * s.getA(j, i) * abs(j);
                 }
-            }
         }
         aV =(aV + c0 * uHpl * hpl[i] + c0 * uOHmin * oH[i]) * farc;
         kapa[i] = aV;
@@ -227,10 +227,10 @@ void Engine::init() {
 
 //Calculation of curden/voltage
     double Resist = 0;
-    for (int i = 1; i <= np/2 - 1; i++) Resist = Resist + 2/kapa[2*i];
-    for (int i = 1; i <= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
-    Resist = Resist + 1/kapa[0] + 1/kapa[np];
-    Resist = Resist * dx / 3;
+    #pragma omp parallel for reduction(+:Resist)
+    for (int i = 1; i <= np - 1; i++) Resist += (2+2*(i%2))/kapa[i];
+    Resist += (1/kapa[0] + 1/kapa[np]);
+    Resist *= (dx / 3);
 
     if (m_constantvoltage) {
         curDen = voltage / Resist;
@@ -267,7 +267,6 @@ void Engine::setStep(const QVariantMap& data) {
         }
     init();
 }
-
 
 void Engine::gCalc()
 {
@@ -397,41 +396,31 @@ void Engine::der()
 #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
         double aV;
+        double aW;
         oH[i] = kw / hpl[i];
         aV = 0;
+        aW = 0;
 
         for (auto &s : mix.getSamples()) {
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
-                if (j != 0) {
-                    aV += s.getU(j, i) * s.getA(j, i) * abs(j);
-                }
+                    double Aji = s.getA(j, i);
+                    aV += s.getU(j,i) *Aji* abs(j);
+                    aW += s.getDif() *Aji * j;
             }
         }
 
         aV =(aV + c0 * uHpl * hpl[i] + c0 * uOHmin * oH[i]) * farc;
         kapa[i] = aV;
-
-        aV = 0;
-
-        for (auto &s : mix.getSamples()) {
-            for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
-                if (j != 0) {
-                    aV += s.getDif() * s.getA(j, i) * j;
-                }
-            }
-        }
-        aV += c0 * hpl[i] * difHpl - c0 * oH[i] * difOHmin;
-        difPot[i] = aV;
-
-    }
+        aW += c0 * hpl[i] * difHpl - c0 * oH[i] * difOHmin;
+        difPot[i] = aW;
+}
 /*konec pragmy*/
 
 
     Resist = 0;
-    for (int i = 1; i <= np/2 - 1; i++) Resist = Resist + 2/kapa[2*i];
-    for (int i = 1; i <= np/2; i++) Resist = Resist + 4/kapa[2*i - 1];
-    Resist = Resist + 1/kapa[0] + 1/kapa[np];
-    Resist = Resist * dx / 3;
+    for (int i = 1; i <= np - 1; i++) Resist += (2+2*(i%2))/kapa[i];
+    Resist += (1/kapa[0] + 1/kapa[np]);
+    Resist *= (dx / 3);
 
     if (m_constantvoltage) {
         curDen = voltage / Resist;
@@ -439,45 +428,51 @@ void Engine::der()
         voltage = curDen * Resist;
     }
 
-    for (int i = 1; i <= np - 1; i++) {
-        e[i] = ( -difPot[i - 1] + difPot[i + 1]) / 2 / dx;
-    }
-
-    e[0] = e[1];
-    e[np] = e[np - 1];
-
-
 #pragma omp parallel for schedule(static)
-    for (int i = 0; i <= np; i++) {
+      for (int i = 1; i <= np-1; i++) {
         double aV;
-        e[i] = (curDen - farc * e[i]) / kapa[i];
+        e[i] = (curDen - farc * (( -difPot[i - 1] + difPot[i + 1]) / 2 / dx)) / kapa[i];
 
         for (auto &s : mix.getSamples()) {
             aV = 0;
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
-                if (j != 0) {
-                    aV += s.getU(j, i) * s.getA(j, i) * j / abs(j);
-                }
+                int signj = (j > 0) - (j < 0);
+                aV += s.getU(j,i) * s.getA(j, i) * signj;
+
             }
             s.setPd(i, aV * e[i]);
         }
     }
-/*konec pragmy*/
 
-
+    e[0] = e[1];
+    e[np] = e[np - 1];
     for (auto &s : mix.getSamples()) {
-         for (int i = 1; i <= np - 1; i++) {
-            s.setD(0, i, (-s.getPd(i - 1) + s.getPd(i + 1)) / 2 / dx);
-         }
-         s.setD(0, 0, s.getD(0, 1));
-         s.setD(0, np, s.getD(0, np - 1));
+        double aV = 0;
+        double aW = 0;
+        for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
+                 int signj = (j > 0) - (j < 0);
+                aV += s.getU(j,0) * s.getA(j, 0)  * signj;
+                aW += s.getU(j,np) * s.getA(j, np) * signj;
 
-         for (int i = 1; i <= np - 1; i++) {
-            s.addD(0, i, (s.getA(0, i - 1) * s.getDif() -2 * s.getA(0, i) * s.getDif() + s.getA(0, i + 1) * s.getDif()) / dx / dx);
-         }
-         s.setD(0, 0, s.getD(0, 1));
-         s.setD(0, np, s.getD(0, np - 1));
+            }
+            s.setPd(0, aV * e[0]);
+            s.setPd(np, aW * e[np]);
+        }
+
+
+#pragma omp parallel for schedule(static)
+for (int i = 1; i <= np - 1; i++) {
+    for (auto &s : mix.getSamples()) {
+        s.setD(0, i, (-s.getPd(i - 1) + s.getPd(i + 1)) / 2 / dx);
+        s.addD(0, i, (s.getA(0, i - 1) * s.getDif() -2 * s.getA(0, i) * s.getDif() + s.getA(0, i + 1) * s.getDif()) / dx / dx);
     }
+}
+
+ for (auto &s : mix.getSamples()) {
+     s.setD(0, 0, s.getD(0, 1));
+     s.setD(0, np, s.getD(0, np - 1));
+ }
+
 }
 
 
