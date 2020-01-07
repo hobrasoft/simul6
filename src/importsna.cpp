@@ -141,29 +141,29 @@ QVariant ImportSna::readData(const QString& filename) {
             readBool();
             int nr = readInt(); // NR Rows
             int ns = readInt(); // NS
-            PDEBUG << nr;
-            PDEBUG << ns;
-            PDEBUG << readBool();
-            PDEBUG << readBool();
-            PDEBUG << readBool();
-            PDEBUG << readBool();
-            PDEBUG << readBool();
-            PDEBUG << readBool();
+            // PDEBUG << nr;
+            // PDEBUG << ns;
+            // PDEBUG << readBool();
+            // PDEBUG << readBool();
+            // PDEBUG << readBool();
+            // PDEBUG << readBool();
+            // PDEBUG << readBool();
+            // PDEBUG << readBool();
             if (ns > 0 || nr > 0) {
                 throw(tr("Unsupported SNA file format"));
                 }
-            PDEBUG << "dateTime" << readDouble();
-            PDEBUG << "realTime" << readDouble();
-            PDEBUG << "count main" << readInt();
-            PDEBUG << "count elneut" << readInt();
+            // PDEBUG << "dateTime" << readDouble();
+            // PDEBUG << "realTime" << readDouble();
+            // PDEBUG << "count main" << readInt();
+            // PDEBUG << "count elneut" << readInt();
             }
         }
     catch (const QString& errstring) {
-        PDEBUG << errstring;
+        // PDEBUG << errstring;
         return QVariant();
         }
 
-    PDEBUG << data;
+    // PDEBUG << data;
 
     return data;
 }

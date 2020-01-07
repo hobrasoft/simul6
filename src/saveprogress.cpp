@@ -139,7 +139,7 @@ void SaveProgress::saveCsv(double time) {
     filename = filename.replace(QRegExp("\\.csv$", Qt::CaseInsensitive), timestamp+".csv");
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) { 
-        PDEBUG << "Could not open" << filename;
+        // PDEBUG << "Could not open" << filename;
         return; 
         }
 

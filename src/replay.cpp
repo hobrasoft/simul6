@@ -50,7 +50,6 @@ Replay::Replay(QWidget *parent) : QWidget(parent) {
 
 
 void Replay::clear() {
-    PDEBUG;
     m_data.clear();
     m_step = 0;
     m_timer->stop();
@@ -60,7 +59,6 @@ void Replay::clear() {
 
 
 void Replay::setData(const QVariantList& data) {
-    PDEBUG;
     setEnabled(true);
     m_replay = false;
     m_data = data;
@@ -74,13 +72,11 @@ void Replay::setData(const QVariantList& data) {
 
 
 void Replay::setEngine(Engine *engine) {
-    PDEBUG;
     m_engine = engine;
 }
 
 
 void Replay::nextStep() {
-    PDEBUG;
     m_step += 1;
     if (m_step >= m_data.size()) {
         m_step = m_data.size() - 1;
@@ -97,7 +93,6 @@ void Replay::nextStep() {
 
 
 void Replay::prevStep() {
-    PDEBUG;
     m_step -= 1;
     if (m_step < 0) {
         m_step = m_data.size() - 1;
@@ -114,7 +109,6 @@ void Replay::prevStep() {
 
 
 void Replay::setStep(int step) {
-    PDEBUG << step;
     if (step >= m_data.size()) {
         return;
         }
@@ -129,7 +123,6 @@ void Replay::setStep(int step) {
 
 
 void Replay::toBegin() {
-    PDEBUG;
     m_timer->stop();
     m_step = -1;
     nextStep();
@@ -144,7 +137,6 @@ void Replay::toEnd() {
 
 
 void Replay::play() {
-    PDEBUG;
     if (m_replay) {
         m_replay = false;
         m_actionPlay->setIcon(QIcon("://icons/play.svg"));

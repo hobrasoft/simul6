@@ -89,7 +89,7 @@ void MixControlModel::toggleVisible(const QModelIndex& idx) {
 
     emit visibilityChanged(c.getInternalId(), negvisible);
 
-    PDEBUG << c.getInternalId() << c.visible() << negvisible << constituent(row).visible();
+    // PDEBUG << c.getInternalId() << c.visible() << negvisible << constituent(row).visible();
 
 }
 

@@ -151,7 +151,6 @@ void Simul6::saveData() {
         filename = filename.replace(QRegExp("\\.+$"),"");
         filename += ".simul6.json";
         }
-    PDEBUG << filename;
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly)) {
         SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
@@ -163,7 +162,6 @@ void Simul6::saveData() {
 
 
 QVariantMap Simul6::data() const {
-    PDEBUG;
     QVariantMap data;
     if (mixControlModel() == nullptr) { return data; }
     data["mix"] = mixControlModel()->json();
@@ -332,7 +330,6 @@ void Simul6::readSettings() {
 
 
 void Simul6::writeSettings() {
-    PDEBUG;
     MSETTINGS->setGuiMainWindowSize(size());
     MSETTINGS->setGuiMainWindowLayout1(saveState(1));
 }

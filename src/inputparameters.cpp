@@ -20,7 +20,7 @@ InputParameters::~InputParameters()
 
 
 void InputParameters::setConstantVoltage(bool x) {
-    PDEBUG << x;
+    // PDEBUG << x;
     ui->f_constant_current->setChecked(!x);
     ui->f_constant_voltage->setChecked(x);
     ui->f_current->setEnabled(!x);

@@ -54,7 +54,7 @@ void Ampholines::accept() {
         double pKAp = low_pKAp + i * delta;
         double pKAn = low_pKAn + i * delta;
         QString name = QString("%1%2").arg(ui->f_name->text()).arg(pKAp + (pKAn - pKAp)/2, 6, 'f', 3, QChar('0'));
-        PDEBUG << name << pKAn << pKAp << Un << Up;
+        // PDEBUG << name << pKAn << pKAp << Un << Up;
         Constituent constituent(name);
         constituent.addNegPKa(pKAn);
         constituent.addPosPKa(pKAp);
