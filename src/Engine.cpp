@@ -118,9 +118,7 @@ void Engine::initArray(vector< vector<double> > &pVector)
 void Engine::initArrays()
 {
     //cout << "Initializing arrays" << endl;
-    //initArray(a);
-    //initArray(d);
-    //initArray(v);
+
     initArray(q1);
     initArray(q2);
     initArray(q3);
@@ -133,12 +131,9 @@ void Engine::initVectors()
 {
     //cout << "Initializing vectors for size: " << getNm() << " elements" << endl;
     hpl.resize(np + 1, 1e-14); // make the number as constant
-//    derHpl.resize(np + 1, 0);
-//    derOH.resize(np + 1, 0);
     kapa.resize(np + 1, 0);
     oH.resize(np + 1, 0);
     e.resize(np + 1, 0);
-//    error.resize(np + 1);
     difPot.resize(np + 1, 0);
 }
 
@@ -164,7 +159,6 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
         for (int segmentNumber = 0; segmentNumber < segmentsCount; segmentNumber++) {
             double concentration = segments.segments[segmentNumber].concentration;
             double segmentRatio = segments.segments[segmentNumber].ratio;
-     //       sample.setIC(segmentNumber, concentration);              k cemu to tam je?
 
             int segmentEnd = segmentBegin + (int)((double)(np)/((double)ratioSum)*((double)segmentRatio));
             if (segmentEnd >= np - 5) {
@@ -188,13 +182,11 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
 
             //Here it should be expected filling u[j, i] according values in segments
 
-            // Úplně na konci!
             prevConcentration = concentration;
             segmentBegin = segmentEnd;
         }
 
         mix.addSample(sample);
-
     }
 
     init();
@@ -381,7 +373,6 @@ void Engine::gCalc()
         hpl[i] = hPlus;
     }
 
-
 }
 
 
@@ -409,10 +400,11 @@ void Engine::der()
         kapa[i] = aV;
         aW += c0 * hpl[i] * difHpl - c0 * oH[i] * difOHmin;
         difPot[i] = aW;
-}
-/*konec pragmy*/
+    }
+/*end of pragma cycle*/
 
 
+/*Simpson integration of resistance*/
     Resist = 0;
     for (int i = 1; i <= np - 1; i++) Resist += (2+2*(i%2))/kapa[i];
     Resist += (1/kapa[0] + 1/kapa[np]);
@@ -425,7 +417,7 @@ void Engine::der()
     }
 
 #pragma omp parallel for schedule(static)
-      for (int i = 1; i <= np-1; i++) {
+    for (int i = 1; i <= np-1; i++) {
         double aV;
         e[i] = (curDen - farc * (( -difPot[i - 1] + difPot[i + 1]) / 2 / dx)) / kapa[i];
 
@@ -434,11 +426,11 @@ void Engine::der()
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
                 int signj = (j > 0) - (j < 0);
                 aV += s.getU(j,i) * s.getA(j, i) * signj;
-
             }
             s.setPd(i, aV * e[i]);
         }
     }
+/*end of pragma cycle*/
 
     e[0] = e[1];
     e[np] = e[np - 1];
@@ -455,19 +447,19 @@ void Engine::der()
             s.setPd(np, aW * e[np]);
         }
 
-
 #pragma omp parallel for schedule(static)
-for (int i = 1; i <= np - 1; i++) {
-    for (auto &s : mix.getSamples()) {
-        s.setD(0, i, (-s.getPd(i - 1) + s.getPd(i + 1)) / 2 / dx);
-        s.addD(0, i, (s.getA(0, i - 1) * s.getDif() -2 * s.getA(0, i) * s.getDif() + s.getA(0, i + 1) * s.getDif()) / dx / dx);
+    for (int i = 1; i <= np - 1; i++) {
+        for (auto &s : mix.getSamples()) {
+            s.setD(0, i, (-s.getPd(i - 1) + s.getPd(i + 1)) / 2 / dx);
+            s.addD(0, i, (s.getA(0, i - 1) * s.getDif() -2 * s.getA(0, i) * s.getDif() + s.getA(0, i + 1) * s.getDif()) / dx / dx);
+        }
     }
-}
+/*end of pragma cycle*/
 
- for (auto &s : mix.getSamples()) {
+    for (auto &s : mix.getSamples()) {
      s.setD(0, 0, s.getD(0, 1));
      s.setD(0, np, s.getD(0, np - 1));
- }
+    }
 
 }
 
@@ -485,11 +477,6 @@ void Engine::rungekutta()
             s.setA(0, i, s.getV(i) + beta2 * s.getQ1(i));
         }
     }
-
-// tahle srandicka je pro vyzkouseni jak funguje omp parallel
-// #pragma omp parallel for schedule(static)
-//        for (int i = 0; i <= np; i++) double kuk = 1.0;
-//
 
     gCalc();
     der();
@@ -687,6 +674,5 @@ void Engine::runPrivate() {
 
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
-
 
 #endif
