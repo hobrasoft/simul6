@@ -20,7 +20,7 @@ QWidget *SegmentsDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
     QDoubleSpinBox *editor = new QDoubleSpinBox(parent);
     editor->setFrame(false);
     editor->setMinimum(0.0);
-    editor->setMaximum(1000);
+    editor->setMaximum(100000);
     editor->setDecimals(4);
     return editor;
 }
