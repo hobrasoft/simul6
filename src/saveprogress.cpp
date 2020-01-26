@@ -151,6 +151,7 @@ void SaveProgress::saveCsv(double time) {
     header << "\"length\"";
     header << "\"pH\"";
     header << "\"cond\"";
+    header << "\"Efield\"";
     for (auto &sample : engine->getMix().getSamples()) {
         header << "\""+sample.getName()+"\"";
         }
@@ -163,10 +164,13 @@ void SaveProgress::saveCsv(double time) {
         double len = caplen * ((double)i) / ((double)p);
         double pH = engine->getHpl()[i];
         double cond = engine->getKapa()[i]*100.0;
+        double efield = engine->getE()[i]/1000.0;
+        efield = abs (efield);
         pH = (pH > 0) ? -log(pH) / log(10) : 0;
         line << QString("%1").arg(len);
         line << QString("%1").arg(pH);
         line << QString("%1").arg(cond);
+        line << QString("%1").arg(efield);
         for (unsigned int c = 0; c<constituentsCount; c++) {
             line << QString("%1").arg(engine->getMix().getSample(c).getA(0, i));
             }
