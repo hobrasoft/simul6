@@ -130,7 +130,7 @@ void Engine::initArrays()
 void Engine::initVectors()
 {
     //cout << "Initializing vectors for size: " << getNm() << " elements" << endl;
-    hpl.resize(np + 1, 1e-14); // make the number as constant
+    hpl.resize(np + 1, 1e-16); // make the number as constant
     kapa.resize(np + 1, 0);
     oH.resize(np + 1, 0);
     e.resize(np + 1, 0);
@@ -197,7 +197,7 @@ void Engine::init() {
 //Calculation of pH
    #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++){
-        hpl[i] = 1E-14;
+        hpl[i] = 1E-16;
     }
     gCalc();
 
