@@ -28,6 +28,9 @@ public:
     void   setCurrent(double);
     void   setConstantVoltage(bool);
 
+signals:
+    void   errHChanged(double);
+
 public slots:
     void showError(double);
     void showCurrent(double);

@@ -12,6 +12,9 @@ InputParameters::InputParameters(QWidget *parent) :
     connect(ui->f_optimize_dt, &QCheckBox::stateChanged, this, &InputParameters::enableInputs);
     connect(ui->f_constant_voltage, &QCheckBox::stateChanged, this, &InputParameters::voltageCheckboxChanged);
     connect(ui->f_constant_current, &QCheckBox::stateChanged, this, &InputParameters::currentCheckboxChanged);
+    connect(ui->f_maxerr, QOverload<int>::of(&QSpinBox::valueChanged), [this](int) {
+        emit errHChanged(getErrH());
+        });
 }
 
 InputParameters::~InputParameters()
@@ -79,9 +82,7 @@ double InputParameters::getCurrent() const {
 }
 
 double InputParameters::getErrH() const {
-    double x = pow(10, -1 * ui->f_maxerr->value());
-    PDEBUG << x << ui->f_maxerr->value();
-    return x;
+    return pow(10, ui->f_maxerr->value());
 }
 
 double InputParameters::getDt() const {
