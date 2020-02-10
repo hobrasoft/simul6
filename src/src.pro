@@ -124,6 +124,7 @@ HEADERS += \
     importsna.h \
     ampholines.h \
     replay.h \
+    grafstyle.h \
     myview.h
 
 FORMS += \

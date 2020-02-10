@@ -8,6 +8,7 @@
 #include <cmath>
 #include <math.h>
 #include <QValueAxis>
+#include "grafstyle.h"
 
 #define E_COLOR     "#00ff00"
 #define PH_COLOR    "#0000ff"
@@ -40,6 +41,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 
 
 void Graf::mouseReleaseEvent(QMouseEvent *event) { 
+    PDEBUG << event->x() << event->y();
     if (event->button() != Qt::RightButton) { 
         QChartView::mouseReleaseEvent(event);
         return; 
@@ -87,7 +89,7 @@ void Graf::init(const Engine *pEngine) {
     phbrush.setColor(PH_COLOR);
     QPen phpen = series->pen();
     phpen.setColor(PH_COLOR);
-    phpen.setWidthF(1.6);
+    phpen.setWidthF(PENWIDTH);
     series->setPen(phpen);
     series->setBrush(phbrush);
     double x = 0;
@@ -110,7 +112,7 @@ void Graf::init(const Engine *pEngine) {
     kappabrush.setColor(KAPPA_COLOR);
     QPen kappapen = series->pen();
     kappapen.setColor(KAPPA_COLOR);
-    kappapen.setWidthF(1.6);
+    kappapen.setWidthF(PENWIDTH);
     series->setPen(kappapen);
     series->setBrush(kappabrush);
     x = 0;
@@ -130,7 +132,7 @@ void Graf::init(const Engine *pEngine) {
     efieldbrush.setColor(E_COLOR);
     QPen efieldpen = series->pen();
     efieldpen.setColor(E_COLOR);
-    efieldpen.setWidthF(1.6);
+    efieldpen.setWidthF(PENWIDTH);
     series->setPen(efieldpen);
     series->setBrush(efieldbrush);
     x = 0;
