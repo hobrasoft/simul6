@@ -31,6 +31,11 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
     connect(m_chart, &QChart::geometryChanged, this, &Graf::subselected);
 
+    m_actionRescale = new QAction(tr("Auto scale"), this);
+    connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
+    addAction(m_actionRescale);
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+
 }
 
 
@@ -229,6 +234,7 @@ void Graf::autoscale() {
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
     #endif
 
+    repaint();
 }
 
 
@@ -238,7 +244,7 @@ void Graf::setVisible(int id, bool visible) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
         if (series->internalId() == id) {
             series->setVisible(visible);
-            autoscale();
+            // autoscale();
             return;
             }
         }
@@ -251,7 +257,7 @@ void Graf::setVisiblePh(bool visible) {
     int i = list.size()-3;
     if (i<0) { return; }
     list[i]->setVisible(visible);
-    autoscale();
+    // autoscale();
 }
 
 
@@ -261,7 +267,7 @@ void Graf::setVisibleKapa(bool visible) {
     int i = list.size()-2;
     if (i<0) { return; }
     list[i]->setVisible(visible);
-    autoscale();
+    // autoscale();
 }
 
 
@@ -271,7 +277,7 @@ void Graf::setVisibleE(bool visible) {
     int i = list.size()-1;
     if (i<0) { return; }
     list[i]->setVisible(visible);
-    autoscale();
+    // autoscale();
 }
 
 
