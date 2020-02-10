@@ -1,6 +1,6 @@
 #include "inputparameters.h"
 #include "ui_inputparameters.h"
-#include <math.h>
+#include "math.h"
 #include "pdebug.h"
 
 InputParameters::InputParameters(QWidget *parent) :
@@ -79,7 +79,9 @@ double InputParameters::getCurrent() const {
 }
 
 double InputParameters::getErrH() const {
-    return exp10(-1 * ui->f_maxerr->value());
+    double x = pow(10, -1 * ui->f_maxerr->value());
+    PDEBUG << x << ui->f_maxerr->value();
+    return x;
 }
 
 double InputParameters::getDt() const {
