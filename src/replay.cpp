@@ -8,6 +8,8 @@
 #include <QAction>
 #include <QIcon>
 #include "pdebug.h"
+#include "simul6.h"
+#include "graf.h"
 
 Replay::~Replay() {
     delete ui;
@@ -65,7 +67,7 @@ void Replay::setData(const QVariantList& data) {
     m_step = 0;
     ui->f_slider->setValue(0);
     ui->f_slider->setRange(0, data.size()-1);
-    ui->f_step_number->setText("1");
+    ui->f_step_number->setText("0");
     ui->f_size->setText(QString("%1").arg(data.size()-1));
     m_actionPlay->setIcon(QIcon("://icons/play.svg"));
 }
@@ -118,6 +120,7 @@ void Replay::setStep(int step) {
         m_timer->setInterval(1000 / ui->f_speed->value());
         m_timer->start();
         }
+    Simul6::instance()->graf()->setRescaleEnabled(false);
     m_engine->setStep(m_data[m_step].toMap());
 }
 

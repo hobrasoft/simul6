@@ -28,6 +28,7 @@ public slots:
     void setVisiblePh(bool visible);
     void setVisibleKapa(bool visible);
     void setVisibleE(bool visible);
+    void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
 
 private slots:
     void seriesClicked(const QPointF&);
@@ -40,6 +41,7 @@ private:
     bool m_visiblePh;
     bool m_visibleKapa;
     bool m_visibleE;
+    bool m_rescaleEnabled;
 
     QValueAxis *m_axis_x;
     QValueAxis *m_axis_y;

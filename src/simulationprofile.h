@@ -10,6 +10,8 @@ namespace Ui {
 class SimulationProfile;
 }
 
+class Graf;
+
 class SimulationProfile : public QWidget
 {
     Q_OBJECT
@@ -21,6 +23,7 @@ public:
     Engine *engine() const { return m_engine; }
 
     void createEngine(int np);
+    Graf *graf() const;
 
 public slots:
     void slotRun();

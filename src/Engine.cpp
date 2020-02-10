@@ -258,6 +258,7 @@ void Engine::setStep(const QVariantMap& data) {
             }
         }
     init();
+    timeChanged(t);
 }
 
 void Engine::gCalc()

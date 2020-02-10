@@ -80,6 +80,11 @@ void Simul6::init() {
 }
 
 
+Graf *Simul6::graf() const {
+    return ui->f_simulationProfile->graf();
+}
+
+
 const MixControlModel *Simul6::mixControlModel() const {
     return ui->f_mixcontrol->model();
 }

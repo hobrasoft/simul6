@@ -35,7 +35,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
     addAction(m_actionRescale);
     setContextMenuPolicy(Qt::ActionsContextMenu);
-
+    m_rescaleEnabled = true;
 }
 
 
@@ -161,6 +161,8 @@ void Graf::init(const Engine *pEngine) {
 
 
 void Graf::autoscale() {
+    // PDEBUG << m_rescaleEnabled;
+    // if (!m_rescaleEnabled) { return; }
     double maximum = 0;
     m_engine->lock();
     size_t p    = m_engine->getNp();

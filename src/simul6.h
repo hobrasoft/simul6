@@ -10,6 +10,7 @@ class Simul6;
 }
 
 class Engine;
+class Graf;
 
 class Simul6 : public QMainWindow
 {
@@ -21,6 +22,7 @@ public:
 
     const MixControlModel *mixControlModel() const;
     int mixSize() const;
+    Graf *graf() const;
 
     double getCaplen() const;
 
