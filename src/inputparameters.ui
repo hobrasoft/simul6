@@ -78,6 +78,9 @@
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QDoubleSpinBox" name="f_dt">
+     <property name="keyboardTracking">
+      <bool>false</bool>
+     </property>
      <property name="suffix">
       <string> sec</string>
      </property>
@@ -89,9 +92,6 @@
      </property>
      <property name="singleStep">
       <double>0.001000000000000</double>
-     </property>
-     <property name="stepType">
-      <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
      </property>
      <property name="value">
       <double>0.000100000000000</double>

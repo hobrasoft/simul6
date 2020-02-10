@@ -44,8 +44,8 @@ void Graf::mouseReleaseEvent(QMouseEvent *event) {
         QChartView::mouseReleaseEvent(event);
         return; 
         }
-    m_chart->zoomReset();
-    event->accept();
+    // m_chart->zoomReset();
+    // event->accept();
 }
 
 
@@ -234,6 +234,7 @@ void Graf::autoscale() {
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
     #endif
 
+    m_chart->zoomReset();
     repaint();
 }
 
