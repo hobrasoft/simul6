@@ -9,6 +9,7 @@
 #include <QPointF>
 #include <QRectF>
 #include <QValueAxis>
+#include <QAction>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -42,6 +43,7 @@ private:
 
     QValueAxis *m_axis_x;
     QValueAxis *m_axis_y;
+    QAction    *m_actionRescale;
 
     const Engine *m_engine;
 };
