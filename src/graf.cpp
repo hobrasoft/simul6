@@ -234,7 +234,6 @@ void Graf::autoscale() {
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
     #endif
 
-    m_chart->zoomReset();
     repaint();
 }
 
