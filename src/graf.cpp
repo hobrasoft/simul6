@@ -397,14 +397,35 @@ void Graf::seriesClicked(const QPointF& point) {
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
     if (m_engine == nullptr) { return; }
-    double caplen = m_engine->getCapLen() * 1000.0;
-    int np = m_engine->getNp();
-    int node = np * point.x() / caplen;
+
+    m_engine->lock();
     QPoint position = mapToGlobal(QPoint(15,15));
+    double caplen   = m_engine->getCapLen() * 1000.0;
+    int    np       = m_engine->getNp();
+    int    node     = (np+1) * point.x() / caplen;
+    double x        = ((double)node) * (caplen / ((double)np));
+    double y        = point.y();
+    auto   hpl      = m_engine->getHpl();
+    auto   mix      = m_engine->getMix();
+    auto   kapa     = m_engine->getKapa();
+    auto   efield   = m_engine->getE();
+    m_engine->unlock();
 
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
     if (s2 != nullptr) {
-        GrafDetail *d = new GrafDetail(this, s2->name(), point, node);
+        double minimumd = 1e99;
+        double minimumy = 1e99;
+        m_engine->lock();
+        for (auto &sample : m_engine->getMix().getSamples()) {
+            double sample_y = sample.getA(0, node);
+            double distance = fabs(y - sample_y);
+            if (distance < minimumd) {
+                minimumd = distance;
+                minimumy = sample_y;
+                }
+            }
+        m_engine->unlock();
+        GrafDetail *d = new GrafDetail(this, s2->name(), x, minimumy, node);
         d->move(position);
         d->show();
         return;
@@ -412,21 +433,24 @@ void Graf::seriesClicked(const QPointF& point) {
 
     int seriescount = m_chart->series().size();
     if (s1 == m_chart->series()[seriescount-3]) {
-        GrafDetail *d = new GrafDetail(this, tr("pH"), point, node);
+        double pH = -log(hpl[node]) / log(10);
+        GrafDetail *d = new GrafDetail(this, tr("pH"), x, pH, node);
         d->move(position);
         d->show();
         return;
         }
 
     if (s1 == m_chart->series()[seriescount-2]) {
-        GrafDetail *d = new GrafDetail(this, tr("Conductivity [1e-2 S/m]"), point, node);
+        double k = kapa[node];
+        GrafDetail *d = new GrafDetail(this, tr("Conductivity [1e-2 S/m]"), x, k, node);
         d->move(position);
         d->show();
         return;
         }
 
     if (s1 == m_chart->series()[seriescount-1]) {
-        GrafDetail *d = new GrafDetail(this, tr("Electric field [kV/m]"), point, node);
+        double e = efield[node];
+        GrafDetail *d = new GrafDetail(this, tr("Electric field [kV/m]"), x, e, node);
         d->move(position);
         d->show();
         return;
