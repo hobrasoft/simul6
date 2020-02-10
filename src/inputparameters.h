@@ -18,6 +18,7 @@ public:
     double getVoltage() const;
     double getCurrent() const;
     double getDt() const;
+    double getErrH() const;
     bool optimizeDt() const;
     bool getConstantVoltage() const;
 

@@ -125,7 +125,7 @@ void Simul6::initEngine() {
     ui->f_dock_replay->setVisible(false);
     ui->f_simulationProfile->createEngine(ui->f_computeControl->getNp());
     ui->f_simulationProfile->engine()->setTime(0);
-    ui->f_simulationProfile->engine()->setErrH(1e-7); //this must be set carefully to ensure stability of computation with optimization of dt
+    ui->f_simulationProfile->engine()->setErrH(ui->f_parameters->getErrH());
     ui->f_simulationProfile->engine()->setCapLen(ui->f_computeControl->getCapLen()/1000.0);
     ui->f_simulationProfile->engine()->setBW(ui->f_computeControl->getBW());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());

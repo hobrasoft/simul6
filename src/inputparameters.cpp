@@ -1,5 +1,6 @@
 #include "inputparameters.h"
 #include "ui_inputparameters.h"
+#include <math.h>
 #include "pdebug.h"
 
 InputParameters::InputParameters(QWidget *parent) :
@@ -49,6 +50,8 @@ bool InputParameters::getConstantVoltage() const {
 
 void InputParameters::enableInputs() {
     ui->f_dt->setEnabled(!ui->f_optimize_dt->isChecked());
+    ui->f_maxerr->setEnabled(ui->f_optimize_dt->isChecked());
+    ui->f_maxerr_label->setEnabled(ui->f_optimize_dt->isChecked());
 }
 
 void InputParameters::showError(double time) {
@@ -73,6 +76,10 @@ double InputParameters::getVoltage() const {
 
 double InputParameters::getCurrent() const {
     return ui->f_current->value();
+}
+
+double InputParameters::getErrH() const {
+    return exp10(-1 * ui->f_maxerr->value());
 }
 
 double InputParameters::getDt() const {
