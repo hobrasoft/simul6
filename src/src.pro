@@ -81,7 +81,6 @@ SOURCES += \
     segmentsmodel.cpp \
     segmentsdelegate.cpp \
     preferences.cpp \
-    parametersmodel.cpp \
     mixcontrol.cpp \
     mixcontrolmodel.cpp \
     mixcontroldelegate.cpp \
@@ -114,7 +113,6 @@ HEADERS += \
     segmentsmodel.h \
     segmentsdelegate.h \
     preferences.h \
-    parametersmodel.h \
     mixcontrol.h \
     mixcontrolmodel.h \
     mixcontroldelegate.h \

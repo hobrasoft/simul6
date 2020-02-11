@@ -8,6 +8,18 @@ SegmentsModel::SegmentsModel(QObject *parent)
     insertRows(0, LastRow);
     setHeaderData(Ratio, Qt::Vertical, tr("Ratio"));
     setHeaderData(Concentration, Qt::Vertical, tr("c [mM]"));
+    setHeaderData(U3n, Qt::Vertical, tr("U-3"));
+    setHeaderData(U2n, Qt::Vertical, tr("U-2"));
+    setHeaderData(U1n, Qt::Vertical, tr("U-1"));
+    setHeaderData(U1p, Qt::Vertical, tr("U+1"));
+    setHeaderData(U2p, Qt::Vertical, tr("U+2"));
+    setHeaderData(U3p, Qt::Vertical, tr("U+3"));
+    setHeaderData(Pk3n, Qt::Vertical, tr("Pka-3"));
+    setHeaderData(Pk2n, Qt::Vertical, tr("Pka-2"));
+    setHeaderData(Pk1n, Qt::Vertical, tr("Pka-1"));
+    setHeaderData(Pk1p, Qt::Vertical, tr("Pka+1"));
+    setHeaderData(Pk2p, Qt::Vertical, tr("Pka+2"));
+    setHeaderData(Pk3p, Qt::Vertical, tr("Pka+3"));
     connect(this, &QAbstractItemModel::dataChanged, this, &SegmentsModel::slotDataChanged);
 }
 

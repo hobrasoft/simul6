@@ -5,7 +5,6 @@
 #include <QSortFilterProxyModel>
 #include <QColor>
 #include "segmentsmodel.h"
-#include "parametersmodel.h"
 #include "constituentsmodel.h"
 #include "segments.h"
 #include "Constituent.h"
@@ -42,7 +41,7 @@ private:
     int m_id;
     QColor m_color;
     SegmentsModel *m_segmentsModel;
-    ParametersModel *m_parametersModel;
+//  ParametersModel *m_parametersModel;
     ConstituentsModel *m_constituentsModel;
     QSortFilterProxyModel *m_constituentsProxyModel;
 };

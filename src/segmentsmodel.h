@@ -17,6 +17,18 @@ public:
     enum Rows {
         Ratio = 0,
         Concentration,
+        U3n,
+        U2n,
+        U1n,
+        U1p,
+        U2p,
+        U3p,
+        Pk3n,
+        Pk2n,
+        Pk1n,
+        Pk1p,
+        Pk2p,
+        Pk3p,
         LastRow
     };
 

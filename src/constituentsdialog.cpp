@@ -2,7 +2,6 @@
 #include "constituentsmodel.h"
 #include "ui_constituentsdialog.h"
 #include "segmentsdelegate.h"
-#include "parametersmodel.h"
 #include "colorsgenerator.h"
 #include "simul6.h"
 #include "msettings.h"
@@ -35,8 +34,8 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     ui->f_segmentsView->setItemDelegate(new SegmentsDelegate(this));
     connect(ui->f_segmentsNumber, SIGNAL(valueChanged(int)), m_segmentsModel, SLOT(setSegmentsNumber(int)));
 
-    m_parametersModel = new ParametersModel(this);
-    ui->f_parametersView->setModel(m_parametersModel);
+    // m_parametersModel = new ParametersModel(this);
+    // ui->f_parametersView->setModel(m_parametersModel);
 
     connect(ui->f_databaseView, &MyView::currentRowChanged, this, &ConstituentsDialog::currentRowChanged);
     QTimer::singleShot(1, this, &ConstituentsDialog::readSettings);
@@ -63,7 +62,7 @@ void ConstituentsDialog::enableGroupBoxes() {
     bool manually = ui->f_manuallyGroupBox->isChecked();
     ui->f_segmentsGroupBox->setEnabled(true);
     ui->f_databaseGroupBox->setEnabled(!manually);
-    ui->f_parametersGroupBox->setEnabled(manually);
+    // ui->f_parametersGroupBox->setEnabled(manually);
 }
 
 
@@ -115,6 +114,7 @@ void ConstituentsDialog::currentRowChanged(int row) {
     QVariant pu3    = m_constituentsProxyModel->data(m_constituentsProxyModel->index(row, ConstituentsModel::PU3));
 
     ui->f_name->setText(name);
+/*
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3), npka3);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2), npka2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1), npka1);
@@ -128,11 +128,12 @@ void ConstituentsDialog::currentRowChanged(int row) {
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P1), pu1);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P2), pu2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P3), pu3);
-
+*/
 }
 
 
 Constituent ConstituentsDialog::constituent() const {
+/*
     QVariant npka3 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3));
     QVariant npka2 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2));
     QVariant npka1 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1));
@@ -145,12 +146,14 @@ Constituent ConstituentsDialog::constituent() const {
     QVariant pu1   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P1));
     QVariant pu2   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P2));
     QVariant pu3   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P3));
+*/
 
     bool manually = ui->f_manuallyGroupBox->isChecked();
     Constituent constituent(ui->f_name->text());
     constituent.setColor(m_color);
     constituent.setId((manually) ? -1 : m_id);
 
+/*
     for (;;) {
         if (npka1.isValid() && nu1.isValid()) {
             constituent.addNegU(nu1.toDouble() * Constituent::uFactor);
@@ -195,6 +198,7 @@ Constituent ConstituentsDialog::constituent() const {
         break;
     }
 
+*/
     return constituent;
 
 }
@@ -230,6 +234,7 @@ void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     m_color = constituent.color().name();
     ui->f_name->setText(name);
     ui->f_color->setStyleSheet("background: "+m_color.name(QColor::HexRgb));
+/*
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3), npka3);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2), npka2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1), npka1);
@@ -243,7 +248,7 @@ void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P1), pu1);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P2), pu2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P3), pu3);
-
+*/
     ui->f_manuallyGroupBox->setChecked(m_id < 0);
 
 }
