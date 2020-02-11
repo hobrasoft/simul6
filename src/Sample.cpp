@@ -16,8 +16,7 @@ std::vector<double> initHVector(const unsigned int N)
   return vec;
 }
 
-Sample::Sample(const Constituent &pConstituent, const unsigned int pAreas, const int pNp) :
-    Constituent(pConstituent),
+Sample::Sample(const unsigned int pAreas, const int pNp) :
     areas(pAreas),
     IC(pAreas, 0),
     h(initHVector(pNp + 1)),
@@ -34,21 +33,35 @@ Sample::Sample(const Constituent &pConstituent, const unsigned int pAreas, const
     q4(pNp + 1),
     q5(pNp + 1),
     q6(pNp + 1),
-    u(CHARGE_BLOCK_SIZE, pNp)
+    u(CHARGE_BLOCK_SIZE, pNp),
+    L(CHARGE_BLOCK_SIZE, pNp)
 {
-    // Temporary piece of code used to populate mobilities for each combination of charge and axial coordinate
-    // To be replaced once UI component for segments filling is introduced
-    for (int j = getNegCharge(); j <= getPosCharge(); j++) {
-        for (int i = 0; i <= pNp; i++) {
-            u.set(j, i, pConstituent.getU(j));
-        }
-    }
+}
+
+void Sample::setU(const int pCharge, const unsigned int i, const double value) {
+    u.set(pCharge, i, value);
+}
+
+
+void Sample::setL(const int pCharge, const unsigned int i, const double value) {
+    L.set(pCharge, i, value);
 }
 
 Sample::~Sample()
 {
     //std::cout << "Sample destructor" << std::endl;
 }
+
+
+double Sample::getDif(const int pI) const {
+    return dif[pI];
+}
+
+
+void Sample::setDif(const int pI, const double pValue) {
+    dif[pI] = pValue;
+}
+
 
 size_t Sample::getHIdx(const int pCharge, const unsigned int pI) const
 {
@@ -144,5 +157,10 @@ double Sample::getDerH(const int pCharge, const unsigned int pI) const
 double Sample::getU(const int pCharge, const unsigned int pI) const
 {
     return u.get(pCharge, pI);
+}
+
+double Sample::getL(const int pCharge, const unsigned int pI) const
+{
+    return L.get(pCharge, pI);
 }
 

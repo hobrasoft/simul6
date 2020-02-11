@@ -59,10 +59,9 @@ ConstituentsDialog::~ConstituentsDialog()
 
 
 void ConstituentsDialog::enableGroupBoxes() {
-    bool manually = ui->f_manuallyGroupBox->isChecked();
     ui->f_segmentsGroupBox->setEnabled(true);
-    ui->f_databaseGroupBox->setEnabled(!manually);
-    // ui->f_parametersGroupBox->setEnabled(manually);
+    ui->f_databaseGroupBox->setEnabled(!manually());
+    // ui->f_parametersGroupBox->setEnabled(manually());
 }
 
 
@@ -132,8 +131,17 @@ void ConstituentsDialog::currentRowChanged(int row) {
 }
 
 
-Constituent ConstituentsDialog::constituent() const {
+bool ConstituentsDialog::manually() const {
+    return ui->f_manuallyGroupBox->isChecked();
+}
+
+SegmentedConstituent ConstituentsDialog::constituent() const {
+    return m_segmentsModel->constituent();
+}
+
 /*
+SegmentedConstituent ConstituentsDialog::constituent() const {
+
     QVariant npka3 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3));
     QVariant npka2 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2));
     QVariant npka1 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1));
@@ -146,14 +154,12 @@ Constituent ConstituentsDialog::constituent() const {
     QVariant pu1   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P1));
     QVariant pu2   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P2));
     QVariant pu3   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P3));
-*/
 
-    bool manually = ui->f_manuallyGroupBox->isChecked();
-    Constituent constituent(ui->f_name->text());
+    SegmentedConstituent constituent;
+    constituent.setName(ui->f_name->text());
     constituent.setColor(m_color);
-    constituent.setId((manually) ? -1 : m_id);
+    constituent.setId((manually()) ? -1 : m_id);
 
-/*
     for (;;) {
         if (npka1.isValid() && nu1.isValid()) {
             constituent.addNegU(nu1.toDouble() * Constituent::uFactor);
@@ -198,21 +204,17 @@ Constituent ConstituentsDialog::constituent() const {
         break;
     }
 
-*/
     return constituent;
 
 }
+*/
 
-Segments ConstituentsDialog::segments() const {
-    return m_segmentsModel->segments();
-}
-
-void ConstituentsDialog::setSegments(const Segments& segments) {
+void ConstituentsDialog::setConstituent(const SegmentedConstituent& segments) {
     ui->f_segmentsNumber->setValue(segments.size());
-    m_segmentsModel->setSegments(segments);
+    m_segmentsModel->setConstituent(segments);
 }
 
-
+/*
 void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     unsigned int negCount = constituent.getNegCount();
     unsigned int posCount = constituent.getPosCount();
@@ -234,7 +236,7 @@ void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     m_color = constituent.color().name();
     ui->f_name->setText(name);
     ui->f_color->setStyleSheet("background: "+m_color.name(QColor::HexRgb));
-/*
+
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3), npka3);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2), npka2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1), npka1);
@@ -248,10 +250,11 @@ void ConstituentsDialog::setConstituent(const Constituent& constituent) {
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P1), pu1);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P2), pu2);
     m_parametersModel->setData(m_parametersModel->index(ParametersModel::U, ParametersModel::P3), pu3);
-*/
+
     ui->f_manuallyGroupBox->setChecked(m_id < 0);
 
 }
+*/
 
 
 void ConstituentsDialog::readSettings() {

@@ -7,7 +7,7 @@
 #define _ConstituentSeries_H_
 
 #include <QLineSeries>
-#include "Constituent.h"
+#include "Sample.h"
 
 /**
  * @brief
@@ -15,7 +15,7 @@
 class ConstituentSeries : public QtCharts::QLineSeries {
     Q_OBJECT
   public:
-    ConstituentSeries(const Constituent&, QObject *parent);
+    ConstituentSeries(const Sample&, QObject *parent);
 
     int internalId() const;
 

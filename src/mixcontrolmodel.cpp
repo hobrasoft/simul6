@@ -23,49 +23,48 @@ MixControlModel::MixControlModel(QObject *parent)
     setHeaderData(Ratio, Qt::Horizontal, tr("Ratio"));
 }
 
-QModelIndex MixControlModel::add(const Constituent& pConstituent, const Segments& segments) {
+QModelIndex MixControlModel::add(const SegmentedConstituent& pConstituent) {
     insertRows(0, 1);
-    Constituent constituent = pConstituent;
+    SegmentedConstituent constituent = pConstituent;
     if (constituent.color() == QColor()) {
         constituent.setColor(ColorsGenerator::color());
         }
     if (constituent.getInternalId() == 0) {
         constituent.setInternalId(IdGenerator::nextId());
         }
-    setConstituentAndSegments(constituent, segments, 0);
+    setConstituent(constituent, 0);
     return index(0, 0);
 }
 
-void MixControlModel::add(const QList<Constituent>& constituents, const QList<Segments>& segments) {
-    Q_ASSERT(constituents.size() == segments.size());
+void MixControlModel::add(const QList<SegmentedConstituent>& constituents) {
     for (int i=0; i<constituents.size(); i++) {
-        add(constituents[i], segments[i]);
+        add(constituents[i]);
         }
 }
 
-void MixControlModel::setConstituentAndSegments(const Constituent& constituent, const Segments& segments, int row) {
+void MixControlModel::setConstituent(const SegmentedConstituent& constituent, int row) {
     double caplen = Simul6::instance()->getCaplen();
     double ratioSum = 0;
     QStringList ratio;
     QStringList len;
     QStringList conc;
-    for (int i=0; i<segments.segments.size(); i++) {
-        double ratio = segments.segments[i].ratio;
+    for (int i=0; i<constituent.segments.size(); i++) {
+        double ratio = constituent.segments[i].ratio;
         ratioSum += ratio;
     }
-    for (int i=0; i<segments.segments.size(); i++) {
-        double ratioLen = (ratioSum > 0) ? 1000 * segments.segments[i].ratio * caplen / ratioSum : 0;
-        ratio << QString("%1").arg(segments.segments[i].ratio, 0, 'f', 2);
+    for (int i=0; i<constituent.segments.size(); i++) {
+        double ratioLen = (ratioSum > 0) ? 1000 * constituent.segments[i].ratio * caplen / ratioSum : 0;
+        ratio << QString("%1").arg(constituent.segments[i].ratio, 0, 'f', 2);
         len   << QString("%1").arg(ratioLen, 0, 'f', 2);
-        conc  << QString("%1").arg(segments.segments[i].concentration, 0, 'f', 3);
+        conc  << QString("%1").arg(constituent.segments[i].concentration, 0, 'f', 3);
     }
 
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
-    setData(index(row, 0), QVariant::fromValue(segments), SegmentsRole);
+//  setData(index(row, 0), QVariant::fromValue(segments), SegmentsRole);
     setData(index(row, Visible), constituent.visible());
     setData(index(row, Name), constituent.getName());
-    setData(index(row, NegCount), constituent.getNegCount());
-    setData(index(row, PosCount), constituent.getPosCount());
+    setData(index(row, NegCount), constituent.getNegCharge());
+    setData(index(row, PosCount), constituent.getPosCharge());
     setData(index(row, SegCount), len.join("; "));
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));
@@ -81,7 +80,7 @@ void MixControlModel::toggleVisible(const QModelIndex& idx) {
     bool visible = data(vidx).toBool();
     bool negvisible = (visible) ? false : true;
     
-    Constituent c = constituent(row);
+    SegmentedConstituent c = constituent(row);
     c.setVisible(negvisible);
     setData(index(row, 0), QVariant::fromValue(c), ConstituentRole);
 
@@ -94,29 +93,15 @@ void MixControlModel::toggleVisible(const QModelIndex& idx) {
 }
 
 
-Constituent MixControlModel::constituent(int row) const {
-    return data(index(row, 0), ConstituentRole).value<Constituent>();
+SegmentedConstituent MixControlModel::constituent(int row) const {
+    return data(index(row, 0), ConstituentRole).value<SegmentedConstituent>();
 }
 
 
-Segments MixControlModel::segments(int row) const {
-    return data(index(row, 0), SegmentsRole).value<Segments>();
-}
-
-
-QList<Constituent> MixControlModel::constituents() const {
-    QList<Constituent> list;
+QList<SegmentedConstituent> MixControlModel::constituents() const {
+    QList<SegmentedConstituent> list;
     for (int i=0; i<rowCount(); i++) {
         list << constituent(i);
-        }
-    return list;
-}
-
-
-QList<Segments> MixControlModel::segments() const {
-    QList<Segments> list;
-    for (int i=0; i<rowCount(); i++) {
-        list << segments(i);
         }
     return list;
 }
@@ -127,7 +112,6 @@ QVariantList MixControlModel::json() const {
     for (int row=0; row<rowCount(); row++) {
         QVariantMap sample;
         sample["constituent"] = constituent(row).json();
-        sample["segments"] = segments(row).json();
         list << sample;
         }
     return list;
@@ -138,10 +122,8 @@ void MixControlModel::setJson(const QVariantList& list) {
     removeRows(0, rowCount());
     for (int i=0; i<list.size(); i++) {
         QVariantMap constituentMap = list[i].toMap()["constituent"].toMap();
-        QVariantList segmentsMap = list[i].toMap()["segments"].toList();
-        Constituent constituent(constituentMap);
-        Segments segments(segmentsMap);
-        add(constituent, segments);
+        SegmentedConstituent constituent(constituentMap);
+        add(constituent);
         }
 }
 

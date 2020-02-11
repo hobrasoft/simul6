@@ -70,9 +70,8 @@ void MixControl::resizeColumns() {
 void MixControl::addComponent() {
     ConstituentsDialog dialog;
     if (QDialog::Accepted == dialog.exec()) {
-        Constituent c = dialog.constituent();
-        Segments s = dialog.segments();
-        QModelIndex index = m_model->add(c, s);
+        SegmentedConstituent c = dialog.constituent();
+        QModelIndex index = m_model->add(c);
         Q_UNUSED(index);
         // QItemSelectionModel sm;
         // sm.select(index, QItemSelectionModel::Rows);
@@ -91,11 +90,9 @@ void MixControl::editComponent(const QModelIndex& index) {
     int row = index.row();
     ConstituentsDialog dialog;
     dialog.setConstituent(m_model->constituent(row));
-    dialog.setSegments(m_model->segments(row));
     if (QDialog::Accepted == dialog.exec()) {
-        Constituent c = dialog.constituent();
-        Segments s = dialog.segments();
-        m_model->setConstituentAndSegments(c, s, row);
+        SegmentedConstituent c = dialog.constituent();
+        m_model->setConstituent(c, row);
         resizeColumns();
         }
 }

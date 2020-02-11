@@ -6,7 +6,7 @@
 #include "Sample.h"
 #include "Mix.h"
 #include "Vec2d.h"
-#include "segments.h"
+#include "segmentedconstituent.h"
 #include <list>
 #include <string>
 #include <vector>
@@ -145,7 +145,7 @@ public:
     const std::vector<double>& getE() const { return e; }
 	const Mix &getMix() const;
     
-    void setMix(const QList<Constituent>&, const QList<Segments>&);
+    void setMix(const QList<SegmentedConstituent>&);
     void setStep(const QVariantMap& data);
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();

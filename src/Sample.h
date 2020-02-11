@@ -2,12 +2,12 @@
 #ifndef SAMPLE_HPP
 #define SAMPLE_HPP
 
-#include "Constituent.h"
+#include "segmentedconstituent.h"
 #include "Vec2d.h"
 #include <vector>
 #include <string>
 
-class Sample : public Constituent
+class Sample : public SegmentedConstituent
 {
 private:
     unsigned int areas;
@@ -21,19 +21,28 @@ private:
     std::vector<double> pd;
     std::vector<double> q1, q2, q3, q4, q5, q6;
     Vec2d u;
+    Vec2d L;
+    std::vector<double> dif;
 
     unsigned int getChargeIndex(const int pCharge) const;
 
     size_t getHIdx(const int pCharge, const unsigned int pI) const;
 
 public:
-    Sample(const Constituent &pConstituent, const unsigned int pAreas, const int pNp);
+    Sample(const unsigned int pAreas, const int pNp);
     ~Sample();
+
+    const QString& getName() const;
+
+    void setDif(const int pI, const double pValue);
+    double getDif(const int pI) const;
 
     Sample &setIC(const unsigned int pArea, const double pValue);
     double getIC(unsigned int pArea) const;
     // A
     void setA(const int pCharge, const unsigned int pI, const double pValue);
+    void setU(const int pCharge, const unsigned int pI, const double pValue);
+    void setL(const int pCharge, const unsigned int pI, const double pValue);
     double getA(const int pCharge, const unsigned int pI) const;
     // D
     void setD(const int pCharge, const unsigned int pI, const double pValue);
@@ -76,6 +85,7 @@ public:
     double getQ6(const unsigned int pI) const { return q6[pI]; }
     // u 2d vector
     double getU(const int pCharge, const unsigned int pI) const;
+    double getL(const int pCharge, const unsigned int pI) const;
 
 };
 

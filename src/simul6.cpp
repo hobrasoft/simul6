@@ -139,7 +139,7 @@ void Simul6::initEngine() {
     ui->f_simulationProfile->engine()->setCurDen(ui->f_parameters->getCurrent());
     ui->f_simulationProfile->engine()->setConstantVoltage(ui->f_parameters->getConstantVoltage());
     ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
-    ui->f_simulationProfile->engine()->setMix(mixControlModel()->constituents(), mixControlModel()->segments()); // Nakrmí nový engine směsí
+    ui->f_simulationProfile->engine()->setMix(mixControlModel()->constituents()); // Nakrmí nový engine směsí
 }
 
 
@@ -286,7 +286,7 @@ void Simul6::createActions() {
         Ampholines ampholines(this);
         if (QDialog::Accepted != ampholines.exec()) { return; }
         MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
-        model->add(ampholines.constituents(), ampholines.segments());
+        model->add(ampholines.constituents());
     });
     menu->addAction(action);
 

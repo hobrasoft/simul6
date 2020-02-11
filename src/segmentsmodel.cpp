@@ -14,12 +14,12 @@ SegmentsModel::SegmentsModel(QObject *parent)
     setHeaderData(U1p, Qt::Vertical, tr("U+1"));
     setHeaderData(U2p, Qt::Vertical, tr("U+2"));
     setHeaderData(U3p, Qt::Vertical, tr("U+3"));
-    setHeaderData(Pk3n, Qt::Vertical, tr("Pka-3"));
-    setHeaderData(Pk2n, Qt::Vertical, tr("Pka-2"));
-    setHeaderData(Pk1n, Qt::Vertical, tr("Pka-1"));
-    setHeaderData(Pk1p, Qt::Vertical, tr("Pka+1"));
-    setHeaderData(Pk2p, Qt::Vertical, tr("Pka+2"));
-    setHeaderData(Pk3p, Qt::Vertical, tr("Pka+3"));
+    setHeaderData(Pk3n, Qt::Vertical, tr("PKa-3"));
+    setHeaderData(Pk2n, Qt::Vertical, tr("PKa-2"));
+    setHeaderData(Pk1n, Qt::Vertical, tr("PKa-1"));
+    setHeaderData(Pk1p, Qt::Vertical, tr("PKa+1"));
+    setHeaderData(Pk2p, Qt::Vertical, tr("PKa+2"));
+    setHeaderData(Pk3p, Qt::Vertical, tr("PKa+3"));
     connect(this, &QAbstractItemModel::dataChanged, this, &SegmentsModel::slotDataChanged);
 }
 
@@ -45,8 +45,8 @@ void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
 }
 
 
-Segments SegmentsModel::segments() const {
-    Segments segments;
+SegmentedConstituent SegmentsModel::constituent() const {
+    SegmentedConstituent segments;
     double ratioSum = 0;
     for (int column = 0; column < columnCount(); column++) {
         double ratio = data(index(Ratio, column)).toDouble();
@@ -55,7 +55,7 @@ Segments SegmentsModel::segments() const {
     for (int column = 0; column < columnCount(); column++) {
         double ratio = data(index(Ratio, column)).toDouble();
         double concentration = data(index(Concentration, column)).toDouble();
-        Segments::Segment segment;
+        SegmentedConstituent::Segment segment;
         segment.ratio = ratio;
         segment.concentration = concentration;
         segments << segment;
@@ -64,7 +64,7 @@ Segments SegmentsModel::segments() const {
 }
 
 
-void SegmentsModel::setSegments(const Segments& segments) {
+void SegmentsModel::setConstituent(const SegmentedConstituent& segments) {
     removeColumns(0, columnCount());
     insertColumns(0, segments.size());
     for (int i=0; i<segments.size(); i++) {

@@ -14,10 +14,7 @@ class Constituent
 private:
     bool m_valid;
     int m_id;
-    int m_internalId;
     QString m_name;
-    QColor  m_color;
-    bool    m_visible;
 	double m_U;
 	int m_Z;
 	unsigned int m_negCount;
@@ -42,18 +39,14 @@ public:
     ~Constituent();
 
     void setId(int x) { m_id = x; }
-    void setInternalId(int x) { m_internalId = x; }
 	void setU(double pU) { m_U = pU; }
 	void setZ(int pZ) { m_Z = pZ; }
-	void setColor(const QColor& c) { m_color = c; }
-	void setVisible(bool v) { m_visible = v; }
 	void addNegU(double pValue);
 	void addPosU(double pValue);
 	void addNegPKa(double pValue);
 	void addPosPKa(double pValue);
 
     int getId() const { return m_id; }
-    int getInternalId() const { return m_internalId; }
     unsigned int getNegCount() const { return m_negCount; }
     int getNegCharge() const { return -1 * static_cast<int>(m_negCount); }
     unsigned int getPosCount() const { return m_posCount; }
@@ -63,8 +56,6 @@ public:
     double getU(int pCharge) const;
     int getZ() const { return m_Z; }
     double getL(const int pCharge) const;
-    QColor color() const { return m_color; }
-    bool visible() const { return m_visible; }
 
 
     double getPKa(const int pCharge) const;
