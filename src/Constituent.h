@@ -64,6 +64,7 @@ public:
     const QString& getName() const { return m_name; }
 
     QVariantMap json() const;
+    QVariantMap jsonSimplified() const;
 
 
 private:

@@ -12,7 +12,9 @@ const double Constituent::uFactor = 1e-9;
 
 Constituent::Constituent() :
     m_valid(false),
-    m_id(-1)
+    m_id(-1),
+	m_negCount(0),
+    m_posCount(0)
 {
 }
 
@@ -71,34 +73,37 @@ Constituent::~Constituent()
 }
 
 QVariantMap Constituent::json() const {
+    QVariantMap data = jsonSimplified();
+    data["name"] = m_name;
+    data["negCount"] = m_negCount;
+    data["posCount"] = m_posCount;
+    return data;
+}
+
+
+QVariantMap Constituent::jsonSimplified() const {
     QVariantList listuNeg;
     QVariantList listpKaNeg;
     for (unsigned int i=0; i<m_negCount; i++) {
-        listuNeg.prepend(m_uNeg[i] / uFactor);
+        listuNeg.prepend(m_uNeg[i]);
         listpKaNeg.prepend(m_pKaNeg[i]);
     }
 
     QVariantList listuPos;
     QVariantList listpKaPos;
     for (unsigned int i=0; i<m_posCount; i++) {
-        listuPos << m_uPos[i] / uFactor;
+        listuPos << m_uPos[i];
         listpKaPos << m_pKaPos[i];
     }
 
-//  PDEBUG << listuNeg << pKaNeg << uNeg << pKaPos << uPos;
-
     QVariantMap data;
-    data["name"] = m_name;
-    // data["color"] = m_color.name(QColor::HexRgb);
-    // data["visible"] = m_visible;
-    data["negCount"] = m_negCount;
-    data["posCount"] = m_posCount;
-    data["uNeg"] = listuNeg;
-    data["uPos"] = listuPos;
-    data["pKaNeg"] = listpKaNeg;
-    data["pKaPos"] = listpKaPos;
+    if (!listuNeg.isEmpty()) { data["uNeg"] = listuNeg; }
+    if (!listuPos.isEmpty()) { data["uPos"] = listuPos; }
+    if (!listpKaNeg.isEmpty()) { data["pKaNeg"] = listpKaNeg; }
+    if (!listpKaPos.isEmpty()) { data["pKaPos"] = listpKaPos; }
     return data;
 }
+
 
 void Constituent::addNegU(double pValue)
 {
@@ -106,6 +111,7 @@ void Constituent::addNegU(double pValue)
 	m_negCount++;
     calculateDif();
 }
+
 
 void Constituent::addPosU(double pValue)
 {

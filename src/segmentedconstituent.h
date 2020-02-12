@@ -13,8 +13,8 @@ public:
     SegmentedConstituent(const QVariantMap& json);
     SegmentedConstituent(const QString& name);
 
-    int getPosCharge() const { return m_posCharge; }
-    int getNegCharge() const { return m_negCharge; }
+    int getPosCharge() const;
+    int getNegCharge() const;
     void setVisible(bool v) { m_visible = v; }
     bool visible() const { return m_visible; }
     void setInternalId(int x) { m_internalId = x; }
@@ -23,7 +23,8 @@ public:
     QColor color() const { return m_color; }
     void setName(const QString& name) { m_name = name; }
     QString getName() const { return m_name; }
-    void setId(int);
+    void setId(int x) { m_id = x; } 
+    int getId() const { return m_id; }
 
     void addNegPKa(double);
     void addPosPKa(double);
@@ -38,6 +39,7 @@ public:
             QVariantMap data;
             data["concentration"] = concentration;
             data["ratio"] = ratio;
+            data["constituent"] = constituent.jsonSimplified();
             return data;
             }
     };
@@ -52,13 +54,7 @@ public:
         return segments.size();
     }
 
-    QVariantList json() const {
-        QVariantList list;
-        for (int i=0; i<segments.size(); i++) {
-            list << segments[i].json();
-            }
-        return list;
-        }
+    QVariantMap json() const;
 
     int ratioSum() const {
         int sum = 0;
@@ -70,12 +66,11 @@ public:
     }
 
 private:
-    int m_posCharge;
-    int m_negCharge;
     int m_internalId;
     bool m_visible;
     QColor m_color;
     QString m_name;
+    int m_id;
     
 };
 

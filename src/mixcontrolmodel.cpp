@@ -60,7 +60,6 @@ void MixControlModel::setConstituent(const SegmentedConstituent& constituent, in
     }
 
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
-//  setData(index(row, 0), QVariant::fromValue(segments), SegmentsRole);
     setData(index(row, Visible), constituent.visible());
     setData(index(row, Name), constituent.getName());
     setData(index(row, NegCount), constituent.getNegCharge());

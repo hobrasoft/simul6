@@ -8,18 +8,18 @@ SegmentsModel::SegmentsModel(QObject *parent)
     insertRows(0, LastRow);
     setHeaderData(Ratio, Qt::Vertical, tr("Ratio"));
     setHeaderData(Concentration, Qt::Vertical, tr("c [mM]"));
-    setHeaderData(U3n, Qt::Vertical, tr("U-3"));
-    setHeaderData(U2n, Qt::Vertical, tr("U-2"));
-    setHeaderData(U1n, Qt::Vertical, tr("U-1"));
-    setHeaderData(U1p, Qt::Vertical, tr("U+1"));
-    setHeaderData(U2p, Qt::Vertical, tr("U+2"));
-    setHeaderData(U3p, Qt::Vertical, tr("U+3"));
-    setHeaderData(Pk3n, Qt::Vertical, tr("PKa-3"));
-    setHeaderData(Pk2n, Qt::Vertical, tr("PKa-2"));
-    setHeaderData(Pk1n, Qt::Vertical, tr("PKa-1"));
-    setHeaderData(Pk1p, Qt::Vertical, tr("PKa+1"));
-    setHeaderData(Pk2p, Qt::Vertical, tr("PKa+2"));
-    setHeaderData(Pk3p, Qt::Vertical, tr("PKa+3"));
+    setHeaderData(U3n, Qt::Vertical, tr("u-3"));
+    setHeaderData(U2n, Qt::Vertical, tr("u-2"));
+    setHeaderData(U1n, Qt::Vertical, tr("u-1"));
+    setHeaderData(U1p, Qt::Vertical, tr("u+1"));
+    setHeaderData(U2p, Qt::Vertical, tr("u+2"));
+    setHeaderData(U3p, Qt::Vertical, tr("u+3"));
+    setHeaderData(Pk3n, Qt::Vertical, tr("pKa-3"));
+    setHeaderData(Pk2n, Qt::Vertical, tr("pKa-2"));
+    setHeaderData(Pk1n, Qt::Vertical, tr("pKa-1"));
+    setHeaderData(Pk1p, Qt::Vertical, tr("pKa+1"));
+    setHeaderData(Pk2p, Qt::Vertical, tr("pKa+2"));
+    setHeaderData(Pk3p, Qt::Vertical, tr("pKa+3"));
     connect(this, &QAbstractItemModel::dataChanged, this, &SegmentsModel::slotDataChanged);
 }
 
@@ -53,11 +53,24 @@ SegmentedConstituent SegmentsModel::constituent() const {
         ratioSum += ratio;
     }
     for (int column = 0; column < columnCount(); column++) {
-        double ratio = data(index(Ratio, column)).toDouble();
-        double concentration = data(index(Concentration, column)).toDouble();
+        Constituent constituent;
+        auto xdataValid = [this,column](int rowU, int rowPka) {
+            return data(index(rowU, column)).isValid() && data(index(rowPka, column)).isValid();
+            };
+        auto xdata = [this,column](int row) {
+            return data(index(row, column)).toDouble();
+            };
+        if (xdataValid(U1n,Pk1n)) { constituent.addNegU(xdata(U1n)); constituent.addNegPKa(xdata(Pk1n)); }
+        if (xdataValid(U2n,Pk2n)) { constituent.addNegU(xdata(U2n)); constituent.addNegPKa(xdata(Pk2n)); }
+        if (xdataValid(U3n,Pk3n)) { constituent.addNegU(xdata(U3n)); constituent.addNegPKa(xdata(Pk3n)); }
+        if (xdataValid(U1p,Pk1p)) { constituent.addPosU(xdata(U1p)); constituent.addPosPKa(xdata(Pk1p)); }
+        if (xdataValid(U2p,Pk2p)) { constituent.addPosU(xdata(U2p)); constituent.addPosPKa(xdata(Pk2p)); }
+        if (xdataValid(U3p,Pk3p)) { constituent.addPosU(xdata(U3p)); constituent.addPosPKa(xdata(Pk3p)); }
+
         SegmentedConstituent::Segment segment;
-        segment.ratio = ratio;
-        segment.concentration = concentration;
+        segment.ratio = data(index(Ratio, column)).toDouble();
+        segment.concentration = data(index(Concentration, column)).toDouble();
+        segment.constituent = constituent;
         segments << segment;
     }
     return segments;
