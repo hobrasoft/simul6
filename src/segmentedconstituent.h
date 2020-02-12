@@ -1,5 +1,5 @@
-#ifndef SEGMENTS_H
-#define SEGMENTS_H
+#ifndef _SegmentedConstituent_H_
+#define _SegmentedConstituent_H_
 
 #include <QList>
 #include <QListIterator>
@@ -74,6 +74,8 @@ private:
     
 };
 
+QDebug operator<<(QDebug dbg, const SegmentedConstituent& other);
+
 Q_DECLARE_METATYPE(SegmentedConstituent);
 
-#endif // SEGMENTS_H
+#endif

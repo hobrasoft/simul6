@@ -4,6 +4,7 @@
 
 #include "Constituent.h"
 #include "Engine.h"
+#include "pdebug.h"
 #include <cmath>
 
 using namespace std;
@@ -45,6 +46,9 @@ Constituent::Constituent(const QVariantMap& json) {
     QVariantList pKaNeg = json["pKaNeg"].toList();
     QVariantList pKaPos = json["pKaPos"].toList();
 
+    // m_posCount = uPos.size();
+    // m_negCount = uNeg.size();
+
     QListIterator<QVariant> citerator(uNeg);
     for (citerator = uNeg, citerator.toBack(); citerator.hasPrevious();) {
         addNegU(citerator.previous().toDouble() * Constituent::uFactor);
@@ -63,7 +67,14 @@ Constituent::Constituent(const QVariantMap& json) {
 
 
 QDebug operator<<(QDebug dbg, const Constituent& c) {
-    dbg.nospace() << '(' << c.getId() << ", " << c.getName() << ")";
+    QStringList p, n;
+    for (unsigned int i=0; i<c.m_posCount; i++) {
+        p << QString("%1").arg(c.m_uPos[i]);
+        }
+    for (unsigned int i=0; i<c.m_negCount; i++) {
+        n << QString("%1").arg(c.m_uNeg[i]);
+        }
+    dbg.nospace() << '(' << c.getId() << ", " << c.getName() << p << n << ")";
     return dbg;
 }
 

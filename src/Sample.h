@@ -20,9 +20,9 @@ private:
     std::vector<double> v;
     std::vector<double> pd;
     std::vector<double> q1, q2, q3, q4, q5, q6;
+    std::vector<double> dif;
     Vec2d u;
     Vec2d L;
-    std::vector<double> dif;
 
     unsigned int getChargeIndex(const int pCharge) const;
 

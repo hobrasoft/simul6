@@ -73,9 +73,6 @@ void MixControl::addComponent() {
         SegmentedConstituent c = dialog.constituent();
         QModelIndex index = m_model->add(c);
         Q_UNUSED(index);
-        // QItemSelectionModel sm;
-        // sm.select(index, QItemSelectionModel::Rows);
-        // ui->f_view->setSelectionModel(&sm);
         resizeColumns();
         }
 }

@@ -69,6 +69,7 @@ public:
 
 private:
     void calculateDif();
+    friend QDebug operator<<(QDebug dbg, const Constituent& other);
 };
 
 

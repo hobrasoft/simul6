@@ -33,6 +33,7 @@ Sample::Sample(const unsigned int pAreas, const int pNp) :
     q4(pNp + 1),
     q5(pNp + 1),
     q6(pNp + 1),
+    dif(pNp + 1),
     u(CHARGE_BLOCK_SIZE, pNp),
     L(CHARGE_BLOCK_SIZE, pNp)
 {

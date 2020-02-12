@@ -170,21 +170,21 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
                         prevConcentration +
                         (concentration - prevConcentration) *
                         (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2;
-                    // PDEBUG << i << concentration_bw << concentration << prevConcentration; 
-                    int negCharge = constituent.getNegCharge();
-                    int posCharge = constituent.getPosCharge();
                     sample.setA(0, i, concentration_bw);
-                    sample.setDif(i, constituent.segments[segmentNumber].constituent.getDif());
-                    for (int j = negCharge; j <= posCharge; j++) {
-                        if (j==0) { continue; }
-                        sample.setL(j, i, constituent.segments[segmentNumber].constituent.getL(j));
-                        sample.setU(j, i, constituent.segments[segmentNumber].constituent.getU(j));
-                        }
-                    continue;
+                  } else {
+                    sample.setA(0, i, concentration);
+                    }
+                // PDEBUG << i << concentration_bw << concentration << prevConcentration; 
+                int negCharge = constituent.getNegCharge();
+                int posCharge = constituent.getPosCharge();
+                sample.setDif(i, constituent.segments[segmentNumber].constituent.getDif());
+                for (int j = negCharge; j <= posCharge; j++) {
+                    if (j==0) { continue; }
+                    sample.setL(j, i, constituent.segments[segmentNumber].constituent.getL(j));
+                    sample.setU(j, i, constituent.segments[segmentNumber].constituent.getU(j) * Constituent::uFactor);
+                    }
+                // PDEBUG << i << sample.getL(1, i) << sample.getU(1,i) << sample.getA(0, i);
                 }
-                // PDEBUG << i << concentration; 
-                sample.setA(0, i, concentration);
-            }
 
             //Here it should be expected filling u[j, i] according values in segments
 
@@ -270,7 +270,7 @@ void Engine::setStep(const QVariantMap& data) {
 void Engine::gCalc()
 {
 
-#pragma omp parallel for schedule(static)
+// #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
         double hPlus, hPlusIn;
 
@@ -300,6 +300,7 @@ void Engine::gCalc()
 
 
                 s.setH(0, 1 / temp, i);
+                // PDEBUG << i << temp << hPlusPow[0] << hPlusPow[0] << hPlusPow[0] << hPlusPow[0] << hPlusPow[0] << s.getL(1, i) << s.getPosCharge() << s.getNegCharge();
                 for (int j = 1; j <= s.getPosCharge(); j++) {
 
                      s.setH(j, s.getL(j, i) * hPlusPow[j]/temp , i);

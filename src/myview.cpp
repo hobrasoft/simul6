@@ -10,8 +10,8 @@ void MyView::currentChanged(const QModelIndex& current, const QModelIndex& previ
         emit currentRowChanged(-1);
     }
     int row = current.row();
-    QItemSelectionModel sm;
-    sm.select(current, QItemSelectionModel::Rows);
-    setSelectionModel(&sm);
+    // QItemSelectionModel sm;
+    // sm.select(current, QItemSelectionModel::Rows);
+    // setSelectionModel(&sm);
     emit currentRowChanged(row);
 }

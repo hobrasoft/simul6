@@ -5,6 +5,7 @@
 #include "colorsgenerator.h"
 #include "simul6.h"
 #include "msettings.h"
+#include "pdebug.h"
 #include <QSortFilterProxyModel>
 #include <QRegExp>
 #include <QColorDialog>
