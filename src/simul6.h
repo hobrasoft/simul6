@@ -41,6 +41,7 @@ private slots:
     void engineFinished();
     void saveData();
     void loadData();
+    void setDockingWindows();
 
     void readSettings();
     void writeSettings();

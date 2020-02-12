@@ -79,6 +79,7 @@ Simul6 *Simul6::instance() {
 
 void Simul6::init() {
     readSettings();
+    setDockingWindows();
     ui->f_dock_replay->setVisible(false);
     ui->f_replay->clear();
 }
@@ -244,6 +245,7 @@ void Simul6::createActions() {
     connect(action, &QAction::triggered, [this]() {
         Preferences preferences(this);
         preferences.exec();
+        setDockingWindows();
     });
     menu->addAction(action);
 
@@ -342,4 +344,17 @@ void Simul6::writeSettings() {
     MSETTINGS->setGuiMainWindowSize(size());
     MSETTINGS->setGuiMainWindowLayout1(saveState(1));
 }
+
+
+void Simul6::setDockingWindows() {
+    QDockWidget::DockWidgetFeatures features = 
+        ((MSETTINGS->guiCloseable()) ? QDockWidget::DockWidgetClosable  : QDockWidget::NoDockWidgetFeatures) |
+        ((MSETTINGS->guiMoveable())  ? QDockWidget::DockWidgetMovable   : QDockWidget::NoDockWidgetFeatures) |
+        ((MSETTINGS->guiFloatable()) ? QDockWidget::DockWidgetFloatable : QDockWidget::NoDockWidgetFeatures) ;
+    PDEBUG << features;
+    ui->f_dock_computeControl->setFeatures(features);
+    ui->f_dock_inputParams->setFeatures(features);
+    ui->f_dock_composition->setFeatures(features);
+}
+
 
