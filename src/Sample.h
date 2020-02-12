@@ -27,12 +27,14 @@ private:
     unsigned int getChargeIndex(const int pCharge) const;
 
     size_t getHIdx(const int pCharge, const unsigned int pI) const;
+    QString m_name;
 
 public:
     Sample(const unsigned int pAreas, const int pNp);
     ~Sample();
 
-    const QString& getName() const;
+    const QString& getName() const { return m_name; }
+    void setName(const QString& name) { m_name = name; }
 
     void setDif(const int pI, const double pValue);
     double getDif(const int pI) const;

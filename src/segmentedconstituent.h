@@ -21,8 +21,8 @@ public:
     int getInternalId() const { return m_internalId; }
     void setColor(const QColor& c) { m_color = c; }
     QColor color() const { return m_color; }
-    void setName(const QString& name);
-    QString getName() const;
+    void setName(const QString& name) { m_name = name; }
+    QString getName() const { return m_name; }
     void setId(int);
 
     void addNegPKa(double);
@@ -75,7 +75,7 @@ private:
     int m_internalId;
     bool m_visible;
     QColor m_color;
-
+    QString m_name;
     
 };
 
