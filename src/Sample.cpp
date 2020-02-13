@@ -16,9 +16,10 @@ std::vector<double> initHVector(const unsigned int N)
   return vec;
 }
 
-Sample::Sample(const unsigned int pAreas, const int pNp) :
-    areas(pAreas),
-    IC(pAreas, 0),
+Sample::Sample(const SegmentedConstituent& constituent, const int pNp) :
+    SegmentedConstituent(constituent),
+    areas(constituent.segments.size()),
+    IC(constituent.segments.size(), 0),
     h(initHVector(pNp + 1)),
     derH(initHVector(pNp + 1)),
     hc(pNp + 1, 0),

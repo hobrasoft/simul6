@@ -30,7 +30,8 @@ private:
     QString m_name;
 
 public:
-    Sample(const unsigned int pAreas, const int pNp);
+    // Sample(const unsigned int pAreas, const int pNp);
+    Sample(const SegmentedConstituent& constituent, const int pNp);
     ~Sample();
 
     const QString& getName() const { return m_name; }

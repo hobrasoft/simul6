@@ -15,6 +15,8 @@ public:
 
     int getPosCharge() const;
     int getNegCharge() const;
+    unsigned int getPosCount() const;
+    unsigned int getNegCount() const;
     void setVisible(bool v) { m_visible = v; }
     bool visible() const { return m_visible; }
     void setInternalId(int x) { m_internalId = x; }

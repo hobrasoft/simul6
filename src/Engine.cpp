@@ -150,7 +150,8 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
         const SegmentedConstituent& constituent = pconstituents[row];
         int segmentsCount = constituent.size();
         int ratioSum = constituent.ratioSum();
-        Sample sample(segmentsCount, np);
+        Sample sample(constituent, np);
+        PDEBUG << constituent << sample;
 
         int segmentBegin = 0;
         double prevConcentration = constituent.segments[0].concentration;
@@ -181,7 +182,7 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
                 for (int j = negCharge; j <= posCharge; j++) {
                     if (j==0) { continue; }
                     sample.setL(j, i, constituent.segments[segmentNumber].constituent.getL(j));
-                    sample.setU(j, i, constituent.segments[segmentNumber].constituent.getU(j) * Constituent::uFactor);
+                    sample.setU(j, i, constituent.segments[segmentNumber].constituent.getU(j));
                     }
                 // PDEBUG << i << sample.getL(1, i) << sample.getU(1,i) << sample.getA(0, i);
                 }
@@ -301,6 +302,7 @@ void Engine::gCalc()
 
                 s.setH(0, 1 / temp, i);
                 // PDEBUG << i << temp << hPlusPow[0] << hPlusPow[0] << hPlusPow[0] << hPlusPow[0] << hPlusPow[0] << s.getL(1, i) << s.getPosCharge() << s.getNegCharge();
+                // PDEBUG << i << temp << s.getL(1, i) << s;
                 for (int j = 1; j <= s.getPosCharge(); j++) {
 
                      s.setH(j, s.getL(j, i) * hPlusPow[j]/temp , i);

@@ -27,8 +27,8 @@ SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
 
 QDebug operator<<(QDebug dbg, const SegmentedConstituent& c) {
     dbg.nospace() << '(' 
-        << c.getId() << ", " << c.getName() << ", " << c.segments.size() 
-        << c.segments[0].constituent
+        << c.getId() << ", " << c.getName() << ", segmens count:" << c.segments.size() 
+        << ", charge -/+:" << c.getNegCharge() << "/" << c.getPosCharge()
         << ")";
     return dbg;
 }
@@ -46,6 +46,22 @@ int SegmentedConstituent::getNegCharge() const {
     if (segments.isEmpty()) { return 0; }
     return segments[0].constituent.getNegCharge();
 }
+
+
+unsigned int SegmentedConstituent::getPosCount() const {
+    Q_ASSERT(!segments.isEmpty());
+    if (segments.isEmpty()) { return 0; }
+    return segments[0].constituent.getPosCount();
+}
+
+
+unsigned int SegmentedConstituent::getNegCount() const {
+    Q_ASSERT(!segments.isEmpty());
+    if (segments.isEmpty()) { return 0; }
+    return segments[0].constituent.getNegCount();
+}
+
+
 
 
 QVariantMap SegmentedConstituent::json() const {
