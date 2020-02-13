@@ -178,6 +178,7 @@ void Engine::setMix(const QList<Constituent>& pconstituents, const QList<Segment
                 }
                 // PDEBUG << i << concentration; 
                 sample.setA(0, i, concentration);
+                PDEBUG << i << constituent.getL(1) << sample.getU(1,i) << sample.getA(0, i);
             }
 
             //Here it should be expected filling u[j, i] according values in segments
