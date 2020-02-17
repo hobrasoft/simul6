@@ -143,6 +143,8 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
     m_initialized = true;
     t = 0;
 
+    PDEBUG << pconstituents;
+
     initArrays();
     initVectors();
 
@@ -151,7 +153,11 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
         int segmentsCount = constituent.size();
         int ratioSum = constituent.ratioSum();
         Sample sample(constituent, np);
-        PDEBUG << constituent << sample;
+
+        /*
+        PDEBUG << sample.segments[0].constituent.getU(-3) << sample.segments[0].constituent.getU(-2) << sample.segments[0].constituent.getU(-1) << sample.segments[0].constituent.getU(0)
+               << sample.segments[0].constituent.getU( 1) << sample.segments[0].constituent.getU( 2) << sample.segments[0].constituent.getU( 3);
+        */
 
         int segmentBegin = 0;
         double prevConcentration = constituent.segments[0].concentration;
@@ -165,7 +171,15 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
                 }
 
             for (int i = segmentBegin; i < segmentEnd; i++) {
-                // Q_ASSERT(i < np);
+                int negCharge = constituent.getNegCharge();
+                int posCharge = constituent.getPosCharge();
+                sample.setDif(i, constituent.segments[segmentNumber].constituent.getDif());
+                for (int j = negCharge; j <= posCharge; j++) {
+                    if (j==0) { continue; }
+                    sample.setL(j, i, constituent.segments[segmentNumber].constituent.getL(j));
+                    sample.setU(j, i, constituent.segments[segmentNumber].constituent.getU(j));
+                    }
+
                 if (i < segmentBegin + bw) {
                     double concentration_bw = 
                         prevConcentration +
@@ -175,15 +189,8 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
                   } else {
                     sample.setA(0, i, concentration);
                     }
-                // PDEBUG << i << concentration_bw << concentration << prevConcentration; 
-                int negCharge = constituent.getNegCharge();
-                int posCharge = constituent.getPosCharge();
-                sample.setDif(i, constituent.segments[segmentNumber].constituent.getDif());
-                for (int j = negCharge; j <= posCharge; j++) {
-                    if (j==0) { continue; }
-                    sample.setL(j, i, constituent.segments[segmentNumber].constituent.getL(j));
-                    sample.setU(j, i, constituent.segments[segmentNumber].constituent.getU(j));
-                    }
+
+                // PDEBUG << i << sample.getA(0, i) << concentration;
                 // PDEBUG << i << sample.getL(1, i) << sample.getU(1,i) << sample.getA(0, i);
                 }
 
@@ -209,7 +216,7 @@ void Engine::init() {
     gCalc();
 
 //Calculation of conductivity
-    #pragma omp parallel for schedule(static)
+//  #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
         double aV;
         aV = 0;
@@ -217,10 +224,12 @@ void Engine::init() {
         for (auto &s : mix.getSamples()) {
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
                     aV += s.getU(j, i) * s.getA(j, i) * abs(j);
+                    // PDEBUG << i << j << s.getU(1,i) << s.getA(j,i);
                 }
         }
         aV =(aV + c0 * uHpl * hpl[i] + c0 * uOHmin * oH[i]) * farc;
         kapa[i] = aV;
+
     }
 
 
@@ -325,6 +334,7 @@ void Engine::gCalc()
             }
             g += hPlus * c0 - Engine::kw / hPlus * c0;
 
+
             // Der G
             for (auto &s : mix.getSamples()) {
 
@@ -360,6 +370,7 @@ void Engine::gCalc()
                 derG += s.getDerHc(i) * s.getA(0, i);
             }
             derG += c0 + Engine::kw / hPlusPow[2] * c0;
+            // PDEBUG << i << derG;
 
             hPlus -= g / derG;
 

@@ -30,6 +30,10 @@ QDebug operator<<(QDebug dbg, const SegmentedConstituent& c) {
         << c.getId() << ", " << c.getName() << ", segmens count:" << c.segments.size() 
         << ", charge -/+:" << c.getNegCharge() << "/" << c.getPosCharge()
         << ")";
+    for (int i=0; i<c.segments.size(); i++) {
+        dbg.nospace() << " conc:" << c.segments[i].concentration << " ratio: " << c.segments[i].ratio;
+        dbg.nospace() << " const: " << c.segments[i].constituent;
+        }
     return dbg;
 }
 

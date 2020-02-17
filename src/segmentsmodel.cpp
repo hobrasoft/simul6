@@ -58,7 +58,7 @@ SegmentedConstituent SegmentsModel::constituent() const {
             return data(index(rowU, column)).isValid() && data(index(rowPka, column)).isValid();
             };
         auto xdata = [this,column](int row) {
-            return data(index(row, column)).toDouble();
+            return data(index(row, column)).toDouble() * Constituent::uFactor;
             };
         if (xdataValid(U1n,Pk1n)) { constituent.addNegU(xdata(U1n)); constituent.addNegPKa(xdata(Pk1n)); }
         if (xdataValid(U2n,Pk2n)) { constituent.addNegU(xdata(U2n)); constituent.addNegPKa(xdata(Pk2n)); }

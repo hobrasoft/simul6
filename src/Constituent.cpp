@@ -96,14 +96,14 @@ QVariantMap Constituent::jsonSimplified() const {
     QVariantList listuNeg;
     QVariantList listpKaNeg;
     for (unsigned int i=0; i<m_negCount; i++) {
-        listuNeg.prepend(m_uNeg[i]);
+        listuNeg.prepend(m_uNeg[i] / Constituent::uFactor);
         listpKaNeg.prepend(m_pKaNeg[i]);
     }
 
     QVariantList listuPos;
     QVariantList listpKaPos;
     for (unsigned int i=0; i<m_posCount; i++) {
-        listuPos << m_uPos[i];
+        listuPos << m_uPos[i] / Constituent::uFactor;
         listpKaPos << m_pKaPos[i];
     }
 

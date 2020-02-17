@@ -135,6 +135,7 @@ bool ConstituentsDialog::manually() const {
     return ui->f_manuallyGroupBox->isChecked();
 }
 
+
 SegmentedConstituent ConstituentsDialog::constituent() const {
     SegmentedConstituent constituent = m_segmentsModel->constituent();
     constituent.setName(ui->f_name->text());
@@ -143,75 +144,6 @@ SegmentedConstituent ConstituentsDialog::constituent() const {
     return constituent;
 }
 
-/*
-SegmentedConstituent ConstituentsDialog::constituent() const {
-
-    QVariant npka3 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N3));
-    QVariant npka2 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N2));
-    QVariant npka1 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::N1));
-    QVariant ppka1 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P1));
-    QVariant ppka2 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P2));
-    QVariant ppka3 = m_parametersModel->data(m_parametersModel->index(ParametersModel::pKa, ParametersModel::P3));
-    QVariant nu3   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::N3));
-    QVariant nu2   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::N2));
-    QVariant nu1   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::N1));
-    QVariant pu1   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P1));
-    QVariant pu2   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P2));
-    QVariant pu3   = m_parametersModel->data(m_parametersModel->index(ParametersModel::U, ParametersModel::P3));
-
-    SegmentedConstituent constituent;
-    constituent.setName(ui->f_name->text());
-    constituent.setColor(m_color);
-    constituent.setId((manually()) ? -1 : m_id);
-
-    for (;;) {
-        if (npka1.isValid() && nu1.isValid()) {
-            constituent.addNegU(nu1.toDouble() * Constituent::uFactor);
-            constituent.addNegPKa(npka1.toDouble());
-        } else {
-            break;
-        }
-        if (npka2.isValid() && nu2.isValid()) {
-            constituent.addNegU(nu2.toDouble() * Constituent::uFactor);
-            constituent.addNegPKa(npka2.toDouble());
-        } else {
-            break;
-        }
-        if (npka3.isValid() && nu3.isValid()) {
-            constituent.addNegU(nu3.toDouble() * Constituent::uFactor);
-            constituent.addNegPKa(npka3.toDouble());
-        } else {
-            break;
-        }
-        break;
-    }
-
-    for (;;) {
-        if (ppka1.isValid() && pu1.isValid()) {
-            constituent.addPosU(pu1.toDouble() * Constituent::uFactor);
-            constituent.addPosPKa(ppka1.toDouble());
-        } else {
-            break;
-        }
-        if (ppka2.isValid() && pu2.isValid()) {
-            constituent.addPosU(pu2.toDouble() * Constituent::uFactor);
-            constituent.addPosPKa(ppka2.toDouble());
-        } else {
-            break;
-        }
-        if (ppka3.isValid() && pu3.isValid()) {
-            constituent.addPosU(pu3.toDouble() * Constituent::uFactor);
-            constituent.addPosPKa(ppka3.toDouble());
-        } else {
-            break;
-        }
-        break;
-    }
-
-    return constituent;
-
-}
-*/
 
 void ConstituentsDialog::setConstituent(const SegmentedConstituent& constituent) {
     m_id 			= constituent.getId();
