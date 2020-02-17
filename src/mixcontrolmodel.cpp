@@ -95,7 +95,6 @@ void MixControlModel::toggleVisible(const QModelIndex& idx) {
 
 SegmentedConstituent MixControlModel::constituent(int row) const {
     SegmentedConstituent sc = data(index(row, 0), ConstituentRole).value<SegmentedConstituent>();
-    PDEBUG << sc;
     return sc;
 }
 

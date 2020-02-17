@@ -85,16 +85,20 @@ QVariantMap SegmentedConstituent::json() const {
 
 
 void SegmentedConstituent::addNegPKa(double x) {
+    Q_ASSERT(false);
 }
 
 
 void SegmentedConstituent::addPosPKa(double x) {
+    Q_ASSERT(false);
 }
 
 void SegmentedConstituent::addNegU(double x) {
+    Q_ASSERT(false);
 }
 
 void SegmentedConstituent::addPosU(double x) {
+    Q_ASSERT(false);
 }
 
 

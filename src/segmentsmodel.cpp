@@ -57,15 +57,18 @@ SegmentedConstituent SegmentsModel::constituent() const {
         auto xdataValid = [this,column](int rowU, int rowPka) {
             return data(index(rowU, column)).isValid() && data(index(rowPka, column)).isValid();
             };
-        auto xdata = [this,column](int row) {
+        auto udata = [this,column](int row) {
             return data(index(row, column)).toDouble() * Constituent::uFactor;
             };
-        if (xdataValid(U1n,Pk1n)) { constituent.addNegU(xdata(U1n)); constituent.addNegPKa(xdata(Pk1n)); }
-        if (xdataValid(U2n,Pk2n)) { constituent.addNegU(xdata(U2n)); constituent.addNegPKa(xdata(Pk2n)); }
-        if (xdataValid(U3n,Pk3n)) { constituent.addNegU(xdata(U3n)); constituent.addNegPKa(xdata(Pk3n)); }
-        if (xdataValid(U1p,Pk1p)) { constituent.addPosU(xdata(U1p)); constituent.addPosPKa(xdata(Pk1p)); }
-        if (xdataValid(U2p,Pk2p)) { constituent.addPosU(xdata(U2p)); constituent.addPosPKa(xdata(Pk2p)); }
-        if (xdataValid(U3p,Pk3p)) { constituent.addPosU(xdata(U3p)); constituent.addPosPKa(xdata(Pk3p)); }
+        auto pdata = [this,column](int row) {
+            return data(index(row, column)).toDouble();
+            };
+        if (xdataValid(U1n,Pk1n)) { constituent.addNegU(udata(U1n)); constituent.addNegPKa(pdata(Pk1n)); }
+        if (xdataValid(U2n,Pk2n)) { constituent.addNegU(udata(U2n)); constituent.addNegPKa(pdata(Pk2n)); }
+        if (xdataValid(U3n,Pk3n)) { constituent.addNegU(udata(U3n)); constituent.addNegPKa(pdata(Pk3n)); }
+        if (xdataValid(U1p,Pk1p)) { constituent.addPosU(udata(U1p)); constituent.addPosPKa(pdata(Pk1p)); }
+        if (xdataValid(U2p,Pk2p)) { constituent.addPosU(udata(U2p)); constituent.addPosPKa(pdata(Pk2p)); }
+        if (xdataValid(U3p,Pk3p)) { constituent.addPosU(udata(U3p)); constituent.addPosPKa(pdata(Pk3p)); }
 
         SegmentedConstituent::Segment segment;
         segment.ratio = data(index(Ratio, column)).toDouble();
