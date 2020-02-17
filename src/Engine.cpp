@@ -216,7 +216,7 @@ void Engine::init() {
     gCalc();
 
 //Calculation of conductivity
-//  #pragma omp parallel for schedule(static)
+  #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
         double aV;
         aV = 0;
@@ -280,7 +280,7 @@ void Engine::setStep(const QVariantMap& data) {
 void Engine::gCalc()
 {
 
-// #pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++) {
         double hPlus, hPlusIn;
 
