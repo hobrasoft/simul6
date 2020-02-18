@@ -342,7 +342,6 @@ void Graf::drawGraph(const Engine *pEngine)
     series->replace(plist);
     id += 1;
 
-
     pEngine->unlock(); 
 }
 
@@ -350,9 +349,8 @@ void Graf::drawGraph(const Engine *pEngine)
 void Graf::subselected() {
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
-    QRectF rect = m_chart->geometry(); // m_chart->plotArea();
-
     #if QT_VERSION > 0x050c00
+    QRectF rect = m_chart->geometry(); // m_chart->plotArea();
     QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
     QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
     QRectF rext(topLeft, bottomRight);
