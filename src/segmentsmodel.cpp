@@ -37,8 +37,32 @@ void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
         int insertColumnsCount = m_segmentsNumber - currentColumnsCount;
         insertColumns(m_segmentsNumber-insertColumnsCount, insertColumnsCount);
         for (int column = m_segmentsNumber - insertColumnsCount; column < columnCount(); column++) {
+            QVariant u3n = data(index(U3n, currentColumnsCount-1));
+            QVariant u2n = data(index(U2n, currentColumnsCount-1));
+            QVariant u1n = data(index(U1n, currentColumnsCount-1));
+            QVariant u1p = data(index(U1p, currentColumnsCount-1));
+            QVariant u2p = data(index(U2p, currentColumnsCount-1));
+            QVariant u3p = data(index(U3p, currentColumnsCount-1));
+            QVariant pk3n = data(index(Pk3n, currentColumnsCount-1));
+            QVariant pk2n = data(index(Pk2n, currentColumnsCount-1));
+            QVariant pk1n = data(index(Pk1n, currentColumnsCount-1));
+            QVariant pk1p = data(index(Pk1p, currentColumnsCount-1));
+            QVariant pk2p = data(index(Pk2p, currentColumnsCount-1));
+            QVariant pk3p = data(index(Pk3n, currentColumnsCount-1));
             setData(index(Ratio, column), 1.0);
             setData(index(Concentration, column), 0.0);
+            setData(index(U3n, column), u3n);
+            setData(index(U2n, column), u2n);
+            setData(index(U1n, column), u1n);
+            setData(index(U1p, column), u1p);
+            setData(index(U2p, column), u2p);
+            setData(index(U3p, column), u3p);
+            setData(index(Pk3n, column), pk3n);
+            setData(index(Pk2n, column), pk2n);
+            setData(index(Pk1n, column), pk1n);
+            setData(index(Pk1p, column), pk1p);
+            setData(index(Pk2p, column), pk2p);
+            setData(index(Pk3p, column), pk3p);
         }
         recalculate();
         }
@@ -141,3 +165,4 @@ void SegmentsModel::recalculate() {
         setHeaderData(column, Qt::Horizontal, QString("%1").arg(ratioLen, 0, 'f', 2));
     }
 }
+
