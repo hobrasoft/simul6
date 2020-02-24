@@ -40,11 +40,11 @@ unix {
     DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
     LIBS += -lgomp
 }
-#win32 {
-#   QMAKE_CXXFLAGS += -ftree-parallelize-loops=24 -fopenmp
-#   DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
-#   LIBS += -lgomp
-#}
+win32 {
+   QMAKE_CXXFLAGS += -ftree-parallelize-loops=24 -fopenmp
+   DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
+   LIBS += -lgomp
+}
 
 include(../version.pri)
 include(../global.pri)
