@@ -46,7 +46,7 @@ public:
             }
     };
 
-    QList<SegmentedConstituent::Segment>	segments;
+    QList<SegmentedConstituent::Segment> segments;
     SegmentedConstituent& operator<<(const SegmentedConstituent::Segment& segment) {
         segments << segment;
         return *this;
@@ -55,6 +55,8 @@ public:
     int size() const {
         return segments.size();
     }
+
+    void reserveSize(int);
 
     QVariantMap json() const;
 

@@ -1,11 +1,17 @@
 #include "segmentedconstituent.h"
 #include "pdebug.h"
 
+
 SegmentedConstituent::SegmentedConstituent() {
+    m_visible = true;
 }
 
+
 SegmentedConstituent::SegmentedConstituent(const QString& name) {
+    m_name = name;
+    m_visible = true;
 }
+
 
 SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
     m_name = json["name"].toString();
@@ -85,21 +91,45 @@ QVariantMap SegmentedConstituent::json() const {
 
 
 void SegmentedConstituent::addNegPKa(double x) {
-    Q_ASSERT(false);
+    for (int i=0; i<segments.size(); i++) {
+        Segment s = segments[i];
+        s.constituent.addNegPKa(x);
+        segments[i] = s;
+        }
 }
 
 
 void SegmentedConstituent::addPosPKa(double x) {
-    Q_ASSERT(false);
+    for (int i=0; i<segments.size(); i++) {
+        Segment s = segments[i];
+        s.constituent.addPosPKa(x);
+        segments[i] = s;
+        }
 }
+
 
 void SegmentedConstituent::addNegU(double x) {
-    Q_ASSERT(false);
+    for (int i=0; i<segments.size(); i++) {
+        Segment s = segments[i];
+        s.constituent.addNegU(x);
+        segments[i] = s;
+        }
 }
+
 
 void SegmentedConstituent::addPosU(double x) {
-    Q_ASSERT(false);
+    for (int i=0; i<segments.size(); i++) {
+        Segment s = segments[i];
+        s.constituent.addPosU(x);
+        segments[i] = s;
+        }
 }
 
+
+void SegmentedConstituent::reserveSize(int x) {
+    for (int i=0; i<x; i++) {
+        segments << Segment();
+        }
+}
 
 

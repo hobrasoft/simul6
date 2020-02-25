@@ -146,6 +146,7 @@ SegmentedConstituent ConstituentsDialog::constituent() const {
 
 
 void ConstituentsDialog::setConstituent(const SegmentedConstituent& constituent) {
+    PDEBUG << constituent;
     m_id 			= constituent.getId();
     QString name    = constituent.getName();
     ui->f_segmentsNumber->setValue(constituent.segments.size());

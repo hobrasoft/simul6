@@ -105,6 +105,7 @@ SegmentedConstituent SegmentsModel::constituent() const {
 
 
 void SegmentsModel::setConstituent(const SegmentedConstituent& segments) {
+    PDEBUG << segments;
     removeColumns(0, columnCount());
     insertColumns(0, segments.size());
     for (int i=0; i<segments.size(); i++) {
@@ -114,27 +115,27 @@ void SegmentsModel::setConstituent(const SegmentedConstituent& segments) {
         setData(index(Concentration, i), concentration);
         setData(index(Concentration, i), concentration);
         Constituent c = segments.segments[i].constituent;
-        if (c.getNegCharge() >= 1) {
+        if (c.getNegCount() >= 1) {
             setData(index(U1n,  i), c.getU  (-1) / Constituent::uFactor);
             setData(index(Pk1n, i), c.getPKa(-1));
             }
-        if (c.getNegCharge() >= 2) {
+        if (c.getNegCount() >= 2) {
             setData(index(U2n,  i), c.getU  (-2) / Constituent::uFactor);
             setData(index(Pk2n, i), c.getPKa(-2));
             }
-        if (c.getNegCharge() >= 3) {
+        if (c.getNegCount() >= 3) {
             setData(index(U3n,  i), c.getU  (-3) / Constituent::uFactor);
             setData(index(Pk3n, i), c.getPKa(-3));
             }
-        if (c.getPosCharge() >= 1) {
+        if (c.getPosCount() >= 1) {
             setData(index(U1p,  i), c.getU  (+1) / Constituent::uFactor);
             setData(index(Pk1p, i), c.getPKa(+1));
             }
-        if (c.getPosCharge() >= 2) {
+        if (c.getPosCount() >= 2) {
             setData(index(U2p,  i), c.getU  (+2) / Constituent::uFactor);
             setData(index(Pk2p, i), c.getPKa(+2));
             }
-        if (c.getPosCharge() >= 3) {
+        if (c.getPosCount() >= 3) {
             setData(index(U3p,  i), c.getU  (+3) / Constituent::uFactor);
             setData(index(Pk3p, i), c.getPKa(+3));
             }
