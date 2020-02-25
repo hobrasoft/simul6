@@ -3,11 +3,13 @@
 
 
 SegmentedConstituent::SegmentedConstituent() {
+    m_visible = true;
 }
 
 
 SegmentedConstituent::SegmentedConstituent(const QString& name) {
     m_name = name;
+    m_visible = true;
 }
 
 
