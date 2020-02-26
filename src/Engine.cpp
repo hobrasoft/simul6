@@ -148,22 +148,39 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
     initArrays();
     initVectors();
 
+    struct ChargeValues {
+        double value[7];
+        double& operator[](int j) { return value[j+3]; }
+        };
+
     for (int row = 0; row < pconstituents.size(); row++) {
         const SegmentedConstituent& constituent = pconstituents[row];
         int segmentsCount = constituent.size();
         int ratioSum = constituent.ratioSum();
         Sample sample(constituent, np);
-
-        /*
-        PDEBUG << sample.segments[0].constituent.getU(-3) << sample.segments[0].constituent.getU(-2) << sample.segments[0].constituent.getU(-1) << sample.segments[0].constituent.getU(0)
-               << sample.segments[0].constituent.getU( 1) << sample.segments[0].constituent.getU( 2) << sample.segments[0].constituent.getU( 3);
-        */
+        int negCharge = constituent.getNegCharge();
+        int posCharge = constituent.getPosCharge();
+        double prevConcentration = constituent.segments[0].concentration;
+        double prevDif           = constituent.segments[0].constituent.getDif();
+        ChargeValues prevL;
+        ChargeValues prevU;
+        for (int j=negCharge; j <= posCharge; j++) {
+            prevL[j] = constituent.segments[0].constituent.getL(j);
+            prevU[j] = constituent.segments[0].constituent.getU(j);
+            }
 
         int segmentBegin = 0;
-        double prevConcentration = constituent.segments[0].concentration;
         for (int segmentNumber = 0; segmentNumber < segmentsCount; segmentNumber++) {
             double concentration = constituent.segments[segmentNumber].concentration;
             double segmentRatio = constituent.segments[segmentNumber].ratio;
+            double currentDif = constituent.segments[segmentNumber].constituent.getDif();
+            ChargeValues currentL;
+            ChargeValues currentU;
+            for (int j = negCharge; j <= posCharge; j++) {
+                if (j==0) { continue; }
+                currentL[j] = constituent.segments[segmentNumber].constituent.getL(j);
+                currentU[j] = constituent.segments[segmentNumber].constituent.getU(j);
+                }
 
             int segmentEnd = segmentBegin + (int)((double)(np)/((double)ratioSum)*((double)segmentRatio));
             if (segmentEnd >= np - 5) {
@@ -171,23 +188,17 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
                 }
 
             for (int i = segmentBegin; i < segmentEnd; i++) {
-                int negCharge = constituent.getNegCharge();
-                int posCharge = constituent.getPosCharge();
-                sample.setDif(i, constituent.segments[segmentNumber].constituent.getDif());
-                for (int j = negCharge; j <= posCharge; j++) {
-                    if (j==0) { continue; }
-                    sample.setL(j, i, constituent.segments[segmentNumber].constituent.getL(j));
-                    sample.setU(j, i, constituent.segments[segmentNumber].constituent.getU(j));
-                    }
+                auto smooth = [&segmentBegin,&i,this](double previous, double current) {
+                    return (i < segmentBegin + bw) 
+                        ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2) 
+                        : current;
+                    };
 
-                if (i < segmentBegin + bw) {
-                    double concentration_bw = 
-                        prevConcentration +
-                        (concentration - prevConcentration) *
-                        (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2;
-                    sample.setA(0, i, concentration_bw);
-                  } else {
-                    sample.setA(0, i, concentration);
+                sample.setDif(   i, smooth(prevDif, currentDif));
+                sample.setA  (0, i, smooth(prevConcentration, concentration));
+                for (int j = negCharge; j <= posCharge; j++) {
+                    sample.setL  (j, i, smooth(prevL[j], currentL[j]));
+                    sample.setU  (j, i, smooth(prevU[j], currentU[j]));
                     }
 
                 // PDEBUG << i << sample.getA(0, i) << concentration;
@@ -197,6 +208,9 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
             //Here it should be expected filling u[j, i] according values in segments
 
             prevConcentration = concentration;
+            prevDif = currentDif;
+            prevU = currentU;
+            prevL = currentL;
             segmentBegin = segmentEnd;
         }
 
