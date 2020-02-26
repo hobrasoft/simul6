@@ -126,10 +126,3 @@ void SegmentedConstituent::addPosU(double x) {
 }
 
 
-void SegmentedConstituent::reserveSize(int x) {
-    for (int i=0; i<x; i++) {
-        segments << Segment();
-        }
-}
-
-

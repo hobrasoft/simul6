@@ -68,8 +68,8 @@ void Ampholines::accept() {
         double pKAn = low_pKAn + i * delta;
         QString name = QString("%1%2").arg(ui->f_name->text()).arg(pKAp + (pKAn - pKAp)/2, 6, 'f', 3, QChar('0'));
         // PDEBUG << name << pKAn << pKAp << Un << Up;
-        SegmentedConstituent constituent(name);
-        constituent.reserveSize(ui->f_segmentsNumber->value());
+        SegmentedConstituent constituent = m_segmentsModel->constituent();
+        constituent.setName(name);
         constituent.addNegPKa(pKAn);
         constituent.addPosPKa(pKAp);
         constituent.addNegU(Un * Constituent::uFactor);

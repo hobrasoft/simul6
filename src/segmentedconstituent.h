@@ -56,8 +56,6 @@ public:
         return segments.size();
     }
 
-    void reserveSize(int);
-
     QVariantMap json() const;
 
     int ratioSum() const {
