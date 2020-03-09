@@ -143,7 +143,7 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
     m_initialized = true;
     t = 0;
 
-    PDEBUG << pconstituents;
+    // PDEBUG << pconstituents;
 
     initArrays();
     initVectors();
@@ -270,7 +270,6 @@ void Engine::init() {
     emit drawGraph(this);
     emit curDenChanged(curDen);
     emit voltageChanged(voltage);
-    qDebug() << "Engine::init() hotovo";
 }
 
 
@@ -645,7 +644,6 @@ void Engine::setVisible(int id, bool visible) {
 
 
 void Engine::stop() {
-    qDebug() << "Engine::stop()";
     m_running = false;
 }
 

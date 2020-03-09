@@ -13,10 +13,10 @@ public:
     SegmentedConstituent(const QVariantMap& json);
     SegmentedConstituent(const QString& name);
 
-    int getPosCharge() const;
-    int getNegCharge() const;
-    unsigned int getPosCount() const;
-    unsigned int getNegCount() const;
+    int inline getPosCharge() const { return m_posCharge; }
+    int inline getNegCharge() const { return m_negCharge; }
+    unsigned int inline getPosCount() const { return m_posCount; }
+    unsigned int inline getNegCount() const { return m_negCount; }
     void setVisible(bool v) { m_visible = v; }
     bool visible() const { return m_visible; }
     void setInternalId(int x) { m_internalId = x; }
@@ -49,6 +49,7 @@ public:
     QList<SegmentedConstituent::Segment> segments;
     SegmentedConstituent& operator<<(const SegmentedConstituent::Segment& segment) {
         segments << segment;
+        updateChargesAndCounts();
         return *this;
     }
 
@@ -73,6 +74,13 @@ private:
     QColor m_color;
     QString m_name;
     int m_id;
+
+    int m_posCharge;
+    int m_negCharge;
+    int m_posCount;
+    int m_negCount;
+
+    void updateChargesAndCounts();
     
 };
 

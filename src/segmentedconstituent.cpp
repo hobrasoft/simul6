@@ -10,6 +10,10 @@ SegmentedConstituent::SegmentedConstituent() {
 SegmentedConstituent::SegmentedConstituent(const QString& name) {
     m_name = name;
     m_visible = true;
+    m_posCharge = 0;
+    m_negCharge = 0;
+    m_posCount = 0;
+    m_negCount = 0;
 }
 
 
@@ -18,7 +22,7 @@ SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
     m_color = QColor(json["color"].toString());
     m_visible = json.contains("visible") ? json["visible"].toBool() : true;
 
-    PDEBUG << m_name << m_color << m_visible << json["segments"];
+    // PDEBUG << m_name << m_color << m_visible << json["segments"];
 
     QVariantList segmentslist = json["segments"].toList();
     for (int i=0; i<segmentslist.size(); i++) {
@@ -27,6 +31,22 @@ SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
         segment.ratio = segmentslist[i].toMap()["ratio"].toDouble();
         segment.constituent = Constituent(segmentslist[i].toMap()["constituent"].toMap());
         segments << segment;
+        }
+    updateChargesAndCounts();
+}
+
+
+void SegmentedConstituent::updateChargesAndCounts() {
+    if (!segments.isEmpty()) { 
+        m_posCharge = segments[0].constituent.getPosCharge();
+        m_posCount  = segments[0].constituent.getPosCount();
+        m_negCharge = segments[0].constituent.getNegCharge();
+        m_negCount  = segments[0].constituent.getNegCount();
+      } else {
+        m_posCharge = 0;
+        m_posCount  = 0;
+        m_negCharge = 0;
+        m_negCount  = 0;
         }
 }
 
@@ -42,36 +62,6 @@ QDebug operator<<(QDebug dbg, const SegmentedConstituent& c) {
         }
     return dbg;
 }
-
-
-int SegmentedConstituent::getPosCharge() const {
-    Q_ASSERT(!segments.isEmpty());
-    if (segments.isEmpty()) { return 0; }
-    return segments[0].constituent.getPosCharge();
-}
-
-
-int SegmentedConstituent::getNegCharge() const {
-    Q_ASSERT(!segments.isEmpty());
-    if (segments.isEmpty()) { return 0; }
-    return segments[0].constituent.getNegCharge();
-}
-
-
-unsigned int SegmentedConstituent::getPosCount() const {
-    Q_ASSERT(!segments.isEmpty());
-    if (segments.isEmpty()) { return 0; }
-    return segments[0].constituent.getPosCount();
-}
-
-
-unsigned int SegmentedConstituent::getNegCount() const {
-    Q_ASSERT(!segments.isEmpty());
-    if (segments.isEmpty()) { return 0; }
-    return segments[0].constituent.getNegCount();
-}
-
-
 
 
 QVariantMap SegmentedConstituent::json() const {
@@ -96,6 +86,7 @@ void SegmentedConstituent::addNegPKa(double x) {
         s.constituent.addNegPKa(x);
         segments[i] = s;
         }
+    updateChargesAndCounts();
 }
 
 
@@ -105,6 +96,7 @@ void SegmentedConstituent::addPosPKa(double x) {
         s.constituent.addPosPKa(x);
         segments[i] = s;
         }
+    updateChargesAndCounts();
 }
 
 
@@ -114,6 +106,7 @@ void SegmentedConstituent::addNegU(double x) {
         s.constituent.addNegU(x);
         segments[i] = s;
         }
+    updateChargesAndCounts();
 }
 
 
@@ -123,6 +116,7 @@ void SegmentedConstituent::addPosU(double x) {
         s.constituent.addPosU(x);
         segments[i] = s;
         }
+    updateChargesAndCounts();
 }
 
 

@@ -59,7 +59,6 @@ void MixControlModel::setConstituent(const SegmentedConstituent& constituent, in
         conc  << QString("%1").arg(constituent.segments[i].concentration, 0, 'f', 3);
     }
 
-PDEBUG << constituent;
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
     setData(index(row, Visible), constituent.visible());
     setData(index(row, Name), constituent.getName());

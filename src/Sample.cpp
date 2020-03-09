@@ -40,81 +40,12 @@ Sample::Sample(const SegmentedConstituent& constituent, const int pNp) :
 {
 }
 
-void Sample::setU(const int pCharge, const unsigned int i, const double value) {
-    u.set(pCharge, i, value);
-}
-
-
-void Sample::setL(const int pCharge, const unsigned int i, const double value) {
-    L.set(pCharge, i, value);
-}
 
 Sample::~Sample()
 {
     //std::cout << "Sample destructor" << std::endl;
 }
 
-
-double Sample::getDif(const int pI) const {
-    return dif[pI];
-}
-
-
-void Sample::setDif(const int pI, const double pValue) {
-    dif[pI] = pValue;
-}
-
-
-size_t Sample::getHIdx(const int pCharge, const unsigned int pI) const
-{
-  return pI * CHARGE_BLOCK_SIZE + getChargeIndex(pCharge);
-}
-
-Sample &Sample::setIC(const unsigned int pArea, const double pValue)
-{
-    if (pArea < areas) {
-        IC[pArea] = pValue;
-    }
-
-    return *this;
-}
-
-double Sample::getIC(unsigned int pArea) const
-{
-    return (pArea < areas) ? IC[pArea] : 0;
-}
-
-unsigned int Sample::getChargeIndex(const int pCharge) const
-{
-    return static_cast<unsigned int>(pCharge + static_cast<int>(Engine::maxCharge));
-}
-
-// A
-void Sample::setA(const int pCharge, const unsigned int pI, const double pValue)
-{
-    a.set(pCharge, pI, pValue);
-}
-
-double Sample::getA(const int pCharge, const unsigned int pI) const
-{
-    return a.get(pCharge, pI);
-}
-
-// D
-void Sample::setD(const int pCharge, const unsigned int pI, const double pValue)
-{
-    d.set(pCharge, pI, pValue);
-}
-
-void Sample::addD(const int pCharge, const unsigned int pI, const double pValue)
-{
-    setD(pCharge, pI, getD(pCharge, pI) + pValue);
-}
-
-double Sample::getD(const int pCharge, const unsigned int pI) const
-{
-    return d.get(pCharge, pI);
-}
 
 // V
 void Sample::initV()
@@ -124,45 +55,16 @@ void Sample::initV()
     }
 }
 
-// H
-void Sample::setH(const int pCharge, const double pValue, const unsigned int pI)
+
+unsigned int Sample::getChargeIndex(const int pCharge) const
 {
-    h[getHIdx(pCharge, pI)] = pValue;
+    return static_cast<unsigned int>(pCharge + static_cast<int>(Engine::maxCharge));
 }
 
-void Sample::addH(const int pCharge, const double pValue, const unsigned int pI)
+
+size_t Sample::getHIdx(const int pCharge, const unsigned int pI) const
 {
-    h[getHIdx(pCharge, pI)] += pValue;
+  return pI * CHARGE_BLOCK_SIZE + getChargeIndex(pCharge);
 }
 
-double Sample::getH(const int pCharge, const unsigned int pI) const
-{
-    return h[getHIdx(pCharge, pI)];
-}
-
-// der H
-void Sample::setDerH(const int pCharge, const double pValue, const unsigned int pI)
-{
-    derH[getHIdx(pCharge, pI)] = pValue;
-}
-
-void Sample::addDerH(const int pCharge, const double pValue, const unsigned int pI)
-{
-    derH[getHIdx(pCharge, pI)] += pValue;
-}
-
-double Sample::getDerH(const int pCharge, const unsigned int pI) const
-{
-    return derH[getHIdx(pCharge, pI)];
-}
-
-double Sample::getU(const int pCharge, const unsigned int pI) const
-{
-    return u.get(pCharge, pI);
-}
-
-double Sample::getL(const int pCharge, const unsigned int pI) const
-{
-    return L.get(pCharge, pI);
-}
 
