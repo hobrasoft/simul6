@@ -81,13 +81,12 @@ SOURCES += \
     segmentsmodel.cpp \
     segmentsdelegate.cpp \
     preferences.cpp \
-    parametersmodel.cpp \
     mixcontrol.cpp \
     mixcontrolmodel.cpp \
     mixcontroldelegate.cpp \
     simulationprogressdialog.cpp \
     saveprogress.cpp \
-    segments.cpp \
+    segmentedconstituent.cpp \
     importsna.cpp \
     ampholines.cpp \
     replay.cpp \
@@ -114,13 +113,12 @@ HEADERS += \
     segmentsmodel.h \
     segmentsdelegate.h \
     preferences.h \
-    parametersmodel.h \
     mixcontrol.h \
     mixcontrolmodel.h \
     mixcontroldelegate.h \
     simulationprogressdialog.h \
     saveprogress.h \
-    segments.h \
+    segmentedconstituent.h \
     importsna.h \
     ampholines.h \
     replay.h \
@@ -139,6 +137,9 @@ FORMS += \
     ampholines.ui \
     replay.ui \
     simulationprogressdialog.ui \
+
+RESOURCES += \
+    simul6.qrc \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

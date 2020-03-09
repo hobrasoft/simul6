@@ -23,6 +23,19 @@ Ampholines::Ampholines(QWidget *parent) : QDialog(parent), ui(new Ui::Ampholines
     ui->f_segmentsView->setModel(m_segmentsModel);
     ui->f_segmentsView->setItemDelegate(new SegmentsDelegate(this));
     connect(ui->f_segmentsNumber, SIGNAL(valueChanged(int)), m_segmentsModel, SLOT(setSegmentsNumber(int)));
+    ui->f_segmentsView->setRowHidden(SegmentsModel::U3n, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::U2n, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::U1n, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::U1p, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::U2p, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::U3p, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::Pk3n, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::Pk2n, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::Pk1n, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::Pk1p, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::Pk2p, true);
+    ui->f_segmentsView->setRowHidden(SegmentsModel::Pk3p, true);
+
 
 
     connect(ui->f_low_pKAn,  QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Ampholines::recalculate);
@@ -55,13 +68,13 @@ void Ampholines::accept() {
         double pKAn = low_pKAn + i * delta;
         QString name = QString("%1%2").arg(ui->f_name->text()).arg(pKAp + (pKAn - pKAp)/2, 6, 'f', 3, QChar('0'));
         // PDEBUG << name << pKAn << pKAp << Un << Up;
-        Constituent constituent(name);
+        SegmentedConstituent constituent = m_segmentsModel->constituent();
+        constituent.setName(name);
         constituent.addNegPKa(pKAn);
         constituent.addPosPKa(pKAp);
         constituent.addNegU(Un * Constituent::uFactor);
         constituent.addPosU(Up * Constituent::uFactor);
         m_constituents << constituent;
-        m_segments << m_segmentsModel->segments();
         }
     QDialog::accept();
 }

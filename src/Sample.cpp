@@ -16,10 +16,10 @@ std::vector<double> initHVector(const unsigned int N)
   return vec;
 }
 
-Sample::Sample(const Constituent &pConstituent, const unsigned int pAreas, const int pNp) :
-    Constituent(pConstituent),
-    areas(pAreas),
-    IC(pAreas, 0),
+Sample::Sample(const SegmentedConstituent& constituent, const int pNp) :
+    SegmentedConstituent(constituent),
+    areas(constituent.segments.size()),
+    IC(constituent.segments.size(), 0),
     h(initHVector(pNp + 1)),
     derH(initHVector(pNp + 1)),
     hc(pNp + 1, 0),
@@ -34,72 +34,18 @@ Sample::Sample(const Constituent &pConstituent, const unsigned int pAreas, const
     q4(pNp + 1),
     q5(pNp + 1),
     q6(pNp + 1),
-    u(CHARGE_BLOCK_SIZE, pNp)
+    dif(pNp + 1),
+    u(CHARGE_BLOCK_SIZE, pNp),
+    L(CHARGE_BLOCK_SIZE, pNp)
 {
-    // Temporary piece of code used to populate mobilities for each combination of charge and axial coordinate
-    // To be replaced once UI component for segments filling is introduced
-    for (int j = getNegCharge(); j <= getPosCharge(); j++) {
-        for (int i = 0; i <= pNp; i++) {
-            u.set(j, i, pConstituent.getU(j));
-        }
-    }
 }
+
 
 Sample::~Sample()
 {
     //std::cout << "Sample destructor" << std::endl;
 }
 
-size_t Sample::getHIdx(const int pCharge, const unsigned int pI) const
-{
-  return pI * CHARGE_BLOCK_SIZE + getChargeIndex(pCharge);
-}
-
-Sample &Sample::setIC(const unsigned int pArea, const double pValue)
-{
-    if (pArea < areas) {
-        IC[pArea] = pValue;
-    }
-
-    return *this;
-}
-
-double Sample::getIC(unsigned int pArea) const
-{
-    return (pArea < areas) ? IC[pArea] : 0;
-}
-
-unsigned int Sample::getChargeIndex(const int pCharge) const
-{
-    return static_cast<unsigned int>(pCharge + static_cast<int>(Engine::maxCharge));
-}
-
-// A
-void Sample::setA(const int pCharge, const unsigned int pI, const double pValue)
-{
-    a.set(pCharge, pI, pValue);
-}
-
-double Sample::getA(const int pCharge, const unsigned int pI) const
-{
-    return a.get(pCharge, pI);
-}
-
-// D
-void Sample::setD(const int pCharge, const unsigned int pI, const double pValue)
-{
-    d.set(pCharge, pI, pValue);
-}
-
-void Sample::addD(const int pCharge, const unsigned int pI, const double pValue)
-{
-    setD(pCharge, pI, getD(pCharge, pI) + pValue);
-}
-
-double Sample::getD(const int pCharge, const unsigned int pI) const
-{
-    return d.get(pCharge, pI);
-}
 
 // V
 void Sample::initV()
@@ -109,40 +55,16 @@ void Sample::initV()
     }
 }
 
-// H
-void Sample::setH(const int pCharge, const double pValue, const unsigned int pI)
+
+unsigned int Sample::getChargeIndex(const int pCharge) const
 {
-    h[getHIdx(pCharge, pI)] = pValue;
+    return static_cast<unsigned int>(pCharge + static_cast<int>(Engine::maxCharge));
 }
 
-void Sample::addH(const int pCharge, const double pValue, const unsigned int pI)
+
+size_t Sample::getHIdx(const int pCharge, const unsigned int pI) const
 {
-    h[getHIdx(pCharge, pI)] += pValue;
+  return pI * CHARGE_BLOCK_SIZE + getChargeIndex(pCharge);
 }
 
-double Sample::getH(const int pCharge, const unsigned int pI) const
-{
-    return h[getHIdx(pCharge, pI)];
-}
-
-// der H
-void Sample::setDerH(const int pCharge, const double pValue, const unsigned int pI)
-{
-    derH[getHIdx(pCharge, pI)] = pValue;
-}
-
-void Sample::addDerH(const int pCharge, const double pValue, const unsigned int pI)
-{
-    derH[getHIdx(pCharge, pI)] += pValue;
-}
-
-double Sample::getDerH(const int pCharge, const unsigned int pI) const
-{
-    return derH[getHIdx(pCharge, pI)];
-}
-
-double Sample::getU(const int pCharge, const unsigned int pI) const
-{
-    return u.get(pCharge, pI);
-}
 

@@ -2,7 +2,7 @@
 #define SEGMENTSMODEL_H
 
 #include <QStandardItemModel>
-#include "segments.h"
+#include "segmentedconstituent.h"
 
 class SegmentsModel : public QStandardItemModel
 {
@@ -11,12 +11,24 @@ class SegmentsModel : public QStandardItemModel
 public:
     explicit SegmentsModel(QObject *parent = nullptr);
 
-    Segments segments() const;
-    void setSegments(const Segments&);
+    SegmentedConstituent constituent() const;
+    void setConstituent(const SegmentedConstituent&);
 
     enum Rows {
         Ratio = 0,
         Concentration,
+        U3n,
+        U2n,
+        U1n,
+        U1p,
+        U2p,
+        U3p,
+        Pk3n,
+        Pk2n,
+        Pk1n,
+        Pk1p,
+        Pk2p,
+        Pk3p,
         LastRow
     };
 

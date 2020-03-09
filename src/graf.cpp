@@ -349,6 +349,7 @@ void Graf::drawGraph(const Engine *pEngine)
 void Graf::subselected() {
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
+
     #if QT_VERSION > 0x050c00
     QRectF rect = m_chart->geometry(); // m_chart->plotArea();
     QPointF topLeft     = m_chart->mapToValue(rect.topLeft());

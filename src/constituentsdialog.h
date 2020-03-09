@@ -5,9 +5,8 @@
 #include <QSortFilterProxyModel>
 #include <QColor>
 #include "segmentsmodel.h"
-#include "parametersmodel.h"
 #include "constituentsmodel.h"
-#include "segments.h"
+#include "segmentedconstituent.h"
 #include "Constituent.h"
 
 namespace Ui {
@@ -22,11 +21,11 @@ public:
     explicit ConstituentsDialog(QWidget *parent = nullptr);
     ~ConstituentsDialog();
 
-    Constituent constituent() const;
-    Segments segments() const;
+    SegmentedConstituent constituent() const;
 
-    void setConstituent(const Constituent&);
-    void setSegments(const Segments&);
+    void setConstituent(const SegmentedConstituent&);
+//  void setConstituent(const Constituent&);
+    bool manually() const;
 
 private slots:
     void modelLoaded();
@@ -42,7 +41,7 @@ private:
     int m_id;
     QColor m_color;
     SegmentsModel *m_segmentsModel;
-    ParametersModel *m_parametersModel;
+//  ParametersModel *m_parametersModel;
     ConstituentsModel *m_constituentsModel;
     QSortFilterProxyModel *m_constituentsProxyModel;
 };

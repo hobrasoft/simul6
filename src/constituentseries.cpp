@@ -8,20 +8,20 @@
 #include <QBrush>
 #include <QPen>
 
-ConstituentSeries::ConstituentSeries(const Constituent& constituent, QObject *parent) : QLineSeries(parent) {
-    m_internalId = constituent.getInternalId();
-    setName(constituent.getName());
+ConstituentSeries::ConstituentSeries(const Sample& sample, QObject *parent) : QLineSeries(parent) {
+    m_internalId = sample.getInternalId();
+    setName(sample.getName());
     setUseOpenGL(true);
 
     // colors
     QBrush lbrush = brush();
-    lbrush.setColor(constituent.color());
+    lbrush.setColor(sample.color());
     QPen lpen = pen();
-    lpen.setColor(constituent.color());
+    lpen.setColor(sample.color());
     lpen.setWidthF(PENWIDTH);
     setPen(lpen);
     setBrush(lbrush);
-    setVisible(constituent.visible());
+    setVisible(sample.visible());
 
 }
 

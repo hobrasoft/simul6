@@ -2,8 +2,7 @@
 #define MIXCONTROLMODEL_H
 
 #include <QStandardItemModel>
-#include "Constituent.h"
-#include "segments.h"
+#include "segmentedconstituent.h"
 
 
 class MixControlModel : public QStandardItemModel
@@ -25,16 +24,14 @@ public:
         LastCol
     };
 
-    QModelIndex add(const Constituent&, const Segments&);
-    void add(const QList<Constituent>&, const QList<Segments>&);
+    QModelIndex add(const SegmentedConstituent&);
+    void add(const QList<SegmentedConstituent>&);
+    void add(const QList<Constituent>&);
 
-    QList<Constituent> constituents() const;
-    QList<Segments> segments() const;
+    QList<SegmentedConstituent> constituents() const;
+    SegmentedConstituent constituent(int row) const;
 
-    Constituent constituent(int row) const;
-    Segments segments(int row) const;
-
-    void setConstituentAndSegments(const Constituent&, const Segments&, int row);
+    void setConstituent(const SegmentedConstituent&, int row);
 
     QVariantList json() const;
     void setJson(const QVariantList& json);

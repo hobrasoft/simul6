@@ -7,6 +7,8 @@
 #define _SegmentsDelegate_H_
 
 #include <QStyledItemDelegate>
+#include <QStyleOptionViewItem>
+#include <QModelIndex>
 
 /**
  * @brief
@@ -18,7 +20,7 @@ class SegmentsDelegate : public QStyledItemDelegate {
 
   private:
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem& option, const QModelIndex &index) const Q_DECL_OVERRIDE;
-
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 #endif

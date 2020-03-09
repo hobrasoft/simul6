@@ -13,6 +13,7 @@
 #include "simulationprogressdialog.h"
 #include "saveprogress.h"
 #include "about.h"
+#include "localurl.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QDir>
@@ -36,6 +37,7 @@ Simul6::Simul6(QWidget *parent) :
 {
     m_instance = this;
     MSettings::instance(this);
+    new LocalUrl(this);
     qDebug() << "Simul6";
     ui->setupUi(this);
     setWindowIcon(QIcon("://icons/appicon.svg"));
@@ -140,7 +142,7 @@ void Simul6::initEngine() {
     ui->f_simulationProfile->engine()->setCurDen(ui->f_parameters->getCurrent());
     ui->f_simulationProfile->engine()->setConstantVoltage(ui->f_parameters->getConstantVoltage());
     ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
-    ui->f_simulationProfile->engine()->setMix(mixControlModel()->constituents(), mixControlModel()->segments()); // Nakrmí nový engine směsí
+    ui->f_simulationProfile->engine()->setMix(mixControlModel()->constituents()); // Nakrmí nový engine směsí
 }
 
 
@@ -288,7 +290,7 @@ void Simul6::createActions() {
         Ampholines ampholines(this);
         if (QDialog::Accepted != ampholines.exec()) { return; }
         MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
-        model->add(ampholines.constituents(), ampholines.segments());
+        model->add(ampholines.constituents());
     });
     menu->addAction(action);
 
