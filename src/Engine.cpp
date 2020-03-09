@@ -453,7 +453,7 @@ void Engine::der()
 #pragma omp parallel for schedule(static)
     for (int i = 1; i <= np-1; i++) {
         double aV;
-        e[i] = (curDen - farc * (( -difPot[i - 1] + difPot[i + 1]) / 2 / dx)) / kapa[i];
+        e[i] = -(curDen + farc * (( -difPot[i - 1] + difPot[i + 1]) / 2 / dx)) / kapa[i];
 
         for (auto &s : mix.getSamples()) {
             aV = 0;
