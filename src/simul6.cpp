@@ -13,6 +13,7 @@
 #include "simulationprogressdialog.h"
 #include "saveprogress.h"
 #include "about.h"
+#include "localurl.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QDir>
@@ -36,6 +37,7 @@ Simul6::Simul6(QWidget *parent) :
 {
     m_instance = this;
     MSettings::instance(this);
+    new LocalUrl(this);
     qDebug() << "Simul6";
     ui->setupUi(this);
     setWindowIcon(QIcon("://icons/appicon.svg"));

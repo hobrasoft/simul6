@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>640</width>
+    <height>478</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,6 +105,36 @@
       <widget class="QLabel" name="f_authors">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bohuslav Gaš&lt;br/&gt;Petr Bravenec&lt;br/&gt;Pavel Gaš&lt;br/&gt;Pablo Kler&lt;br/&gt;Gabriel Gerlero&lt;br/&gt;Michal Malý&lt;br/&gt;Vlastimil Hruška&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>License: &lt;a href=&quot;local:///gpl2&quot;&gt;GNU General Public License version 2&lt;/a&gt;</string>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Home: &lt;a href=&quot;https://echmet.natur.cuni.cz/&quot;&gt;https://echmet.natur.cuni.cz/&lt;/a&gt;</string>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Source code: &lt;a href=&quot;https://dev.hobrasoft.cz/source/Simul6b/&quot;&gt;https://dev.hobrasoft.cz/source/Simul6b/&lt;/a&gt;</string>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

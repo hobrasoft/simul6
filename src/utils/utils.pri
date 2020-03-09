@@ -7,6 +7,7 @@ SOURCES += \
  $$PWD/idgenerator.cpp \
  $$PWD/logger.cpp \
  $$PWD/colorsgenerator.cpp \ 
+ $$PWD/localurl.cpp \ 
 
 HEADERS += \
  $$PWD/json.h \
@@ -15,4 +16,5 @@ HEADERS += \
  $$PWD/logger.h \
  $$PWD/pdebug.h \
  $$PWD/colorsgenerator.h \
+ $$PWD/localurl.h \ 
 
