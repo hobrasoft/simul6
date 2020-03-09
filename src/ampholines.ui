@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
+    <width>661</width>
     <height>520</height>
    </rect>
   </property>
@@ -279,6 +279,9 @@
      </item>
      <item row="11" column="2">
       <widget class="QSpinBox" name="f_segmentsNumber">
+       <property name="maximum">
+        <number>8</number>
+       </property>
        <property name="value">
         <number>4</number>
        </property>

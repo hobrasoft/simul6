@@ -55,16 +55,6 @@ Sample::~Sample()
 }
 
 
-double Sample::getDif(const int pI) const {
-    return dif[pI];
-}
-
-
-void Sample::setDif(const int pI, const double pValue) {
-    dif[pI] = pValue;
-}
-
-
 size_t Sample::getHIdx(const int pCharge, const unsigned int pI) const
 {
   return pI * CHARGE_BLOCK_SIZE + getChargeIndex(pCharge);
@@ -95,11 +85,6 @@ void Sample::setA(const int pCharge, const unsigned int pI, const double pValue)
     a.set(pCharge, pI, pValue);
 }
 
-double Sample::getA(const int pCharge, const unsigned int pI) const
-{
-    return a.get(pCharge, pI);
-}
-
 // D
 void Sample::setD(const int pCharge, const unsigned int pI, const double pValue)
 {
@@ -109,11 +94,6 @@ void Sample::setD(const int pCharge, const unsigned int pI, const double pValue)
 void Sample::addD(const int pCharge, const unsigned int pI, const double pValue)
 {
     setD(pCharge, pI, getD(pCharge, pI) + pValue);
-}
-
-double Sample::getD(const int pCharge, const unsigned int pI) const
-{
-    return d.get(pCharge, pI);
 }
 
 // V
@@ -154,15 +134,5 @@ void Sample::addDerH(const int pCharge, const double pValue, const unsigned int 
 double Sample::getDerH(const int pCharge, const unsigned int pI) const
 {
     return derH[getHIdx(pCharge, pI)];
-}
-
-double Sample::getU(const int pCharge, const unsigned int pI) const
-{
-    return u.get(pCharge, pI);
-}
-
-double Sample::getL(const int pCharge, const unsigned int pI) const
-{
-    return L.get(pCharge, pI);
 }
 

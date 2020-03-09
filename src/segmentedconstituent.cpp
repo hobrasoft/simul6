@@ -18,7 +18,7 @@ SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
     m_color = QColor(json["color"].toString());
     m_visible = json.contains("visible") ? json["visible"].toBool() : true;
 
-    PDEBUG << m_name << m_color << m_visible << json["segments"];
+    // PDEBUG << m_name << m_color << m_visible << json["segments"];
 
     QVariantList segmentslist = json["segments"].toList();
     for (int i=0; i<segmentslist.size(); i++) {
