@@ -40,32 +40,39 @@ public:
     void inline setDif(const int pI, const double pValue) { dif[pI] = pValue; }
     double inline getDif(const int pI) const { return dif[pI]; }
 
-    Sample &setIC(const unsigned int pArea, const double pValue);
-    double getIC(unsigned int pArea) const;
+    inline Sample &setIC(const unsigned int pArea, const double pValue) {
+        if (pArea < areas) {
+            IC[pArea] = pValue;
+            }
+        return *this;
+        }
+    double inline getIC(unsigned int pArea) const {
+        return (pArea < areas) ? IC[pArea] : 0;
+        }
     // A
-    void setA(const int pCharge, const unsigned int pI, const double pValue);
-    void setU(const int pCharge, const unsigned int pI, const double pValue);
-    void setL(const int pCharge, const unsigned int pI, const double pValue);
+    void inline setA(const int pCharge, const unsigned int pI, const double pValue) { a.set(pCharge, pI, pValue); }
+    void inline setU(const int pCharge, const unsigned int pI, const double pValue) { u.set(pCharge, pI, pValue); }
+    void inline setL(const int pCharge, const unsigned int pI, const double pValue) { L.set(pCharge, pI, pValue); }
     double inline getA(const int pCharge, const unsigned int pI) const { return a.get(pCharge, pI); }
     // D
-    void setD(const int pCharge, const unsigned int pI, const double pValue);
-    void addD(const int pCharge, const unsigned int pI, const double pValue);
+    void setD(const int pCharge, const unsigned int pI, const double pValue) { d.set(pCharge, pI, pValue); }
+    void addD(const int pCharge, const unsigned int pI, const double pValue) { d.set(pCharge, pI, pValue + d.get(pCharge, pI)); }
     double inline getD(const int pCharge, const unsigned int pI) const { return d.get(pCharge, pI); }
     // V
     void initV();
     double inline getV(const unsigned int pI) const { return v[pI]; }
     // H
-    void setH(const int pCharge, const double pValue, const unsigned int pI);
-    void addH(const int pCharge, const double pValue, const unsigned int pI);
-    double getH(const int pCharge, const unsigned int pI) const;
+    void inline setH(const int pCharge, const double pValue, const unsigned int pI) { h[getHIdx(pCharge, pI)] = pValue; }
+    void inline addH(const int pCharge, const double pValue, const unsigned int pI) { h[getHIdx(pCharge, pI)] += pValue; }
+    double inline getH(const int pCharge, const unsigned int pI) const { return h[getHIdx(pCharge, pI)]; }
     // Hc
     void inline setHc(const double pValue, const unsigned int pI) { hc[pI] = pValue; }
     void inline addHc(const double pValue, const unsigned int pI) { hc[pI] += pValue; }
     double inline getHc(const unsigned int pI) const { return hc[pI]; }
     // DerH
-    void setDerH(const int pCharge, const double pValue, const unsigned int pI);
-    void addDerH(const int pCharge, const double pValue, const unsigned int pI);
-    double getDerH(const int pCharge, const unsigned int pI) const;
+    void inline setDerH(const int pCharge, const double pValue, const unsigned int pI) { derH[getHIdx(pCharge, pI)] = pValue; }
+    void inline addDerH(const int pCharge, const double pValue, const unsigned int pI) { derH[getHIdx(pCharge, pI)] += pValue; }
+    double inline getDerH(const int pCharge, const unsigned int pI) const { return derH[getHIdx(pCharge, pI)]; }
     // Der Hc
     void inline setDerHc(const double pValue, const unsigned int pI) { derHc[pI] = pValue; }
     void inline addDerHc(const double pValue, const unsigned int pI) { derHc[pI] += pValue; }

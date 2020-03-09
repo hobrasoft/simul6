@@ -46,22 +46,53 @@ public:
 	void addNegPKa(double pValue);
 	void addPosPKa(double pValue);
 
-    int getId() const { return m_id; }
-    unsigned int getNegCount() const { return m_negCount; }
-    int getNegCharge() const { return -1 * static_cast<int>(m_negCount); }
-    unsigned int getPosCount() const { return m_posCount; }
-    int getPosCharge() const { return static_cast<int>(m_posCount); }
+    int inline getId() const { return m_id; }
+    unsigned int inline getNegCount() const { return m_negCount; }
+    int inline getNegCharge() const { return -1 * static_cast<int>(m_negCount); }
+    unsigned int inline getPosCount() const { return m_posCount; }
+    int inline getPosCharge() const { return static_cast<int>(m_posCount); }
 
-    double getU() const { return m_U; }
-    double getU(int pCharge) const;
-    int getZ() const { return m_Z; }
-    double getL(const int pCharge) const;
+    double inline getU() const { return m_U; }
+    int inline getZ() const { return m_Z; }
+    double inline getL(const int pCharge) const {
+        if (pCharge < 0) {
+            return m_lNeg[static_cast<unsigned int>(-1 * pCharge) - 1];
+            }
+        if (pCharge > 0) {
+            return m_lPos[static_cast<unsigned int>(pCharge) - 1];
+            }
+        return 1;
+        }
+    double inline getU(int pCharge) const {
+        unsigned int sign;
+        if (pCharge < 0) {
+            sign =static_cast<unsigned int>(-1 * pCharge - 1);
+            if (sign < m_negCount) {
+                return m_uNeg[sign];
+                }
+          } else {
+            sign = static_cast<unsigned int>(pCharge - 1);
+            if (sign < m_posCount) {
+                return m_uPos[sign];
+                }
+            }
+        return 0;
+        }
 
 
-    double getPKa(const int pCharge) const;
-    double getDif() const { return m_dif; }
+    double inline getPKa(const int pCharge) const {
+        if (pCharge < 0) {
+            return m_pKaNeg[static_cast<unsigned int>(-1 * pCharge) - 1];
+          } else if (pCharge > 0) {
+            return m_pKaPos[static_cast<unsigned int>(pCharge) - 1];
+          } else {
+            return 1;
+            }
+        }
+
+    double inline getDif() const { return m_dif; }
     void show() const;
-    const QString& getName() const { return m_name; }
+    inline const QString& getName() const { return m_name; }
 
     QVariantMap json() const;
     QVariantMap jsonSimplified() const;

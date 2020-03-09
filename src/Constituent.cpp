@@ -149,47 +149,6 @@ void Constituent::addPosPKa(double pValue)
     m_lPos.push_back(((c == 0) ? 1 : m_lPos[c - 1]) / m_kaPos[c]);
 }
 
-double Constituent::getU(int pCharge) const
-{
-    unsigned int sign;
-
-    if (pCharge < 0) {
-        sign =static_cast<unsigned int>(-1 * pCharge - 1);
-        if (sign < m_negCount) {
-			return m_uNeg[sign];
-		}
-	}
-	else {
-        sign = static_cast<unsigned int>(pCharge - 1);
-        if (sign < m_posCount) {
-			return m_uPos[sign];
-		}
-	}
-
-	return 0;
-}
-
-double Constituent::getL(const int pCharge) const
-{
-    if (pCharge < 0) {
-        return m_lNeg[static_cast<unsigned int>(-1 * pCharge) - 1];
-    } else if (pCharge > 0) {
-        return m_lPos[static_cast<unsigned int>(pCharge) - 1];
-    } else {
-        return 1;
-    }
-}
-
-double Constituent::getPKa(const int pCharge) const
-{
-    if (pCharge < 0) {
-        return m_pKaNeg[static_cast<unsigned int>(-1 * pCharge) - 1];
-    } else if (pCharge > 0) {
-        return m_pKaPos[static_cast<unsigned int>(pCharge) - 1];
-    } else {
-        return 1;
-    }
-}
 
 void Constituent::calculateDif()
 {
