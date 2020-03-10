@@ -414,7 +414,7 @@ void Graf::seriesClicked(const QPointF& point) {
     m_engine->unlock();
 
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
-    if (s2 != nullptr) {
+    if (s2 != nullptr && s2->internalId() != 0) {
         double minimumd = 1e99;
         double minimumy = 1e99;
         m_engine->lock();
