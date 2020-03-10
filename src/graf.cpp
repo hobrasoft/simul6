@@ -445,8 +445,8 @@ void Graf::seriesClicked(const QPointF& point) {
         }
 
     if (s1 == m_chart->series()[seriescount-2]) {
-        double k = kapa[node];
-        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "× 10⁻² S/m", x, k, node);
+        double k = kapa[node] * 10.0;
+        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
