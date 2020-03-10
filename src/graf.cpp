@@ -455,7 +455,7 @@ void Graf::seriesClicked(const QPointF& point) {
 
     if (s1 == m_chart->series()[seriescount-1]) {
         double e = efield[node];
-        GrafDetail *d = new GrafDetail(this, tr("Electric field"), "kV/m", x, e, node);
+        GrafDetail *d = new GrafDetail(this, tr("Electric field"), "V/m", x, e, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
