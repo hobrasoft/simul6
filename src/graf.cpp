@@ -445,7 +445,7 @@ void Graf::seriesClicked(const QPointF& point) {
         }
 
     if (s1 == m_chart->series()[seriescount-2]) {
-        double k = kapa[node] * 10.0;
+        double k = kapa[node] * 1000.0;
         GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
         d->move(position);
         d->show();
