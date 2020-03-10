@@ -16,8 +16,8 @@ MixControlModel::MixControlModel(QObject *parent)
     setHeaderData(Visible, Qt::Horizontal, tr("👁"));
     setHeaderData(Name, Qt::Horizontal, tr("Name"));
     setHeaderData(Color, Qt::Horizontal, tr(""));
-    setHeaderData(NegCount, Qt::Horizontal, tr("Neg"));
-    setHeaderData(PosCount, Qt::Horizontal, tr("Pos"));
+    setHeaderData(NegCharge, Qt::Horizontal, tr("Neg"));
+    setHeaderData(PosCharge, Qt::Horizontal, tr("Pos"));
     setHeaderData(SegCount, Qt::Horizontal, tr("Segments"));
     setHeaderData(Concentrations, Qt::Horizontal, tr("Concentrations"));
     setHeaderData(Ratio, Qt::Horizontal, tr("Ratio"));
@@ -62,8 +62,8 @@ void MixControlModel::setConstituent(const SegmentedConstituent& constituent, in
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
     setData(index(row, Visible), constituent.visible());
     setData(index(row, Name), constituent.getName());
-    setData(index(row, NegCount), constituent.getNegCount());
-    setData(index(row, PosCount), constituent.getPosCount());
+    setData(index(row, NegCharge), constituent.getNegCharge());
+    setData(index(row, PosCharge), constituent.getPosCharge());
     setData(index(row, SegCount), len.join("; "));
     setData(index(row, Concentrations), conc.join("; "));
     setData(index(row, Ratio), ratio.join("; "));

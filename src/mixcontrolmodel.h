@@ -16,8 +16,8 @@ public:
         Visible = 0,
         Name,
         Color, ///< Barva látky v grafu, zvoleno v sekvenci
-        NegCount,
-        PosCount,
+        NegCharge,
+        PosCharge,
         Concentrations, ///< Rozdělení koncentrací v segmentech, odděleno středníkem
         SegCount,
         Ratio,
