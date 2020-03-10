@@ -37,6 +37,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     addAction(m_actionRescale);
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
+    setMouseTracking(true);
 }
 
 
@@ -68,7 +69,7 @@ void Graf::init(const Engine *pEngine) {
 
     int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
-        QLineSeries *series = new ConstituentSeries(sample, this);
+        ConstituentSeries *series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
         m_chart->addSeries(series);
 
@@ -80,7 +81,7 @@ void Graf::init(const Engine *pEngine) {
         id += 1;
         }
 
-    QLineSeries *series = new QLineSeries(this);
+    ConstituentSeries *series = new ConstituentSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("pH"));
     series->setUseOpenGL(true);
@@ -103,7 +104,7 @@ void Graf::init(const Engine *pEngine) {
         }
     m_chart->addSeries(series);
 
-    series = new QLineSeries(this);
+    series = new ConstituentSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("κ"));
     series->setUseOpenGL(true);
@@ -123,7 +124,7 @@ void Graf::init(const Engine *pEngine) {
         }
     m_chart->addSeries(series);
 
-    series = new QLineSeries(this);
+    series = new ConstituentSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("Electric field"));
     series->setUseOpenGL(true);
@@ -426,34 +427,38 @@ void Graf::seriesClicked(const QPointF& point) {
                 }
             }
         m_engine->unlock();
-        GrafDetail *d = new GrafDetail(this, s2->name(), x, minimumy, node);
+        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
         d->move(position);
         d->show();
+        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
         return;
         }
 
     int seriescount = m_chart->series().size();
     if (s1 == m_chart->series()[seriescount-3]) {
         double pH = -log(hpl[node]) / log(10);
-        GrafDetail *d = new GrafDetail(this, tr("pH"), x, pH, node);
+        GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
         d->move(position);
         d->show();
+        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
         return;
         }
 
     if (s1 == m_chart->series()[seriescount-2]) {
         double k = kapa[node];
-        GrafDetail *d = new GrafDetail(this, tr("Conductivity [1e-2 S/m]"), x, k, node);
+        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "× 10⁻² S/m", x, k, node);
         d->move(position);
         d->show();
+        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
         return;
         }
 
     if (s1 == m_chart->series()[seriescount-1]) {
         double e = efield[node];
-        GrafDetail *d = new GrafDetail(this, tr("Electric field [kV/m]"), x, e, node);
+        GrafDetail *d = new GrafDetail(this, tr("Electric field"), "kV/m", x, e, node);
         d->move(position);
         d->show();
+        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
         return;
         }
 

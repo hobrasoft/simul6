@@ -36,7 +36,8 @@ Sample::Sample(const SegmentedConstituent& constituent, const int pNp) :
     q6(pNp + 1),
     dif(pNp + 1),
     u(CHARGE_BLOCK_SIZE, pNp),
-    L(CHARGE_BLOCK_SIZE, pNp)
+    L(CHARGE_BLOCK_SIZE, pNp),
+    m_name(constituent.getName())
 {
 }
 

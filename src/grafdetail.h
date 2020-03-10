@@ -18,7 +18,7 @@ class Simul6;
 class GrafDetail : public QWidget {
     Q_OBJECT
   public:
-    GrafDetail(QWidget *parent, const QString& name, const double x, const double y, int node);
+    GrafDetail(QWidget *parent, const QString& name, const QString& unit, const double x, const double y, int node);
    ~GrafDetail();
 
   private:

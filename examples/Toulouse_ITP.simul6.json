@@ -2,98 +2,50 @@
     "compute_control": {
         "caplen": 0.025,
         "constant_voltage": true,
-        "curden": -427.89,
+        "curden": 427.89,
         "display_interval": 1,
         "dt": 0.04,
         "number_of_points": 2000,
         "optimize_dt": false,
         "stop_time": 80,
-        "voltage": -100,
+        "voltage": 100,
         "zone_edge": 0.0005
     },
     "mix": [
         {
             "constituent": {
-                "color": "#09f59b",
-                "name": "POTASSIUM",
+                "color": "#f50909",
+                "name": "ACETIC ACID",
                 "segments": [
                     {
-                        "concentration": 0,
+                        "concentration": 20,
                         "constituent": {
-                            "pKaPos": [
-                                13
+                            "pKaNeg": [
+                                4.756
                             ],
-                            "uPos": [
-                                76.2
+                            "uNeg": [
+                                42.400000000000006
                             ]
                         },
                         "ratio": 1
-                    },
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13
-                            ],
-                            "uPos": [
-                                76.2
-                            ]
-                        },
-                        "ratio": 1
-                    },
+                    }
+                ],
+                "visible": false
+            }
+        },
+        {
+            "constituent": {
+                "color": "#9bf509",
+                "name": "term",
+                "segments": [
                     {
                         "concentration": 10,
                         "constituent": {
                             "pKaPos": [
-                                13
-                            ],
-                            "uPos": [
-                                76.2
-                            ]
-                        },
-                        "ratio": 5
-                    },
-                    {
-                        "concentration": 10,
-                        "constituent": {
-                            "pKaPos": [
-                                13
-                            ],
-                            "uPos": [
-                                76.2
-                            ]
-                        },
-                        "ratio": 5
-                    }
-                ],
-                "visible": true
-            }
-        },
-        {
-            "constituent": {
-                "color": "#f5f509",
-                "name": "S1",
-                "segments": [
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
                                 13.7
                             ],
                             "uPos": [
-                                57
-                            ]
-                        },
-                        "ratio": 1
-                    },
-                    {
-                        "concentration": 4,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                57
+                                15.000000000000002
                             ]
                         },
                         "ratio": 1
@@ -105,52 +57,7 @@
                                 13.7
                             ],
                             "uPos": [
-                                57
-                            ]
-                        },
-                        "ratio": 5
-                    },
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                57
-                            ]
-                        },
-                        "ratio": 5
-                    }
-                ],
-                "visible": true
-            }
-        },
-        {
-            "constituent": {
-                "color": "#0964f5",
-                "name": "S2",
-                "segments": [
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                45.00000000000001
-                            ]
-                        },
-                        "ratio": 1
-                    },
-                    {
-                        "concentration": 4,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                45.00000000000001
+                                15.000000000000002
                             ]
                         },
                         "ratio": 1
@@ -162,7 +69,7 @@
                                 13.7
                             ],
                             "uPos": [
-                                45.00000000000001
+                                15.000000000000002
                             ]
                         },
                         "ratio": 5
@@ -174,121 +81,7 @@
                                 13.7
                             ],
                             "uPos": [
-                                45.00000000000001
-                            ]
-                        },
-                        "ratio": 5
-                    }
-                ],
-                "visible": true
-            }
-        },
-        {
-            "constituent": {
-                "color": "#09f509",
-                "name": "S3",
-                "segments": [
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                35
-                            ]
-                        },
-                        "ratio": 1
-                    },
-                    {
-                        "concentration": 4,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                35
-                            ]
-                        },
-                        "ratio": 1
-                    },
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                35
-                            ]
-                        },
-                        "ratio": 5
-                    },
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                35
-                            ]
-                        },
-                        "ratio": 5
-                    }
-                ],
-                "visible": true
-            }
-        },
-        {
-            "constituent": {
-                "color": "#f56009",
-                "name": "S4",
-                "segments": [
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                26
-                            ]
-                        },
-                        "ratio": 1
-                    },
-                    {
-                        "concentration": 4,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                26
-                            ]
-                        },
-                        "ratio": 1
-                    },
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                26
-                            ]
-                        },
-                        "ratio": 5
-                    },
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                26
+                                15.000000000000002
                             ]
                         },
                         "ratio": 5
@@ -356,17 +149,29 @@
         },
         {
             "constituent": {
-                "color": "#9bf509",
-                "name": "term",
+                "color": "#f56009",
+                "name": "S4",
                 "segments": [
                     {
-                        "concentration": 10,
+                        "concentration": 0,
                         "constituent": {
                             "pKaPos": [
                                 13.7
                             ],
                             "uPos": [
-                                15.000000000000002
+                                26
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 4,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                26
                             ]
                         },
                         "ratio": 1
@@ -378,19 +183,7 @@
                                 13.7
                             ],
                             "uPos": [
-                                15.000000000000002
-                            ]
-                        },
-                        "ratio": 1
-                    },
-                    {
-                        "concentration": 0,
-                        "constituent": {
-                            "pKaPos": [
-                                13.7
-                            ],
-                            "uPos": [
-                                15.000000000000002
+                                26
                             ]
                         },
                         "ratio": 5
@@ -402,7 +195,7 @@
                                 13.7
                             ],
                             "uPos": [
-                                15.000000000000002
+                                26
                             ]
                         },
                         "ratio": 5
@@ -413,20 +206,227 @@
         },
         {
             "constituent": {
-                "color": "#f50909",
-                "name": "ACETIC ACID",
+                "color": "#09f509",
+                "name": "S3",
                 "segments": [
                     {
-                        "concentration": 20,
+                        "concentration": 0,
                         "constituent": {
-                            "pKaNeg": [
-                                4.756
+                            "pKaPos": [
+                                13.7
                             ],
-                            "uNeg": [
-                                42.400000000000006
+                            "uPos": [
+                                35
                             ]
                         },
                         "ratio": 1
+                    },
+                    {
+                        "concentration": 4,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                35
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                35
+                            ]
+                        },
+                        "ratio": 5
+                    },
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                35
+                            ]
+                        },
+                        "ratio": 5
+                    }
+                ],
+                "visible": true
+            }
+        },
+        {
+            "constituent": {
+                "color": "#0964f5",
+                "name": "S2",
+                "segments": [
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                45.00000000000001
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 4,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                45.00000000000001
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                45.00000000000001
+                            ]
+                        },
+                        "ratio": 5
+                    },
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                45.00000000000001
+                            ]
+                        },
+                        "ratio": 5
+                    }
+                ],
+                "visible": true
+            }
+        },
+        {
+            "constituent": {
+                "color": "#f5f509",
+                "name": "S1",
+                "segments": [
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                57
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 4,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                57
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                57
+                            ]
+                        },
+                        "ratio": 5
+                    },
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13.7
+                            ],
+                            "uPos": [
+                                57
+                            ]
+                        },
+                        "ratio": 5
+                    }
+                ],
+                "visible": true
+            }
+        },
+        {
+            "constituent": {
+                "color": "#09f59b",
+                "name": "POTASSIUM",
+                "segments": [
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13
+                            ],
+                            "uPos": [
+                                76.2
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 0,
+                        "constituent": {
+                            "pKaPos": [
+                                13
+                            ],
+                            "uPos": [
+                                76.2
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 10,
+                        "constituent": {
+                            "pKaPos": [
+                                13
+                            ],
+                            "uPos": [
+                                76.2
+                            ]
+                        },
+                        "ratio": 5
+                    },
+                    {
+                        "concentration": 10,
+                        "constituent": {
+                            "pKaPos": [
+                                13
+                            ],
+                            "uPos": [
+                                76.2
+                            ]
+                        },
+                        "ratio": 5
                     }
                 ],
                 "visible": true
