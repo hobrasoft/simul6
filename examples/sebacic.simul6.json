@@ -1,0 +1,112 @@
+{
+    "compute_control": {
+        "caplen": 0.025,
+        "constant_voltage": true,
+        "curden": -58.8,
+        "display_interval": 1,
+        "dt": 0.04,
+        "number_of_points": 2000,
+        "optimize_dt": true,
+        "stop_time": 300,
+        "voltage": -500,
+        "zone_edge": 0.0005
+    },
+    "mix": [
+        {
+            "constituent": {
+                "color": "#09f59b",
+                "name": "IMIDAZOLE",
+                "segments": [
+                    {
+                        "concentration": 0.33,
+                        "constituent": {
+                            "pKaPos": [
+                                7.15
+                            ],
+                            "uPos": [
+                                52
+                            ]
+                        },
+                        "ratio": 5
+                    },
+                    {
+                        "concentration": 0.3301,
+                        "constituent": {
+                            "pKaPos": [
+                                7.15
+                            ],
+                            "uPos": [
+                                52
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 0.33,
+                        "constituent": {
+                            "pKaPos": [
+                                7.15
+                            ],
+                            "uPos": [
+                                52
+                            ]
+                        },
+                        "ratio": 1
+                    }
+                ],
+                "visible": true
+            }
+        },
+        {
+            "constituent": {
+                "color": "#f50909",
+                "name": "SEBACIC ACID",
+                "segments": [
+                    {
+                        "concentration": 0.23,
+                        "constituent": {
+                            "pKaNeg": [
+                                5.38,
+                                4.53
+                            ],
+                            "uNeg": [
+                                44.9,
+                                20.7
+                            ]
+                        },
+                        "ratio": 5
+                    },
+                    {
+                        "concentration": 0.23,
+                        "constituent": {
+                            "pKaNeg": [
+                                5.38,
+                                4.53
+                            ],
+                            "uNeg": [
+                                44.9,
+                                20.7
+                            ]
+                        },
+                        "ratio": 1
+                    },
+                    {
+                        "concentration": 0.23,
+                        "constituent": {
+                            "pKaNeg": [
+                                5.38,
+                                4.53
+                            ],
+                            "uNeg": [
+                                44.9,
+                                20.7
+                            ]
+                        },
+                        "ratio": 1
+                    }
+                ],
+                "visible": true
+            }
+        }
+    ]
+}

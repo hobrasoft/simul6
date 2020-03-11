@@ -81,6 +81,9 @@ private:
     int m_negCount;
 
     void updateChargesAndCounts();
+
+    static int m_lastInternalId;
+    static int m_lastId;
     
 };
 

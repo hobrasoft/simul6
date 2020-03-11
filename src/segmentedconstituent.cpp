@@ -1,9 +1,13 @@
 #include "segmentedconstituent.h"
 #include "pdebug.h"
 
+int SegmentedConstituent::m_lastInternalId = 1000000;
+int SegmentedConstituent::m_lastId         = 1000000;
 
 SegmentedConstituent::SegmentedConstituent() {
     m_visible = true;
+    m_id = m_lastId++;
+    m_internalId = m_lastInternalId++;
 }
 
 
@@ -14,6 +18,8 @@ SegmentedConstituent::SegmentedConstituent(const QString& name) {
     m_negCharge = 0;
     m_posCount = 0;
     m_negCount = 0;
+    m_id = m_lastId++;
+    m_internalId = m_lastInternalId++;
 }
 
 
@@ -21,6 +27,8 @@ SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
     m_name = json["name"].toString();
     m_color = QColor(json["color"].toString());
     m_visible = json.contains("visible") ? json["visible"].toBool() : true;
+    m_id = json.contains("id") ? json["id"].toInt() : m_lastId++;
+    m_internalId = m_lastInternalId++;
 
     // PDEBUG << m_name << m_color << m_visible << json["segments"];
 
