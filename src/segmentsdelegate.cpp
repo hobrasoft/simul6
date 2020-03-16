@@ -31,7 +31,7 @@ QWidget *SegmentsDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
             editor->setFrame(false);
             editor->setMinimum(0.0);
             editor->setMaximum(100000);
-            editor->setDecimals(4);
+            editor->setDecimals(7);
             return editor;
             break;
             }
