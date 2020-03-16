@@ -13,7 +13,7 @@
 #include <QColor>
 #include <QPainter>
 
-SegmentsDelegate::SegmentsDelegate(QObject *parent) : QStyledItemDelegate(parent) {
+SegmentsDelegate::SegmentsDelegate(QObject *parent) : QItemDelegate(parent) {
 }
 
 QWidget *SegmentsDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem& option, const QModelIndex &index) const {
@@ -72,17 +72,29 @@ QWidget *SegmentsDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
             break;
             }
         }
-    return QStyledItemDelegate::createEditor(parent, option, index);
+    return QItemDelegate::createEditor(parent, option, index);
 }
+
 
 void SegmentsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
     QColor color;
     switch (index.row()) {
         case SegmentsModel::Ratio:
-        case SegmentsModel::Concentration:
-            QStyledItemDelegate::paint(painter, option, index);
+            QItemDelegate::paint(painter, option, index);
             return;
             break;
+        case SegmentsModel::Concentration: {
+            double value = index.model()->data(index).toDouble();
+            QString text = QLocale().toString(value, 'g', 8);
+            PDEBUG << value << text;
+            QStyleOptionViewItem myoption = option;
+            myoption.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
+            drawDisplay(painter, myoption, myoption.rect, text);
+            drawFocus(painter, myoption, myoption.rect);
+            // QItemDelegate::paint(painter, option, index);
+            return;
+            break;
+            }
         case SegmentsModel::U3n:
         case SegmentsModel::U2n:
         case SegmentsModel::U1n: {
@@ -111,7 +123,7 @@ void SegmentsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->save();
     painter->fillRect(myoption.rect, brush);
     painter->restore();
-    QStyledItemDelegate::paint(painter, option, index);
+    QItemDelegate::paint(painter, option, index);
     return;
 }
 
