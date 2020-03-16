@@ -6,6 +6,7 @@
 #ifndef _SegmentsDelegate_H_
 #define _SegmentsDelegate_H_
 
+#include <QItemDelegate>
 #include <QStyledItemDelegate>
 #include <QStyleOptionViewItem>
 #include <QModelIndex>
@@ -13,7 +14,7 @@
 /**
  * @brief
  */
-class SegmentsDelegate : public QStyledItemDelegate {
+class SegmentsDelegate : public QItemDelegate {
     Q_OBJECT
   public:
     SegmentsDelegate(QObject *parent);
