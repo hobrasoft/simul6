@@ -86,7 +86,6 @@ void SegmentsDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         case SegmentsModel::Concentration: {
             double value = index.model()->data(index).toDouble();
             QString text = QLocale().toString(value, 'g', 8);
-            PDEBUG << value << text;
             QStyleOptionViewItem myoption = option;
             myoption.displayAlignment = Qt::AlignLeft | Qt::AlignVCenter;
             drawDisplay(painter, myoption, myoption.rect, text);
