@@ -9,6 +9,7 @@
 #include <math.h>
 #include <QValueAxis>
 #include "grafstyle.h"
+#include "manualscale.h"
 
 #define E_COLOR     "#00ff00"
 #define PH_COLOR    "#0000ff"
@@ -35,6 +36,12 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
     addAction(m_actionRescale);
+
+    m_actionManualScale = new QAction(tr("Manual scale"), this);
+    connect(m_actionManualScale, &QAction::triggered, this, &Graf::manualScale);
+    addAction(m_actionManualScale);
+
+
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
     setMouseTracking(true);
@@ -166,6 +173,7 @@ void Graf::init(const Engine *pEngine) {
 void Graf::autoscale() {
     // PDEBUG << m_rescaleEnabled;
     // if (!m_rescaleEnabled) { return; }
+    if (m_engine == nullptr) { return; }
     double maximum = 0;
     m_engine->lock();
     size_t p    = m_engine->getNp();
@@ -206,7 +214,47 @@ void Graf::autoscale() {
             }
         }
 
-    m_axis_y->setRange(-0.09 * maximum, 1.09 * maximum);
+    QRectF rect;
+    rect.setBottom (-0.09 * maximum);
+    rect.setTop    (1.09 * maximum);
+    rect.setLeft   (0);
+    rect.setRight  (mcaplen);
+    setScale(rect);
+    repaint();
+}
+
+
+void Graf::manualScale() {
+    double caplen = 100;
+    if (m_engine != nullptr) {
+        m_engine->lock();
+        caplen =  m_engine->getCapLen() * 1000;
+        m_engine->unlock();
+        }
+
+    QRectF rect;
+    rect.setBottom(m_axis_y->min());
+    rect.setTop(m_axis_y->max());
+    rect.setLeft(m_axis_x->min());
+    rect.setRight(m_axis_x->max());
+
+    ManualScale *d = new ManualScale(this);
+    d->setRect(rect);
+    d->setCaplen(caplen);
+    if (d->exec() == QDialog::Accepted) {
+        setScale(d->rect());
+        }
+    d->deleteLater();
+}
+
+
+
+void Graf::setScale(const QRectF& rect) {
+    double mcaplen = rect.right();
+    double maximum = rect.top();
+    m_axis_y->setRange(rect.bottom(), rect.top());
+    m_axis_x->setRange(rect.left(), rect.right());
+
     #if QT_VERSION > 0x050c00
     double ytickInterval \
         = (maximum <= 0.3) ? 0.01 
@@ -223,7 +271,6 @@ void Graf::autoscale() {
     m_axis_y->setTickType(QValueAxis::TicksDynamic);
     #endif
 
-    m_axis_x->setRange(0, mcaplen);
     #if QT_VERSION > 0x050c00
     double xtickInterval \
         = (mcaplen < 2) ? 0.1
@@ -239,7 +286,6 @@ void Graf::autoscale() {
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
     #endif
 
-    repaint();
 }
 
 
