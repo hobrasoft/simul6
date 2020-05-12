@@ -90,7 +90,8 @@ SOURCES += \
     importsna.cpp \
     ampholines.cpp \
     replay.cpp \
-    myview.cpp
+    myview.cpp \
+    manualscale.cpp \
 
 HEADERS += \
     simul6.h \
@@ -123,7 +124,8 @@ HEADERS += \
     ampholines.h \
     replay.h \
     grafstyle.h \
-    myview.h
+    myview.h \
+    manualscale.h \
 
 FORMS += \
     simul6.ui \
@@ -137,6 +139,7 @@ FORMS += \
     ampholines.ui \
     replay.ui \
     simulationprogressdialog.ui \
+    manualscale.ui \
 
 RESOURCES += \
     simul6.qrc \

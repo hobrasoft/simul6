@@ -29,6 +29,8 @@ public slots:
     void setVisibleKapa(bool visible);
     void setVisibleE(bool visible);
     void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
+    void setScale(const QRectF& rect);
+    void manualScale();
 
 private slots:
     void seriesClicked(const QPointF&);
@@ -46,6 +48,7 @@ private:
     QValueAxis *m_axis_x;
     QValueAxis *m_axis_y;
     QAction    *m_actionRescale;
+    QAction    *m_actionManualScale;
 
     const Engine *m_engine;
 };
