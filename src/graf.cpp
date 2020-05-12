@@ -61,14 +61,7 @@ void Graf::mouseReleaseEvent(QMouseEvent *event) {
 
 void Graf::init(const Engine *pEngine) {
     m_chart->removeAllSeries();
-    QList<QAbstractAxis *> axislistX = m_chart->axes(Qt::Horizontal);
-    for (int i=0; i<axislistX.size(); i++) {
-        m_chart->removeAxis(axislistX[i]);
-        }
-    QList<QAbstractAxis *> axislistY = m_chart->axes(Qt::Vertical);
-    for (int i=0; i<axislistY.size(); i++) {
-        m_chart->removeAxis(axislistY[i]);
-        }
+
     m_engine = pEngine;
     pEngine->lock();
     size_t p = pEngine->getNp(); // points
@@ -154,18 +147,6 @@ void Graf::init(const Engine *pEngine) {
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
 
-    m_axis_y = new QValueAxis(this);
-    m_chart->addAxis(m_axis_y, Qt::AlignLeft);
-
-    m_axis_x = new QValueAxis(this);
-    m_chart->addAxis(m_axis_x, Qt::AlignBottom);
-
-    QList<QAbstractSeries *> serieslist = m_chart->series();
-    for (int i=0; i<serieslist.size(); i++) {
-        serieslist[i]->attachAxis(m_axis_y);
-        serieslist[i]->attachAxis(m_axis_x);
-        }
-
     autoscale();
 }
 
@@ -250,6 +231,21 @@ void Graf::manualScale() {
 
 
 void Graf::setScale(const QRectF& rect) {
+    QList<QAbstractAxis *> axislistX = m_chart->axes(Qt::Horizontal);
+    for (int i=0; i<axislistX.size(); i++) {
+        m_chart->removeAxis(axislistX[i]);
+        }
+    QList<QAbstractAxis *> axislistY = m_chart->axes(Qt::Vertical);
+    for (int i=0; i<axislistY.size(); i++) {
+        m_chart->removeAxis(axislistY[i]);
+        }
+
+    m_axis_y = new QValueAxis(this);
+    m_chart->addAxis(m_axis_y, Qt::AlignLeft);
+
+    m_axis_x = new QValueAxis(this);
+    m_chart->addAxis(m_axis_x, Qt::AlignBottom);
+
     double mcaplen = rect.right();
     double maximum = rect.top();
     m_axis_y->setRange(rect.bottom(), rect.top());
@@ -257,7 +253,12 @@ void Graf::setScale(const QRectF& rect) {
 
     #if QT_VERSION > 0x050c00
     double ytickInterval \
-        = (maximum <= 0.3) ? 0.01 
+        = (maximum <= 0.000003) ? 0.0000001 
+        : (maximum <= 0.00003) ? 0.000001 
+        : (maximum <= 0.0003) ? 0.00001 
+        : (maximum <= 0.003) ? 0.0001 
+        : (maximum <= 0.03) ? 0.01 
+        : (maximum <= 0.3) ? 0.01 
         : (maximum <= 2.0) ? 0.2
         : (maximum <= 3.0) ? 0.5
         : (maximum <= 10.) ? 1.0
@@ -273,7 +274,12 @@ void Graf::setScale(const QRectF& rect) {
 
     #if QT_VERSION > 0x050c00
     double xtickInterval \
-        = (mcaplen < 2) ? 0.1
+        = (mcaplen < 0.00002) ? 0.000001
+        : (mcaplen < 0.0002) ? 0.00001
+        : (mcaplen < 0.002) ? 0.0001
+        : (mcaplen < 0.02) ? 0.001
+        : (mcaplen < 0.2) ? 0.01
+        : (mcaplen < 2) ? 0.1
         : (mcaplen < 3) ? 0.5
         : (mcaplen < 10) ? 1.0
         : (mcaplen < 20) ? 2.0
@@ -285,6 +291,12 @@ void Graf::setScale(const QRectF& rect) {
     m_axis_x->setTickInterval(xtickInterval);
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
     #endif
+
+    QList<QAbstractSeries *> serieslist = m_chart->series();
+    for (int i=0; i<serieslist.size(); i++) {
+        serieslist[i]->attachAxis(m_axis_y);
+        serieslist[i]->attachAxis(m_axis_x);
+        }
 
 }
 
