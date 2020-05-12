@@ -39,7 +39,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QDoubleSpinBox" name="f_top"/>
+        <widget class="QDoubleSpinBox" name="f_top">
+         <property name="maximum">
+          <double>10000.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer_2">
