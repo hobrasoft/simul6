@@ -36,10 +36,12 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
     addAction(m_actionRescale);
+    m_actionRescale->setEnabled(false);
 
     m_actionManualScale = new QAction(tr("Manual scale"), this);
     connect(m_actionManualScale, &QAction::triggered, this, &Graf::manualScale);
     addAction(m_actionManualScale);
+    m_actionManualScale->setEnabled(false);
 
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -207,6 +209,9 @@ void Graf::autoscale() {
 
 void Graf::manualScale() {
     double caplen = 100;
+    if (m_axis_y == nullptr || m_axis_y == nullptr) {
+        return;
+        }
     if (m_engine != nullptr) {
         m_engine->lock();
         caplen =  m_engine->getCapLen() * 1000;
@@ -231,6 +236,12 @@ void Graf::manualScale() {
 
 
 void Graf::setScale(const QRectF& rect) {
+    if (m_engine == nullptr) {
+        return;
+        }
+    m_actionManualScale->setEnabled(true);
+    m_actionRescale->setEnabled(true);
+
     QList<QAbstractAxis *> axislistX = m_chart->axes(Qt::Horizontal);
     for (int i=0; i<axislistX.size(); i++) {
         m_chart->removeAxis(axislistX[i]);
