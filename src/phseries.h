@@ -17,7 +17,7 @@
 class PhSeries : public ConstituentSeries {
     Q_OBJECT
   public:
-    PhSeries(Graf *parent) : ConstituentSeries(parent) {}
+    PhSeries(Graf *parent) : ConstituentSeries(parent) { m_name = tr("pH"); }
 
   public slots:
     void slotHide() Q_DECL_OVERRIDE {

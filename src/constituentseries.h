@@ -32,15 +32,16 @@ class ConstituentSeries : public QtCharts::QLineSeries {
     void slotRemoveActions();
     virtual void slotHide();
     virtual void slotScale();
+    void    createActions();
 
   protected:
     Graf    *m_graf;
+    QString  m_name;
 
   private:
     int m_internalId;
     QAction *m_scale;
     QAction *m_hide;
-    void    createActions();
 
 };
 

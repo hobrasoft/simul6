@@ -17,7 +17,7 @@
 class ElectricFieldSeries : public ConstituentSeries {
     Q_OBJECT
   public:
-    ElectricFieldSeries(Graf *parent) : ConstituentSeries(parent) {}
+    ElectricFieldSeries(Graf *parent) : ConstituentSeries(parent) { m_name = tr("Electric Field"); }
 
   public slots:
     void slotHide() Q_DECL_OVERRIDE {
