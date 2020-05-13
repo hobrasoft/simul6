@@ -2,6 +2,9 @@
 #include "omp.h"
 #include "pdebug.h"
 #include "constituentseries.h"
+#include "conductivityseries.h"
+#include "phseries.h"
+#include "electricfieldseries.h"
 #include "grafdetail.h"
 #include "msettings.h"
 #include <iostream>
@@ -44,11 +47,12 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     addAction(m_actionManualScale);
     m_actionManualScale->setEnabled(false);
 
+/*
     m_actionSetAxisLabels = new QAction(tr("Adjust asix labels"), this);
     connect(m_actionSetAxisLabels, &QAction::triggered, this, &Graf::setAxisLabels);
     addAction(m_actionSetAxisLabels);
     m_actionSetAxisLabels->setEnabled(false);
-
+*/
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
@@ -78,7 +82,7 @@ void Graf::init(const Engine *pEngine) {
         id += 1;
         }
 
-    ConstituentSeries *series = new ConstituentSeries(this);
+    ConstituentSeries *series = new PhSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("pH"));
     series->setUseOpenGL(true);
@@ -101,7 +105,7 @@ void Graf::init(const Engine *pEngine) {
         }
     m_chart->addSeries(series);
 
-    series = new ConstituentSeries(this);
+    series = new ConductivitySeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("κ"));
     series->setUseOpenGL(true);
@@ -121,7 +125,7 @@ void Graf::init(const Engine *pEngine) {
         }
     m_chart->addSeries(series);
 
-    series = new ConstituentSeries(this);
+    series = new ElectricFieldSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setName(tr("Electric field"));
     series->setUseOpenGL(true);
@@ -265,7 +269,7 @@ void Graf::setScale(const QRectF& rect) {
 
     m_actionManualScale->setEnabled(true);
     m_actionRescale->setEnabled(true);
-    m_actionSetAxisLabels->setEnabled(true);
+    // m_actionSetAxisLabels->setEnabled(true);
 
     QList<QAbstractSeries *> serieslist = m_chart->series();
     for (int i=0; i<serieslist.size(); i++) {

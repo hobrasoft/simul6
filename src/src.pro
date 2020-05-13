@@ -107,6 +107,9 @@ HEADERS += \
     graf.h \
     grafdetail.h \
     constituentseries.h \
+    conductivityseries.h \
+    phseries.h \
+    electricfieldseries.h \
     inputparameters.h \
     constituentsmodel.h \
     settings.h \

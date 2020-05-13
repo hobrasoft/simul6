@@ -37,6 +37,7 @@ public:
     void setJson(const QVariantList& json);
 
     void toggleVisible(const QModelIndex&);
+    void hide(int internalId);
 
 signals:
     void visibilityChanged(int id, bool visible);

@@ -23,6 +23,7 @@ signals:
 
 public slots:
     void resizeColumns();
+    void hideConstituent(int internalId);
 
 private slots:
     void editComponent();

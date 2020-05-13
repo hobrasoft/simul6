@@ -30,6 +30,12 @@ public:
 
     const Engine *engine() const;
 
+    void hideConstituent(int internalId);
+    void hideKapa();
+    void hidePh();
+    void hideE();
+
+
 private slots:
     void init();
     void createActions();

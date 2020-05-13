@@ -241,6 +241,26 @@ void Simul6::loadData() {
 }
 
 
+void Simul6::hideConstituent(int internalId) {
+    ui->f_mixcontrol->hideConstituent(internalId);
+}
+
+
+void Simul6::hideKapa() {
+    ui->f_computeControl->setKapaVisible(false);
+}
+
+
+void Simul6::hidePh() {
+    ui->f_computeControl->setPhVisible(false);
+}
+
+
+void Simul6::hideE() {
+    ui->f_computeControl->setEVisible(false);
+}
+
+
 void Simul6::createActions() {
     QMenu *menu = new QMenu(tr("Application"), this);
     ui->menuBar->addMenu(menu);

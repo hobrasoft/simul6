@@ -8,7 +8,10 @@
 
 #include <QLineSeries>
 #include <QPointF>
+#include <QAction>
 #include "Sample.h"
+
+class Graf;
 
 /**
  * @brief
@@ -16,8 +19,8 @@
 class ConstituentSeries : public QtCharts::QLineSeries {
     Q_OBJECT
   public:
-    ConstituentSeries(const Sample&, QObject *parent);
-    ConstituentSeries(QObject *parent);
+    ConstituentSeries(const Sample&, Graf *parent);
+    ConstituentSeries(Graf *parent);
 
     int internalId() const;
 
@@ -26,9 +29,16 @@ class ConstituentSeries : public QtCharts::QLineSeries {
 
   private slots:
     void slotHovered(const QPointF& point, bool state);
+    void slotRemoveActions();
+    virtual void slotHide();
+    virtual void slotScale();
 
   private:
     int m_internalId;
+    QAction *m_scale;
+    QAction *m_hide;
+    Graf    *m_graf;
+    void    createActions();
 
 };
 
