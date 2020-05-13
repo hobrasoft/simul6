@@ -27,6 +27,10 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     setRubberBand(QChartView::RectangleRubberBand);
     m_chart = new QChart();
     setChart(m_chart);
+    m_rescaleIndividually = false;
+    m_rescalePh = false;
+    m_rescaleKapa = false;
+    m_rescaleE = false;
     m_visiblePh = true;
     m_visibleKapa = true;
     m_visibleE = true;
@@ -159,6 +163,7 @@ void Graf::autoscale() {
     // if (!m_rescaleEnabled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = 0;
+    double minimum = 99999;
     m_engine->lock();
     size_t p    = m_engine->getNp();
     auto hpl    = m_engine->getHpl();
@@ -170,42 +175,98 @@ void Graf::autoscale() {
 
     for (auto &sample : mix.getSamples()) {
         if (!sample.visible()) { continue; }
+        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { continue; }
         for (unsigned int i = 0; i <= p; i++){
             if (sample.getA(0, i) > maximum)  {
                 maximum = sample.getA(0,i);
                 }
+            if (sample.getA(0, i) < minimum)  {
+                minimum = sample.getA(0,i);
+                }
             }
         }
 
-    for (unsigned int i = 0; m_visiblePh && i <= p; i++) {
+    bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
+                     (!m_rescaleIndividually && m_visiblePh);
+    for (unsigned int i = 0; rescalePh && i <= p; i++) {
         if (hpl[i] > 0) {
             double pH = -log(hpl[i]) / log(10);
             if (pH > maximum) { 
                 maximum = pH;
                 }
+            if (pH < minimum) { 
+                minimum = pH;
+                }
             }
         }
 
-    for (unsigned int i = 0; m_visibleKapa && i <= p; i++) {
+    bool rescaleKapa = (m_rescaleIndividually && m_rescaleKapa && m_visibleKapa) ||
+                       (!m_rescaleIndividually && m_visibleKapa);
+    for (unsigned int i = 0; rescaleKapa && i <= p; i++) {
         if (kapa[i] * 100 > maximum) {
             maximum = kapa[i] * 100.0;
             }
+        if (kapa[i] * 100 < minimum) {
+            minimum = kapa[i] * 100.0;
+            }
         }
 
-    for (unsigned int i = 0; m_visibleE && i <= p; i++) {
+    bool rescaleE = (m_rescaleIndividually && m_rescaleE && m_visibleE) ||
+                    (!m_rescaleIndividually && m_visibleE);
+    for (unsigned int i = 0; rescaleE && i <= p; i++) {
         if (fabs(efield[i] / 1000.0) > maximum) {
             maximum = fabs(efield[i] / 1000.0);
+            }
+        if (fabs(efield[i] / 1000.0) < minimum) {
+            minimum = fabs(efield[i] / 1000.0);
             }
         }
 
     QRectF rect;
-    rect.setTop    (-0.09 * maximum);
+    // rect.setTop    (-0.09 * maximum);
+    rect.setTop    (minimum - 0.09 * maximum);
     rect.setBottom (1.09 * maximum);
     rect.setLeft   (0);
     rect.setRight  (mcaplen);
     setScale(rect);
     repaint();
 }
+
+
+
+void Graf::rescalePh() {
+    m_rescaleIndividually = true;
+    m_rescalePh = true;
+    autoscale();
+    m_rescalePh = false;
+    m_rescaleIndividually = false;
+}
+
+void Graf::rescaleE() {
+    m_rescaleIndividually = true;
+    m_rescaleE = true;
+    autoscale();
+    m_rescaleE = false;
+    m_rescaleIndividually = false;
+}
+
+void Graf::rescaleKapa() {
+    m_rescaleIndividually = true;
+    m_rescaleKapa = true;
+    autoscale();
+    m_rescaleKapa = false;
+    m_rescaleIndividually = false;
+}
+
+void Graf::rescale(int internalId) {
+    m_rescaleIndividually = true;
+    m_rescaleId = internalId;
+    autoscale();
+    m_rescaleId = 0;
+    m_rescaleIndividually = false;
+}
+
+
 
 
 void Graf::manualScale() {
