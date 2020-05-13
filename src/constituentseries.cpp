@@ -68,7 +68,7 @@ void ConstituentSeries::slotHide() {
 
 
 void ConstituentSeries::slotScale() {
-    // Simul6::instance()->hideConstituent(m_internalId);
+    m_graf->rescale(m_internalId);
 }
 
 

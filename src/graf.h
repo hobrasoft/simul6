@@ -33,6 +33,11 @@ public slots:
     void manualScale();
     void autoscale();
 
+    void rescalePh();
+    void rescaleE();
+    void rescaleKapa();
+    void rescale(int internalId);
+
 private slots:
     void seriesClicked(const QPointF&);
     void subselected();
@@ -51,6 +56,12 @@ private:
     QAction    *m_actionRescale;
     QAction    *m_actionManualScale;
     QAction    *m_actionSetAxisLabels;
+
+    bool m_rescaleIndividually;
+    bool m_rescalePh;
+    bool m_rescaleE;
+    bool m_rescaleKapa;
+    int  m_rescaleId;
 
     const Engine *m_engine;
 };

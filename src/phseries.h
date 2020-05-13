@@ -9,6 +9,7 @@
 #include "constituentseries.h"
 #include "pdebug.h"
 #include "simul6.h"
+#include "graf.h"
 
 /**
  * @brief
@@ -23,7 +24,7 @@ class PhSeries : public ConstituentSeries {
         Simul6::instance()->hidePh();
         }
     void slotScale() Q_DECL_OVERRIDE {
-        PDEBUG;
+        m_graf->rescalePh();
         }
 };
 
