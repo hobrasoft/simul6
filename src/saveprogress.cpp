@@ -13,12 +13,97 @@
 
 SaveProgress *SaveProgress::m_instance = nullptr;
 
+
+SaveProgressWorker::SaveProgressWorker() : QObject() {
+    m_timer = new QTimer(this);
+    m_timer->setSingleShot(true);
+    m_timer->setInterval(5000);
+    connect(m_timer, &QTimer::timeout, this, &SaveProgressWorker::save);
+    m_nothingToSave = true;
+}
+
+
+void SaveProgressWorker::saveTimeData(const QVariantMap& data) {
+    PDEBUG << data["time"];
+    QMutexLocker locker(&m_mutex);
+    m_nothingToSave = false;
+
+    QVariantList simulations = m_data["simulation"].toList();
+    simulations << data;
+    m_data["simulation"] = simulations;
+
+    if (!m_timer->isActive()) { m_timer->start(); }
+}
+
+
+void SaveProgressWorker::stop() {
+    PDEBUG;
+    QMetaObject::invokeMethod(this, "save", Qt::QueuedConnection);
+    QEventLoop loop;
+    connect(this, &SaveProgressWorker::saved, &loop, &QEventLoop::quit);
+    loop.exec();
+    PDEBUG << "complete";
+}
+
+
+void SaveProgressWorker::setFilename(const QString& filename) {
+    stop();
+    QMutexLocker locker(&m_mutex);
+    m_filename = filename;
+}
+
+
+void SaveProgressWorker::setHeaderData(const QVariantMap& data) {
+    stop();
+    QMutexLocker locker(&m_mutex);
+    m_data = data;
+}
+
+
+void SaveProgressWorker::save() {
+    PDEBUG;
+    QMutexLocker locker(&m_mutex);
+    if (m_nothingToSave) { 
+        PDEBUG << "nothing to save";
+        emit saved();
+        return;
+        }
+
+    QFile file(m_filename);
+    if (!file.open(QIODevice::WriteOnly)) { 
+        emit saved();
+        return; 
+        }
+    file.write(JSON::json(m_data));
+    file.close();
+
+    m_nothingToSave = true;
+    emit saved();
+    PDEBUG << "complete";
+}
+
+
+SaveProgress::~SaveProgress() {
+    m_workerThread.quit();
+    m_workerThread.wait(500);
+    m_workerThread.terminate();
+    m_workerThread.wait(500);
+    delete m_worker;
+}
+
+
 SaveProgress::SaveProgress(Simul6 *parent) : QObject(parent) {
     m_instance = this;
     m_simul6 = parent;
     m_format = Csv;
-    m_interval = 10.0;
+    m_interval = 10000;
+    m_workerThread.start();
+    m_worker = new SaveProgressWorker();
+    m_worker->moveToThread(&m_workerThread);
+    connect(this, &SaveProgress::timeData, m_worker, &SaveProgressWorker::saveTimeData);
+
     init();
+
 }
 
 
@@ -35,20 +120,20 @@ void SaveProgress::setFilename(const QString& filename) {
     m_filename = filename;
 
     if (m_format == Csv && !m_filename.endsWith(".csv", Qt::CaseInsensitive)) {
-        m_filename = filename + ".csv";
-        return;
+        m_filename = m_filename + ".csv";
         }
 
     if (m_format == Json && !m_filename.endsWith(".simul6.json", Qt::CaseInsensitive)) {
-        m_filename = filename + ".simul6.json";
-        return;
+        m_filename = m_filename + ".simul6.json";
         }
+
+    m_worker->setFilename(m_filename);
 
 }
 
 
 void SaveProgress::setInterval(double interval) {
-    m_interval = interval;
+    m_interval = 1000 * interval;
 }
 
 
@@ -63,27 +148,24 @@ void SaveProgress::setFormat(Format format) {
 
 
 void SaveProgress::init() {
-    m_savedTime = -1000;
-    m_data.clear();
-    m_filename.clear();
+    m_savedTime = 0;
     m_active = false;
-    m_data = m_simul6->data();
+    m_worker->setHeaderData(m_simul6->data());
 }
 
 
 void SaveProgress::slotFinished() {
-    m_savedTime = -10000;
+    m_savedTime = 0;
     slotTimeChanged(m_simul6->engine()->getTime());
 }
 
 
 void SaveProgress::slotTimeChanged(double time) {
-    // PDEBUG << time << m_active << (m_savedTime + m_interval <= time);
     if (!m_active) { return; }
-    if (m_savedTime + m_interval > time) {
+    if (time > 0 && m_savedTime + m_interval > round(1000.0 * time)) {
         return; 
         }
-    m_savedTime = time;
+    // PDEBUG << m_savedTime << m_interval << (m_savedTime+m_interval) << time*1000.0 << (m_savedTime + m_interval > round(time*1000.0));
 
     if (m_format == Json) {
         saveJson(time);
@@ -91,6 +173,8 @@ void SaveProgress::slotTimeChanged(double time) {
     if (m_format == Csv) {
         saveCsv(time);
         }
+
+    m_savedTime += m_interval;
 }
 
 
@@ -122,18 +206,13 @@ void SaveProgress::saveJson(double time) {
     simulation["time"] = time;
     simulation["constituents"] = constituents;
 
-    QVariantList simulations = m_data["simulation"].toList();
-    simulations << simulation;
-    m_data["simulation"] = simulations;
+    emit timeData(simulation);
 
-    QFile file(m_filename);
-    if (!file.open(QIODevice::WriteOnly)) { return; }
-    file.write(JSON::json(m_data));
-    file.close();
 }
 
 
 void SaveProgress::saveCsv(double time) {
+/*
     QString timestamp = QString("%1").arg(time, 6, 'f', 2, QChar('0'));
     QString filename = m_filename;
     filename = filename.replace(QRegExp("\\.csv$", Qt::CaseInsensitive), timestamp+".csv");
@@ -180,6 +259,6 @@ void SaveProgress::saveCsv(double time) {
     
     file.close();
     engine->unlock();
-
+*/
 }
 

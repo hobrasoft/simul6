@@ -14,6 +14,7 @@
 #include "saveprogress.h"
 #include "about.h"
 #include "localurl.h"
+#include "graf.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QDir>
@@ -235,6 +236,8 @@ void Simul6::loadData() {
         ui->f_replay->clear();
         ui->f_dock_replay->setVisible(false);
         }
+
+    graf()->autoscale();
 }
 
 
