@@ -31,11 +31,12 @@ public slots:
     void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
     void setScale(const QRectF& rect);
     void manualScale();
+    void autoscale();
 
 private slots:
     void seriesClicked(const QPointF&);
-    void autoscale();
     void subselected();
+    void setAxisLabels();
 
 private:
     QChart *m_chart;
@@ -49,6 +50,7 @@ private:
     QValueAxis *m_axis_y;
     QAction    *m_actionRescale;
     QAction    *m_actionManualScale;
+    QAction    *m_actionSetAxisLabels;
 
     const Engine *m_engine;
 };
