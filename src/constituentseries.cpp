@@ -10,11 +10,13 @@
 #include "simul6.h"
 #include <QBrush>
 #include <QPen>
+#include <QTimer>
 
 ConstituentSeries::ConstituentSeries(const Sample& sample, Graf *parent) : QLineSeries(parent) {
     m_graf = parent;
     m_internalId = sample.getInternalId();
-    setName(sample.getName());
+    m_name = sample.getName();
+    setName(m_name);
     setUseOpenGL(true);
 
     // colors
@@ -26,8 +28,8 @@ ConstituentSeries::ConstituentSeries(const Sample& sample, Graf *parent) : QLine
     setPen(lpen);
     setBrush(lbrush);
     setVisible(sample.visible());
-    createActions();
 
+    QTimer::singleShot(0, this, &ConstituentSeries::createActions);
     connect(this, &QXYSeries::hovered, this, &ConstituentSeries::slotHovered);
 }
 
@@ -38,14 +40,14 @@ ConstituentSeries::ConstituentSeries(Graf *parent) : QLineSeries(parent) {
     QPen lpen = pen();
     lpen.setWidthF(PENWIDTH);
     setPen(lpen);
-    createActions();
+    QTimer::singleShot(0, this, &ConstituentSeries::createActions);
     connect(this, &QXYSeries::hovered, this, &ConstituentSeries::slotHovered);
 }
 
 
 void ConstituentSeries::createActions() {
-    m_scale = new QAction(tr("Scale"), this);
-    m_hide  = new QAction(tr("Hide"), this);
+    m_scale = new QAction(tr("Scale %1").arg(m_name), this);
+    m_hide  = new QAction(tr("Hide %1").arg(m_name), this);
 
     connect(m_hide, &QAction::triggered, this, &ConstituentSeries::slotRemoveActions);
     connect(m_hide, &QAction::triggered, this, &ConstituentSeries::slotHide);

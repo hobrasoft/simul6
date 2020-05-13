@@ -173,10 +173,20 @@ void Graf::autoscale() {
     double mcaplen = 1000 * m_engine->getCapLen();
     m_engine->unlock();
 
+    unsigned int xleft = 0;
+    unsigned int xright = p;
+    if (m_rescaleIndividually && m_axis_x != nullptr) {
+        double d_xleft  = m_axis_x->min();
+        double d_xright = m_axis_x->max();
+        xleft = p * d_xleft /mcaplen;
+        xright = p * d_xright /mcaplen;
+        PDEBUG << d_xleft << d_xright << xleft << xright;
+        }
+
     for (auto &sample : mix.getSamples()) {
         if (!sample.visible()) { continue; }
         if (m_rescaleIndividually && sample.getId() != m_rescaleId) { continue; }
-        for (unsigned int i = 0; i <= p; i++){
+        for (unsigned int i = xleft; i <= xright; i++){
             if (sample.getA(0, i) > maximum)  {
                 maximum = sample.getA(0,i);
                 }
@@ -188,7 +198,7 @@ void Graf::autoscale() {
 
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
                      (!m_rescaleIndividually && m_visiblePh);
-    for (unsigned int i = 0; rescalePh && i <= p; i++) {
+    for (unsigned int i = xleft; rescalePh && i <= xright; i++) {
         if (hpl[i] > 0) {
             double pH = -log(hpl[i]) / log(10);
             if (pH > maximum) { 
@@ -202,7 +212,7 @@ void Graf::autoscale() {
 
     bool rescaleKapa = (m_rescaleIndividually && m_rescaleKapa && m_visibleKapa) ||
                        (!m_rescaleIndividually && m_visibleKapa);
-    for (unsigned int i = 0; rescaleKapa && i <= p; i++) {
+    for (unsigned int i = xleft; rescaleKapa && i <= xright; i++) {
         if (kapa[i] * 100 > maximum) {
             maximum = kapa[i] * 100.0;
             }
@@ -213,7 +223,7 @@ void Graf::autoscale() {
 
     bool rescaleE = (m_rescaleIndividually && m_rescaleE && m_visibleE) ||
                     (!m_rescaleIndividually && m_visibleE);
-    for (unsigned int i = 0; rescaleE && i <= p; i++) {
+    for (unsigned int i = xleft; rescaleE && i <= xright; i++) {
         if (fabs(efield[i] / 1000.0) > maximum) {
             maximum = fabs(efield[i] / 1000.0);
             }
@@ -223,15 +233,20 @@ void Graf::autoscale() {
         }
 
     QRectF rect;
-    // rect.setTop    (-0.09 * maximum);
     rect.setTop    (minimum - 0.09 * maximum);
     rect.setBottom (1.09 * maximum);
     rect.setLeft   (0);
     rect.setRight  (mcaplen);
+
+    if (m_rescaleIndividually && m_axis_x != nullptr) {
+        double d_xleft  = m_axis_x->min();
+        double d_xright = m_axis_x->max();
+        rect.setLeft (d_xleft);
+        rect.setRight(d_xright);
+        }
     setScale(rect);
     repaint();
 }
-
 
 
 void Graf::rescalePh() {
@@ -566,6 +581,7 @@ void Graf::subselected() {
 
 
 void Graf::seriesClicked(const QPointF& point) {
+    PDEBUG;
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
     if (m_engine == nullptr) { return; }
