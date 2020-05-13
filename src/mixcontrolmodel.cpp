@@ -72,6 +72,20 @@ void MixControlModel::setConstituent(const SegmentedConstituent& constituent, in
 }
 
 
+void MixControlModel::hide(int id) {
+    for (int row=0; row<rowCount(); row++) {
+        SegmentedConstituent c = constituent(row);
+        if (c.getInternalId() == id) {
+            c.setVisible(false);
+            setData(index(row,0), QVariant::fromValue(c), ConstituentRole);
+            setData(index(row,Visible), false);
+            emit visibilityChanged(id, false);
+            return;
+            }
+        }
+}
+
+
 void MixControlModel::toggleVisible(const QModelIndex& idx) {
     if (idx.column() != Visible) { return; }
     QModelIndex vidx = index(idx.row(), Visible);

@@ -31,6 +31,21 @@ ComputeControl::~ComputeControl()
 }
 
 
+void ComputeControl::setKapaVisible(bool x) {
+    ui->f_show_kapa->setChecked(x);
+}
+
+
+void ComputeControl::setPhVisible(bool x) {
+    ui->f_show_ph->setChecked(x);
+}
+
+
+void ComputeControl::setEVisible(bool x) {
+    ui->f_show_e->setChecked(x);
+}
+
+
 void ComputeControl::setParallelComputation() {
     if (ui->f_parallel->isChecked()) { 
         omp_set_num_threads(m_maxThreads);

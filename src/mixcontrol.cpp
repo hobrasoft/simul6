@@ -113,3 +113,8 @@ void MixControl::removeAll() {
 }
 
 
+void MixControl::hideConstituent(int internalId) {
+    m_model->hide(internalId);
+}
+
+

@@ -33,6 +33,10 @@ public:
     bool   showKapa() const;
     bool   showE() const;
 
+    void   setKapaVisible(bool);
+    void   setPhVisible(bool);
+    void   setEVisible(bool);
+
 signals:
     void init();
     void run();
