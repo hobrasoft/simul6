@@ -497,7 +497,7 @@ for (auto &s : mix.getSamples()) {
 
 
 /*  Alternative piece of code - double first derivatives.
- * It calculated the pH of strong unbuffered systems better,
+ * It calculates the pH of strong unbuffered systems better,
  * however, it is less stable
 
 #pragma omp parallel for schedule(static)
