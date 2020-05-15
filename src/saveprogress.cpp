@@ -37,12 +37,10 @@ void SaveProgressWorker::saveTimeData(const QVariantMap& data) {
 
 
 void SaveProgressWorker::stop() {
-    PDEBUG;
     QMetaObject::invokeMethod(this, "save", Qt::QueuedConnection);
     QEventLoop loop;
     connect(this, &SaveProgressWorker::saved, &loop, &QEventLoop::quit);
     loop.exec();
-    PDEBUG << "complete";
 }
 
 
@@ -61,10 +59,10 @@ void SaveProgressWorker::setHeaderData(const QVariantMap& data) {
 
 
 void SaveProgressWorker::save() {
-    PDEBUG;
+    // PDEBUG;
     QMutexLocker locker(&m_mutex);
     if (m_nothingToSave) { 
-        PDEBUG << "nothing to save";
+        // PDEBUG << "nothing to save";
         emit saved();
         return;
         }
@@ -79,7 +77,7 @@ void SaveProgressWorker::save() {
 
     m_nothingToSave = true;
     emit saved();
-    PDEBUG << "complete";
+    // PDEBUG << "complete";
 }
 
 
@@ -155,7 +153,9 @@ void SaveProgress::init() {
 
 
 void SaveProgress::slotFinished() {
+    return;
     m_savedTime = 0;
+    m_active = false;
     slotTimeChanged(m_simul6->engine()->getTime());
 }
 
@@ -165,7 +165,7 @@ void SaveProgress::slotTimeChanged(double time) {
     if (time > 0 && m_savedTime + m_interval > round(1000.0 * time)) {
         return; 
         }
-    // PDEBUG << m_savedTime << m_interval << (m_savedTime+m_interval) << time*1000.0 << (m_savedTime + m_interval > round(time*1000.0));
+    PDEBUG << m_savedTime << m_interval << (m_savedTime+m_interval) << time*1000.0 << (time > 0 && m_savedTime + m_interval > round(time*1000.0));
 
     if (m_format == Json) {
         saveJson(time);
@@ -174,7 +174,9 @@ void SaveProgress::slotTimeChanged(double time) {
         saveCsv(time);
         }
 
-    m_savedTime += m_interval;
+    if (time > 0) {
+        m_savedTime += m_interval;
+        }
 }
 
 
@@ -212,7 +214,6 @@ void SaveProgress::saveJson(double time) {
 
 
 void SaveProgress::saveCsv(double time) {
-/*
     QString timestamp = QString("%1").arg(time, 6, 'f', 2, QChar('0'));
     QString filename = m_filename;
     filename = filename.replace(QRegExp("\\.csv$", Qt::CaseInsensitive), timestamp+".csv");
@@ -259,6 +260,5 @@ void SaveProgress::saveCsv(double time) {
     
     file.close();
     engine->unlock();
-*/
 }
 
