@@ -30,6 +30,9 @@
          <property name="text">
           <string>simul6.json</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -38,7 +41,7 @@
           <string>csv</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>

@@ -476,10 +476,12 @@ void Engine::der()
                 aV += s.getU(j,0) * s.getA(j, 0)  * signj;
                 aW += s.getU(j,np) * s.getA(j, np) * signj;
 
-            }
+        }
             s.setPd(0, aV * e[0]);
             s.setPd(np, aW * e[np]);
-        }
+    }
+
+
 
 #pragma omp parallel for schedule(static)
     for (int i = 1; i <= np - 1; i++) {
@@ -488,15 +490,48 @@ void Engine::der()
             s.addD(0, i, (s.getA(0, i - 1) * s.getDif(i) -2 * s.getA(0, i) * s.getDif(i) + s.getA(0, i + 1) * s.getDif(i)) / dx / dx);
         }
     }
-/*end of pragma cycle*/
-
-    for (auto &s : mix.getSamples()) {
-     s.setD(0, 0, s.getD(0, 1));
-     s.setD(0, np, s.getD(0, np - 1));
+for (auto &s : mix.getSamples()) {
+         s.setD(0, 0, s.getD(0, 1));
+         s.setD(0, np, s.getD(0, np - 1));
     }
 
-}
 
+/*  Alternative piece of code - double first derivatives.
+ * It calculates the pH of strong unbuffered systems better,
+ * however, it is less stable
+
+#pragma omp parallel for schedule(static)
+        for (int i = 1; i <= np - 1; i++) {
+            for (auto &s : mix.getSamples()) {
+                s.setD(0, i, (-s.getA(0, i - 1) + s.getA(0, i + 1)) * s.getDif(i) / 2 / dx);
+            }
+        }
+
+        for (auto &s : mix.getSamples()) {
+             s.setD(0, 0, s.getD(0, 1));
+             s.setD(0, np, s.getD(0, np - 1));
+        }
+
+#pragma omp parallel for schedule(static)
+        for (int i = 0; i <= np; i++) {
+            for (auto &s : mix.getSamples()) {
+                s.setPd(i, (s.getD(0, i) + s.getPd(i)));
+            }
+        }
+
+#pragma omp parallel for schedule(static)
+        for (int i = 1; i <= np - 1; i++) {
+            for (auto &s : mix.getSamples()) {
+                s.setD(0, i, (-s.getPd(i - 1) + s.getPd(i + 1)) / 2 / dx);
+            }
+        }
+        for (auto &s : mix.getSamples()) {
+             s.setD(0, 0, s.getD(0, 1));
+             s.setD(0, np, s.getD(0, np - 1));
+        }
+*/
+
+}
 
 void Engine::rungekutta()
 {

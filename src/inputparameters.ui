@@ -32,7 +32,7 @@
         <string> sec</string>
        </property>
        <property name="decimals">
-        <number>4</number>
+        <number>5</number>
        </property>
        <property name="maximum">
         <double>1000000.000000000000000</double>
