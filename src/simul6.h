@@ -35,6 +35,9 @@ public:
     void hidePh();
     void hideE();
 
+signals:
+    void caplenChanged(double);
+
 
 private slots:
     void init();

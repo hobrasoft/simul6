@@ -45,6 +45,7 @@ signals:
     void visibilityChangedPh(bool);
     void visibilityChangedKapa(bool);
     void visibilityChangedE(bool);
+    void caplenChanged(double);
 
 public slots:
     void showTime(double);

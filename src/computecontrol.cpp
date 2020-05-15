@@ -22,6 +22,7 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_show_kapa, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedKapa);
     connect(ui->f_show_ph, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedPh);
     connect(ui->f_show_e, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedE);
+    connect(ui->f_caplen, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &ComputeControl::caplenChanged);
     setParallelComputation();
 }
 

@@ -92,6 +92,8 @@ SOURCES += \
     replay.cpp \
     myview.cpp \
     manualscale.cpp \
+    swapsegmentwidget.cpp \
+    swapsegmentwidgetchart.cpp \
 
 HEADERS += \
     simul6.h \
@@ -129,6 +131,8 @@ HEADERS += \
     grafstyle.h \
     myview.h \
     manualscale.h \
+    swapsegmentwidget.h \
+    swapsegmentwidgetchart.h \
 
 FORMS += \
     simul6.ui \
@@ -143,6 +147,7 @@ FORMS += \
     replay.ui \
     simulationprogressdialog.ui \
     manualscale.ui \
+    swapsegmentwidget.ui \
 
 RESOURCES += \
     simul6.qrc \
