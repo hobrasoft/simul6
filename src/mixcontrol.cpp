@@ -4,6 +4,7 @@
 #include "constituentsdialog.h"
 #include "pdebug.h"
 #include <QAction>
+#include <QToolButton>
 #include <QMessageBox>
 
 
@@ -19,102 +20,58 @@ MixControl::MixControl(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_model = new MixControlModel(this);
-    ui->f_view->setModel(m_model);
-    ui->f_view->setItemDelegate(new MixControlDelegate(this));
-    connect(m_model, &MixControlModel::visibilityChanged, this, &MixControl::visibilityChanged);
+    m_basicTab = new MixControlTab(this, MixControlTab::BasicTab);
+    ui->f_tab->addTab(m_basicTab, tr("Basic"));
 
-    resizeColumns();
+    QToolButton *button = new QToolButton(this);
+    ui->f_tab->setCornerWidget(button);
 
-    QAction *action;
-    action = new QAction("Add", this);
-    ui->f_add->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControl::addComponent);
-    ui->f_view->addAction(action);
-
-    action = new QAction("Remove", this);
-    action->setEnabled(false);
-    ui->f_remove->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControl::removeComponent);
-    connect(ui->f_view, &MyView::currentRowChanged, [this,action]() {
-        action->setEnabled(ui->f_view->currentIndex().isValid());
+    m_addTab = new QAction(QIcon("://icons/copy.svg"), tr("Add empty mix"));
+    button->setDefaultAction(m_addTab);
+    connect(m_addTab, &QAction::triggered, [this]() {
+        MixControlTab *newTab = new MixControlTab(this);
+        ui->f_tab->addTab(newTab, tr("Swap"));
+        ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
         });
-    ui->f_view->addAction(action);
 
-    action = new QAction("Edit", this);
-    action->setEnabled(false);
-    ui->f_edit->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, QOverload<>::of(&MixControl::editComponent));
-    connect(ui->f_view, &MyView::currentRowChanged, [this,action]() {
-        action->setEnabled(ui->f_view->currentIndex().isValid());
+    m_cloneTab = new QAction(tr("Clone current mix"));
+    button->addAction(m_cloneTab);
+    connect(m_cloneTab, &QAction::triggered, [this]() {
+        MixControlTab *newTab = new MixControlTab(this);
+        ui->f_tab->addTab(newTab, tr("Swap"));
+        ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
         });
-    ui->f_view->addAction(action);
 
-    action = new QAction("Remove All", this);
-    ui->f_removeAll->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControl::removeAll);
-    ui->f_view->addAction(action);
+    m_removeTab = new QAction(tr("Remove current mix"));
+    button->addAction(m_removeTab);
+    connect(m_removeTab, &QAction::triggered, this, &MixControl::removeCurrentTab);
 
-    connect(ui->f_view, &QAbstractItemView::doubleClicked, this, QOverload<const QModelIndex&>::of(&MixControl::editComponent));
-    connect(ui->f_view, &QAbstractItemView::clicked, m_model, &MixControlModel::toggleVisible);
+    connect(ui->f_tab, &QTabWidget::currentChanged, this, &MixControl::currentTabChanged);
+
+    currentTabChanged(0);
 }
 
+
+void MixControl::currentTabChanged(int index) {
+    if (index == 0) { m_removeTab->setEnabled(false); return; }
+    m_removeTab->setEnabled(true);
+}
+
+
+void MixControl::removeCurrentTab() {
+    ui->f_tab->removeTab(ui->f_tab->currentIndex());
+}
+
+
+const MixControlModel *MixControl::model() const {
+    return m_basicTab->model();
+}
 
 void MixControl::resizeColumns() {
-    for (int i=0; i<MixControlModel::LastCol; i++) {
-        ui->f_view->resizeColumnToContents(i);
-        }
+    m_basicTab->resizeColumns();
 }
-
-
-void MixControl::addComponent() {
-    ConstituentsDialog dialog;
-    if (QDialog::Accepted == dialog.exec()) {
-        SegmentedConstituent c = dialog.constituent();
-        QModelIndex index = m_model->add(c);
-        Q_UNUSED(index);
-        resizeColumns();
-        }
-}
-
-
-void MixControl::editComponent() {
-    editComponent(ui->f_view->currentIndex());
-}
-
-
-void MixControl::editComponent(const QModelIndex& index) {
-    int row = index.row();
-    ConstituentsDialog dialog;
-    dialog.setConstituent(m_model->constituent(row));
-    if (QDialog::Accepted == dialog.exec()) {
-        SegmentedConstituent c = dialog.constituent();
-        m_model->setConstituent(c, row);
-        resizeColumns();
-        }
-}
-
-
-void MixControl::removeComponent() {
-    QModelIndex index = ui->f_view->currentIndex();
-    m_model->removeRows(index.row(), 1);
-}
-
-
-void MixControl::removeAll() {
-    int rc= QMessageBox::question(this,
-            tr("I have a question"),
-            tr("Do you really want to remove all constituents?"),
-            QMessageBox::Yes, QMessageBox::No, QMessageBox::NoButton);
-    if (rc == QMessageBox::Yes) {
-        m_model->removeRows(0, m_model->rowCount());
-        }
-
-}
-
 
 void MixControl::hideConstituent(int internalId) {
-    m_model->hide(internalId);
+    m_basicTab->hideConstituent(internalId);
 }
-
 

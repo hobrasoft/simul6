@@ -71,8 +71,6 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedE, ui->f_simulationProfile, &SimulationProfile::setVisibleE);
     connect(ui->f_computeControl, &ComputeControl::caplenChanged, this, &Simul6::caplenChanged);
 
-    (new SwapSegmentWidget(nullptr))->show();
-
     QTimer::singleShot(0, this, &Simul6::init);
 }
 

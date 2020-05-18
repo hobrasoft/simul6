@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "mixcontrolmodel.h"
+#include "mixcontroltab.h"
 
 namespace Ui {
 class MixControl;
@@ -16,7 +17,7 @@ public:
     explicit MixControl(QWidget *parent = nullptr);
     ~MixControl();
 
-    const MixControlModel *model() const { return m_model; }
+    const MixControlModel *model() const;
 
 signals:
     void visibilityChanged(int id, bool visible);
@@ -26,16 +27,17 @@ public slots:
     void hideConstituent(int internalId);
 
 private slots:
-    void editComponent();
-    void editComponent(const QModelIndex&);
-    void removeComponent();
-    void addComponent();
-    void removeAll();
+    void removeCurrentTab();
+    void currentTabChanged(int);
 
 private:
     Ui::MixControl *ui;
 
-    MixControlModel *m_model;
+    MixControlTab *m_basicTab;
+
+    QAction *m_addTab;
+    QAction *m_cloneTab;
+    QAction *m_removeTab;
 };
 
 #endif // MIXCONTROL_H

@@ -82,6 +82,7 @@ SOURCES += \
     segmentsdelegate.cpp \
     preferences.cpp \
     mixcontrol.cpp \
+    mixcontroltab.cpp \
     mixcontrolmodel.cpp \
     mixcontroldelegate.cpp \
     simulationprogressdialog.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
     segmentsdelegate.h \
     preferences.h \
     mixcontrol.h \
+    mixcontroltab.h \
     mixcontrolmodel.h \
     mixcontroldelegate.h \
     simulationprogressdialog.h \
@@ -142,6 +144,7 @@ FORMS += \
     constituentsdialog.ui \
     preferences.ui \
     mixcontrol.ui \
+    mixcontroltab.ui \
     grafdetail.ui \
     ampholines.ui \
     replay.ui \
