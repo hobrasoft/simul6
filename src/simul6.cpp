@@ -96,7 +96,7 @@ Graf *Simul6::graf() const {
 }
 
 
-const MixControlModel *Simul6::mixControlModel() const {
+const MixControlModelAbstract *Simul6::mixControlModel() const {
     return ui->f_mixcontrol->model();
 }
 
@@ -225,7 +225,7 @@ void Simul6::loadData() {
     ui->f_parameters->setConstantVoltage( ccontrol.contains("constant_voltage") ? ccontrol["constant_voltage"].toBool() : true );
     ui->f_mixcontrol->resizeColumns();
 
-    MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
+    MixControlModelAbstract *model = const_cast<MixControlModelAbstract *>(mixControlModel());
     model->setJson(data.toMap()["mix"].toList());
 
     initEngine();
@@ -315,7 +315,7 @@ void Simul6::createActions() {
     connect(action, &QAction::triggered, [this]() {
         Ampholines ampholines(this);
         if (QDialog::Accepted != ampholines.exec()) { return; }
-        MixControlModel *model = const_cast<MixControlModel *>(mixControlModel());
+        MixControlModelAbstract *model = const_cast<MixControlModelAbstract *>(mixControlModel());
         model->add(ampholines.constituents());
     });
     menu->addAction(action);

@@ -1,4 +1,6 @@
 #include "mixcontroltab.h"
+#include "mixcontrolmodel.h"
+#include "mixcontrolswapmodel.h"
 #include "mixcontroldelegate.h"
 #include "ui_mixcontroltab.h"
 #include "constituentsdialog.h"
@@ -19,7 +21,9 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
 {
     ui->setupUi(this);
 
-    m_model = new MixControlModel(this);
+    m_model = (tabType == BasicTab) 
+            ? qobject_cast<MixControlModelAbstract *>(new MixControlModel(this))
+            : qobject_cast<MixControlModelAbstract *>(new MixControlSwapModel(this));
     ui->f_view->setModel(m_model);
     ui->f_view->setItemDelegate(new MixControlDelegate(this));
     ui->f_view->setContextMenuPolicy(Qt::ActionsContextMenu);

@@ -63,7 +63,7 @@ void MixControl::removeCurrentTab() {
 }
 
 
-const MixControlModel *MixControl::model() const {
+const MixControlModelAbstract *MixControl::model() const {
     return m_basicTab->model();
 }
 

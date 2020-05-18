@@ -2,7 +2,7 @@
 #define MIXCONTROL_H
 
 #include <QWidget>
-#include "mixcontrolmodel.h"
+#include "mixcontrolmodelabstract.h"
 #include "mixcontroltab.h"
 
 namespace Ui {
@@ -17,7 +17,7 @@ public:
     explicit MixControl(QWidget *parent = nullptr);
     ~MixControl();
 
-    const MixControlModel *model() const;
+    const MixControlModelAbstract *model() const;
 
 signals:
     void visibilityChanged(int id, bool visible);

@@ -2,7 +2,7 @@
 #define _MixControlTab_H_
 
 #include <QWidget>
-#include "mixcontrolmodel.h"
+#include "mixcontrolmodelabstract.h"
 
 namespace Ui {
 class MixControlTab;
@@ -17,7 +17,7 @@ public:
     explicit MixControlTab(QWidget *parent = nullptr, TabType type = SwapTab);
     ~MixControlTab();
 
-    const MixControlModel *model() const { return m_model; }
+    const MixControlModelAbstract *model() const { return m_model; }
 
 signals:
     void visibilityChanged(int id, bool visible);
@@ -37,7 +37,7 @@ private slots:
 private:
     Ui::MixControlTab *ui;
 
-    MixControlModel *m_model;
+    MixControlModelAbstract *m_model;
 };
 
 #endif

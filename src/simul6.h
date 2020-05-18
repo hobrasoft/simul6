@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
-#include "mixcontrolmodel.h"
+#include "mixcontrolmodelabstract.h"
 
 namespace Ui {
 class Simul6;
@@ -20,7 +20,7 @@ public:
    ~Simul6();
     static Simul6 *instance();
 
-    const MixControlModel *mixControlModel() const;
+    const MixControlModelAbstract *mixControlModel() const;
     int mixSize() const;
     Graf *graf() const;
 

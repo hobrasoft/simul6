@@ -1,16 +1,16 @@
-#ifndef MIXCONTROLMODEL_H
-#define MIXCONTROLMODEL_H
+#ifndef __MixControlSwapModel_H_
+#define __MixControlSwapModel_H_
 
 #include "segmentedconstituent.h"
 #include "mixcontrolmodelabstract.h"
 
 
-class MixControlModel : public MixControlModelAbstract
+class MixControlSwapModel : public MixControlModelAbstract 
 {
     Q_OBJECT
 
 public:
-    explicit MixControlModel(QObject *parent = nullptr);
+    explicit MixControlSwapModel(QObject *parent = nullptr);
 
     enum Columns {
         Visible = 0,
@@ -19,8 +19,6 @@ public:
         NegCharge,
         PosCharge,
         Concentrations, ///< Rozdělení koncentrací v segmentech, odděleno středníkem
-        SegCount,
-        Ratio,
         LastCol
     };
 
@@ -29,4 +27,4 @@ public:
 private:
 };
 
-#endif // MIXCONTROLMODEL_H
+#endif

@@ -84,6 +84,8 @@ SOURCES += \
     mixcontrol.cpp \
     mixcontroltab.cpp \
     mixcontrolmodel.cpp \
+    mixcontrolswapmodel.cpp \
+    mixcontrolmodelabstract.cpp \
     mixcontroldelegate.cpp \
     simulationprogressdialog.cpp \
     saveprogress.cpp \
@@ -123,6 +125,8 @@ HEADERS += \
     mixcontrol.h \
     mixcontroltab.h \
     mixcontrolmodel.h \
+    mixcontrolswapmodel.h \
+    mixcontrolmodelabstract.h \
     mixcontroldelegate.h \
     simulationprogressdialog.h \
     saveprogress.h \

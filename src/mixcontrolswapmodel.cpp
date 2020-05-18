@@ -1,4 +1,4 @@
-#include "mixcontrolmodel.h"
+#include "mixcontrolswapmodel.h"
 #include "pdebug.h"
 #include "simul6.h"
 #include "colorsgenerator.h"
@@ -9,8 +9,8 @@
 #define SegmentsRole Qt::UserRole+2
 
 
-MixControlModel::MixControlModel(QObject *parent)
-    : MixControlModelAbstract (parent)
+MixControlSwapModel::MixControlSwapModel(QObject *parent)
+    : MixControlModelAbstract(parent)
 {
     insertColumns(0, LastCol);
     setHeaderData(Visible, Qt::Horizontal, tr("👁"));
@@ -18,13 +18,11 @@ MixControlModel::MixControlModel(QObject *parent)
     setHeaderData(Color, Qt::Horizontal, tr(""));
     setHeaderData(NegCharge, Qt::Horizontal, tr("Neg"));
     setHeaderData(PosCharge, Qt::Horizontal, tr("Pos"));
-    setHeaderData(SegCount, Qt::Horizontal, tr("Segments"));
     setHeaderData(Concentrations, Qt::Horizontal, tr("Concentrations"));
-    setHeaderData(Ratio, Qt::Horizontal, tr("Ratio"));
 }
 
 
-void MixControlModel::setConstituent(const SegmentedConstituent& constituent, int row) {
+void MixControlSwapModel::setConstituent(const SegmentedConstituent& constituent, int row) {
     double caplen = Simul6::instance()->getCaplen();
     double ratioSum = 0;
     QStringList ratio;
@@ -46,9 +44,6 @@ void MixControlModel::setConstituent(const SegmentedConstituent& constituent, in
     setData(index(row, Name), constituent.getName());
     setData(index(row, NegCharge), constituent.getNegCharge());
     setData(index(row, PosCharge), constituent.getPosCharge());
-    setData(index(row, SegCount), len.join("; "));
-    setData(index(row, Concentrations), conc.join("; "));
-    setData(index(row, Ratio), ratio.join("; "));
     setData(index(row, Color), QBrush(constituent.color()), Qt::BackgroundRole);
 
 }
