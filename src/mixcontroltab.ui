@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>639</width>
-    <height>437</height>
+    <width>652</width>
+    <height>326</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -125,10 +125,16 @@
    </item>
    <item row="6" column="0" colspan="2">
     <widget class="SwapSegmentWidget" name="f_segment" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>9</height>
+       <height>100</height>
       </size>
      </property>
     </widget>

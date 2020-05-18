@@ -6,6 +6,7 @@
 #include "swapsegmentwidget.h"
 #include "ui_swapsegmentwidget.h"
 #include "simul6.h"
+#include "pdebug.h"
 #include <QSpinBox>
 
 
@@ -38,9 +39,11 @@ void SwapSegmentWidget::recalculate() {
     double len2 = caplen * ratio2 / ratiosum;
     double len3 = caplen * ratio3 / ratiosum;
 
-    ui->f_len1->setText(QString("%1").arg(len1,0,'g',2,QChar('0')));
-    ui->f_len2->setText(QString("%1").arg(len2,0,'g',2,QChar('0')));
-    ui->f_len3->setText(QString("%1").arg(len3,0,'g',2,QChar('0')));
+    ui->f_len1->setText(QString("%1").arg(len1,1,'f',2,QChar('0')));
+    ui->f_len2->setText(QString("%1").arg(len2,1,'f',2,QChar('0')));
+    ui->f_len3->setText(QString("%1").arg(len3,1,'f',2,QChar('0')));
+
+    PDEBUG << len1 << len2 << len3;
 
     ui->f_chart->repaint(len1, len2, len3);
 }
