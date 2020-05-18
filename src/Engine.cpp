@@ -767,7 +767,7 @@ void Engine::run()
 
 
 void Engine::runPrivate() {
-    if (!m_running || t+dt > timeStop) {
+    if (!m_running || t > timeStop) {
         emit drawGraph(this);
         emit timeChanged(t);
         emit finished();
