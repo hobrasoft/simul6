@@ -21,6 +21,7 @@ public:
 
 signals:
     void visibilityChanged(int id, bool visible);
+    void swap(const QList<SegmentedConstituent>&);
 
 public slots:
     void resizeColumns();
@@ -32,12 +33,13 @@ private slots:
     void removeComponent();
     void addComponent();
     void removeAll();
-    void swap();
+    void swapPressed();
 
 private:
     Ui::MixControlTab *ui;
 
     MixControlModelAbstract *m_model;
+    TabType m_tabType;
 };
 
 #endif

@@ -21,6 +21,7 @@ public:
 
 signals:
     void visibilityChanged(int id, bool visible);
+    void swap(const QList<SegmentedConstituent>&);
 
 public slots:
     void resizeColumns();

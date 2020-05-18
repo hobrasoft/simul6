@@ -153,6 +153,15 @@ void SegmentsModel::slotDataChanged(const QModelIndex& topLeft, const QModelInde
 }
 
 
+void SegmentsModel::setRatios(const QList<int>& ratios) {
+    Q_ASSERT(ratios.size() == columnCount());
+    for (int i = 0; i<ratios.size(); i++) {
+        setData(index(Ratio, i), ratios[i]);
+        }
+    recalculate();
+}
+
+
 void SegmentsModel::recalculate() {
     double caplen = Simul6::instance()->getCaplen();
     double ratioSum = 0;
@@ -166,4 +175,7 @@ void SegmentsModel::recalculate() {
         setHeaderData(column, Qt::Horizontal, QString("%1").arg(ratioLen, 0, 'f', 2));
     }
 }
+
+
+
 

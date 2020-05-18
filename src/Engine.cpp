@@ -138,6 +138,11 @@ void Engine::initVectors()
 }
 
 
+void Engine::addMix(const QList<SegmentedConstituent>&) {
+    PDEBUG;
+}
+
+
 void Engine::setMix(const QList<SegmentedConstituent>& pconstituents) 
 {
     m_initialized = true;

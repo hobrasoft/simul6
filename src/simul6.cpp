@@ -65,11 +65,14 @@ Simul6::Simul6(QWidget *parent) :
         ui->f_simulationProfile->engine()->setErrH(x);
         });
 
-    connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedPh, ui->f_simulationProfile, &SimulationProfile::setVisiblePh);
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedKapa, ui->f_simulationProfile, &SimulationProfile::setVisibleKapa);
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedE, ui->f_simulationProfile, &SimulationProfile::setVisibleE);
     connect(ui->f_computeControl, &ComputeControl::caplenChanged, this, &Simul6::caplenChanged);
+    connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
+    connect(ui->f_mixcontrol, &MixControl::swap, [this](const QList<SegmentedConstituent>& constituents) {
+        ui->f_simulationProfile->engine()->addMix(constituents);
+        });
 
     QTimer::singleShot(0, this, &Simul6::init);
 }

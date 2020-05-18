@@ -11,6 +11,14 @@
 #include <QColorDialog>
 #include <QTimer>
 
+
+ConstituentsDialog::~ConstituentsDialog()
+{
+    writeSettings();
+    delete ui;
+}
+
+
 ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ConstituentsDialog)
@@ -35,9 +43,6 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     ui->f_segmentsView->setItemDelegate(new SegmentsDelegate(this));
     connect(ui->f_segmentsNumber, SIGNAL(valueChanged(int)), m_segmentsModel, SLOT(setSegmentsNumber(int)));
 
-    // m_parametersModel = new ParametersModel(this);
-    // ui->f_parametersView->setModel(m_parametersModel);
-
     connect(ui->f_databaseView, &MyView::currentRowChanged, this, &ConstituentsDialog::currentRowChanged);
     QTimer::singleShot(1, this, &ConstituentsDialog::readSettings);
 
@@ -52,17 +57,20 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
 }
 
 
-ConstituentsDialog::~ConstituentsDialog()
-{
-    writeSettings();
-    delete ui;
+void ConstituentsDialog::set3FixedSegments(const QList<int>& ratios) {
+    ui->f_segmentsNumber->setValue(3);
+    ui->f_segmentsNumber->setReadOnly(true);
+    ui->f_segmentsView->horizontalHeader()->hideSection(0);
+    ui->f_segmentsView->horizontalHeader()->hideSection(2);
+    ui->f_segmentsView->verticalHeader()->hideSection(0);
+    ui->f_segmentsNumberWidget->setVisible(false);
+    m_segmentsModel->setRatios(ratios);
 }
 
 
 void ConstituentsDialog::enableGroupBoxes() {
     ui->f_segmentsGroupBox->setEnabled(true);
     ui->f_databaseGroupBox->setEnabled(!manually());
-    // ui->f_parametersGroupBox->setEnabled(manually());
 }
 
 

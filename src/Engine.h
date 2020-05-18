@@ -146,6 +146,7 @@ public:
 	const Mix &getMix() const;
     
     void setMix(const QList<SegmentedConstituent>&);
+    void addMix(const QList<SegmentedConstituent>&);
     void setStep(const QVariantMap& data);
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();

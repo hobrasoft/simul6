@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QThread>
 #include <QPaintEvent>
+#include <QList>
 
 namespace Ui {
 class SwapSegmentWidget;
@@ -14,6 +15,8 @@ class SwapSegmentWidget : public QWidget {
   public:
     SwapSegmentWidget(QWidget *parent = nullptr);
    ~SwapSegmentWidget();
+
+    QList<int> ratios() const;
 
   public slots:
 

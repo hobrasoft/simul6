@@ -21,10 +21,11 @@ public:
     explicit ConstituentsDialog(QWidget *parent = nullptr);
     ~ConstituentsDialog();
 
+    void set3FixedSegments(const QList<int>& ratios);
+
     SegmentedConstituent constituent() const;
 
     void setConstituent(const SegmentedConstituent&);
-//  void setConstituent(const Constituent&);
     bool manually() const;
 
 private slots:
@@ -41,7 +42,6 @@ private:
     int m_id;
     QColor m_color;
     SegmentsModel *m_segmentsModel;
-//  ParametersModel *m_parametersModel;
     ConstituentsModel *m_constituentsModel;
     QSortFilterProxyModel *m_constituentsProxyModel;
 };

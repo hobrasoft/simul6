@@ -20,6 +20,7 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
     ui(new Ui::MixControlTab)
 {
     ui->setupUi(this);
+    m_tabType = tabType;
 
     m_model = (tabType == BasicTab) 
             ? qobject_cast<MixControlModelAbstract *>(new MixControlModel(this))
@@ -61,7 +62,7 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
 
     action = new QAction("Swap", this);
     ui->f_swap->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControlTab::swap);
+    connect(action, &QAction::triggered, this, &MixControlTab::swapPressed);
 
     ui->f_segment->setVisible(tabType != BasicTab);
     ui->f_swap->setVisible(tabType != BasicTab);
@@ -71,7 +72,8 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
 }
 
 
-void MixControlTab::swap() {
+void MixControlTab::swapPressed() {
+    emit swap(m_model->constituents());
 }
 
 
@@ -84,6 +86,7 @@ void MixControlTab::resizeColumns() {
 
 void MixControlTab::addComponent() {
     ConstituentsDialog dialog;
+    if (m_tabType == SwapTab) { dialog.set3FixedSegments(ui->f_segment->ratios()); }
     if (QDialog::Accepted == dialog.exec()) {
         SegmentedConstituent c = dialog.constituent();
         QModelIndex index = m_model->add(c);
@@ -102,6 +105,7 @@ void MixControlTab::editComponent(const QModelIndex& index) {
     int row = index.row();
     ConstituentsDialog dialog;
     dialog.setConstituent(m_model->constituent(row));
+    if (m_tabType == SwapTab) { dialog.set3FixedSegments(ui->f_segment->ratios()); }
     if (QDialog::Accepted == dialog.exec()) {
         SegmentedConstituent c = dialog.constituent();
         m_model->setConstituent(c, row);

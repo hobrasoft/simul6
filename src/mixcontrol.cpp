@@ -32,6 +32,7 @@ MixControl::MixControl(QWidget *parent) :
         MixControlTab *newTab = new MixControlTab(this);
         ui->f_tab->addTab(newTab, tr("Swap"));
         ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
+        connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
         });
 
     m_cloneTab = new QAction(tr("Clone current mix"));
@@ -40,6 +41,7 @@ MixControl::MixControl(QWidget *parent) :
         MixControlTab *newTab = new MixControlTab(this);
         ui->f_tab->addTab(newTab, tr("Swap"));
         ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
+        connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
         });
 
     m_removeTab = new QAction(tr("Remove current mix"));

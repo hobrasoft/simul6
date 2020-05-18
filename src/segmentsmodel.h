@@ -13,6 +13,7 @@ public:
 
     SegmentedConstituent constituent() const;
     void setConstituent(const SegmentedConstituent&);
+    void setRatios(const QList<int>& ratios);
 
     enum Rows {
         Ratio = 0,

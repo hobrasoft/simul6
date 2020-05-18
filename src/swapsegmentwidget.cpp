@@ -46,4 +46,12 @@ void SwapSegmentWidget::recalculate() {
 }
 
 
+QList<int> SwapSegmentWidget::ratios() const {
+    return QList<int>() 
+        << ui->f_ratio1->value()
+        << ui->f_ratio2->value()
+        << ui->f_ratio3->value()
+        ;
+}
+
 
