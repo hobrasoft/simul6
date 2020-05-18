@@ -28,6 +28,16 @@ void Mix::setVisible(int id, bool visible) {
 }
 
 
+bool Mix::contains(const SegmentedConstituent& x) {
+    for (auto &sample : samples) {
+        if (sample.getName() == x.getName()) {
+            return true;
+            }
+        }
+    return false;
+}
+
+
 Sample &Mix::addSample(const Sample &sample)
 {
 	//Sample *s = new Sample(pConstituent, areas);

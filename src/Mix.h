@@ -25,6 +25,8 @@ public:
     std::vector<Sample>::iterator end();
     void initV();
 
+    bool contains(const SegmentedConstituent& x);
+
     size_t size();
 };
 

@@ -148,6 +148,7 @@ public:
     void setMix(const QList<SegmentedConstituent>&);
     void addMix(const QList<SegmentedConstituent>&);
     void addConstituent(const SegmentedConstituent& constituent);
+    void replaceConstituent(const SegmentedConstituent& constituent);
     void setStep(const QVariantMap& data);
 	void initArray(vector< vector<double> > &pVector);
 	void initArrays();

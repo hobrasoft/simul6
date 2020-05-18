@@ -174,11 +174,21 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
         }
 
     for (int row = 0; row < pconstituents.size(); row++) {
-        addConstituent(pconstituents[row]);
+        if (mix.contains(pconstituents[row])) {
+            replaceConstituent(pconstituents[row]);
+          } else {
+            addConstituent(pconstituents[row]);
+            }
         }
 
     init();
 
+}
+
+
+void Engine::replaceConstituent(const SegmentedConstituent& constituent) {
+    PDEBUG;
+    addConstituent(constituent);
 }
 
 
