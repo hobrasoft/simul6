@@ -18,6 +18,7 @@ public:
     ~MixControlTab();
 
     const MixControlModelAbstract *model() const { return m_model; }
+    void add(const QList<SegmentedConstituent>&);
 
     bool removable() const;
 

@@ -31,7 +31,9 @@ QModelIndex MixControlModelAbstract::add(const SegmentedConstituent& pConstituen
 
 void MixControlModelAbstract::add(const QList<SegmentedConstituent>& constituents) {
     for (int i=0; i<constituents.size(); i++) {
-        add(constituents[i]);
+        SegmentedConstituent c = constituents[i];
+        c.setNewInternalId();
+        add(c);
         }
 }
 

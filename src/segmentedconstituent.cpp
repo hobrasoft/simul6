@@ -44,6 +44,11 @@ SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
 }
 
 
+void SegmentedConstituent::setNewInternalId() {
+    m_internalId = m_lastInternalId++;
+}
+
+
 void SegmentedConstituent::updateChargesAndCounts() {
     if (!segments.isEmpty()) { 
         m_posCharge = segments[0].constituent.getPosCharge();

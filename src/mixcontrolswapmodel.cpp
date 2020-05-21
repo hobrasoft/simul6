@@ -23,12 +23,16 @@ MixControlSwapModel::MixControlSwapModel(QObject *parent)
 
 
 void MixControlSwapModel::setConstituent(const SegmentedConstituent& constituent, int row) {
+    double concentration = (constituent.segments.size() == 0) ? 0  
+                         : (constituent.segments.size() == 1) ? constituent.segments[0].concentration
+                         : (constituent.segments.size() == 2) ? constituent.segments[1].concentration
+                         :  constituent.segments[1].concentration;
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
     setData(index(row, Visible), constituent.visible());
     setData(index(row, Name), constituent.getName());
     setData(index(row, NegCharge), constituent.getNegCharge());
     setData(index(row, PosCharge), constituent.getPosCharge());
-    setData(index(row, Concentrations), constituent.segments[1].concentration);
+    setData(index(row, Concentrations), concentration);
     setData(index(row, Color), QBrush(constituent.color()), Qt::BackgroundRole);
 
 }

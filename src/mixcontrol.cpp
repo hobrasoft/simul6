@@ -40,6 +40,8 @@ MixControl::MixControl(QWidget *parent) :
     button->addAction(m_cloneTab);
     connect(m_cloneTab, &QAction::triggered, [this]() {
         MixControlTab *newTab = new MixControlTab(this);
+        MixControlTab *currentTab = qobject_cast<MixControlTab *>(ui->f_tab->currentWidget());
+        newTab->add(currentTab->model()->constituents());
         ui->f_tab->addTab(newTab, tr("Swap"));
         ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
         connect(newTab, &MixControlTab::swap, this, &MixControl::swap);

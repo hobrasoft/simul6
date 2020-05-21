@@ -144,6 +144,11 @@ void MixControlTab::removeAll() {
 }
 
 
+void MixControlTab::add(const QList<SegmentedConstituent>& list)  {
+    m_model->add(list);
+}
+
+
 void MixControlTab::init() {
     m_model->enableConstituents();
     ui->f_swap->setEnabled(true);

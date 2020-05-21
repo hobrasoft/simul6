@@ -20,6 +20,7 @@ public:
     void setVisible(bool v) { m_visible = v; }
     bool visible() const { return m_visible; }
     void setInternalId(int x) { m_internalId = x; }
+    void setNewInternalId();
     int getInternalId() const { return m_internalId; }
     void setColor(const QColor& c) { m_color = c; }
     QColor color() const { return m_color; }

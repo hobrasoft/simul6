@@ -140,7 +140,7 @@ void Engine::initVectors()
 
 void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
     PDEBUG;
-    Q_ASSERT(pconstituents.isEmpty() != false);
+    Q_ASSERT(pconstituents.isEmpty() != true);
     const SegmentedConstituent& firstConstituent = pconstituents[0];
     int ratioSum = firstConstituent.ratioSum();
 
