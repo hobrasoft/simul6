@@ -18,6 +18,7 @@ public:
     ~MixControl();
 
     const MixControlModelAbstract *model() const;
+    int mixSize() const;
 
 signals:
     void visibilityChanged(int id, bool visible);

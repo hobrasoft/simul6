@@ -106,7 +106,7 @@ const MixControlModelAbstract *Simul6::mixControlModel() const {
 
 
 int Simul6::mixSize() const {
-    return ui->f_mixcontrol->model()->rowCount();
+    return ui->f_mixcontrol->mixSize();
 }
 
 

@@ -85,6 +85,17 @@ void MixControl::hideConstituent(int internalId) {
 }
 
 
+int MixControl::mixSize() const {
+    int size = 0;
+    for (int i=0; i<ui->f_tab->count(); i++) {
+        MixControlTab *tab = qobject_cast<MixControlTab *>(ui->f_tab->widget(i));
+        if (tab == nullptr) { continue; }
+        size += tab->model()->rowCount();
+        }
+    return size;
+}
+
+
 void MixControl::disableConstituent(int internalId) {
     for (int i=0; i<ui->f_tab->count(); i++) {
         MixControlTab *tab = qobject_cast<MixControlTab *>(ui->f_tab->widget(i));
