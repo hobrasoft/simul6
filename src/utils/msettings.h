@@ -35,24 +35,24 @@ class MSettings : public QSettings {
     /*
      * Seznam řetězců pro jednotlivé konfigurační parametry
      */
-    static constexpr const char *LogAll                  = "log/all";
-    static constexpr const char *LogInclude              = "log/include";
-    static constexpr const char *LogExclude              = "log/exclude";
-    static constexpr const char *LogFile                 = "log/file";
+    static constexpr const char *LogAll                     = "log/all";
+    static constexpr const char *LogInclude                 = "log/include";
+    static constexpr const char *LogExclude                 = "log/exclude";
+    static constexpr const char *LogFile                    = "log/file";
 
-    static constexpr const char *DbConstituents          = "db/constituents";
+    static constexpr const char *DbConstituents             = "db/constituents";
 
-    static constexpr const char *GuiMainWindowSize       = "gui/mainwindow-size";
-    static constexpr const char *GuiMainWindowLayout1    = "gui/mainwindow-layout1";
-    static constexpr const char *GuiMainWindowLayout2    = "gui/mainwindow-layout2";
-    static constexpr const char *GuiConstituentsDialogSize       = "gui/constituents-dialog-size";
-    static constexpr const char *GuiDataDirName          = "gui/data-dir-name";
-    static constexpr const char *GuiExportDirName        = "gui/export-dir-name";
-    static constexpr const char *GuiAmpholinesWindowSize = "gui/ampholines-window-size";
-    static constexpr const char *GuiChartAntialiasing    = "gui/chart-antialiasing";
-    static constexpr const char *GuiFloatable            = "gui/floatable";
-    static constexpr const char *GuiCloseable            = "gui/closeable";
-    static constexpr const char *GuiMoveable             = "gui/moveable";
+    static constexpr const char *GuiMainWindowSize          = "gui/mainwindow-size";
+    static constexpr const char *GuiMainWindowLayout        = "gui/mainwindow-layout";
+    static constexpr const char *GuiConstituentsDialogSize  = "gui/constituents-dialog-size";
+    static constexpr const char *GuiDataDirName             = "gui/data-dir-name";
+    static constexpr const char *GuiExportDirName           = "gui/export-dir-name";
+    static constexpr const char *GuiAmpholinesWindowSize    = "gui/ampholines-window-size";
+    static constexpr const char *GuiChartAntialiasing       = "gui/chart-antialiasing";
+    static constexpr const char *GuiFloatable               = "gui/floatable";
+    static constexpr const char *GuiCloseable               = "gui/closeable";
+    static constexpr const char *GuiMoveable                = "gui/moveable";
+    static constexpr const char *GuiDockCompositionGeometry = "gui/dock-composition-geometry";
 
     static constexpr const char *DbConstituentsDefault   = "://data/constituents.json";
 
@@ -69,10 +69,10 @@ class MSettings : public QSettings {
     // GUI
     QSize guiMainWindowSize() const { return value(GuiMainWindowSize, QSize(1000, 800)).toSize(); }
     void setGuiMainWindowSize(const QSize& size) { setValue(GuiMainWindowSize, size); }
-    QByteArray guiMainWindowLayout1() const { return value(GuiMainWindowLayout1).toByteArray(); }
-    void setGuiMainWindowLayout1(const QByteArray& layout) { setValue(GuiMainWindowLayout1, layout); }
-    QByteArray guiMainWindowLayout2() const { return value(GuiMainWindowLayout2).toByteArray(); }
-    void setGuiMainWindowLayout2(const QByteArray& layout) { setValue(GuiMainWindowLayout2, layout); }
+    QByteArray guiMainWindowLayout() const { return value(GuiMainWindowLayout).toByteArray(); }
+    void setGuiMainWindowLayout(const QByteArray& layout) { setValue(GuiMainWindowLayout, layout); }
+    QByteArray guiDockCompositionGeometry() const { return value(GuiDockCompositionGeometry).toByteArray(); }
+    void setGuiDockCompositionGeometry(const QByteArray& geometry) { setValue(GuiDockCompositionGeometry, geometry); }
     QSize guiConstituentsDialogSize() const { return value(GuiConstituentsDialogSize, QSize(1000, 996)).toSize(); }
     void setGuiConstituentsDialogSize(const QSize& size) { setValue(GuiConstituentsDialogSize, size); }
     QString dataDirName() const { return value(GuiDataDirName).toString(); }

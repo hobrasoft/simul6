@@ -373,14 +373,15 @@ void Simul6::closeEvent(QCloseEvent *event) {
 
 void Simul6::readSettings() {
     resize(MSETTINGS->guiMainWindowSize());
-
-    restoreState(MSETTINGS->guiMainWindowLayout1(), 1);
+    restoreState(MSETTINGS->guiMainWindowLayout());
+    ui->f_dock_composition->restoreGeometry(MSETTINGS->guiDockCompositionGeometry());
 }
 
 
 void Simul6::writeSettings() {
     MSETTINGS->setGuiMainWindowSize(size());
-    MSETTINGS->setGuiMainWindowLayout1(saveState(1));
+    MSETTINGS->setGuiMainWindowLayout(saveState());
+    MSETTINGS->setGuiDockCompositionGeometry(ui->f_dock_composition->saveGeometry());
 }
 
 
