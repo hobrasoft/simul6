@@ -23,27 +23,12 @@ MixControlSwapModel::MixControlSwapModel(QObject *parent)
 
 
 void MixControlSwapModel::setConstituent(const SegmentedConstituent& constituent, int row) {
-    double caplen = Simul6::instance()->getCaplen();
-    double ratioSum = 0;
-    QStringList ratio;
-    QStringList len;
-    QStringList conc;
-    for (int i=0; i<constituent.segments.size(); i++) {
-        double ratio = constituent.segments[i].ratio;
-        ratioSum += ratio;
-    }
-    for (int i=0; i<constituent.segments.size(); i++) {
-        double ratioLen = (ratioSum > 0) ? 1000 * constituent.segments[i].ratio * caplen / ratioSum : 0;
-        ratio << QString("%1").arg(constituent.segments[i].ratio, 0, 'f', 2);
-        len   << QString("%1").arg(ratioLen, 0, 'f', 2);
-        conc  << QString("%1").arg(constituent.segments[i].concentration, 0, 'f', 3);
-    }
-
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
     setData(index(row, Visible), constituent.visible());
     setData(index(row, Name), constituent.getName());
     setData(index(row, NegCharge), constituent.getNegCharge());
     setData(index(row, PosCharge), constituent.getPosCharge());
+    setData(index(row, Concentrations), constituent.segments[1].concentration);
     setData(index(row, Color), QBrush(constituent.color()), Qt::BackgroundRole);
 
 }
