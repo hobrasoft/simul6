@@ -196,8 +196,10 @@ void Engine::addConstituent(const SegmentedConstituent& constituent) {
 void Engine::replaceConstituent(const SegmentedConstituent& constituent) {
     Q_ASSERT(mix.contains(constituent));
     if (mix.contains(constituent)) {
-        Sample& sample = mix.sample(constituent);
+        Sample& sample = mix.sample(constituent);   
+        emit replacedConstituent(sample.getInternalId(), constituent.getInternalId());
         replaceConstituent(constituent, sample);
+        PDEBUG << "replacee" << constituent.getInternalId();
         return;
         }
     if (!mix.contains(constituent)) {
@@ -750,6 +752,7 @@ void Engine::setVisible(int id, bool visible) {
 
 
 void Engine::stop() {
+    PDEBUG;
     m_running = false;
 }
 
@@ -780,6 +783,7 @@ void Engine::run()
 
 void Engine::runPrivate() {
     if (!m_running || t > timeStop) {
+        PDEBUG;
         emit drawGraph(this);
         emit timeChanged(t);
         emit finished();

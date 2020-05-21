@@ -69,6 +69,7 @@ void SimulationProfile::createEngine(int np)
     connect(m_engine, &Engine::voltageChanged, this, &SimulationProfile::voltageChanged);
     connect(m_engine, &Engine::dtChanged, this, &SimulationProfile::dtChanged);
     connect(m_engine, &Engine::finished, this, &SimulationProfile::finished);
+    connect(m_engine, &Engine::replacedConstituent, this, &SimulationProfile::replacedConstituent);
 }
 
 

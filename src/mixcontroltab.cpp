@@ -79,6 +79,7 @@ void MixControlTab::recalculateModel() {
 
 
 void MixControlTab::swapPressed() {
+    ui->f_swap->setEnabled(false);
     emit swap(m_model->constituents());
 }
 
@@ -135,6 +136,17 @@ void MixControlTab::removeAll() {
         m_model->removeRows(0, m_model->rowCount());
         }
 
+}
+
+
+void MixControlTab::init() {
+    m_model->enableConstituents();
+    ui->f_swap->setEnabled(true);
+}
+
+
+void MixControlTab::disableConstituent(int internalId) {
+    m_model->disableConstituent(internalId);
 }
 
 

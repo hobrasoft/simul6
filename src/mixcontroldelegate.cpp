@@ -18,11 +18,13 @@ void MixControlDelegate::paint(QPainter *painter, const QStyleOptionViewItem& op
         return;
         }
 
+    Qt::ItemFlags flags = index.model()->flags(index);
+    bool enabled = ((flags & Qt::ItemIsEnabled) != Qt::ItemIsEnabled);
     QStyleOptionButton style;
-    style.state = QStyle::State_Enabled;
+    style.state = (enabled) ? QStyle::State_Enabled : QStyle::State_None;
     style.state |= (index.model()->data(index).toBool()) ? QStyle::State_On : QStyle::State_Off;
     style.rect = option.rect;
-    QApplication::style()->drawControl(QStyle::CE_CheckBox, &style, painter);
 
+    QApplication::style()->drawControl(QStyle::CE_CheckBox, &style, painter);
 }
 

@@ -50,6 +50,28 @@ void MixControlModelAbstract::hide(int id) {
 }
 
 
+void MixControlModelAbstract::disableConstituent(int id) {
+    for (int row=0; row<rowCount(); row++) {
+        SegmentedConstituent c = constituent(row);
+        if (c.getInternalId() == id) {
+            for (int col=0; col<columnCount(); col++) {
+                item(row,col)->setEnabled(false);
+                }
+            return;
+            }
+        }
+}
+
+
+void MixControlModelAbstract::enableConstituents() {
+    for (int row=0; row<rowCount(); row++) {
+        for (int col=0; col<columnCount(); col++) {
+            item(row,col)->setEnabled(true);
+            }
+        }
+}
+
+
 void MixControlModelAbstract::toggleVisible(const QModelIndex& idx) {
     if (idx.column() != Visible) { return; }
     QModelIndex vidx = index(idx.row(), Visible);

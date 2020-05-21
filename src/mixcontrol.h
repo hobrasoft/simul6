@@ -24,8 +24,10 @@ signals:
     void swap(const QList<SegmentedConstituent>&);
 
 public slots:
+    void init();
     void resizeColumns();
     void hideConstituent(int internalId);
+    void disableConstituent(int internalId);
 
 private slots:
     void removeCurrentTab();

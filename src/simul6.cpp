@@ -48,7 +48,7 @@ Simul6::Simul6(QWidget *parent) :
     createActions();
     connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
     connect(ui->f_computeControl, &ComputeControl::init, SAVEPROGRESS, &SaveProgress::init);
-    connect(ui->f_computeControl, &ComputeControl::init, ui->f_computeControl, &ComputeControl::resetSaveProgressChecked);
+    connect(ui->f_computeControl, &ComputeControl::init, ui->f_mixcontrol, &MixControl::init);
     connect(ui->f_computeControl, &ComputeControl::run, this, &Simul6::runEngine);
     connect(ui->f_computeControl, &ComputeControl::stop, this, &Simul6::stopEngine);
 
@@ -60,6 +60,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::curDenChanged, ui->f_parameters, &InputParameters::showCurrent);
     connect(ui->f_simulationProfile, &SimulationProfile::voltageChanged, ui->f_parameters, &InputParameters::showVoltage);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
+    connect(ui->f_simulationProfile, &SimulationProfile::replacedConstituent, this, &Simul6::replacedConstituent);
     connect(ui->f_parameters, &InputParameters::errHChanged, [this](double x) {
         if (nullptr == ui->f_simulationProfile->engine()) { return; }
         ui->f_simulationProfile->engine()->setErrH(x);
@@ -249,6 +250,12 @@ void Simul6::loadData() {
 
 void Simul6::hideConstituent(int internalId) {
     ui->f_mixcontrol->hideConstituent(internalId);
+}
+
+
+void Simul6::replacedConstituent(int replacedInternalId, int replaceeInternalId) {
+    Q_UNUSED(replacedInternalId);
+    ui->f_mixcontrol->disableConstituent(replaceeInternalId);
 }
 
 

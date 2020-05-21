@@ -77,3 +77,19 @@ void MixControl::hideConstituent(int internalId) {
     m_basicTab->hideConstituent(internalId);
 }
 
+void MixControl::disableConstituent(int internalId) {
+    for (int i=0; i<ui->f_tab->count(); i++) {
+        MixControlTab *tab = qobject_cast<MixControlTab *>(ui->f_tab->widget(i));
+        if (tab == nullptr) { continue; }
+        tab->disableConstituent(internalId);
+        }
+}
+
+void MixControl::init() {
+    for (int i=0; i<ui->f_tab->count(); i++) {
+        MixControlTab *tab = qobject_cast<MixControlTab *>(ui->f_tab->widget(i));
+        if (tab == nullptr) { continue; }
+        tab->init();
+        }
+}
+

@@ -40,6 +40,7 @@ signals:
     void voltageChanged(double);
     void dtChanged(double);
     void finished();
+    void replacedConstituent(int replacedInternalId, int replaceeInternalId);
 
 private:
     Ui::SimulationProfile *ui;

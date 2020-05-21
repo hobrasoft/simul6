@@ -30,6 +30,7 @@ public:
 
     const Engine *engine() const;
 
+    void replacedConstituent(int replacedInternalId, int replaceeInternalId);
     void hideConstituent(int internalId);
     void hideKapa();
     void hidePh();

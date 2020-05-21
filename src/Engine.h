@@ -172,6 +172,7 @@ signals:
     void dtChanged(double);
     void curDenChanged(double);
     void voltageChanged(double);
+    void replacedConstituent(int replacedInternalId, int replaceeInternalId);
 
 public slots:
     void run();

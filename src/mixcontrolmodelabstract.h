@@ -29,6 +29,8 @@ public:
 
 public slots:
     virtual void recalculate(const QList<int>& ratios) { Q_UNUSED(ratios); }
+    virtual void disableConstituent(int internalId);
+    virtual void enableConstituents();
 
 signals:
     void visibilityChanged(int id, bool visible);
