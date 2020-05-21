@@ -186,13 +186,28 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
 }
 
 
-void Engine::replaceConstituent(const SegmentedConstituent& constituent) {
-    PDEBUG;
-    addConstituent(constituent);
+void Engine::addConstituent(const SegmentedConstituent& constituent) {
+    Sample sample(constituent, np);
+    replaceConstituent(constituent, sample);
+    mix.addSample(sample);
 }
 
 
-void Engine::addConstituent(const SegmentedConstituent& constituent) {
+void Engine::replaceConstituent(const SegmentedConstituent& constituent) {
+    Q_ASSERT(mix.contains(constituent));
+    if (mix.contains(constituent)) {
+        Sample& sample = mix.sample(constituent);
+        replaceConstituent(constituent, sample);
+        return;
+        }
+    if (!mix.contains(constituent)) {
+        addConstituent(constituent);
+        return;
+        }
+}
+
+
+void Engine::replaceConstituent(const SegmentedConstituent& constituent, Sample& sample) {
     struct ChargeValues {
         double value[7];
         double& operator[](int j) { return value[j+3]; }
@@ -200,7 +215,6 @@ void Engine::addConstituent(const SegmentedConstituent& constituent) {
 
     int segmentsCount = constituent.size();
     int ratioSum = constituent.ratioSum();
-    Sample sample(constituent, np);
     int negCharge = constituent.getNegCharge();
     int posCharge = constituent.getPosCharge();
     double prevConcentration = constituent.segments[0].concentration;
@@ -238,7 +252,7 @@ void Engine::addConstituent(const SegmentedConstituent& constituent) {
                 };
 
             sample.setDif(   i, smooth(prevDif, currentDif));
-            sample.setA  (0, i, smooth(prevConcentration, concentration));
+            sample.addA  (0, i, smooth(prevConcentration, concentration));
             for (int j = negCharge; j <= posCharge; j++) {
                 sample.setL  (j, i, smooth(prevL[j], currentL[j]));
                 sample.setU  (j, i, smooth(prevU[j], currentU[j]));
@@ -256,8 +270,6 @@ void Engine::addConstituent(const SegmentedConstituent& constituent) {
         prevL = currentL;
         segmentBegin = segmentEnd;
     }
-
-    mix.addSample(sample);
 
 }
 

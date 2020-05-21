@@ -26,6 +26,7 @@ public:
     void initV();
 
     bool contains(const SegmentedConstituent& x);
+    Sample& sample(const SegmentedConstituent& x);
 
     size_t size();
 };

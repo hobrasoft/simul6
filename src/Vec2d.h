@@ -17,6 +17,7 @@ public:
     int getNp() const { return np; }
     double get(const int pCharge, const unsigned int pI) const { return v[getChargeIndex(pCharge)][pI]; }
     void set(const int pCharge, const unsigned int pI, const double pValue) { v[getChargeIndex(pCharge)][pI] = pValue; }
+    void add(const int pCharge, const unsigned int pI, const double pValue) { v[getChargeIndex(pCharge)][pI] += pValue; }
 };
 
 #endif // VEC2D_H

@@ -38,6 +38,18 @@ bool Mix::contains(const SegmentedConstituent& x) {
 }
 
 
+Sample& Mix::sample(const SegmentedConstituent& x) {
+    for (auto &sample : samples) {
+        if (sample.getName() == x.getName()) {
+            return sample;
+            }
+        }
+    // Should not happen
+    static Sample zero(x, 0);
+    return zero;
+}
+
+
 Sample &Mix::addSample(const Sample &sample)
 {
 	//Sample *s = new Sample(pConstituent, areas);

@@ -50,6 +50,7 @@ public:
         return (pArea < areas) ? IC[pArea] : 0;
         }
     // A
+    void inline addA(const int pCharge, const unsigned int pI, const double pValue) { a.add(pCharge, pI, pValue); }
     void inline setA(const int pCharge, const unsigned int pI, const double pValue) { a.set(pCharge, pI, pValue); }
     void inline setU(const int pCharge, const unsigned int pI, const double pValue) { u.set(pCharge, pI, pValue); }
     void inline setL(const int pCharge, const unsigned int pI, const double pValue) { L.set(pCharge, pI, pValue); }
