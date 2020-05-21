@@ -24,6 +24,7 @@ MixControl::MixControl(QWidget *parent) :
     ui->f_tab->addTab(m_basicTab, tr("Basic"));
 
     QToolButton *button = new QToolButton(this);
+    button->setContextMenuPolicy(Qt::ActionsContextMenu);
     ui->f_tab->setCornerWidget(button);
 
     m_addTab = new QAction(QIcon("://icons/copy.svg"), tr("Add empty mix"));
