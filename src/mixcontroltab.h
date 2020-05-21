@@ -34,6 +34,7 @@ private slots:
     void addComponent();
     void removeAll();
     void swapPressed();
+    void recalculateModel();
 
 private:
     Ui::MixControlTab *ui;

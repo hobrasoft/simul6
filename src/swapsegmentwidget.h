@@ -24,6 +24,7 @@ class SwapSegmentWidget : public QWidget {
     void    recalculate();
 
   signals:
+    void    segmentsChanged();
 
   private:
     Ui::SwapSegmentWidget *ui;

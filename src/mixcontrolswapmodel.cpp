@@ -49,3 +49,13 @@ void MixControlSwapModel::setConstituent(const SegmentedConstituent& constituent
 }
 
 
+void MixControlSwapModel::recalculate(const QList<int>& ratios) {
+    PDEBUG << ratios;
+    for (int row=0; row<rowCount(); row++) {
+        SegmentedConstituent x = constituent(row);
+        x.setRatios(ratios);
+        setConstituent(x, row);
+        }
+}
+
+

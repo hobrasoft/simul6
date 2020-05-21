@@ -27,6 +27,12 @@ public:
     QString getName() const { return m_name; }
     void setId(int x) { m_id = x; } 
     int getId() const { return m_id; }
+    void setRatios(const QList<int>& ratios) {
+        for (int i=0; i<ratios.size(); i++) {
+            if (i >= segments.size()) { return; }
+            segments[i].ratio = ratios[i];
+            }
+        }
 
     void addNegPKa(double);
     void addPosPKa(double);

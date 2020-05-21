@@ -46,6 +46,7 @@ void SwapSegmentWidget::recalculate() {
     PDEBUG << len1 << len2 << len3;
 
     ui->f_chart->repaint(len1, len2, len3);
+    emit segmentsChanged();
 }
 
 

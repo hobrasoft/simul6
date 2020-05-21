@@ -69,6 +69,12 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
 
     connect(ui->f_view, &QAbstractItemView::doubleClicked, this, QOverload<const QModelIndex&>::of(&MixControlTab::editComponent));
     connect(ui->f_view, &QAbstractItemView::clicked, m_model, &MixControlModel::toggleVisible);
+    connect(ui->f_segment, &SwapSegmentWidget::segmentsChanged, this, &MixControlTab::recalculateModel);
+}
+
+
+void MixControlTab::recalculateModel() {
+    m_model->recalculate(ui->f_segment->ratios());
 }
 
 

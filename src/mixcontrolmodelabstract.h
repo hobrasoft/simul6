@@ -27,6 +27,9 @@ public:
     QVariantList json() const;
     void setJson(const QVariantList& json);
 
+public slots:
+    virtual void recalculate(const QList<int>& ratios) { Q_UNUSED(ratios); }
+
 signals:
     void visibilityChanged(int id, bool visible);
 

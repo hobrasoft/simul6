@@ -24,6 +24,9 @@ public:
 
     void setConstituent(const SegmentedConstituent& constituent, int row) Q_DECL_OVERRIDE;
 
+public slots:
+    void recalculate(const QList<int>& ratios) Q_DECL_OVERRIDE;
+
 private:
 };
 
