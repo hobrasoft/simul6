@@ -19,6 +19,8 @@ public:
 
     const MixControlModelAbstract *model() const { return m_model; }
 
+    bool removable() const;
+
 signals:
     void visibilityChanged(int id, bool visible);
     void swap(const QList<SegmentedConstituent>&);

@@ -33,6 +33,7 @@ MixControl::MixControl(QWidget *parent) :
         ui->f_tab->addTab(newTab, tr("Swap"));
         ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
         connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
+        connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
         });
 
     m_cloneTab = new QAction(tr("Clone current mix"));
@@ -42,6 +43,7 @@ MixControl::MixControl(QWidget *parent) :
         ui->f_tab->addTab(newTab, tr("Swap"));
         ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
         connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
+        connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
         });
 
     m_removeTab = new QAction(tr("Remove current mix"));
@@ -56,7 +58,8 @@ MixControl::MixControl(QWidget *parent) :
 
 void MixControl::currentTabChanged(int index) {
     if (index == 0) { m_removeTab->setEnabled(false); return; }
-    m_removeTab->setEnabled(true);
+    MixControlTab *x = qobject_cast<MixControlTab *>(ui->f_tab->currentWidget());
+    m_removeTab->setEnabled(x->removable());
 }
 
 
@@ -69,13 +72,16 @@ const MixControlModelAbstract *MixControl::model() const {
     return m_basicTab->model();
 }
 
+
 void MixControl::resizeColumns() {
     m_basicTab->resizeColumns();
 }
 
+
 void MixControl::hideConstituent(int internalId) {
     m_basicTab->hideConstituent(internalId);
 }
+
 
 void MixControl::disableConstituent(int internalId) {
     for (int i=0; i<ui->f_tab->count(); i++) {
@@ -85,7 +91,9 @@ void MixControl::disableConstituent(int internalId) {
         }
 }
 
+
 void MixControl::init() {
+    m_removeTab->setEnabled(true);
     for (int i=0; i<ui->f_tab->count(); i++) {
         MixControlTab *tab = qobject_cast<MixControlTab *>(ui->f_tab->widget(i));
         if (tab == nullptr) { continue; }

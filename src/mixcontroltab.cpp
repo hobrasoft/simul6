@@ -84,6 +84,11 @@ void MixControlTab::swapPressed() {
 }
 
 
+bool MixControlTab::removable() const {
+    return ui->f_swap->isEnabled();
+}
+
+
 void MixControlTab::resizeColumns() {
     for (int i=0; i<MixControlModel::LastCol; i++) {
         ui->f_view->resizeColumnToContents(i);
