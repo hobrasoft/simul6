@@ -22,6 +22,7 @@ MixControl::MixControl(QWidget *parent) :
 
     m_basicTab = new MixControlTab(this, MixControlTab::BasicTab);
     ui->f_tab->addTab(m_basicTab, tr("Basic"));
+    connect(m_basicTab, &MixControlTab::visibilityChanged, this, &MixControl::visibilityChanged);
 
     QToolButton *button = new QToolButton(this);
     button->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -35,6 +36,7 @@ MixControl::MixControl(QWidget *parent) :
         ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
         connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
         connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
+        connect(newTab, &MixControlTab::visibilityChanged, this, &MixControl::visibilityChanged);
         });
 
     m_cloneTab = new QAction(tr("Clone current mix"));
@@ -47,6 +49,7 @@ MixControl::MixControl(QWidget *parent) :
         ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
         connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
         connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
+        connect(newTab, &MixControlTab::visibilityChanged, this, &MixControl::visibilityChanged);
         });
 
     m_removeTab = new QAction(tr("Remove current mix"));
