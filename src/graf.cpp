@@ -51,12 +51,12 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     addAction(m_actionManualScale);
     m_actionManualScale->setEnabled(false);
 
-/*
+    #ifdef SET_AXIS_LABELS_MANUALLY
     m_actionSetAxisLabels = new QAction(tr("Adjust asix labels"), this);
     connect(m_actionSetAxisLabels, &QAction::triggered, this, &Graf::setAxisLabels);
     addAction(m_actionSetAxisLabels);
     m_actionSetAxisLabels->setEnabled(false);
-*/
+    #endif
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
@@ -345,7 +345,9 @@ void Graf::setScale(const QRectF& rect) {
 
     m_actionManualScale->setEnabled(true);
     m_actionRescale->setEnabled(true);
-    // m_actionSetAxisLabels->setEnabled(true);
+    #ifdef SET_AXIS_LABELS_MANUALLY
+    m_actionSetAxisLabels->setEnabled(true);
+    #endif
 
     QList<QAbstractSeries *> serieslist = m_chart->series();
     for (int i=0; i<serieslist.size(); i++) {
@@ -393,9 +395,7 @@ void Graf::setScale(const QRectF& rect) {
     m_axis_y->setTickAnchor(rect.top());
     m_axis_y->setTickInterval(ytickInterval);
     m_axis_y->setTickType(QValueAxis::TicksDynamic);
-    #endif
 
-    #if QT_VERSION > 0x050c00
     double xtickInterval \
         = (mcaplen < 0.00002) ? 0.000001
         : (mcaplen < 0.0002) ? 0.00001
@@ -423,8 +423,6 @@ void Graf::setScale(const QRectF& rect) {
         serieslist[i]->attachAxis(m_axis_x);
         }
 
-    m_axis_y->setRange(rect.top(), rect.bottom());
-    m_axis_x->setRange(rect.left(), rect.right());
 }
 
 

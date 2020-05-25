@@ -127,6 +127,12 @@ void Simul6::runEngine() {
     ui->f_dock_replay->setVisible(false);
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
+    ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
+    ui->f_simulationProfile->engine()->setConstantVoltage(ui->f_parameters->getConstantVoltage());
+    ui->f_simulationProfile->engine()->setVoltage(ui->f_parameters->getVoltage());
+    ui->f_simulationProfile->engine()->setCurDen(ui->f_parameters->getCurrent());
+    ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
+    ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
     ui->f_simulationProfile->slotRun();
 }
 

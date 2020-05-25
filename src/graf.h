@@ -13,6 +13,8 @@
 
 QT_CHARTS_USE_NAMESPACE
 
+#define SET_AXIS_LABELS_MANUALLY
+
 class Graf : public QChartView
 {
     Q_OBJECT
@@ -55,7 +57,9 @@ private:
     QValueAxis *m_axis_y;
     QAction    *m_actionRescale;
     QAction    *m_actionManualScale;
+    #ifdef SET_AXIS_LABELS_MANUALLY
     QAction    *m_actionSetAxisLabels;
+    #endif
 
     bool m_rescaleIndividually;
     bool m_rescalePh;
