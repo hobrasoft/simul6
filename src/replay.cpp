@@ -121,7 +121,7 @@ void Replay::setStep(int step) {
         m_timer->start();
         }
     Simul6::instance()->graf()->setRescaleEnabled(false);
-    m_engine->setStep(m_data[m_step].toMap());
+    m_engine->setStep(m_data[m_step].toMap()); // item "simulation" in data file
 }
 
 

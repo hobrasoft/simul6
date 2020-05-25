@@ -34,6 +34,11 @@ public:
             segments[i].ratio = ratios[i];
             }
         }
+    void setConcentrationsToZero() {
+        for (int i=0; i<segments.size(); i++) {
+            segments[i].concentration = 0.0;
+            }
+        }
 
     void addNegPKa(double);
     void addPosPKa(double);

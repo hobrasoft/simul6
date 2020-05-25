@@ -191,7 +191,8 @@ void Simul6::saveData() {
 QVariantMap Simul6::data() const {
     QVariantMap data;
     if (mixControlModel() == nullptr) { return data; }
-    data["mix"] = mixControlModel()->json();
+    data["mix"] = ui->f_mixcontrol->mixJson();
+    data["swaps"] = ui->f_mixcontrol->swapsJson();
 
     QVariantMap ccontrol;
     ccontrol["caplen"] = ui->f_computeControl->getCapLen()/1000.0;
@@ -236,8 +237,8 @@ void Simul6::loadData() {
     ui->f_parameters->setConstantVoltage( ccontrol.contains("constant_voltage") ? ccontrol["constant_voltage"].toBool() : true );
     ui->f_mixcontrol->resizeColumns();
 
-    MixControlModelAbstract *model = const_cast<MixControlModelAbstract *>(mixControlModel());
-    model->setJson(data.toMap()["mix"].toList());
+    ui->f_mixcontrol->setMixJson(data.toMap()["mix"].toList());
+    ui->f_mixcontrol->setSwapsJson(data.toMap()["swaps"].toList());
 
     initEngine();
     SAVEPROGRESS->init();
@@ -246,6 +247,15 @@ void Simul6::loadData() {
         ui->f_dock_replay->setVisible(true);
         ui->f_replay->setEngine(ui->f_simulationProfile->engine());
         ui->f_replay->setData(data.toMap()["simulation"].toList());
+        QVariantList swaps = data.toMap()["swaps"].toList();
+        for (int i=0; i<swaps.size(); i++) {
+            const QVariantList& mix = swaps[i].toMap()["mix"].toList();
+            for (int i=0; i<mix.size(); i++) {
+                SegmentedConstituent constituent(mix[i].toMap()["constituent"].toMap());
+                constituent.setConcentrationsToZero();
+                ui->f_simulationProfile->engine()->addConstituent(constituent);
+                }
+            }
       } else {
         ui->f_replay->clear();
         ui->f_dock_replay->setVisible(false);

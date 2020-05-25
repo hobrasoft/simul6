@@ -17,6 +17,7 @@ class SwapSegmentWidget : public QWidget {
    ~SwapSegmentWidget();
 
     QList<int> ratios() const;
+    void setRatios(const QList<int>&);
 
   public slots:
 

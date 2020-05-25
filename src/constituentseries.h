@@ -23,6 +23,7 @@ class ConstituentSeries : public QtCharts::QLineSeries {
     ConstituentSeries(Graf *parent);
 
     int internalId() const;
+    QString name() const { return m_name; }
 
   public slots:
     void setNormalWidth();

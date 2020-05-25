@@ -38,7 +38,7 @@ class Replay : public QWidget {
     bool    m_replay;
     int     m_step;
     Engine *m_engine;
-    QVariantList m_data;
+    QVariantList m_data; // item "simulation" in data file
     QTimer *m_timer;
     QAction *m_actionPlay;
 };

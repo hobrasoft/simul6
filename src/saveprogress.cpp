@@ -189,7 +189,6 @@ void SaveProgress::saveJson(double time) {
     size_t p = engine->getNp(); // points
 
     QVariantList constituents;
-    int id = 0;
     for (auto &sample : engine->getMix().getSamples()) {
         QVariantList concentrations;
         for (unsigned int i = 0; i <= p; i++){
@@ -197,7 +196,7 @@ void SaveProgress::saveJson(double time) {
             }
 
         QVariantMap constituent;
-        constituent["id"] = id;
+        constituent["internalId"] = sample.getInternalId();
         constituent["concentrations"] = concentrations;
         constituents << constituent;
         }

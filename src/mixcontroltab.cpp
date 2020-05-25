@@ -78,6 +78,11 @@ void MixControlTab::recalculateModel() {
 }
 
 
+void MixControlTab::setRatios(const QList<int>& ratios) {
+    ui->f_segment->setRatios(ratios);
+}
+
+
 void MixControlTab::swapPressed() {
     ui->f_swap->setEnabled(false);
     emit swap(m_model->constituents());

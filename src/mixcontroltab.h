@@ -20,6 +20,8 @@ public:
     const MixControlModelAbstract *model() const { return m_model; }
     void add(const QList<SegmentedConstituent>&);
 
+    void setRatios(const QList<int>& ratios);
+
     bool removable() const;
 
 signals:

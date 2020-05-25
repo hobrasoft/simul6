@@ -158,9 +158,6 @@ void Graf::init(const Engine *pEngine) {
 
 
 void Graf::autoscale() {
-    PDEBUG;
-    // PDEBUG << m_rescaleEnabled;
-    // if (!m_rescaleEnabled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = 0;
     double minimum = 99999;
@@ -180,7 +177,6 @@ void Graf::autoscale() {
         double d_xright = m_axis_x->max();
         xleft = p * d_xleft /mcaplen;
         xright = p * d_xright /mcaplen;
-        PDEBUG << d_xleft << d_xright << xleft << xright;
         }
 
     for (auto &sample : mix.getSamples()) {
@@ -312,7 +308,7 @@ void Graf::manualScale() {
 
 
 void Graf::mouseReleaseEvent(QMouseEvent *event) { 
-    PDEBUG << event->x() << event->y();
+    // PDEBUG << event->x() << event->y();
     if (event->button() != Qt::RightButton) { 
         QChartView::mouseReleaseEvent(event);
         return; 
@@ -323,7 +319,6 @@ void Graf::mouseReleaseEvent(QMouseEvent *event) {
 
 
 void Graf::setAxisLabels() {
-    PDEBUG;
     if (m_axis_y == nullptr || m_axis_x == nullptr) { 
         return;
         }
@@ -335,7 +330,7 @@ void Graf::setAxisLabels() {
 
 
 void Graf::setScale(const QRectF& rect) {
-    PDEBUG << rect;
+    // PDEBUG << rect;
     if (rect.isNull()) {
         return;
         }
@@ -391,7 +386,7 @@ void Graf::setScale(const QRectF& rect) {
         : (maximum <= 200.) ? 10.0  
         : (maximum <= 300.) ? 50.0  
         : 100;
-    PDEBUG << "ytickInterval" << ytickInterval << maximum;
+    // PDEBUG << "ytickInterval" << ytickInterval << maximum;
     m_axis_y->setTickAnchor(rect.top());
     m_axis_y->setTickInterval(ytickInterval);
     m_axis_y->setTickType(QValueAxis::TicksDynamic);
@@ -410,7 +405,7 @@ void Graf::setScale(const QRectF& rect) {
         : (mcaplen < 200) ? 10.0
         : (mcaplen < 300) ? 50.0
         : 100;
-    PDEBUG << "xtickInterval" << xtickInterval << mcaplen;
+    // PDEBUG << "xtickInterval" << xtickInterval << mcaplen;
     m_axis_x->setTickAnchor(rect.left());
     m_axis_x->setTickInterval(xtickInterval);
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
@@ -479,6 +474,7 @@ void Graf::drawGraph(const Engine *pEngine)
     double inc_x = pEngine->getCapLen() / p;
     for (auto &sample : pEngine->getMix().getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        // PDEBUG << sample.getName() << sample.getInternalId();
         double x = 0;
         QList<double> vlist;
         QVector<QPointF> plist;
@@ -531,6 +527,7 @@ void Graf::drawGraph(const Engine *pEngine)
 
 
 void Graf::subselected() {
+    // PDEBUG;
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
 
@@ -579,7 +576,7 @@ void Graf::subselected() {
 
 
 void Graf::seriesClicked(const QPointF& point) {
-    PDEBUG;
+    // PDEBUG;
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
     if (m_engine == nullptr) { return; }
@@ -611,6 +608,7 @@ void Graf::seriesClicked(const QPointF& point) {
                 }
             }
         m_engine->unlock();
+        PDEBUG << s2->name() << s2->internalId();
         GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
         d->move(position);
         d->show();

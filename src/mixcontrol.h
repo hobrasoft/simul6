@@ -20,6 +20,12 @@ public:
     const MixControlModelAbstract *model() const;
     int mixSize() const;
 
+    QVariantList swapsJson() const;
+    void setSwapsJson(const QVariantList& list);
+
+    QVariantList mixJson() const;
+    void setMixJson(const QVariantList& list);
+
 signals:
     void visibilityChanged(int id, bool visible);
     void swap(const QList<SegmentedConstituent>&);
@@ -33,6 +39,7 @@ public slots:
 private slots:
     void removeCurrentTab();
     void currentTabChanged(int);
+    MixControlTab *createNewSwap(const QList<SegmentedConstituent>& data = QList<SegmentedConstituent>());
 
 private:
     Ui::MixControl *ui;

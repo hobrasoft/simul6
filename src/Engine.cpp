@@ -8,6 +8,7 @@
 #include "Constituent.h"
 #include "ConstituentDb.h"
 #include "Sample.h"
+#include "messagedialog.h"
 #include "Mix.h"
 #include <iostream>
 #include <cmath>
@@ -251,7 +252,7 @@ void Engine::replaceConstituent(const SegmentedConstituent& constituent, Sample&
             segmentEnd = np + 1;
             }
 
-        PDEBUG << "segmenty" << segmentBegin << segmentEnd;
+        // PDEBUG << "segments" << segmentBegin << segmentEnd;
 
         for (int i = segmentBegin; i < segmentEnd; i++) {
             auto smooth = [&segmentBegin,&i,this](double previous, double current) {
@@ -353,17 +354,32 @@ void Engine::init() {
 }
 
 
+/**
+ * @brief Receives one step from data file, item "simulation"
+ */
 void Engine::setStep(const QVariantMap& data) {
     // PDEBUG;
     const QVariantList& constituents = data["constituents"].toList();
     t = data["time"].toDouble();
-    int sampleIndex = constituents.size();
     for (auto &sample : mix.getSamples()) {
-        sampleIndex -= 1;
-        const QVariantMap& constituent = constituents[sampleIndex].toMap();
-        const QVariantList& concentrations = constituent["concentrations"].toList();
-        for (int i = 0; i<= np; i++) {
-            sample.setA(0, i, concentrations[i].toDouble());
+        int internalId = sample.getInternalId();
+        int sampleIndex = -1;
+        for (int i = 0; i<constituents.size(); i++) {
+            if (internalId == constituents[i].toMap()["internalId"].toInt()) {
+                sampleIndex = i;
+                break;
+                }
+            }
+        if (sampleIndex < 0) {
+            for (int i = 0; i<= np; i++) {
+                sample.setA(0, i, 0);
+                }
+          } else {
+            const QVariantMap& constituent = constituents[sampleIndex].toMap();
+            const QVariantList& concentrations = constituent["concentrations"].toList();
+            for (int i = 0; i<= np; i++) {
+                sample.setA(0, i, concentrations[i].toDouble());
+                }
             }
         }
     init();

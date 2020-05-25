@@ -31,25 +31,15 @@ MixControl::MixControl(QWidget *parent) :
     m_addTab = new QAction(QIcon("://icons/copy.svg"), tr("Add empty mix"));
     button->setDefaultAction(m_addTab);
     connect(m_addTab, &QAction::triggered, [this]() {
-        MixControlTab *newTab = new MixControlTab(this);
-        ui->f_tab->addTab(newTab, tr("Swap"));
-        ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
-        connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
-        connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
-        connect(newTab, &MixControlTab::visibilityChanged, this, &MixControl::visibilityChanged);
+        createNewSwap();
         });
 
     m_cloneTab = new QAction(tr("Clone current mix"));
     button->addAction(m_cloneTab);
     connect(m_cloneTab, &QAction::triggered, [this]() {
-        MixControlTab *newTab = new MixControlTab(this);
         MixControlTab *currentTab = qobject_cast<MixControlTab *>(ui->f_tab->currentWidget());
-        newTab->add(currentTab->model()->constituents());
-        ui->f_tab->addTab(newTab, tr("Swap"));
-        ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
-        connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
-        connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
-        connect(newTab, &MixControlTab::visibilityChanged, this, &MixControl::visibilityChanged);
+        QList<SegmentedConstituent> data = currentTab->model()->constituents();
+        createNewSwap(data);
         });
 
     m_removeTab = new QAction(tr("Remove current mix"));
@@ -62,6 +52,18 @@ MixControl::MixControl(QWidget *parent) :
 }
 
 
+MixControlTab *MixControl::createNewSwap(const QList<SegmentedConstituent>& data) {
+    MixControlTab *newTab = new MixControlTab(this);
+    ui->f_tab->addTab(newTab, tr("Swap"));
+    ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
+    connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
+    connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
+    connect(newTab, &MixControlTab::visibilityChanged, this, &MixControl::visibilityChanged);
+    newTab->add(data); 
+    return newTab;
+}
+
+
 void MixControl::currentTabChanged(int index) {
     if (index == 0) { m_removeTab->setEnabled(false); return; }
     MixControlTab *x = qobject_cast<MixControlTab *>(ui->f_tab->currentWidget());
@@ -71,6 +73,53 @@ void MixControl::currentTabChanged(int index) {
 
 void MixControl::removeCurrentTab() {
     ui->f_tab->removeTab(ui->f_tab->currentIndex());
+}
+
+
+void MixControl::setMixJson(const QVariantList& json) {
+    const_cast<MixControlModelAbstract *>(m_basicTab->model())->setJson(json);
+}
+
+
+QVariantList MixControl::mixJson() const {
+    return m_basicTab->model()->json();
+}
+
+QVariantList MixControl::swapsJson() const {
+    QVariantList list;
+    for (int i=1; i<ui->f_tab->count(); i++) {
+        MixControlTab *tab = qobject_cast<MixControlTab *>(ui->f_tab->widget(i));
+        if (tab == nullptr) { continue; }
+        QVariantMap mix;
+        mix["mix"] = tab->model()->json();
+        list << mix;
+        }
+    return list;
+}
+
+
+void MixControl::setSwapsJson(const QVariantList& json) {
+    while (ui->f_tab->count() != 1) {
+        ui->f_tab->removeTab(1);
+        }
+
+    for (int i=0; i<json.size(); i++) {
+        const QVariantMap& swap = json[i].toMap();
+        const QVariantList& mix = swap["mix"].toList();
+        QList<SegmentedConstituent> list;
+        QList<int> ratios;
+        for (int c=0; c<mix.size(); c++) {
+            SegmentedConstituent constituent = SegmentedConstituent(mix[c].toMap()["constituent"].toMap());
+            // PDEBUG << constituent << mix[c].toMap();
+            list << constituent;
+            if (c==0) {
+                for (int s=0; s<constituent.segments.size(); s++) {
+                    ratios << constituent.segments[s].ratio;
+                    }
+                }
+            }
+        createNewSwap(list)->setRatios(ratios);
+        }
 }
 
 

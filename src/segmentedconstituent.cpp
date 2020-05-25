@@ -28,7 +28,10 @@ SegmentedConstituent::SegmentedConstituent(const QVariantMap& json) {
     m_color = QColor(json["color"].toString());
     m_visible = json.contains("visible") ? json["visible"].toBool() : true;
     m_id = json.contains("id") ? json["id"].toInt() : m_lastId++;
-    m_internalId = m_lastInternalId++;
+    m_internalId = json.contains("internalId") ? json["internalId"].toInt() : m_lastInternalId++;
+    if (m_internalId >= m_lastInternalId) {
+        m_lastInternalId = m_internalId+1;
+        }
 
     // PDEBUG << m_name << m_color << m_visible << json["segments"];
 
@@ -79,9 +82,10 @@ QDebug operator<<(QDebug dbg, const SegmentedConstituent& c) {
 
 QVariantMap SegmentedConstituent::json() const {
     QVariantMap cdata;
-    cdata["name"] = m_name;
-    cdata["color"]    =  m_color;
-    cdata["visible"]  =  m_visible;
+    cdata["name"]       = m_name;
+    cdata["color"]      = m_color;
+    cdata["visible"]    = m_visible;
+    cdata["internalId"] = m_internalId;
 
     QVariantList list;
     for (int i=0; i<segments.size(); i++) {
