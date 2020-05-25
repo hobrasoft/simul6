@@ -49,6 +49,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
     connect(ui->f_computeControl, &ComputeControl::init, SAVEPROGRESS, &SaveProgress::init);
     connect(ui->f_computeControl, &ComputeControl::init, ui->f_mixcontrol, &MixControl::init);
+    connect(ui->f_computeControl, &ComputeControl::init, ui->f_simulationProfile, &SimulationProfile::init);
     connect(ui->f_computeControl, &ComputeControl::run, this, &Simul6::runEngine);
     connect(ui->f_computeControl, &ComputeControl::stop, this, &Simul6::stopEngine);
 

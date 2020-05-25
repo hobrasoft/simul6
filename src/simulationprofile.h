@@ -26,6 +26,7 @@ public:
     Graf *graf() const;
 
 public slots:
+    void init();
     void slotRun();
     void slotStop();
     void setVisible(int id, bool visible);

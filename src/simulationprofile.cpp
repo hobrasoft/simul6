@@ -30,6 +30,11 @@ Graf *SimulationProfile::graf() const {
 }
 
 
+void SimulationProfile::init() {
+    ui->f_graf->autoscale();
+}
+
+
 void SimulationProfile::setVisible(int id, bool visible) {
     if (m_engine != nullptr) {
         m_engine->setVisible(id, visible);
