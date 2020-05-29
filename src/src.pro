@@ -35,6 +35,7 @@ macx { # using MacPorts libomp
     INCLUDEPATH += /opt/local/include/libomp
     LIBS += -L/opt/local/lib/libomp -lomp
     TARGET = "Simul 6"
+    ICON = ../images/appicon.icns
 } 
 unix:!macx {
     QMAKE_CXXFLAGS += -ftree-parallelize-loops=24 -fopenmp
