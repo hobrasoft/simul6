@@ -34,6 +34,7 @@ macx { # using MacPorts libomp
     DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
     INCLUDEPATH += /opt/local/include/libomp
     LIBS += -L/opt/local/lib/libomp -lomp
+    TARGET = "Simul 6"
 } 
 unix:!macx {
     QMAKE_CXXFLAGS += -ftree-parallelize-loops=24 -fopenmp
