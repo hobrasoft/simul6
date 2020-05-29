@@ -169,22 +169,41 @@ void Simul6::stopEngine() {
 void Simul6::saveData() {
     QString dirname = MSETTINGS->dataDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), dirname,
-        tr("Simul6 data [.simul6.json] (*.simul6.json)")
-        );
+        tr("Simul6 data, JSON format (*.simul6.json);;"
+           "Simul6 data, Sqlite3 format (*.simul6.sqlite3)")
+        ).trimmed();
     if (filename.isEmpty()) { return; }
-    filename = filename.trimmed();
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
-    if (!filename.endsWith(".simul6.json", Qt::CaseInsensitive)) {
+    if (!filename.endsWith(".simul6.json", Qt::CaseInsensitive) &&
+        !filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive)) {
         filename = filename.replace(QRegExp("\\.+$"),"");
         filename += ".simul6.json";
         }
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)) {
-        SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
+
+    bool sqliteformat = filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive);
+    bool jsonformat   = filename.endsWith(".simul6.json", Qt::CaseInsensitive);
+
+    if (jsonformat) {
+        QFile file(filename);
+        if (!file.open(QIODevice::WriteOnly)) {
+            SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
+            return;
+            }
+        file.write(JSON::json(data()));
+        file.close();
         return;
         }
-    file.write(JSON::json(data()));
-    file.close();
+
+    if (sqliteformat) {
+        Db::Database db(filename);
+        db.open();
+        if (!db.isOpen()) {
+            SHOWMESSAGE(tr("Could not open or create file %1").arg(filename));
+            return;
+            }
+        db.save(data());
+        return;
+        }
 }
 
 
