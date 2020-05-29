@@ -116,22 +116,14 @@ SaveProgress *SaveProgress::instance(Simul6 *parent) {
 
 
 void SaveProgress::setFilename(const QString& filename) {
+    if (m_database != nullptr) {
+        m_database->close();
+        delete m_database;
+        m_database = nullptr;
+        }
+    QFile::remove(filename);
     m_filename = filename;
-
-    if (m_format == Csv && !m_filename.endsWith(".csv", Qt::CaseInsensitive)) {
-        m_filename = m_filename + ".csv";
-        }
-
-    if (m_format == Json && !m_filename.endsWith(".simul6.json", Qt::CaseInsensitive)) {
-        m_filename = m_filename + ".simul6.json";
-        }
-
-    if (m_format == Sqlite3 && !m_filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive)) {
-        m_filename = m_filename + ".simul6.sqlite3";
-        }
-
     m_worker->setFilename(m_filename);
-
 }
 
 
@@ -146,6 +138,7 @@ void SaveProgress::setActive(bool active) {
 
 
 void SaveProgress::setFormat(Format format) {
+    PDEBUG << format;
     m_format = format;
 }
 

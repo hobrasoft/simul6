@@ -7,6 +7,7 @@
 #define _SimulationProgressDialog_H_
 
 #include <QDialog>
+#include "saveprogress.h"
 
 namespace Ui {
 class SimulationProgressDialog;
@@ -24,11 +25,12 @@ class SimulationProgressDialog : public QDialog {
 
   private slots:
     void selectFile();
-    void changeExtension();
     void accept();
 
   private:
     Ui::SimulationProgressDialog *ui;
+
+    SaveProgress::Format m_format;
 };
 
 #endif

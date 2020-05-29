@@ -51,7 +51,7 @@ class SaveProgressWorker : public QObject {
 class SaveProgress : public QObject {
     Q_OBJECT
   public:
-    enum Format { Csv, Json, Sqlite3 };
+    enum Format { Csv = 1, Json, Sqlite3 };
     static SaveProgress *instance(Simul6 *parent = nullptr);
    ~SaveProgress();
 
