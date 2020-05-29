@@ -195,6 +195,7 @@ void Simul6::saveData() {
         }
 
     if (sqliteformat) {
+        QFile::remove(filename);
         Db::Database db(filename);
         db.open();
         if (!db.isOpen()) {
