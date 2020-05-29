@@ -50,6 +50,7 @@ include(../version.pri)
 include(../global.pri)
 include(../data/data.pri)
 include(../images/images.pri)
+include(database/database.pri)
 include(utils/utils.pri)
 include(widgets/widgets.pri)
 

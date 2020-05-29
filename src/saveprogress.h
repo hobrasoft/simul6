@@ -11,6 +11,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
+#include "database.h"
 
 #define SAVEPROGRESS SaveProgress::instance()
 
@@ -50,7 +51,7 @@ class SaveProgressWorker : public QObject {
 class SaveProgress : public QObject {
     Q_OBJECT
   public:
-    enum Format { Csv, Json };
+    enum Format { Csv, Json, Sqlite3 };
     static SaveProgress *instance(Simul6 *parent = nullptr);
    ~SaveProgress();
 
@@ -79,6 +80,7 @@ class SaveProgress : public QObject {
 
     void saveJson(double time);
     void saveCsv(double time);
+    void saveSqlite(double time);
 
     bool    m_active;
     quint64 m_interval;
@@ -86,6 +88,8 @@ class SaveProgress : public QObject {
     QString m_filename;
     Format  m_format;
     Simul6 *m_simul6;
+
+    Db::Database *m_database;
 };
 
 #endif

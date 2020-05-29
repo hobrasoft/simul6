@@ -92,6 +92,7 @@ SaveProgress::~SaveProgress() {
 
 SaveProgress::SaveProgress(Simul6 *parent) : QObject(parent) {
     m_instance = this;
+    m_database = nullptr;
     m_simul6 = parent;
     m_format = Csv;
     m_interval = 10000;
@@ -123,6 +124,10 @@ void SaveProgress::setFilename(const QString& filename) {
 
     if (m_format == Json && !m_filename.endsWith(".simul6.json", Qt::CaseInsensitive)) {
         m_filename = m_filename + ".simul6.json";
+        }
+
+    if (m_format == Sqlite3 && !m_filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive)) {
+        m_filename = m_filename + ".simul6.sqlite3";
         }
 
     m_worker->setFilename(m_filename);
@@ -172,6 +177,9 @@ void SaveProgress::slotTimeChanged(double time) {
         }
     if (m_format == Csv) {
         saveCsv(time);
+        }
+    if (m_format == Sqlite3) {
+        saveSqlite(time);
         }
 
     if (time > 0) {
@@ -259,6 +267,36 @@ void SaveProgress::saveCsv(double time) {
         }
     
     file.close();
+    engine->unlock();
+}
+
+
+void SaveProgress::saveSqlite(double time) {
+    PDEBUG;
+    if (m_database == nullptr) {
+        m_database = new Db::Database(m_filename, this);
+        m_database->open();
+        }
+
+    if (m_database == nullptr) { return; }
+    if (!m_database->isOpen()) { return; }
+
+    const Engine *engine = m_simul6->engine();
+    engine->lock();
+    size_t p = engine->getNp(); // points
+    for (auto &sample : engine->getMix().getSamples()) {
+        QList<double> list;
+        for (unsigned int i = 0; i<=p; i++) {
+            list << sample.getA(0,i);
+            }
+
+        Dbt::Steps steps;
+        steps.time = time;
+        steps.internal_id = sample.getInternalId();
+        steps.values_array = list;
+        m_database->save(steps);
+        }
+    
     engine->unlock();
 }
 
