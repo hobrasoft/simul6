@@ -6,7 +6,7 @@
 
 QT += core gui charts
 
-# CONFIG += debug debug_and_release
+CONFIG += debug debug_and_release
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -50,6 +50,7 @@ include(../version.pri)
 include(../global.pri)
 include(../data/data.pri)
 include(../images/images.pri)
+include(database/database.pri)
 include(utils/utils.pri)
 include(widgets/widgets.pri)
 
@@ -93,6 +94,8 @@ SOURCES += \
     importsna.cpp \
     ampholines.cpp \
     replay.cpp \
+    replaydatajson.cpp \
+    replaydatasqlite3.cpp \
     myview.cpp \
     manualscale.cpp \
     swapsegmentwidget.cpp \
@@ -134,6 +137,9 @@ HEADERS += \
     importsna.h \
     ampholines.h \
     replay.h \
+    replaydataabstract.h \
+    replaydatajson.h \
+    replaydatasqlite3.h \
     grafstyle.h \
     myview.h \
     manualscale.h \

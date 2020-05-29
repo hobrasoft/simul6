@@ -26,12 +26,22 @@
      <item row="1" column="1" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
+        <widget class="QRadioButton" name="f_format_sqlite">
+         <property name="text">
+          <string>simul6.sqlite3</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QRadioButton" name="f_format_json">
          <property name="text">
           <string>simul6.json</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -176,6 +186,16 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>f_format_sqlite</tabstop>
+  <tabstop>f_format_json</tabstop>
+  <tabstop>f_format_csv</tabstop>
+  <tabstop>f_filename</tabstop>
+  <tabstop>f_filename_select</tabstop>
+  <tabstop>f_interval</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>f_accept</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -185,8 +205,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>427</x>
-     <y>239</y>
+     <x>751</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
      <x>229</x>
@@ -201,8 +221,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>341</x>
-     <y>256</y>
+     <x>661</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>

@@ -7,6 +7,7 @@
 #define _Replay_H_
 
 #include "ui_replay.h"
+#include "replaydataabstract.h"
 #include <QTimer>
 
 class Engine;
@@ -20,7 +21,8 @@ class Replay : public QWidget {
    ~Replay();
     Replay(QWidget *);
 
-    void setData(const QVariantList&);
+    void setData(const QString& database_file_name);
+    void setData(const QVariantList& data);
     void clear();
     void setEngine(Engine *);
 
@@ -38,9 +40,10 @@ class Replay : public QWidget {
     bool    m_replay;
     int     m_step;
     Engine *m_engine;
-    QVariantList m_data; // item "simulation" in data file
     QTimer *m_timer;
     QAction *m_actionPlay;
+    ReplayDataAbstract *m_data;
+    void    initReplay();
 };
 
 #endif

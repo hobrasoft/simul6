@@ -360,28 +360,26 @@ void Engine::init() {
 void Engine::setStep(const QVariantMap& data) {
     // PDEBUG;
     const QVariantList& constituents = data["constituents"].toList();
+    if (constituents.isEmpty()) { return; }
     t = data["time"].toDouble();
+
     for (auto &sample : mix.getSamples()) {
         int internalId = sample.getInternalId();
         int sampleIndex = -1;
-        for (int i = 0; i<constituents.size(); i++) {
-            if (internalId == constituents[i].toMap()["internalId"].toInt()) {
+        for (int i=0; i<constituents.size(); i++) {
+            if (constituents[i].toMap()["internal_id"].toInt() == internalId) {
                 sampleIndex = i;
                 break;
                 }
             }
-        if (sampleIndex < 0) {
-            for (int i = 0; i<= np; i++) {
-                sample.setA(0, i, 0);
-                }
-          } else {
-            const QVariantMap& constituent = constituents[sampleIndex].toMap();
-            const QVariantList& concentrations = constituent["concentrations"].toList();
-            for (int i = 0; i<= np; i++) {
-                sample.setA(0, i, concentrations[i].toDouble());
-                }
+        if (sampleIndex < 0) { continue; }
+        const QVariantMap& constituent = constituents[sampleIndex].toMap();
+        const QVariantList& concentrations = constituent["concentrations"].toList();
+        for (int i = 0; i<= np; i++) {
+            sample.setA(0, i, concentrations[i].toDouble());
             }
         }
+
     init();
     timeChanged(t);
 }

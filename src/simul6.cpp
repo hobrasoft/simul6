@@ -213,17 +213,38 @@ QVariantMap Simul6::data() const {
 void Simul6::loadData() {
     QString dirname = MSETTINGS->dataDirName();
     QString filename = QFileDialog::getOpenFileName(this, tr("Load simulation"), dirname, 
-        tr("Simul6 data (*.simul6.json)")
-        );
+        tr("Simul6 data, JSON format (*.simul6.json);;"
+           "Simul6 data, Sqlite3 format (*.simul6.sqlite3)")
+        ).trimmed();
+
+    bool sqliteformat = filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive);
+    bool jsonformat   = filename.endsWith(".simul6.json", Qt::CaseInsensitive);
+
     setWindowTitle(tr("Simul: ") + filename);
     if (filename.isEmpty()) { return; }
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly)) {
-        SHOWMESSAGE(tr("Could not open file %1").arg(filename));
-        return;
+
+    QVariant data;
+    if (jsonformat) {
+        QFile file(filename);
+        if (!file.open(QIODevice::ReadOnly)) {
+            SHOWMESSAGE(tr("Could not open file %1").arg(filename));
+            return;
+            }
+        data = JSON::data(file.readAll());
         }
-    QVariant data = JSON::data(file.readAll());
+
+    Db::Database *db = nullptr;
+    if (sqliteformat) {
+        db = new Db::Database(filename);
+        db->open();
+        if (!db->isOpen()) {
+            SHOWMESSAGE(tr("Could not open file %1").arg(filename));
+            return;
+            }
+        data = db->json();
+        }
+
     QVariantMap ccontrol = data.toMap()["compute_control"].toMap();
     ui->f_computeControl->setCaplen(1000.0 * ccontrol["caplen"].toDouble());
     ui->f_computeControl->setBWmeters( ccontrol["zone_edge"].toDouble() );
@@ -243,22 +264,21 @@ void Simul6::loadData() {
     initEngine();
     SAVEPROGRESS->init();
 
-    if (data.toMap().contains("simulation")) {
+    ui->f_replay->clear();
+    ui->f_dock_replay->setVisible(false);
+
+    if (jsonformat && data.toMap().contains("simulation")) {
         ui->f_dock_replay->setVisible(true);
         ui->f_replay->setEngine(ui->f_simulationProfile->engine());
         ui->f_replay->setData(data.toMap()["simulation"].toList());
-        QVariantList swaps = data.toMap()["swaps"].toList();
-        for (int i=0; i<swaps.size(); i++) {
-            const QVariantList& mix = swaps[i].toMap()["mix"].toList();
-            for (int i=0; i<mix.size(); i++) {
-                SegmentedConstituent constituent(mix[i].toMap()["constituent"].toMap());
-                constituent.setConcentrationsToZero();
-                ui->f_simulationProfile->engine()->addConstituent(constituent);
-                }
-            }
-      } else {
-        ui->f_replay->clear();
-        ui->f_dock_replay->setVisible(false);
+        }
+
+    if (sqliteformat && db->containsStepData()) {
+        db->close();
+        ui->f_dock_replay->setVisible(true);
+        ui->f_replay->setEngine(ui->f_simulationProfile->engine());
+        ui->f_replay->setData(filename);
+        delete db;
         }
 
     graf()->autoscale();
