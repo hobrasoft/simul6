@@ -6,6 +6,7 @@
 #include "database.h"
 #include "msettings.h"
 #include "msqlquery.h"
+#include "json.h"
 #include "pdebug.h"
 #include <QFile>
 #include <QSqlError>
@@ -151,7 +152,30 @@ QString Database::dbFileName() const {
 }
 
 
-void Database::save(const Dbt::Steps& steps) {
+QVariant Database::json() const {
+    MSqlQuery q(m_db);
+    q.exec("select json from json limit 1;");
+    if (!q.next()) { return QVariant(); }
+    return JSON::data(q.value(0).toByteArray());
+}
+
+
+bool Database::containsStepData() const {
+    MSqlQuery q(m_db);
+    q.exec("select 1 from stepdata limit 1;");
+    q.next();
+    return q.value(0).toInt() == 1;
+}
+
+
+void Database::save(const QVariantMap& json) {
+    MSqlQuery q(m_db);
+    q.prepare("insert into json (json) values (:json);");
+    q.bindValue(":json", JSON::json(json));
+    q.exec();
+}
+
+void Database::save(const Dbt::StepData& stepdata) {
     auto toString = [](const QList<double>& list) {
         QStringList stringlist;
         for (int i=0; i<list.size(); i++) {
@@ -160,11 +184,52 @@ void Database::save(const Dbt::Steps& steps) {
         return stringlist.join(",");
         };
     MSqlQuery q(m_db);
-    q.prepare("insert into steps (time, internal_id, values_array) values (:time, :internal_id, :values_array);");
-    q.bindValue(":time", steps.time);
-    q.bindValue(":internal_id", steps.internal_id);
-    q.bindValue(":values_array", toString(steps.values_array));
+    q.prepare("insert into stepdata (time, internal_id, values_array) values (:time, :internal_id, :values_array);");
+    q.bindValue(":time", stepdata.time);
+    q.bindValue(":internal_id", stepdata.internal_id);
+    q.bindValue(":values_array", toString(stepdata.values_array));
     q.exec();
 }
 
+
+QList<double> Database::steps() const {
+    QList<double> list;
+    MSqlQuery q(m_db);
+    q.exec("select time from stepdata group by time order by time;");
+    while (q.next()) {
+        list << q.value(0).toDouble();
+        }
+    return list;
+}
+
+
+QVariantMap Database::stepData(double time) const {
+    QVariantMap data;
+    QVariantList constituents;
+    MSqlQuery q(m_db);
+    q.prepare("select internal_id, values_array from stepdata "
+              " where time > :time1 and time < :time2 "
+              " order by internal_id;");
+    q.bindValue(":time1", time-0.01);
+    q.bindValue(":time2", time+0.01);
+    q.exec();
+    while (q.next()) {
+        int internal_id = q.value(0).toInt();
+        QStringList sconcentrations = q.value(1).toString().split(",");
+        QVariantList concentrations;
+        for (int i=0; i<sconcentrations.size(); i++) {
+            bool ok;
+            double x = QLocale::c().toDouble(sconcentrations[i], &ok);
+            if (!ok) { x = 0; }
+            concentrations << x;
+            }
+        QVariantMap constituent;
+        constituent["internal_id"] = internal_id;
+        constituent["concentrations"] = concentrations;
+        constituents << constituent;
+        }
+    data["time"] = time;
+    data["constituents"] = constituents;
+    return data;
+}
 

@@ -10,8 +10,11 @@
 #include "pdebug.h"
 #include "simul6.h"
 #include "graf.h"
+#include "replaydatajson.h"
+#include "replaydatasqlite3.h"
 
 Replay::~Replay() {
+    if (m_data != nullptr) { delete m_data; }
     delete ui;
 }
 
@@ -20,6 +23,7 @@ Replay::Replay(QWidget *parent) : QWidget(parent) {
     ui = new Ui::Replay;
     ui->setupUi(this);
     m_replay = false;
+    m_data = nullptr;
 
     QAction *action;
     action = new QAction(QIcon("://icons/begin.svg"), tr("Begin"), this);
@@ -52,7 +56,8 @@ Replay::Replay(QWidget *parent) : QWidget(parent) {
 
 
 void Replay::clear() {
-    m_data.clear();
+    delete m_data;
+    m_data = nullptr;
     m_step = 0;
     m_timer->stop();
     ui->f_slider->setRange(0, 0);
@@ -60,15 +65,28 @@ void Replay::clear() {
 }
 
 
+void Replay::setData(const QString& databaseFilename) {
+    clear();
+    m_data = new ReplayDataSqlite3(databaseFilename);
+    initReplay();
+}
+
 void Replay::setData(const QVariantList& data) {
+    clear();
+    m_data = new ReplayDataJson(data);
+    initReplay();
+}
+
+
+void Replay::initReplay() {
+    if (m_data == nullptr) { return; }
     setEnabled(true);
     m_replay = false;
-    m_data = data;
     m_step = 0;
     ui->f_slider->setValue(0);
-    ui->f_slider->setRange(0, data.size()-1);
+    ui->f_slider->setRange(0, m_data->size()-1);
     ui->f_step_number->setText("0");
-    ui->f_size->setText(QString("%1").arg(data.size()-1));
+    ui->f_size->setText(QString("%1").arg(m_data->size()-1));
     m_actionPlay->setIcon(QIcon("://icons/play.svg"));
 }
 
@@ -79,9 +97,10 @@ void Replay::setEngine(Engine *engine) {
 
 
 void Replay::nextStep() {
+    if (m_data == nullptr) { return; }
     m_step += 1;
-    if (m_step >= m_data.size()) {
-        m_step = m_data.size() - 1;
+    if (m_step >= m_data->size()) {
+        m_step = m_data->size() - 1;
         m_replay = false;
         ui->f_toBegin->setEnabled(!m_replay);
         ui->f_toEnd->setEnabled(!m_replay);
@@ -95,9 +114,10 @@ void Replay::nextStep() {
 
 
 void Replay::prevStep() {
+    if (m_data == nullptr) { return; }
     m_step -= 1;
     if (m_step < 0) {
-        m_step = m_data.size() - 1;
+        m_step = m_data->size() - 1;
         m_replay = false;
         ui->f_toBegin->setEnabled(!m_replay);
         ui->f_toEnd->setEnabled(!m_replay);
@@ -111,9 +131,8 @@ void Replay::prevStep() {
 
 
 void Replay::setStep(int step) {
-    if (step >= m_data.size()) {
-        return;
-        }
+    if (m_data == nullptr) { return; }
+    if (step >= m_data->size()) { return; }
     m_step = step;
     ui->f_step_number->setText(QString("%1").arg(m_step));
     if (m_replay) {
@@ -121,11 +140,12 @@ void Replay::setStep(int step) {
         m_timer->start();
         }
     Simul6::instance()->graf()->setRescaleEnabled(false);
-    m_engine->setStep(m_data[m_step].toMap());
+    m_engine->setStep(m_data->step(m_step));
 }
 
 
 void Replay::toBegin() {
+    if (m_data == nullptr) { return; }
     m_timer->stop();
     m_step = -1;
     nextStep();
@@ -133,8 +153,9 @@ void Replay::toBegin() {
 
 
 void Replay::toEnd() {
+    if (m_data == nullptr) { return; }
     m_timer->stop();
-    m_step = m_data.size() - 1;
+    m_step = m_data->size() - 1;
     nextStep();
 }
 

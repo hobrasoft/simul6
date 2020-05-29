@@ -6,7 +6,11 @@ create table version (
 
 insert into version values (0);
 
-create table steps (
+create table json (
+    json    text
+);
+
+create table stepdata (
     time         numeric not null,
     internal_id  int     not null,
     values_array text,

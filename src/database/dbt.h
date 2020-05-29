@@ -10,11 +10,11 @@
 
 namespace Dbt {
 
-struct Steps {
+struct StepData {
     double          time;
     int             internal_id;
     QList<double>   values_array;
-    Steps() { time = 0; internal_id = 0; }
+    StepData() { time = 0; internal_id = 0; }
 };
 
 

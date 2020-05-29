@@ -197,7 +197,6 @@ void SaveProgress::saveJson(double time) {
     size_t p = engine->getNp(); // points
 
     QVariantList constituents;
-    int id = 0;
     for (auto &sample : engine->getMix().getSamples()) {
         QVariantList concentrations;
         for (unsigned int i = 0; i <= p; i++){
@@ -205,7 +204,7 @@ void SaveProgress::saveJson(double time) {
             }
 
         QVariantMap constituent;
-        constituent["id"] = id;
+        constituent["internal_id"] = sample.getInternalId();
         constituent["concentrations"] = concentrations;
         constituents << constituent;
         }
@@ -272,10 +271,12 @@ void SaveProgress::saveCsv(double time) {
 
 
 void SaveProgress::saveSqlite(double time) {
-    PDEBUG;
+    PDEBUG << time;
     if (m_database == nullptr) {
+        QFile::remove(m_filename);
         m_database = new Db::Database(m_filename, this);
         m_database->open();
+        m_database->save(m_simul6->data());
         }
 
     if (m_database == nullptr) { return; }
@@ -290,11 +291,11 @@ void SaveProgress::saveSqlite(double time) {
             list << sample.getA(0,i);
             }
 
-        Dbt::Steps steps;
-        steps.time = time;
-        steps.internal_id = sample.getInternalId();
-        steps.values_array = list;
-        m_database->save(steps);
+        Dbt::StepData stepdata;
+        stepdata.time = time;
+        stepdata.internal_id = sample.getInternalId();
+        stepdata.values_array = list;
+        m_database->save(stepdata);
         }
     
     engine->unlock();
