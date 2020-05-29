@@ -29,13 +29,13 @@ msvc {
     QMAKE_CXXFLAGS += /openmp
     DEFINES += PDEBUG_FUNCTION_NAME=__FUNCSIG__
 } 
-mac { # using MacPorts libomp
+macx { # using MacPorts libomp
     QMAKE_CXXFLAGS += -Xpreprocessor -fopenmp
     DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
     INCLUDEPATH += /opt/local/include/libomp
     LIBS += -L/opt/local/lib/libomp -lomp
 } 
-unix {
+unix:!macx {
     QMAKE_CXXFLAGS += -ftree-parallelize-loops=24 -fopenmp
     DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
     LIBS += -lgomp
