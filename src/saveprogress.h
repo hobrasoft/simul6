@@ -70,7 +70,7 @@ class SaveProgress : public QObject {
     void setInterval(double);
     void setActive(bool);
     void setFormat(Format);
-    void saveMix();
+    void saveSwap();
     void init();
 
   private:
@@ -86,6 +86,7 @@ class SaveProgress : public QObject {
     bool    m_active;
     quint64 m_interval;
     quint64 m_savedTime;
+    double  m_savedTimeReal;
     QString m_filename;
     Format  m_format;
     Simul6 *m_simul6;

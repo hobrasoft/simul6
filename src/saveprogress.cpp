@@ -145,6 +145,7 @@ void SaveProgress::setFormat(Format format) {
 
 void SaveProgress::init() {
     m_savedTime = 0;
+    m_savedTimeReal = 0;
     m_active = false;
     m_worker->setHeaderData(m_simul6->data());
 }
@@ -153,6 +154,7 @@ void SaveProgress::init() {
 void SaveProgress::slotFinished() {
     return;
     m_savedTime = 0;
+    m_savedTimeReal = 0;
     m_active = false;
     slotTimeChanged(m_simul6->engine()->getTime());
 }
@@ -178,6 +180,8 @@ void SaveProgress::slotTimeChanged(double time) {
     if (time > 0) {
         m_savedTime += m_interval;
         }
+
+    m_savedTimeReal = time;
 }
 
 
@@ -295,11 +299,12 @@ void SaveProgress::saveSqlite(double time) {
 }
 
 
-void SaveProgress::saveMix() {
+void SaveProgress::saveSwap() {
     PDEBUG;
     if (m_database != nullptr && m_format == Sqlite3) {
         PDEBUG;
         m_database->save(m_simul6->data());
+        saveSqlite(m_savedTimeReal+0.001);
         }
 }
 
