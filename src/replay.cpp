@@ -81,13 +81,11 @@ void Replay::setData(const QVariantList& data) {
 void Replay::setMixData(const QVariantList& data) {
     for (int i=0; i<data.size(); i++) {
         int internalId = data[i].toMap()["constituent"].toMap()["internal_id"].toInt();
-        PDEBUG << internalId << data[i];
         m_mixData[internalId] = data[i];
         }
 }
 
 void Replay::setSwapsData(const QVariantList& data) {
-    PDEBUG << data;
     for (int i=0; i<data.size(); i++) {
         setMixData(data[i].toMap()["mix"].toList());
         }
