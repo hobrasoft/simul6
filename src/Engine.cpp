@@ -370,6 +370,11 @@ void Engine::setStep(const QVariantMap& data) {
     if (constituents.isEmpty()) { return; }
     t = data["time"].toDouble();
 
+    QSet<int> internalIdsToZero;
+    for (auto &sample : mix.getSamples()) {
+        internalIdsToZero << sample.getInternalId();
+        }
+
     for (auto &sample : mix.getSamples()) {
         int internalId = sample.getInternalId();
         int sampleIndex = -1;
@@ -380,10 +385,19 @@ void Engine::setStep(const QVariantMap& data) {
                 }
             }
         if (sampleIndex < 0) { continue; }
+        internalIdsToZero.remove(internalId);
         const QVariantMap& constituent = constituents[sampleIndex].toMap();
         const QVariantList& concentrations = constituent["concentrations"].toList();
         for (int i = 0; i<= np; i++) {
             sample.setA(0, i, concentrations[i].toDouble());
+            }
+        }
+
+    for (auto &sample: mix.getSamples()) {
+        int internalId = sample.getInternalId();
+        if (!internalIdsToZero.contains(internalId)) { continue; }
+        for (int i=0; i<=np; i++) {
+            sample.setA(0, i, 0);
             }
         }
 
