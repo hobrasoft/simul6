@@ -60,6 +60,7 @@ void Replay::clear() {
     m_data = nullptr;
     m_step = 0;
     m_timer->stop();
+    m_mixData.clear();
     ui->f_slider->setRange(0, 0);
     setEnabled(false);
 }
@@ -75,6 +76,21 @@ void Replay::setData(const QVariantList& data) {
     clear();
     m_data = new ReplayDataJson(data);
     initReplay();
+}
+
+void Replay::setMixData(const QVariantList& data) {
+    for (int i=0; i<data.size(); i++) {
+        int internalId = data[i].toMap()["constituent"].toMap()["internal_id"].toInt();
+        PDEBUG << internalId << data[i];
+        m_mixData[internalId] = data[i];
+        }
+}
+
+void Replay::setSwapsData(const QVariantList& data) {
+    PDEBUG << data;
+    for (int i=0; i<data.size(); i++) {
+        setMixData(data[i].toMap()["mix"].toList());
+        }
 }
 
 
@@ -140,7 +156,21 @@ void Replay::setStep(int step) {
         m_timer->start();
         }
     Simul6::instance()->graf()->setRescaleEnabled(false);
-    m_engine->setStep(m_data->step(m_step));
+    const QVariantMap& stepData = m_data->step(m_step);
+    const QVariantList& constituents = stepData["constituents"].toList();
+
+    // If the constituent does not exist in engine yet,
+    // add the constituent to enginet.
+    // This can happen when swap data are in steps data
+    for (int i=0; i<constituents.size(); i++) {
+        int internalId = constituents[i].toMap()["internal_id"].toInt();
+        if (!m_engine->containsConstituentInternalId(internalId) && m_mixData.contains(internalId)) {
+            const QVariantMap& cdata = m_mixData[internalId].toMap()["constituent"].toMap();
+            m_engine->addConstituent(SegmentedConstituent(cdata));
+            }
+        }
+
+    m_engine->setStep(stepData);
 }
 
 

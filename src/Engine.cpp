@@ -354,6 +354,13 @@ void Engine::init() {
 }
 
 
+bool Engine::containsConstituentInternalId(int internalId) {
+    for (auto &sample : mix.getSamples()) {
+        if (internalId == sample.getInternalId()) { return true; }
+        }
+    return false;
+}
+
 /**
  * @brief Receives one step from data file, item "simulation"
  */

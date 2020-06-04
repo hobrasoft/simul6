@@ -23,6 +23,8 @@ class Replay : public QWidget {
 
     void setData(const QString& database_file_name);
     void setData(const QVariantList& data);
+    void setMixData(const QVariantList& data);
+    void setSwapsData(const QVariantList& data);
     void clear();
     void setEngine(Engine *);
 
@@ -44,6 +46,7 @@ class Replay : public QWidget {
     QAction *m_actionPlay;
     ReplayDataAbstract *m_data;
     void    initReplay();
+    QHash<int, QVariant>    m_mixData;
 };
 
 #endif

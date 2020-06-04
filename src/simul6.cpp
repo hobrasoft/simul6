@@ -291,6 +291,8 @@ void Simul6::loadData() {
         ui->f_dock_replay->setVisible(true);
         ui->f_replay->setEngine(ui->f_simulationProfile->engine());
         ui->f_replay->setData(data.toMap()["simulation"].toList());
+        ui->f_replay->setMixData(data.toMap()["mix"].toList());
+        ui->f_replay->setSwapsData(data.toMap()["swaps"].toList());
         }
 
     if (sqliteformat && db->containsStepData()) {
@@ -298,6 +300,8 @@ void Simul6::loadData() {
         ui->f_dock_replay->setVisible(true);
         ui->f_replay->setEngine(ui->f_simulationProfile->engine());
         ui->f_replay->setData(filename);
+        ui->f_replay->setMixData(data.toMap()["mix"].toList());
+        ui->f_replay->setSwapsData(data.toMap()["swaps"].toList());
         delete db;
         }
 

@@ -136,6 +136,7 @@ public:
     void setOptimizeDt(bool x) { m_optimizeDt = x; }
     void setTimeDisplay(double pTimeDisplay) {timeDisplay = pTimeDisplay; }
     void setBW(int x) { bw = x; }
+    bool containsConstituentInternalId(int internalId);
 
     size_t getNm(); // Get number of constituents
     int getNp() const { return np; }
