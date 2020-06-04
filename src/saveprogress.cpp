@@ -8,7 +8,9 @@
 #include "simul6.h"
 #include "Engine.h"
 #include "messagedialog.h"
+#include "msettings.h"
 #include "json.h"
+#include <QFileDialog>
 #include <math.h>
 
 SaveProgress *SaveProgress::m_instance = nullptr;
@@ -90,10 +92,11 @@ SaveProgress::~SaveProgress() {
 }
 
 
-SaveProgress::SaveProgress(Simul6 *parent) : QObject(parent) {
+SaveProgress::SaveProgress(QWidget *parent) : QWidget (parent), ui(new Ui::SaveProgress) {
+    ui->setupUi(this);
     m_instance = this;
     m_database = nullptr;
-    m_simul6 = parent;
+    m_simul6 = Simul6::instance();
     m_format = Csv;
     m_interval = 10000;
     m_workerThread.start();
@@ -101,62 +104,92 @@ SaveProgress::SaveProgress(Simul6 *parent) : QObject(parent) {
     m_worker->moveToThread(&m_workerThread);
     connect(this, &SaveProgress::timeData, m_worker, &SaveProgressWorker::saveTimeData);
 
-    init();
+    ui->f_directory->setText(MSETTINGS->exportDirName());
+    connect(ui->f_filename_select, &QAbstractButton::clicked, this, &SaveProgress::selectFile);
+    connect(ui->f_active, &QCheckBox::stateChanged, this, &SaveProgress::activeStateChanged);
+
+    QTimer::singleShot(0, this, &SaveProgress::init);
+
+}
+
+void SaveProgress::selectFile() {
+    QString dirname = MSETTINGS->exportDirName();
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), dirname,
+          tr("Simul6 data, Sqlite3 format (*.simul6.sqlite3);;"
+             "Simul6 data, Json format (*.simul6.json);;"
+             "Csv format (*.csv)")
+        ).trimmed();
+    ui->f_active->setEnabled(!filename.isEmpty());
+    if (filename.isEmpty()) { return; }
+    m_filename = filename;
+    ui->f_directory->setText(QFileInfo(filename).absoluteDir().absolutePath());
+    MSETTINGS->setExportDirName(QFileInfo(filename).absoluteDir().absolutePath());
+    ui->f_filename->setText(QFileInfo(filename).fileName());
+
+    if (filename.endsWith(".simul6.json", Qt::CaseInsensitive))    { m_format = SaveProgress::Json; return; }
+    if (filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive)) { m_format = SaveProgress::Sqlite3; return; }
+    if (filename.endsWith(".csv", Qt::CaseInsensitive))            { m_format = SaveProgress::Csv; return; }
 
 }
 
 
-SaveProgress *SaveProgress::instance(Simul6 *parent) {
-    if (m_instance == nullptr) {
-        Q_ASSERT(parent != nullptr);
-        new SaveProgress(parent);
+void SaveProgress::activeStateChanged() {
+    bool active = ui->f_active->isChecked();
+    ui->f_form->setEnabled(!active);
+
+    if (active)  {
+        m_active = true;
+        m_interval = 1000 * ui->f_interval->value();
+        if (m_database != nullptr) {
+            m_database->close();
+            delete m_database;
+            m_database = nullptr;
+            }
+        QFile::remove(m_filename);
+        m_worker->setFilename(m_filename);
+        showStepsForm();
+        return;
         }
+
+    if (!active) {
+        m_active = false;
+        init();
+        showStepsForm();
+        return;
+        }
+
+}
+
+void SaveProgress::showStepsForm() {
+    ui->f_active->setChecked(m_active);
+    ui->f_savedsteps->setText(QString("%1").arg(m_savedSteps));
+    ui->f_savedtime->setText(QString("%1").arg(m_savedTimeReal));
+    ui->f_filesize->setText(QString("%1").arg(QFileInfo(m_filename).size()));
+}
+
+
+
+SaveProgress *SaveProgress::instance() {
+    Q_ASSERT(m_instance != nullptr);
     return m_instance;
 }
 
 
-void SaveProgress::setFilename(const QString& filename) {
-    if (m_database != nullptr) {
-        m_database->close();
-        delete m_database;
-        m_database = nullptr;
-        }
-    QFile::remove(filename);
-    m_filename = filename;
-    m_worker->setFilename(m_filename);
-}
-
-
-void SaveProgress::setInterval(double interval) {
-    m_interval = 1000 * interval;
-}
-
-
-void SaveProgress::setActive(bool active) {
-    m_active = active;
-}
-
-
-void SaveProgress::setFormat(Format format) {
-    PDEBUG << format;
-    m_format = format;
-}
-
-
 void SaveProgress::init() {
+    m_savedSteps = 0;
     m_savedTime = 0;
     m_savedTimeReal = 0;
     m_active = false;
     m_worker->setHeaderData(m_simul6->data());
+    m_filename.clear();
+    ui->f_filename->setText(QString());
+    ui->f_active->setEnabled(false);
+    showStepsForm();
 }
 
 
 void SaveProgress::slotFinished() {
     return;
-    m_savedTime = 0;
-    m_savedTimeReal = 0;
-    m_active = false;
-    slotTimeChanged(m_simul6->engine()->getTime());
 }
 
 
@@ -182,6 +215,9 @@ void SaveProgress::slotTimeChanged(double time) {
         }
 
     m_savedTimeReal = time;
+    m_savedSteps += 1;
+
+    showStepsForm();
 }
 
 

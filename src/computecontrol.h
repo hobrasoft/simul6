@@ -41,7 +41,6 @@ signals:
     void init();
     void run();
     void stop();
-    void saveProgressChecked();
     void visibilityChangedPh(bool);
     void visibilityChangedKapa(bool);
     void visibilityChangedE(bool);
@@ -50,8 +49,7 @@ signals:
 public slots:
     void showTime(double);
     void slotFinished();
-    void setSaveProgressChecked(bool x);
-    void resetSaveProgressChecked() { setSaveProgressChecked(false); }
+    void initForm();
 
 private slots:
     void slotRunClicked();

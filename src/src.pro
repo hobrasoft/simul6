@@ -90,7 +90,6 @@ SOURCES += \
     mixcontrolswapmodel.cpp \
     mixcontrolmodelabstract.cpp \
     mixcontroldelegate.cpp \
-    simulationprogressdialog.cpp \
     saveprogress.cpp \
     segmentedconstituent.cpp \
     importsna.cpp \
@@ -133,7 +132,6 @@ HEADERS += \
     mixcontrolswapmodel.h \
     mixcontrolmodelabstract.h \
     mixcontroldelegate.h \
-    simulationprogressdialog.h \
     saveprogress.h \
     segmentedconstituent.h \
     importsna.h \
@@ -160,7 +158,7 @@ FORMS += \
     grafdetail.ui \
     ampholines.ui \
     replay.ui \
-    simulationprogressdialog.ui \
+    saveprogress.ui \
     manualscale.ui \
     swapsegmentwidget.ui \
 

@@ -15,9 +15,6 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_run, &QPushButton::clicked, this, &ComputeControl::slotRunClicked);
     connect(ui->f_stop, &QPushButton::clicked, this, &ComputeControl::slotStopClicked);
     connect(ui->f_init, &QPushButton::clicked, this, &ComputeControl::slotInitClicked);
-    connect(ui->f_saveprogress, &QAbstractButton::clicked, [this]() {
-        if (ui->f_saveprogress->isChecked()) { emit saveProgressChecked(); }
-        });
     connect(ui->f_parallel, &QAbstractButton::clicked, this, &ComputeControl::setParallelComputation);
     connect(ui->f_show_kapa, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedKapa);
     connect(ui->f_show_ph, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedPh);
@@ -75,16 +72,14 @@ bool ComputeControl::showE() const {
 }
 
 
-void ComputeControl::setSaveProgressChecked(bool x) {
-    ui->f_saveprogress->setChecked(x);
+void ComputeControl::initForm() {
+    slotInitClicked();
 }
-
 
 void ComputeControl::slotInitClicked() {
     ui->f_init->setEnabled(true);
     ui->f_run->setEnabled(true);
     ui->f_stop->setEnabled(true);
-    ui->f_saveprogress->setChecked(false);
 }
 
 void ComputeControl::slotRunClicked() {

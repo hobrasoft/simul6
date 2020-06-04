@@ -12,10 +12,14 @@
 #include <QMutex>
 #include <QTimer>
 #include "database.h"
+#include "ui_saveprogress.h"
 
 #define SAVEPROGRESS SaveProgress::instance()
 
 class Simul6;
+namespace Ui {
+class SaveProgress;
+};
 
 class SaveProgressWorker : public QObject {
     Q_OBJECT
@@ -48,11 +52,12 @@ class SaveProgressWorker : public QObject {
 /**
  * @brief
  */
-class SaveProgress : public QObject {
+class SaveProgress : public QWidget {
     Q_OBJECT
   public:
+    SaveProgress(QWidget *parent);
     enum Format { Csv = 1, Json, Sqlite3 };
-    static SaveProgress *instance(Simul6 *parent = nullptr);
+    static SaveProgress *instance();
    ~SaveProgress();
 
     const QString& filename() const { return m_filename; }
@@ -66,15 +71,15 @@ class SaveProgress : public QObject {
   public slots:
     void slotTimeChanged(double);
     void slotFinished();
-    void setFilename(const QString&);
-    void setInterval(double);
-    void setActive(bool);
-    void setFormat(Format);
     void saveSwap();
     void init();
 
+  private slots:
+    void selectFile();
+    void activeStateChanged();
+    void showStepsForm();
+
   private:
-    SaveProgress(Simul6 *parent);
     static SaveProgress *m_instance;
     QThread m_workerThread;
     SaveProgressWorker *m_worker;
@@ -87,11 +92,13 @@ class SaveProgress : public QObject {
     quint64 m_interval;
     quint64 m_savedTime;
     double  m_savedTimeReal;
+    int     m_savedSteps;
     QString m_filename;
     Format  m_format;
     Simul6 *m_simul6;
 
     Db::Database *m_database;
+    Ui::SaveProgress *ui;
 };
 
 #endif

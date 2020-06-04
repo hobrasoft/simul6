@@ -45,7 +45,7 @@
      <x>0</x>
      <y>0</y>
      <width>772</width>
-     <height>22</height>
+     <height>34</height>
     </rect>
    </property>
   </widget>
@@ -166,6 +166,21 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="f_dock_saveprogress">
+   <property name="windowTitle">
+    <string>Progress saving</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="0" column="0">
+      <widget class="SaveProgress" name="f_saveprogress" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -197,6 +212,12 @@
    <class>Replay</class>
    <extends>QWidget</extends>
    <header>replay.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SaveProgress</class>
+   <extends>QWidget</extends>
+   <header>saveprogress.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

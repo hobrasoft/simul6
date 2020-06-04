@@ -10,7 +10,6 @@
 #include "importsna.h"
 #include "pdebug.h"
 #include "ampholines.h"
-#include "simulationprogressdialog.h"
 #include "saveprogress.h"
 #include "about.h"
 #include "localurl.h"
@@ -41,10 +40,8 @@ Simul6::Simul6(QWidget *parent) :
     m_instance = this;
     MSettings::instance(this);
     new LocalUrl(this);
-    qDebug() << "Simul6";
     ui->setupUi(this);
     setWindowIcon(QIcon("://icons/appicon.svg"));
-    SaveProgress::instance(this);
     createActions();
     connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
     connect(ui->f_computeControl, &ComputeControl::init, SAVEPROGRESS, &SaveProgress::init);
@@ -92,6 +89,7 @@ Simul6 *Simul6::instance() {
 void Simul6::init() {
     readSettings();
     setDockingWindows();
+    setVisible(true);
     ui->f_dock_replay->setVisible(false);
     ui->f_replay->clear();
 }
@@ -285,6 +283,7 @@ void Simul6::loadData() {
     ui->f_mixcontrol->setMixJson(data.toMap()["mix"].toList());
     ui->f_mixcontrol->setSwapsJson(data.toMap()["swaps"].toList());
 
+    ui->f_computeControl->initForm();
     initEngine();
     SAVEPROGRESS->init();
 
@@ -373,18 +372,6 @@ void Simul6::createActions() {
         saveData();
     });
 
-    action = new QAction(tr("Save simulation progress"), this);
-    menu->addAction(action);
-    connect(action, &QAction::triggered, [this]() {
-        SimulationProgressDialog d(this);
-        if (QDialog::Accepted != d.exec()) { 
-            ui->f_computeControl->setSaveProgressChecked(false);
-            return; 
-            }
-        ui->f_computeControl->setSaveProgressChecked(true);
-        SAVEPROGRESS->setActive(true);
-    });
-    connect(ui->f_computeControl, &ComputeControl::saveProgressChecked, action, &QAction::trigger);
 
     action = new QAction(tr("Ampholines"), this);
     connect(action, &QAction::triggered, [this]() {
@@ -401,6 +388,7 @@ void Simul6::createActions() {
     menu->addAction(ui->f_dock_inputParams->toggleViewAction());
     menu->addAction(ui->f_dock_composition->toggleViewAction());
     menu->addAction(ui->f_dock_replay->toggleViewAction());
+    menu->addAction(ui->f_dock_saveprogress->toggleViewAction());
     ui->menuBar->addMenu(menu);
 
 
