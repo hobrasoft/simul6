@@ -294,3 +294,13 @@ void SaveProgress::saveSqlite(double time) {
     engine->unlock();
 }
 
+
+void SaveProgress::saveMix() {
+    PDEBUG;
+    if (m_database != nullptr && m_format == Sqlite3) {
+        PDEBUG;
+        m_database->save(m_simul6->data());
+        }
+}
+
+

@@ -74,6 +74,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
     connect(ui->f_mixcontrol, &MixControl::swap, [this](const QList<SegmentedConstituent>& constituents) {
         ui->f_simulationProfile->engine()->addMix(constituents);
+        SaveProgress::instance()->saveMix();
         });
 
     QTimer::singleShot(0, this, &Simul6::init);

@@ -70,6 +70,7 @@ class SaveProgress : public QObject {
     void setInterval(double);
     void setActive(bool);
     void setFormat(Format);
+    void saveMix();
     void init();
 
   private:

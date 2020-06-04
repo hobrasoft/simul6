@@ -170,6 +170,10 @@ bool Database::containsStepData() const {
 
 void Database::save(const QVariantMap& json) {
     MSqlQuery q(m_db);
+    q.exec("select 1 from json;");
+    if (q.next()) {
+        q.exec("delete from json;");
+        }
     q.prepare("insert into json (json) values (:json);");
     q.bindValue(":json", JSON::json(json));
     q.exec();
