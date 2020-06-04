@@ -363,14 +363,15 @@ void Graf::setScale(const QRectF& rect) {
     if (m_axis_x != nullptr) { m_axis_x->deleteLater(); }
     if (m_axis_y != nullptr) { m_axis_y->deleteLater(); }
 
-    double mcaplen = rect.width();
-    double maximum = rect.height();
     m_axis_y = new QValueAxis(this);
     m_axis_x = new QValueAxis(this);
     m_axis_y->setRange(rect.top(), rect.bottom());
     m_axis_x->setRange(rect.left(), rect.right());
 
+    #ifdef SET_AXIS_LABELS_MANUALLY
     #if QT_VERSION > 0x050c00
+    double mcaplen = rect.width();
+    double maximum = rect.height();
     double ytickInterval \
         = (maximum <= 0.000003) ? 0.0000001 
         : (maximum <= 0.00003) ? 0.000001 
@@ -409,6 +410,7 @@ void Graf::setScale(const QRectF& rect) {
     m_axis_x->setTickAnchor(rect.left());
     m_axis_x->setTickInterval(xtickInterval);
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
+    #endif
     #endif
 
     m_chart->addAxis(m_axis_x, Qt::AlignBottom);

@@ -13,7 +13,7 @@
 
 QT_CHARTS_USE_NAMESPACE
 
-#define SET_AXIS_LABELS_MANUALLY
+// #define SET_AXIS_LABELS_MANUALLY
 
 class Graf : public QChartView
 {
