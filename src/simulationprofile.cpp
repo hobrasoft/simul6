@@ -80,12 +80,14 @@ void SimulationProfile::createEngine(int np)
 
 void SimulationProfile::slotRun() {
     Q_ASSERT(m_engine != nullptr);
+    if (m_engine == nullptr) { return; }
     m_engine->run();
 }
 
 
 void SimulationProfile::slotStop() {
     Q_ASSERT(m_engine != nullptr);
+    if (m_engine == nullptr) { return; }
     m_engine->stop();
 }
 

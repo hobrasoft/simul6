@@ -2,6 +2,7 @@
 #define _MixControlTab_H_
 
 #include <QWidget>
+#include <QAction>
 #include "mixcontrolmodelabstract.h"
 
 namespace Ui {
@@ -48,6 +49,7 @@ private:
 
     MixControlModelAbstract *m_model;
     TabType m_tabType;
+    QAction *m_actionSwap;
 };
 
 #endif

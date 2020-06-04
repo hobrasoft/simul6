@@ -74,7 +74,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
     connect(ui->f_mixcontrol, &MixControl::swap, [this](const QList<SegmentedConstituent>& constituents) {
         ui->f_simulationProfile->engine()->addMix(constituents);
-        SaveProgress::instance()->saveMix();
+        SAVEPROGRESS->saveMix();
         });
 
     QTimer::singleShot(0, this, &Simul6::init);
@@ -126,6 +126,7 @@ const Engine *Simul6::engine() const {
 void Simul6::runEngine() {
     ui->f_replay->clear();
     ui->f_dock_replay->setVisible(false);
+    if (ui->f_simulationProfile->engine() == nullptr) { return; }
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setTimeStop(ui->f_computeControl->getTimeStop());
     ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
@@ -234,8 +235,10 @@ QVariantMap Simul6::data() const {
 void Simul6::loadData() {
     QString dirname = MSETTINGS->dataDirName();
     QString filename = QFileDialog::getOpenFileName(this, tr("Load simulation"), dirname, 
-        tr("Simul6 data, JSON format (*.simul6.json);;"
-           "Simul6 data, Sqlite3 format (*.simul6.sqlite3)")
+        tr("Simul6 data (*.simul6.json *.simul6.sqlite3);;"
+           "Simul6 data, JSON format (*.simul6.json);;"
+           "Simul6 data, Sqlite3 format (*.simul6.sqlite3);;"
+           "All files (*)")
         ).trimmed();
 
     bool sqliteformat = filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive);

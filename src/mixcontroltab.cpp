@@ -60,9 +60,10 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
     ui->f_removeAll->setDefaultAction(action);
     connect(action, &QAction::triggered, this, &MixControlTab::removeAll);
 
-    action = new QAction("Swap", this);
-    ui->f_swap->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControlTab::swapPressed);
+    m_actionSwap = new QAction("Swap", this);
+    ui->f_swap->setDefaultAction(m_actionSwap);
+    m_actionSwap->setEnabled(false);
+    connect(m_actionSwap, &QAction::triggered, this, &MixControlTab::swapPressed);
 
     ui->f_segment->setVisible(tabType != BasicTab);
     ui->f_swap->setVisible(tabType != BasicTab);
@@ -109,6 +110,7 @@ void MixControlTab::addComponent() {
         QModelIndex index = m_model->add(c);
         Q_UNUSED(index);
         resizeColumns();
+        m_actionSwap->setEnabled(m_model->rowCount() != 0);
         }
 }
 
@@ -134,6 +136,7 @@ void MixControlTab::editComponent(const QModelIndex& index) {
 void MixControlTab::removeComponent() {
     QModelIndex index = ui->f_view->currentIndex();
     m_model->removeRows(index.row(), 1);
+    m_actionSwap->setEnabled(m_model->rowCount() != 0);
 }
 
 
@@ -145,12 +148,13 @@ void MixControlTab::removeAll() {
     if (rc == QMessageBox::Yes) {
         m_model->removeRows(0, m_model->rowCount());
         }
-
+    m_actionSwap->setEnabled(m_model->rowCount() != 0);
 }
 
 
 void MixControlTab::add(const QList<SegmentedConstituent>& list)  {
     m_model->add(list);
+    m_actionSwap->setEnabled(m_model->rowCount() != 0);
 }
 
 
