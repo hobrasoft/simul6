@@ -1,7 +1,6 @@
 #include "graf.h"
 #include "omp.h"
 #include "pdebug.h"
-#include "backtrace.h"
 #include "constituentseries.h"
 #include "conductivityseries.h"
 #include "phseries.h"
@@ -39,8 +38,8 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_axis_x = nullptr;
     m_axis_y = nullptr;
 
-    connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
-    connect(m_chart, &QChart::geometryChanged, this, &Graf::subselected);
+//  connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
+//  connect(m_chart, &QChart::geometryChanged, this, &Graf::subselected);
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
@@ -71,6 +70,7 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 
 
 void Graf::init(const Engine *pEngine) {
+    disconnect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
     m_chart->removeAllSeries();
 
     m_engine = pEngine;
@@ -160,10 +160,12 @@ void Graf::init(const Engine *pEngine) {
 
     setAxisLabels();
 //  autoscale();
+    QTimer::singleShot(1000, this, [this]() { connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected); });
 }
 
 
 void Graf::autoscale() {
+    disconnect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
     if (m_engine == nullptr) { return; }
     double maximum = 0;
     double minimum = 99999;
@@ -248,6 +250,7 @@ void Graf::autoscale() {
         rect.setRight(d_xright);
         }
     repaint();
+    QTimer::singleShot(1000, this, [this]() { connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected); });
 }
 
 
@@ -313,14 +316,12 @@ void Graf::manualScale() {
 }
 
 
+// prevents the context menu 
 void Graf::mouseReleaseEvent(QMouseEvent *event) { 
-    // PDEBUG << event->x() << event->y();
     if (event->button() != Qt::RightButton) { 
         QChartView::mouseReleaseEvent(event);
         return; 
         }
-    // m_chart->zoomReset();
-    // event->accept();
 }
 
 
@@ -341,8 +342,8 @@ void Graf::applyNiceNumbers() {
     m_axis_x->applyNiceNumbers();
 }
 
+
 void Graf::subselected() {
-    // PDEBUG;
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
 
@@ -357,7 +358,6 @@ void Graf::subselected() {
 
 void Graf::setScale(const QRectF& rect) {
     PDEBUG << rect;
-    BACKTRACE();
     if (rect.isNull()) {
         return;
         }
@@ -401,18 +401,17 @@ void Graf::setScale(const QRectF& rect) {
     m_axis_y->setRange(rect.top(), rect.bottom());
     m_axis_x->setRange(rect.left(), rect.right());
 
-    double lx = exp10( floor(log10(rect.width())) );
-    double ly = exp10( floor(log10(rect.height())) );
-    double anchor_x = lx*floor(rect.left()/lx);
-    double anchor_y = ly*floor(rect.bottom()/ly);
-    m_axis_y->setTickInterval(lx/2.0);
-    m_axis_x->setTickInterval(ly/10);
-    m_axis_y->setTickAnchor(anchor_y);
+    double ix = exp10( round(log10(rect.width() / 8)));
+    double iy = exp10( round(log10(rect.height() / 8)));
+    m_axis_x->setTickInterval(ix);
+    m_axis_y->setTickInterval(iy);
+
+    double anchor_x = (rect.left() <= 0) ? 0 : exp10( round(log10(rect.left())) );
+    double anchor_y = (rect.bottom() <= 0) ? 0 : exp10( round(log10(rect.bottom())) );
     m_axis_x->setTickAnchor(anchor_x);
+    m_axis_y->setTickAnchor(anchor_y);
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
     m_axis_y->setTickType(QValueAxis::TicksDynamic);
-
-    PDEBUG << "anchor_x" << lx << anchor_x << "anchor_y" << ly << anchor_y;
 
     m_chart->addAxis(m_axis_x, Qt::AlignBottom);
     m_chart->addAxis(m_axis_y, Qt::AlignLeft);

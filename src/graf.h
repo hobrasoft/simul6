@@ -13,7 +13,7 @@
 
 QT_CHARTS_USE_NAMESPACE
 
-#define SET_AXIS_LABELS_MANUALLY
+// #define SET_AXIS_LABELS_MANUALLY
 
 class Graf : public QChartView
 {
@@ -67,6 +67,7 @@ private:
     bool m_rescalePh;
     bool m_rescaleE;
     bool m_rescaleKapa;
+    bool m_initialized;
     int  m_rescaleId;
 
     const Engine *m_engine;
