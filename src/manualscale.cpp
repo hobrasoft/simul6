@@ -26,9 +26,9 @@ void ManualScale::setRect(const QRectF& rect) {
 
 QRectF ManualScale::rect() const {
     QRectF rect;
-    rect.setBottom(ui->f_bottom->value());
-    rect.setTop(ui->f_top->value());
+    rect.setBottom(ui->f_top->value());
+    rect.setTop(ui->f_bottom->value());
     rect.setLeft(ui->f_left->value());
     rect.setRight(ui->f_right->value());
-    return rect;
+    return rect.normalized();
 }

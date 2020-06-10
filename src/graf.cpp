@@ -1,6 +1,7 @@
 #include "graf.h"
 #include "omp.h"
 #include "pdebug.h"
+#include "backtrace.h"
 #include "constituentseries.h"
 #include "conductivityseries.h"
 #include "phseries.h"
@@ -52,11 +53,16 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_actionManualScale->setEnabled(false);
 
     #ifdef SET_AXIS_LABELS_MANUALLY
-    m_actionSetAxisLabels = new QAction(tr("Adjust asix labels"), this);
+    m_actionSetAxisLabels = new QAction(tr("Adjust axis labels"), this);
     connect(m_actionSetAxisLabels, &QAction::triggered, this, &Graf::setAxisLabels);
     addAction(m_actionSetAxisLabels);
     m_actionSetAxisLabels->setEnabled(false);
     #endif
+
+    m_actionApplyNiceNumbers = new QAction(tr("Apply nice numbers to axes"), this);
+    connect(m_actionApplyNiceNumbers, &QAction::triggered, this, &Graf::applyNiceNumbers);
+    addAction(m_actionApplyNiceNumbers);
+    m_actionApplyNiceNumbers->setEnabled(false);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
@@ -233,6 +239,7 @@ void Graf::autoscale() {
     rect.setBottom (1.09 * maximum);
     rect.setLeft   (0);
     rect.setRight  (mcaplen);
+    setScale(rect.normalized());
 
     if (m_rescaleIndividually && m_axis_x != nullptr) {
         double d_xleft  = m_axis_x->min();
@@ -240,7 +247,6 @@ void Graf::autoscale() {
         rect.setLeft (d_xleft);
         rect.setRight(d_xright);
         }
-    setScale(rect);
     repaint();
 }
 
@@ -301,7 +307,7 @@ void Graf::manualScale() {
     d->setRect(rect);
     d->setCaplen(caplen);
     if (d->exec() == QDialog::Accepted) {
-        setScale(d->rect());
+        setScale(d->rect().normalized());
         }
     d->deleteLater();
 }
@@ -325,21 +331,48 @@ void Graf::setAxisLabels() {
     QPointF topleft(m_axis_x->min(), m_axis_y->min());
     QPointF rightbottom(m_axis_x->max(), m_axis_y->max());
     QRectF rect(topleft, rightbottom);
-    setScale(rect);
+    setScale(rect.normalized());
+}
+
+
+void Graf::applyNiceNumbers() {
+    if (m_axis_y == nullptr || m_axis_x == nullptr) { return; }
+    m_axis_y->applyNiceNumbers();
+    m_axis_x->applyNiceNumbers();
+}
+
+void Graf::subselected() {
+    // PDEBUG;
+    if (m_axis_x == nullptr) { return; }
+    if (m_axis_y == nullptr) { return; }
+
+    QRectF  rect        = m_chart->geometry(); // m_chart->plotArea();
+    QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
+    QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
+    QRectF rext(topLeft, bottomRight);
+    setScale(rext.normalized());
+
 }
 
 
 void Graf::setScale(const QRectF& rect) {
-    // PDEBUG << rect;
+    PDEBUG << rect;
+    BACKTRACE();
     if (rect.isNull()) {
         return;
         }
-    Q_ASSERT (rect.height() > 0);
-    Q_ASSERT (rect.width() > 0);
+    if (rect.height() <= 0 || rect.width() <= 0) {
+        PDEBUG << "Invalid rect dimensions" << rect << rect.height() << rect.width();
+        return;
+        }
     Q_ASSERT (m_engine != nullptr);
+    if (m_engine == nullptr) {
+        return;
+        }
 
     m_actionManualScale->setEnabled(true);
     m_actionRescale->setEnabled(true);
+    m_actionApplyNiceNumbers->setEnabled(true);
     #ifdef SET_AXIS_LABELS_MANUALLY
     m_actionSetAxisLabels->setEnabled(true);
     #endif
@@ -368,50 +401,18 @@ void Graf::setScale(const QRectF& rect) {
     m_axis_y->setRange(rect.top(), rect.bottom());
     m_axis_x->setRange(rect.left(), rect.right());
 
-    #ifdef SET_AXIS_LABELS_MANUALLY
-    #if QT_VERSION > 0x050c00
-    double mcaplen = rect.width();
-    double maximum = rect.height();
-    double ytickInterval \
-        = (maximum <= 0.000003) ? 0.0000001 
-        : (maximum <= 0.00003) ? 0.000001 
-        : (maximum <= 0.0003) ? 0.00001 
-        : (maximum <= 0.003) ? 0.0001 
-        : (maximum <= 0.03) ? 0.01 
-        : (maximum <= 0.3) ? 0.01 
-        : (maximum <= 2.0) ? 0.2
-        : (maximum <= 3.0) ? 0.5
-        : (maximum <= 10.) ? 1.0
-        : (maximum <= 20.) ? 2.0
-        : (maximum <= 50.) ? 5.0
-        : (maximum <= 200.) ? 10.0  
-        : (maximum <= 300.) ? 50.0  
-        : 100;
-    // PDEBUG << "ytickInterval" << ytickInterval << maximum;
-    m_axis_y->setTickAnchor(rect.top());
-    m_axis_y->setTickInterval(ytickInterval);
+    double lx = exp10( floor(log10(rect.width())) );
+    double ly = exp10( floor(log10(rect.height())) );
+    double anchor_x = lx*floor(rect.left()/lx);
+    double anchor_y = ly*floor(rect.bottom()/ly);
+    m_axis_y->setTickInterval(lx/2.0);
+    m_axis_x->setTickInterval(ly/10);
+    m_axis_y->setTickAnchor(anchor_y);
+    m_axis_x->setTickAnchor(anchor_x);
+    m_axis_x->setTickType(QValueAxis::TicksDynamic);
     m_axis_y->setTickType(QValueAxis::TicksDynamic);
 
-    double xtickInterval \
-        = (mcaplen < 0.00002) ? 0.000001
-        : (mcaplen < 0.0002) ? 0.00001
-        : (mcaplen < 0.002) ? 0.0001
-        : (mcaplen < 0.02) ? 0.001
-        : (mcaplen < 0.2) ? 0.01
-        : (mcaplen < 2) ? 0.1
-        : (mcaplen < 3) ? 0.5
-        : (mcaplen < 10) ? 1.0
-        : (mcaplen < 20) ? 2.0
-        : (mcaplen < 50) ? 5.0
-        : (mcaplen < 200) ? 10.0
-        : (mcaplen < 300) ? 50.0
-        : 100;
-    // PDEBUG << "xtickInterval" << xtickInterval << mcaplen;
-    m_axis_x->setTickAnchor(rect.left());
-    m_axis_x->setTickInterval(xtickInterval);
-    m_axis_x->setTickType(QValueAxis::TicksDynamic);
-    #endif
-    #endif
+    PDEBUG << "anchor_x" << lx << anchor_x << "anchor_y" << ly << anchor_y;
 
     m_chart->addAxis(m_axis_x, Qt::AlignBottom);
     m_chart->addAxis(m_axis_y, Qt::AlignLeft);
@@ -525,55 +526,6 @@ void Graf::drawGraph(const Engine *pEngine)
     id += 1;
 
     pEngine->unlock(); 
-}
-
-
-void Graf::subselected() {
-    // PDEBUG;
-    if (m_axis_x == nullptr) { return; }
-    if (m_axis_y == nullptr) { return; }
-
-    #if QT_VERSION > 0x050c00
-    QRectF rect = m_chart->geometry(); // m_chart->plotArea();
-    QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
-    QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
-    QRectF rext(topLeft, bottomRight);
-    // PDEBUG << rect << rext;
-    double minimum_x = rext.x();
-    double minimum_y = rext.y();
-    double width     = fabs(rext.width());
-    double height    = fabs(rext.height());
-    double xtickInterval \
-        = (width <= 0.3) ? 0.01 
-        : (width <= 2.0) ? 0.2
-        : (width <= 3.0) ? 0.5
-        : (width <= 10.) ? 1.0
-        : (width <= 20.) ? 2.0
-        : (width <= 50.) ? 5.0
-        : (width <= 200.) ? 10.0  
-        : (width <= 300.) ? 50.0  
-        : 100;
-    double xtickAnchor = floor(minimum_x/xtickInterval)*xtickInterval;
-    m_axis_x->setTickAnchor(xtickAnchor);
-    m_axis_x->setTickInterval(xtickInterval);
-    m_axis_x->setTickType(QValueAxis::TicksDynamic);
-
-    double ytickInterval \
-        = (height <= 0.3) ? 0.01 
-        : (height <= 2.0) ? 0.2
-        : (height <= 3.0) ? 0.5
-        : (height <= 10.) ? 1.0
-        : (height <= 20.) ? 2.0
-        : (height <= 50.) ? 5.0
-        : (height <= 200.) ? 10.0  
-        : (height <= 300.) ? 50.0  
-        : 100;
-    double ytickAnchor = floor(minimum_y/ytickInterval)*ytickInterval;
-    m_axis_y->setTickAnchor(ytickAnchor);
-    m_axis_y->setTickInterval(ytickInterval);
-    m_axis_y->setTickType(QValueAxis::TicksDynamic);
-
-    #endif
 }
 
 

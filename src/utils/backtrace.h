@@ -19,7 +19,7 @@
 #include <execinfo.h>
 #include <cxxabi.h>
 
-#define BACKTRACE() PDEBUG << stacktrace(16)
+#define BACKTRACE() PDEBUG << qPrintable(stacktrace(16))
 
 static inline QString stacktrace(unsigned int max_frames = 63) {
     QString text = "Backtrace:\n";
