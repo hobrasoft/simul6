@@ -811,15 +811,15 @@ void Engine::unlock() const {
 
 void Engine::run()
 {
-    qDebug() << "Engine::run()";
+    PDEBUG;
     Q_ASSERT (m_initialized == true);
-    timeDisplay = timeInterval;
-    intervalCounter = 0;
     m_running = true;
-    QTimer::singleShot(0, this, &Engine::runPrivate);
     if (t == 0) {
         emit timeChanged(t);
         }
+    timeDisplay = timeInterval;
+    intervalCounter = 0;
+    QTimer::singleShot(0, this, &Engine::runPrivate);
 }
 
 

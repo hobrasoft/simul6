@@ -222,7 +222,7 @@ void SaveProgress::slotTimeChanged(double time) {
 
 
 void SaveProgress::saveJson(double time) {
-    // PDEBUG << time << "saving";
+    PDEBUG << time << "saving";
 
     const Engine *engine = m_simul6->engine();
     engine->lock();
@@ -250,6 +250,38 @@ void SaveProgress::saveJson(double time) {
 
     emit timeData(simulation);
 
+}
+
+
+void SaveProgress::saveSqlite(double time) {
+    PDEBUG << time;
+    if (m_database == nullptr) {
+        QFile::remove(m_filename);
+        m_database = new Db::Database(m_filename, this);
+        m_database->open();
+        m_database->save(m_simul6->data());
+        }
+
+    if (m_database == nullptr) { return; }
+    if (!m_database->isOpen()) { return; }
+
+    const Engine *engine = m_simul6->engine();
+    engine->lock();
+    size_t p = engine->getNp(); // points
+    for (auto &sample : engine->getMix().getSamples()) {
+        QList<double> list;
+        for (unsigned int i = 0; i<=p; i++) {
+            list << sample.getA(0,i);
+            }
+
+        Dbt::StepData stepdata;
+        stepdata.time = time;
+        stepdata.internal_id = sample.getInternalId();
+        stepdata.values_array = list;
+        m_database->save(stepdata);
+        }
+    
+    engine->unlock();
 }
 
 
@@ -299,38 +331,6 @@ void SaveProgress::saveCsv(double time) {
         }
     
     file.close();
-    engine->unlock();
-}
-
-
-void SaveProgress::saveSqlite(double time) {
-    PDEBUG << time;
-    if (m_database == nullptr) {
-        QFile::remove(m_filename);
-        m_database = new Db::Database(m_filename, this);
-        m_database->open();
-        m_database->save(m_simul6->data());
-        }
-
-    if (m_database == nullptr) { return; }
-    if (!m_database->isOpen()) { return; }
-
-    const Engine *engine = m_simul6->engine();
-    engine->lock();
-    size_t p = engine->getNp(); // points
-    for (auto &sample : engine->getMix().getSamples()) {
-        QList<double> list;
-        for (unsigned int i = 0; i<=p; i++) {
-            list << sample.getA(0,i);
-            }
-
-        Dbt::StepData stepdata;
-        stepdata.time = time;
-        stepdata.internal_id = sample.getInternalId();
-        stepdata.values_array = list;
-        m_database->save(stepdata);
-        }
-    
     engine->unlock();
 }
 
