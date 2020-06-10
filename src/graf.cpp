@@ -401,6 +401,8 @@ void Graf::setScale(const QRectF& rect) {
     m_axis_y->setRange(rect.top(), rect.bottom());
     m_axis_x->setRange(rect.left(), rect.right());
 
+    #if QT_VERSION > 0x050c00
+    // Not supported in Qt < 5.12
     double ix = exp10( round(log10(rect.width() / 8)));
     double iy = exp10( round(log10(rect.height() / 8)));
     m_axis_x->setTickInterval(ix);
@@ -412,6 +414,7 @@ void Graf::setScale(const QRectF& rect) {
     m_axis_y->setTickAnchor(anchor_y);
     m_axis_x->setTickType(QValueAxis::TicksDynamic);
     m_axis_y->setTickType(QValueAxis::TicksDynamic);
+    #endif
 
     m_chart->addAxis(m_axis_x, Qt::AlignBottom);
     m_chart->addAxis(m_axis_y, Qt::AlignLeft);
