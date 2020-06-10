@@ -170,9 +170,9 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
 
         // last segment must have length + 1
         if (segmentEnd >= np - 5) {
-            segmentEnd = np + 1;
+            segmentEnd = np + 1000;
             }
-        for (int i = segmentBegin; i < segmentEnd; i++) {
+        for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
             sample.setA(0, i, smooth(previousA, currentA, segmentBegin, i) );
             }
 
