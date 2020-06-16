@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>652</width>
-    <height>326</height>
+    <width>755</width>
+    <height>523</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,31 +26,12 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="2" column="1">
-    <widget class="QToolButton" name="f_edit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="6" column="1">
+    <widget class="QToolButton" name="f_removeAll">
      <property name="text">
       <string>...</string>
      </property>
     </widget>
-   </item>
-   <item row="4" column="1">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>133</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item row="3" column="1">
     <widget class="QToolButton" name="f_swap">
@@ -65,7 +46,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="6">
+   <item row="0" column="0" rowspan="7">
     <widget class="MyView" name="f_view">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -75,6 +56,9 @@
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -90,8 +74,8 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QToolButton" name="f_remove">
+   <item row="2" column="1">
+    <widget class="QToolButton" name="f_edit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -116,14 +100,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="QToolButton" name="f_removeAll">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="2">
+   <item row="7" column="0" colspan="2">
     <widget class="SwapSegmentWidget" name="f_segment" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -136,6 +113,39 @@
        <width>0</width>
        <height>100</height>
       </size>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>133</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1">
+    <widget class="QToolButton" name="f_remove">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QToolButton" name="f_toggle">
+     <property name="text">
+      <string>...</string>
      </property>
     </widget>
    </item>
@@ -160,6 +170,7 @@
   <tabstop>f_remove</tabstop>
   <tabstop>f_edit</tabstop>
   <tabstop>f_swap</tabstop>
+  <tabstop>f_toggle</tabstop>
   <tabstop>f_removeAll</tabstop>
  </tabstops>
  <resources/>

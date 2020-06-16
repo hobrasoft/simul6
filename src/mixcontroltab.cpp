@@ -29,36 +29,37 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
     ui->f_view->setItemDelegate(new MixControlDelegate(this));
     ui->f_view->setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(m_model, &MixControlModel::visibilityChanged, this, &MixControlTab::visibilityChanged);
+    connect(ui->f_view->selectionModel(), &QItemSelectionModel::currentChanged, this, &MixControlTab::currentChanged);
+    connect(ui->f_view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MixControlTab::selectionChanged);
 
     resizeColumns();
 
-    QAction *action;
-    action = new QAction("Add", this);
-    ui->f_add->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControlTab::addComponent);
-    ui->f_view->addAction(action);
+    m_actionAdd = new QAction("Add", this);
+    ui->f_add->setDefaultAction(m_actionAdd);
+    connect(m_actionAdd, &QAction::triggered, this, &MixControlTab::addComponent);
+    ui->f_view->addAction(m_actionAdd);
 
-    action = new QAction("Remove", this);
-    action->setEnabled(false);
-    ui->f_remove->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControlTab::removeComponent);
-    connect(ui->f_view, &MyView::currentRowChanged, [this,action]() {
-        action->setEnabled(ui->f_view->currentIndex().isValid());
-        });
-    ui->f_view->addAction(action);
+    m_actionRemove= new QAction("Remove", this);
+    m_actionRemove->setEnabled(false);
+    ui->f_remove->setDefaultAction(m_actionRemove);
+    connect(m_actionRemove, &QAction::triggered, this, &MixControlTab::removeComponent);
+    ui->f_view->addAction(m_actionRemove);
 
-    action = new QAction("Edit", this);
-    action->setEnabled(false);
-    ui->f_edit->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, QOverload<>::of(&MixControlTab::editComponent));
-    connect(ui->f_view, &MyView::currentRowChanged, [this,action]() {
-        action->setEnabled(ui->f_view->currentIndex().isValid());
-        });
-    ui->f_view->addAction(action);
+    m_actionEdit = new QAction("Edit", this);
+    m_actionEdit->setEnabled(false);
+    ui->f_edit->setDefaultAction(m_actionEdit);
+    connect(m_actionEdit, &QAction::triggered, this, QOverload<>::of(&MixControlTab::editComponent));
+    ui->f_view->addAction(m_actionEdit);
 
-    action = new QAction("Remove All", this);
-    ui->f_removeAll->setDefaultAction(action);
-    connect(action, &QAction::triggered, this, &MixControlTab::removeAll);
+    m_actionToggleVisibility = new QAction("Toggle Visibility", this);
+    m_actionToggleVisibility->setEnabled(false);
+    ui->f_toggle->setDefaultAction(m_actionToggleVisibility);
+    connect(m_actionToggleVisibility, &QAction::triggered, this, &MixControlTab::toggleVisibility);
+    ui->f_view->addAction(m_actionToggleVisibility);
+
+    m_actionRemoveAll = new QAction("Remove All", this);
+    ui->f_removeAll->setDefaultAction(m_actionRemoveAll);
+    connect(m_actionRemoveAll, &QAction::triggered, this, &MixControlTab::removeAll);
 
     m_actionSwap = new QAction("Swap", this);
     ui->f_swap->setDefaultAction(m_actionSwap);
@@ -71,6 +72,25 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
     connect(ui->f_view, &QAbstractItemView::doubleClicked, this, QOverload<const QModelIndex&>::of(&MixControlTab::editComponent));
     connect(ui->f_view, &QAbstractItemView::clicked, m_model, &MixControlModel::toggleVisible);
     connect(ui->f_segment, &SwapSegmentWidget::segmentsChanged, this, &MixControlTab::recalculateModel);
+}
+
+
+void MixControlTab::currentChanged(const QModelIndex&, const QModelIndex&) {
+    enableActions();
+}
+
+
+void MixControlTab::selectionChanged(const QItemSelection&, const QItemSelection&) {
+    enableActions();
+}
+
+
+void MixControlTab::enableActions() {
+    bool hasSelection = ui->f_view->selectionModel()->hasSelection();
+    int number = ui->f_view->selectionModel()->selectedRows().size();
+    m_actionRemove->setEnabled(hasSelection);
+    m_actionToggleVisibility->setEnabled(hasSelection);
+    m_actionEdit->setEnabled(number == 1);
 }
 
 
@@ -134,9 +154,28 @@ void MixControlTab::editComponent(const QModelIndex& index) {
 
 
 void MixControlTab::removeComponent() {
-    QModelIndex index = ui->f_view->currentIndex();
-    m_model->removeRows(index.row(), 1);
+    QModelIndexList selectedRows = ui->f_view->selectionModel()->selectedRows();
+    QMap<int, int> rowsToRemove;
+    for (int i=0; i<selectedRows.size(); i++) {
+        rowsToRemove[selectedRows[i].row()] = 0;
+        }
+    QMapIterator<int, int> iterator(rowsToRemove);
+    iterator.toBack();
+    while (iterator.hasPrevious()) {
+        iterator.previous();
+        int row = iterator.key();
+        m_model->removeRows(row, 1);
+        }
+
     m_actionSwap->setEnabled(m_model->rowCount() != 0);
+}
+
+
+void MixControlTab::toggleVisibility() {
+    QModelIndexList selectedRows = ui->f_view->selectionModel()->selectedRows();
+    for (int i=0; i<selectedRows.size(); i++) {
+        m_model->toggleVisible(selectedRows[i]);
+        }
 }
 
 

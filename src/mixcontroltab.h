@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QAction>
+#include <QItemSelection>
 #include "mixcontrolmodelabstract.h"
 
 namespace Ui {
@@ -38,11 +39,15 @@ public slots:
 private slots:
     void editComponent();
     void editComponent(const QModelIndex&);
+    void toggleVisibility();
     void removeComponent();
     void addComponent();
     void removeAll();
     void swapPressed();
     void recalculateModel();
+    void currentChanged(const QModelIndex& current, const QModelIndex& previous);
+    void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+    void enableActions();
 
 private:
     Ui::MixControlTab *ui;
@@ -50,6 +55,11 @@ private:
     MixControlModelAbstract *m_model;
     TabType m_tabType;
     QAction *m_actionSwap;
+    QAction *m_actionToggleVisibility;
+    QAction *m_actionAdd;
+    QAction *m_actionRemove;
+    QAction *m_actionEdit;
+    QAction *m_actionRemoveAll;
 };
 
 #endif
