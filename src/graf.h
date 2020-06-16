@@ -44,11 +44,13 @@ private slots:
     void seriesClicked(const QPointF&);
     void subselected();
     void setAxisLabels();
-    void applyNiceNumbers();
 
 private:
     QChart *m_chart;
+    static double axisTable(double);
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    QPoint m_pressedPoint;
     bool m_visiblePh;
     bool m_visibleKapa;
     bool m_visibleE;
@@ -58,7 +60,6 @@ private:
     QValueAxis *m_axis_y;
     QAction    *m_actionRescale;
     QAction    *m_actionManualScale;
-    QAction    *m_actionApplyNiceNumbers;
     #ifdef SET_AXIS_LABELS_MANUALLY
     QAction    *m_actionSetAxisLabels;
     #endif

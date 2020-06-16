@@ -38,9 +38,6 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_axis_x = nullptr;
     m_axis_y = nullptr;
 
-//  connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
-//  connect(m_chart, &QChart::geometryChanged, this, &Graf::subselected);
-
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
     addAction(m_actionRescale);
@@ -58,11 +55,6 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
     m_actionSetAxisLabels->setEnabled(false);
     #endif
 
-    m_actionApplyNiceNumbers = new QAction(tr("Apply nice numbers to axes"), this);
-    connect(m_actionApplyNiceNumbers, &QAction::triggered, this, &Graf::applyNiceNumbers);
-    addAction(m_actionApplyNiceNumbers);
-    m_actionApplyNiceNumbers->setEnabled(false);
-
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
     setMouseTracking(true);
@@ -70,7 +62,6 @@ Graf::Graf(QWidget *parent) : QChartView(parent)
 
 
 void Graf::init(const Engine *pEngine) {
-    disconnect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
     m_chart->removeAllSeries();
 
     m_engine = pEngine;
@@ -159,13 +150,11 @@ void Graf::init(const Engine *pEngine) {
     m_chart->legend()->setVisible(false);
 
     setAxisLabels();
-//  autoscale();
-    QTimer::singleShot(1000, this, [this]() { connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected); });
 }
 
 
 void Graf::autoscale() {
-    disconnect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected);
+    PDEBUG;
     if (m_engine == nullptr) { return; }
     double maximum = 0;
     double minimum = 99999;
@@ -250,7 +239,6 @@ void Graf::autoscale() {
         rect.setRight(d_xright);
         }
     repaint();
-    QTimer::singleShot(1000, this, [this]() { connect(m_chart, &QChart::plotAreaChanged, this, &Graf::subselected); });
 }
 
 
@@ -316,15 +304,6 @@ void Graf::manualScale() {
 }
 
 
-// prevents the context menu 
-void Graf::mouseReleaseEvent(QMouseEvent *event) { 
-    if (event->button() != Qt::RightButton) { 
-        QChartView::mouseReleaseEvent(event);
-        return; 
-        }
-}
-
-
 void Graf::setAxisLabels() {
     if (m_axis_y == nullptr || m_axis_x == nullptr) { 
         return;
@@ -336,10 +315,54 @@ void Graf::setAxisLabels() {
 }
 
 
-void Graf::applyNiceNumbers() {
-    if (m_axis_y == nullptr || m_axis_x == nullptr) { return; }
-    m_axis_y->applyNiceNumbers();
-    m_axis_x->applyNiceNumbers();
+// prevents the unlimited scale
+void Graf::mousePressEvent(QMouseEvent *event) {
+    m_pressedPoint = event->pos();
+    if (event->button() != Qt::LeftButton) {
+        QChartView::mousePressEvent(event);
+        return;
+        }
+
+    QRectF  rect        = m_chart->geometry(); // m_chart->plotArea();
+    QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
+    QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
+    QRectF rext(topLeft, bottomRight);
+    rext = rext.normalized();
+
+    if (rext.width() < 10e-12 || rext.height() < 10e-12) {
+        m_pressedPoint = QPoint(-1,-1);
+        event->accept();
+        QChartView::mousePressEvent(event);
+        return;
+        }
+
+    QChartView::mousePressEvent(event);
+}
+
+
+// prevents the context menu 
+void Graf::mouseReleaseEvent(QMouseEvent *event) { 
+    if (event->button() == Qt::RightButton) { 
+        event->accept();
+        QChartView::mouseReleaseEvent(event);
+        return;
+        }
+
+    if (m_pressedPoint.x() == -1 && m_pressedPoint.y() == -1) {
+        event->accept();
+        QChartView::mouseReleaseEvent(event);
+        return;
+        }
+
+    if (std::pow((m_pressedPoint.x() - event->x()), 2) +
+        std::pow((m_pressedPoint.y() - event->y()), 2) < 9) {
+        event->accept();
+        QChartView::mouseReleaseEvent(event);
+        return;
+        }
+
+    QChartView::mouseReleaseEvent(event);
+    subselected();
 }
 
 
@@ -348,9 +371,13 @@ void Graf::subselected() {
     if (m_axis_y == nullptr) { return; }
 
     QRectF  rect        = m_chart->geometry(); // m_chart->plotArea();
+
     QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
     QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
     QRectF rext(topLeft, bottomRight);
+
+    PDEBUG << rect << rext.normalized() << m_chart->plotArea();
+
     setScale(rext.normalized());
 
 }
@@ -372,7 +399,6 @@ void Graf::setScale(const QRectF& rect) {
 
     m_actionManualScale->setEnabled(true);
     m_actionRescale->setEnabled(true);
-    m_actionApplyNiceNumbers->setEnabled(true);
     #ifdef SET_AXIS_LABELS_MANUALLY
     m_actionSetAxisLabels->setEnabled(true);
     #endif
@@ -403,8 +429,8 @@ void Graf::setScale(const QRectF& rect) {
 
     #if QT_VERSION > 0x050c00
     // Not supported in Qt < 5.12
-    double ix = pow(10, round(log10(rect.width() / 8)));
-    double iy = pow(10, round(log10(rect.height() / 8)));
+    double ix = axisTable(rect.width());
+    double iy = axisTable(rect.height());
     m_axis_x->setTickInterval(ix);
     m_axis_y->setTickInterval(iy);
 
@@ -423,6 +449,82 @@ void Graf::setScale(const QRectF& rect) {
         serieslist[i]->attachAxis(m_axis_x);
         }
 
+}
+
+
+double Graf::axisTable(double maximum) {
+    maximum = maximum * 0.8;
+    return
+          (maximum <= 0.000000000000010) ? 0.0000000000000020
+        : (maximum <= 0.000000000000020) ? 0.0000000000000050
+        : (maximum <= 0.000000000000050) ? 0.0000000000000100
+
+        : (maximum <= 0.00000000000010) ? 0.000000000000020
+        : (maximum <= 0.00000000000020) ? 0.000000000000050
+        : (maximum <= 0.00000000000050) ? 0.000000000000100
+
+        : (maximum <= 0.0000000000010) ? 0.00000000000020
+        : (maximum <= 0.0000000000020) ? 0.00000000000050
+        : (maximum <= 0.0000000000050) ? 0.00000000000100
+
+        : (maximum <= 0.000000000010) ? 0.0000000000020
+        : (maximum <= 0.000000000020) ? 0.0000000000050
+        : (maximum <= 0.000000000050) ? 0.0000000000100
+
+        : (maximum <= 0.00000000010) ? 0.000000000020
+        : (maximum <= 0.00000000020) ? 0.000000000050
+        : (maximum <= 0.00000000050) ? 0.000000000100
+
+        : (maximum <= 0.0000000010) ? 0.00000000020
+        : (maximum <= 0.0000000020) ? 0.00000000050
+        : (maximum <= 0.0000000050) ? 0.00000000100
+
+        : (maximum <= 0.000000010) ? 0.0000000020
+        : (maximum <= 0.000000020) ? 0.0000000050
+        : (maximum <= 0.000000050) ? 0.0000000100
+
+        : (maximum <= 0.00000010) ? 0.000000020
+        : (maximum <= 0.00000020) ? 0.000000050
+        : (maximum <= 0.00000050) ? 0.000000100
+
+        : (maximum <= 0.0000010) ? 0.00000020
+        : (maximum <= 0.0000020) ? 0.00000050
+        : (maximum <= 0.0000050) ? 0.00000100
+
+        : (maximum <= 0.000010) ? 0.0000020
+        : (maximum <= 0.000020) ? 0.0000050
+        : (maximum <= 0.000050) ? 0.0000100
+
+        : (maximum <= 0.00010) ? 0.000020
+        : (maximum <= 0.00020) ? 0.000050
+        : (maximum <= 0.00050) ? 0.000100
+
+        : (maximum <= 0.0010) ? 0.00020
+        : (maximum <= 0.0020) ? 0.00050
+        : (maximum <= 0.0050) ? 0.00100
+
+        : (maximum <= 0.010) ? 0.0020
+        : (maximum <= 0.020) ? 0.0050
+        : (maximum <= 0.050) ? 0.0100
+
+        : (maximum <= 0.10) ? 0.020
+        : (maximum <= 0.20) ? 0.050
+        : (maximum <= 0.50) ? 0.100
+
+        : (maximum <= 1.) ? 0.20
+        : (maximum <= 2.) ? 0.50
+        : (maximum <= 5.) ? 1.0
+
+        : (maximum <= 10.) ? 2.0
+        : (maximum <= 20.) ? 5.0  
+        : (maximum <= 50.) ? 10.0  
+
+        : (maximum <= 100.) ? 20.0
+        : (maximum <= 200.) ? 50.0  
+        : (maximum <= 500.) ? 100.0  
+        : (maximum <= 1000.) ? 200.0  
+
+        : 500;
 }
 
 
