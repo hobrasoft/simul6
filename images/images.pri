@@ -14,5 +14,4 @@ FILES += \
  $PWD/stop.svg \
  $PWD/step.svg \
  $PWD/back.svg \
- $PWD/copy.svg \
 

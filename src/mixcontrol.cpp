@@ -28,8 +28,10 @@ MixControl::MixControl(QWidget *parent) :
     button->setContextMenuPolicy(Qt::ActionsContextMenu);
     ui->f_tab->setCornerWidget(button);
 
-    m_addTab = new QAction(QIcon("://icons/copy.svg"), tr("Add empty mix"));
+    m_addTab = new QAction(tr("Add empty mix"));
+    m_addTab->setToolTip(tr("Add an empty mix to be swapped in part of capilary."));
     button->setDefaultAction(m_addTab);
+    button->setToolButtonStyle(Qt::ToolButtonTextOnly);
     connect(m_addTab, &QAction::triggered, [this]() {
         createNewSwap();
         });
