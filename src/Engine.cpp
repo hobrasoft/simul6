@@ -158,7 +158,11 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
                 : current;
             };
 
-        for (int i = segmentBegin; i < segmentEnd; i++) {
+        // last segment must have length + 1
+        if (segmentEnd >= np - 5) {
+            segmentEnd = np + 1000;
+            }
+        for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
             sample.setA(0, i, smooth(previousA, currentA, segmentBegin, i) );
             }
 
@@ -249,12 +253,11 @@ void Engine::replaceConstituent(const SegmentedConstituent& constituent, Sample&
         int segmentEnd = segmentBegin + (int)((double)(np)/((double)ratioSum)*((double)segmentRatio));
         // last segment must have length + 1
         if (segmentEnd >= np - 5) {
-            segmentEnd = np + 1;
+            segmentEnd = np + 1000;
             }
 
         // PDEBUG << "segments" << segmentBegin << segmentEnd;
-
-        for (int i = segmentBegin; i < segmentEnd; i++) {
+        for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
             auto smooth = [&segmentBegin,&i,this](double previous, double current) {
                 return (i < segmentBegin + bw) 
                     ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2) 
