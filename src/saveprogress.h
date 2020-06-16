@@ -57,6 +57,7 @@ class SaveProgress : public QWidget {
   public:
     SaveProgress(QWidget *parent);
     enum Format { Csv = 1, Json, Sqlite3 };
+    enum SaveMode { Swapped, Normal };
     static SaveProgress *instance();
    ~SaveProgress();
 
@@ -85,7 +86,7 @@ class SaveProgress : public QWidget {
     SaveProgressWorker *m_worker;
 
     void saveJson(double time);
-    void saveCsv(double time);
+    void saveCsv(double time, SaveMode saveMode = Normal);
     void saveSqlite(double time);
 
     bool    m_active;
