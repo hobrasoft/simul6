@@ -111,7 +111,7 @@
      <item>
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>License: &lt;a href=&quot;local:///gpl2&quot;&gt;GNU General Public License version 2&lt;/a&gt;</string>
+        <string>License: &lt;a href=&quot;local:///gpl2&quot;&gt;GNU General Public License version 3&lt;/a&gt;</string>
        </property>
        <property name="openExternalLinks">
         <bool>true</bool>

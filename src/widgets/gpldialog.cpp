@@ -9,7 +9,7 @@
 
 GplDialog::GplDialog(QWidget *parent) : QDialog(parent) {
     setupUi(this);
-    QFile file("://GPL2-license.txt");
+    QFile file("://GPL3-license.txt");
     file.open(QIODevice::ReadOnly);
     f_editor->setPlainText(QString::fromUtf8(file.readAll()));
     file.close();
