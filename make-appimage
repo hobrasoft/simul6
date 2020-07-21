@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -fr AppDir Simul6.desktop
+rm -fr AppDir
 
 (
 make distclean
