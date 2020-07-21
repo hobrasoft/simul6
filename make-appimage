@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -fr AppDir
+rm -fr AppDir Simul6.desktop
 
 (
 make distclean
@@ -8,7 +8,7 @@ qmake
 make -j7
 )
 
-rm -f linuxdeploy*.AppImage
+rm -f linuxdeploy*.AppImage Simul6-*-x86_64.AppImage
 
 wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
 wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
@@ -22,4 +22,7 @@ chmod +x linuxdeploy*.AppImage
     -e bin/simul6b  \
     --output appimage \
     --plugin qt \
+
+VERSION=$(cat version.pri | awk -F '"' '$1 ~ "APP_VERSION" { print $2; }')
+mv -f Simul6-*-x86_64.AppImage Simul6-$VERSION-x86_64.AppImage
 
