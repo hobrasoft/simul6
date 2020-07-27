@@ -52,7 +52,11 @@ class MSettings : public QSettings {
     static constexpr const char *GuiFloatable               = "gui/floatable";
     static constexpr const char *GuiCloseable               = "gui/closeable";
     static constexpr const char *GuiMoveable                = "gui/moveable";
-    static constexpr const char *GuiDockCompositionGeometry = "gui/dock-composition-geometry";
+    static constexpr const char *GuiDockComputeControlGeometry  = "gui/dock-compute-control-geometry";
+    static constexpr const char *GuiDockInputParamsGeometry     = "gui/dock-input-params-geometry";
+    static constexpr const char *GuiDockSaveProgressGeometry    = "gui/dock-save-progress-geometry";
+    static constexpr const char *GuiDockReplayGeometry          = "gui/dock-replay-geometry";
+    static constexpr const char *GuiDockCompositionGeometry     = "gui/dock-composition-geometry";
 
     static constexpr const char *DbConstituentsDefault   = "://data/constituents.json";
 
@@ -71,6 +75,14 @@ class MSettings : public QSettings {
     void setGuiMainWindowSize(const QSize& size) { setValue(GuiMainWindowSize, size); }
     QByteArray guiMainWindowLayout() const { return value(GuiMainWindowLayout).toByteArray(); }
     void setGuiMainWindowLayout(const QByteArray& layout) { setValue(GuiMainWindowLayout, layout); }
+    QByteArray guiDockComputeControlGeometry() const { return value(GuiDockComputeControlGeometry).toByteArray(); }
+    void setGuiDockComputeControlGeometry(const QByteArray& geometry) { setValue(GuiDockComputeControlGeometry, geometry); }
+    QByteArray guiDockInputParamsGeometry() const { return value(GuiDockInputParamsGeometry).toByteArray(); }
+    void setGuiDockInputParamsGeometry(const QByteArray& geometry) { setValue(GuiDockInputParamsGeometry, geometry); }
+    QByteArray guiDockSaveProgressGeometry() const { return value(GuiDockSaveProgressGeometry).toByteArray(); }
+    void setGuiDockSaveProgressGeometry(const QByteArray& geometry) { setValue(GuiDockSaveProgressGeometry, geometry); }
+    QByteArray guiDockReplayGeometry() const { return value(GuiDockReplayGeometry).toByteArray(); }
+    void setGuiDockReplayGeometry(const QByteArray& geometry) { setValue(GuiDockReplayGeometry, geometry); }
     QByteArray guiDockCompositionGeometry() const { return value(GuiDockCompositionGeometry).toByteArray(); }
     void setGuiDockCompositionGeometry(const QByteArray& geometry) { setValue(GuiDockCompositionGeometry, geometry); }
     QSize guiConstituentsDialogSize() const { return value(GuiConstituentsDialogSize, QSize(1000, 996)).toSize(); }

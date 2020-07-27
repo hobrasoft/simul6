@@ -426,15 +426,25 @@ void Simul6::closeEvent(QCloseEvent *event) {
 
 void Simul6::readSettings() {
     resize(MSETTINGS->guiMainWindowSize());
-    restoreState(MSETTINGS->guiMainWindowLayout());
+
+    ui->f_dock_computeControl->restoreGeometry(MSETTINGS->guiDockComputeControlGeometry());
+    ui->f_dock_inputParams->restoreGeometry(MSETTINGS->guiDockInputParamsGeometry());
+    ui->f_dock_saveprogress->restoreGeometry(MSETTINGS->guiDockSaveProgressGeometry());
+    ui->f_dock_replay->restoreGeometry(MSETTINGS->guiDockReplayGeometry());
     ui->f_dock_composition->restoreGeometry(MSETTINGS->guiDockCompositionGeometry());
+
+    restoreState(MSETTINGS->guiMainWindowLayout());
 }
 
 
 void Simul6::writeSettings() {
     MSETTINGS->setGuiMainWindowSize(size());
     MSETTINGS->setGuiMainWindowLayout(saveState());
-    MSETTINGS->setGuiDockCompositionGeometry(ui->f_dock_composition->saveGeometry());
+    MSETTINGS->setGuiDockComputeControlGeometry (ui->f_dock_computeControl->saveGeometry());
+    MSETTINGS->setGuiDockInputParamsGeometry    (ui->f_dock_inputParams->saveGeometry());
+    MSETTINGS->setGuiDockSaveProgressGeometry   (ui->f_dock_saveprogress->saveGeometry());
+    MSETTINGS->setGuiDockReplayGeometry         (ui->f_dock_replay->saveGeometry());
+    MSETTINGS->setGuiDockCompositionGeometry    (ui->f_dock_composition->saveGeometry());
 }
 
 
@@ -447,6 +457,8 @@ void Simul6::setDockingWindows() {
     ui->f_dock_computeControl->setFeatures(features);
     ui->f_dock_inputParams->setFeatures(features);
     ui->f_dock_composition->setFeatures(features);
+    ui->f_dock_saveprogress->setFeatures(features);
+
 }
 
 
