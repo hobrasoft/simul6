@@ -44,6 +44,9 @@
        <property name="text">
         <string>f_savedsteps</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
      <item row="1" column="0">
@@ -58,12 +61,18 @@
        <property name="text">
         <string>f_savedtime</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="f_filesize">
        <property name="text">
         <string>f_filesize</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -93,6 +102,20 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>secs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>bytes</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
