@@ -19,7 +19,7 @@ void MixControlDelegate::paint(QPainter *painter, const QStyleOptionViewItem& op
         }
 
     Qt::ItemFlags flags = index.model()->flags(index);
-    bool enabled = ((flags & Qt::ItemIsEnabled) != Qt::ItemIsEnabled);
+    bool enabled = ((flags & Qt::ItemIsEnabled) == Qt::ItemIsEnabled);
     QStyleOptionButton style;
     style.state = (enabled) ? QStyle::State_Enabled : QStyle::State_None;
     style.state |= (index.model()->data(index).toBool()) ? QStyle::State_On : QStyle::State_Off;
