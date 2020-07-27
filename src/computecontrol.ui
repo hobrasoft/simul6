@@ -108,7 +108,7 @@
         <number>3</number>
        </property>
        <property name="maximum">
-        <double>10000.000000000000000</double>
+        <double>1000000.000000000000000</double>
        </property>
        <property name="value">
         <double>80.000000000000000</double>

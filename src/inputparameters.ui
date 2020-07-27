@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>288</height>
+    <width>308</width>
+    <height>317</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
         <string> sec</string>
        </property>
        <property name="decimals">
-        <number>5</number>
+        <number>9</number>
        </property>
        <property name="maximum">
         <double>1000000.000000000000000</double>
