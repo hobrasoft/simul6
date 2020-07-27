@@ -214,8 +214,8 @@ QVariantMap Database::stepData(double time) const {
     q.prepare("select internal_id, values_array from stepdata "
               " where time > :time1 and time < :time2 "
               " order by internal_id;");
-    q.bindValue(":time1", time-0.0001);
-    q.bindValue(":time2", time+0.0001);
+    q.bindValue(":time1", time-0.0000001);
+    q.bindValue(":time2", time+0.0000001);
     q.exec();
     while (q.next()) {
         int internal_id = q.value(0).toInt();

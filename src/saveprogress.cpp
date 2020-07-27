@@ -340,8 +340,8 @@ void SaveProgress::saveSwap() {
     PDEBUG;
     if (m_database != nullptr && m_format == Sqlite3) {
         PDEBUG;
-        m_database->save(m_simul6->data());
-        saveSqlite(m_savedTimeReal+0.000001);
+        m_database->save(m_simul6->data());		// Saves the JSON structure of basic mix + swap
+        saveSqlite(m_savedTimeReal+0.000001);	// Saves computed data
         }
 
     if (m_format == Csv) {
