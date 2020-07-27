@@ -61,6 +61,12 @@ QList<int> SwapSegmentWidget::ratios() const {
 
 
 void SwapSegmentWidget::setRatios(const QList<int>& ratios) {
+    if (ratios.size() == 0) {
+        ui->f_ratio1->setValue(1);
+        ui->f_ratio2->setValue(1);
+        ui->f_ratio3->setValue(1);
+        return;
+        }
     if (ratios.size() != 3) {
         SHOWMESSAGE(QString("Bad count of segments in swap, file possibly corrupted."));
         return;
