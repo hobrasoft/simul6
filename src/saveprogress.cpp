@@ -115,8 +115,8 @@ SaveProgress::SaveProgress(QWidget *parent) : QWidget (parent), ui(new Ui::SaveP
 void SaveProgress::selectFile() {
     QString dirname = MSETTINGS->exportDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), dirname,
-          tr("Simul6 data, Sqlite3 format (*.simul6.sqlite3);;"
-             "Simul6 data, Json format (*.simul6.json);;"
+          tr("Sqlite3 format (*.sqlite3);;"
+             "Json format (*.json);;"
              "Csv format (*.csv)")
         ).trimmed();
     ui->f_active->setEnabled(!filename.isEmpty());
@@ -126,9 +126,9 @@ void SaveProgress::selectFile() {
     MSETTINGS->setExportDirName(QFileInfo(filename).absoluteDir().absolutePath());
     ui->f_filename->setText(QFileInfo(filename).fileName());
 
-    if (filename.endsWith(".simul6.json", Qt::CaseInsensitive))    { m_format = SaveProgress::Json; return; }
-    if (filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive)) { m_format = SaveProgress::Sqlite3; return; }
-    if (filename.endsWith(".csv", Qt::CaseInsensitive))            { m_format = SaveProgress::Csv; return; }
+    if (filename.endsWith(".json", Qt::CaseInsensitive))    { m_format = SaveProgress::Json; return; }
+    if (filename.endsWith(".sqlite3", Qt::CaseInsensitive)) { m_format = SaveProgress::Sqlite3; return; }
+    if (filename.endsWith(".csv", Qt::CaseInsensitive))     { m_format = SaveProgress::Csv; return; }
 
 }
 

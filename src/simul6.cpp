@@ -169,19 +169,19 @@ void Simul6::stopEngine() {
 void Simul6::saveData() {
     QString dirname = MSETTINGS->dataDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), dirname,
-        tr("Simul6 data, JSON format (*.simul6.json);;"
-           "Simul6 data, Sqlite3 format (*.simul6.sqlite3)")
+        tr("JSON format (*.json);;"
+           "Sqlite3 format (*.sqlite3)")
         ).trimmed();
     if (filename.isEmpty()) { return; }
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
-    if (!filename.endsWith(".simul6.json", Qt::CaseInsensitive) &&
-        !filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive)) {
+    if (!filename.endsWith(".json", Qt::CaseInsensitive) &&
+        !filename.endsWith(".sqlite3", Qt::CaseInsensitive)) {
         filename = filename.replace(QRegExp("\\.+$"),"");
-        filename += ".simul6.json";
+        filename += ".json";
         }
 
-    bool sqliteformat = filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive);
-    bool jsonformat   = filename.endsWith(".simul6.json", Qt::CaseInsensitive);
+    bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
+    bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
 
     if (jsonformat) {
         QFile file(filename);
@@ -233,14 +233,14 @@ QVariantMap Simul6::data() const {
 void Simul6::loadData() {
     QString dirname = MSETTINGS->dataDirName();
     QString filename = QFileDialog::getOpenFileName(this, tr("Load simulation"), dirname, 
-        tr("Simul6 data (*.simul6.json *.simul6.sqlite3);;"
-           "Simul6 data, JSON format (*.simul6.json);;"
-           "Simul6 data, Sqlite3 format (*.simul6.sqlite3);;"
+        tr("Simul6 data (*.json *.sqlite3);;"
+           "Simul6 data, JSON format (*.json);;"
+           "Simul6 data, Sqlite3 format (*.sqlite3);;"
            "All files (*)")
         ).trimmed();
 
-    bool sqliteformat = filename.endsWith(".simul6.sqlite3", Qt::CaseInsensitive);
-    bool jsonformat   = filename.endsWith(".simul6.json", Qt::CaseInsensitive);
+    bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
+    bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
 
     setWindowTitle(tr("Simul: ") + filename);
     if (filename.isEmpty()) { return; }
