@@ -1,5 +1,5 @@
-#ifndef GRAF_H
-#define GRAF_H
+#ifndef _Detector_H_
+#define _Detector_H_
 
 #include "Mix.h"
 #include "Engine.h"
@@ -15,10 +15,10 @@ QT_CHARTS_USE_NAMESPACE
 
 // #define SET_AXIS_LABELS_MANUALLY
 
-class Graf : public GrafAbstract {
+class Detector : public GrafAbstract {
     Q_OBJECT
 public:
-    explicit Graf(QWidget *parent = nullptr);
+    explicit Detector(QWidget *parent = nullptr);
 
 signals:
 
@@ -28,16 +28,14 @@ public slots:
     void setVisible(int id, bool visible);
     void setVisiblePh(bool visible);
     void setVisibleKapa(bool visible);
-    void setVisibleE(bool visible);
     void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
     void setScale(const QRectF& rect);
     void manualScale();
     void autoscale();
 
-    void rescalePh() Q_DECL_OVERRIDE;
-    void rescaleE() Q_DECL_OVERRIDE;
-    void rescaleKapa() Q_DECL_OVERRIDE;
-    void rescale(int internalId) Q_DECL_OVERRIDE;
+    void rescalePh();
+    void rescaleKapa();
+    void rescale(int internalId);
 
 private slots:
     void seriesClicked(const QPointF&);
@@ -52,7 +50,6 @@ private:
     QPoint m_pressedPoint;
     bool m_visiblePh;
     bool m_visibleKapa;
-    bool m_visibleE;
     bool m_rescaleEnabled;
 
     QValueAxis *m_axis_x;
@@ -65,7 +62,6 @@ private:
 
     bool m_rescaleIndividually;
     bool m_rescalePh;
-    bool m_rescaleE;
     bool m_rescaleKapa;
     bool m_initialized;
     int  m_rescaleId;

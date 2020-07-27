@@ -17,7 +17,7 @@
 class ConductivitySeries : public ConstituentSeries {
     Q_OBJECT
   public:
-    ConductivitySeries(Graf *parent) : ConstituentSeries(parent) { m_name = tr("Conductivity"); }
+    ConductivitySeries(GrafAbstract *parent) : ConstituentSeries(parent) { m_name = tr("Conductivity"); }
 
   public slots:
     void slotHide() Q_DECL_OVERRIDE {

@@ -9,7 +9,7 @@
 #include "constituentseries.h"
 #include "pdebug.h"
 #include "simul6.h"
-#include "graf.h"
+#include "grafabstract.h"
 
 /**
  * @brief
@@ -17,7 +17,7 @@
 class ElectricFieldSeries : public ConstituentSeries {
     Q_OBJECT
   public:
-    ElectricFieldSeries(Graf *parent) : ConstituentSeries(parent) { m_name = tr("Electric Field"); }
+    ElectricFieldSeries(GrafAbstract *parent) : ConstituentSeries(parent) { m_name = tr("Electric Field"); }
 
   public slots:
     void slotHide() Q_DECL_OVERRIDE {

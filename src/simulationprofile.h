@@ -11,6 +11,7 @@ class SimulationProfile;
 }
 
 class Graf;
+class Detector;
 
 class SimulationProfile : public QWidget
 {
@@ -24,6 +25,7 @@ public:
 
     void createEngine(int np);
     Graf *graf() const;
+    Detector *detector() const;
 
 public slots:
     void init();

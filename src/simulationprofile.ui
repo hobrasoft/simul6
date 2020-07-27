@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1008</width>
+    <height>513</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -16,24 +16,90 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_2">
    <property name="leftMargin">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="spacing">
-    <number>0</number>
+    <number>1</number>
    </property>
    <item row="0" column="0">
-    <widget class="Graf" name="f_graf" native="true"/>
+    <widget class="QTabWidget" name="stackedWidget">
+     <property name="tabPosition">
+      <enum>QTabWidget::East</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Triangular</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="documentMode">
+      <bool>false</bool>
+     </property>
+     <property name="tabBarAutoHide">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="page_1">
+      <attribute name="title">
+       <string>Chart</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="Graf" name="f_graf" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_2">
+      <attribute name="title">
+       <string>Detector</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="Detector" name="f_detector" native="true"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -42,6 +108,12 @@
    <class>Graf</class>
    <extends>QWidget</extends>
    <header>graf.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Detector</class>
+   <extends>QWidget</extends>
+   <header>detector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -30,8 +30,14 @@ Graf *SimulationProfile::graf() const {
 }
 
 
+Detector *SimulationProfile::detector() const {
+    return ui->f_detector;
+}
+
+
 void SimulationProfile::init() {
     ui->f_graf->autoscale();
+    ui->f_detector->autoscale();
 }
 
 
@@ -40,16 +46,19 @@ void SimulationProfile::setVisible(int id, bool visible) {
         m_engine->setVisible(id, visible);
         }
     ui->f_graf->setVisible(id, visible);
+    ui->f_detector->setVisible(id, visible);
 }
 
 
 void SimulationProfile::setVisiblePh(bool visible) {
     ui->f_graf->setVisiblePh(visible);
+    ui->f_detector->setVisiblePh(visible);
 }
 
 
 void SimulationProfile::setVisibleKapa(bool visible) {
     ui->f_graf->setVisibleKapa(visible);
+    ui->f_detector->setVisibleKapa(visible);
 }
 
 
@@ -68,6 +77,10 @@ void SimulationProfile::createEngine(int np)
 
     connect(m_engine, &Engine::mixChanged, ui->f_graf, &Graf::init);
     connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);
+
+    connect(m_engine, &Engine::mixChanged, ui->f_detector, &Detector::init);
+    connect(m_engine, &Engine::drawGraph, ui->f_detector, &Detector::drawGraph);
+
     connect(m_engine, &Engine::timeChanged, this, &SimulationProfile::timeChanged);
     connect(m_engine, &Engine::errorChanged, this, &SimulationProfile::errorChanged);
     connect(m_engine, &Engine::curDenChanged, this, &SimulationProfile::curDenChanged);

@@ -11,7 +11,7 @@
 #include <QAction>
 #include "Sample.h"
 
-class Graf;
+class GrafAbstract;
 
 /**
  * @brief
@@ -19,8 +19,8 @@ class Graf;
 class ConstituentSeries : public QtCharts::QLineSeries {
     Q_OBJECT
   public:
-    ConstituentSeries(const Sample&, Graf *parent);
-    ConstituentSeries(Graf *parent);
+    ConstituentSeries(const Sample&, GrafAbstract *parent);
+    ConstituentSeries(GrafAbstract *parent);
 
     int internalId() const;
     QString name() const { return m_name; }
@@ -36,7 +36,7 @@ class ConstituentSeries : public QtCharts::QLineSeries {
     void    createActions();
 
   protected:
-    Graf    *m_graf;
+    GrafAbstract    *m_graf;
     QString  m_name;
 
   private:

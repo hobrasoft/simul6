@@ -6,7 +6,7 @@
 
 QT += core gui charts
 
-# CONFIG += debug debug_and_release
+CONFIG += debug debug_and_release
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -76,7 +76,9 @@ SOURCES += \
     Vec2d.cpp \
     pch.cpp \
     graf.cpp \
+    grafabstract.cpp \
     grafdetail.cpp \
+    detector.cpp \
     constituentseries.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
@@ -114,7 +116,9 @@ HEADERS += \
     Vec2d.h \
     pch.h \
     graf.h \
+    grafabstract.h \
     grafdetail.h \
+    detector.h \
     constituentseries.h \
     conductivityseries.h \
     phseries.h \

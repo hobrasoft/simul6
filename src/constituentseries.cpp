@@ -5,14 +5,14 @@
  */
 #include "constituentseries.h"
 #include "grafstyle.h"
-#include "graf.h"
+#include "grafabstract.h"
 #include "pdebug.h"
 #include "simul6.h"
 #include <QBrush>
 #include <QPen>
 #include <QTimer>
 
-ConstituentSeries::ConstituentSeries(const Sample& sample, Graf *parent) : QLineSeries(parent) {
+ConstituentSeries::ConstituentSeries(const Sample& sample, GrafAbstract *parent) : QLineSeries(parent) {
     m_graf = parent;
     m_internalId = sample.getInternalId();
     m_name = sample.getName();
@@ -34,7 +34,7 @@ ConstituentSeries::ConstituentSeries(const Sample& sample, Graf *parent) : QLine
 }
 
 
-ConstituentSeries::ConstituentSeries(Graf *parent) : QLineSeries(parent) {
+ConstituentSeries::ConstituentSeries(GrafAbstract *parent) : QLineSeries(parent) {
     m_graf = parent;
     m_internalId = 0;
     QPen lpen = pen();

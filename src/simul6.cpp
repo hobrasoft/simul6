@@ -13,7 +13,7 @@
 #include "saveprogress.h"
 #include "about.h"
 #include "localurl.h"
-#include "graf.h"
+#include "detector.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QDir>
@@ -97,6 +97,11 @@ void Simul6::init() {
 
 Graf *Simul6::graf() const {
     return ui->f_simulationProfile->graf();
+}
+
+
+Detector *Simul6::detector() const {
+    return ui->f_simulationProfile->detector();
 }
 
 
@@ -308,7 +313,7 @@ void Simul6::loadData() {
         delete db;
         }
 
-    graf()->autoscale();
+    ui->f_simulationProfile->init();
 }
 
 

@@ -1,4 +1,4 @@
-#include "graf.h"
+#include "detector.h"
 #include "omp.h"
 #include "pdebug.h"
 #include "constituentseries.h"
@@ -19,7 +19,7 @@
 #define PH_COLOR    "#0000ff"
 #define KAPPA_COLOR "#000000"
 
-Graf::Graf(QWidget *parent) : GrafAbstract(parent)
+Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 {
     if (MSETTINGS->guiChartAntialiasing()) {
         setRenderHint(QPainter::Antialiasing);
@@ -30,27 +30,25 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     m_rescaleIndividually = false;
     m_rescalePh = false;
     m_rescaleKapa = false;
-    m_rescaleE = false;
     m_visiblePh = true;
     m_visibleKapa = true;
-    m_visibleE = true;
     m_engine = nullptr;
     m_axis_x = nullptr;
     m_axis_y = nullptr;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
-    connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
+    connect(m_actionRescale, &QAction::triggered, this, &Detector::autoscale);
     addAction(m_actionRescale);
     m_actionRescale->setEnabled(false);
 
     m_actionManualScale = new QAction(tr("Manual scale"), this);
-    connect(m_actionManualScale, &QAction::triggered, this, &Graf::manualScale);
+    connect(m_actionManualScale, &QAction::triggered, this, &Detector::manualScale);
     addAction(m_actionManualScale);
     m_actionManualScale->setEnabled(false);
 
     #ifdef SET_AXIS_LABELS_MANUALLY
     m_actionSetAxisLabels = new QAction(tr("Adjust axis labels"), this);
-    connect(m_actionSetAxisLabels, &QAction::triggered, this, &Graf::setAxisLabels);
+    connect(m_actionSetAxisLabels, &QAction::triggered, this, &Detector::setAxisLabels);
     addAction(m_actionSetAxisLabels);
     m_actionSetAxisLabels->setEnabled(false);
     #endif
@@ -61,7 +59,7 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
 }
 
 
-void Graf::init(const Engine *pEngine) {
+void Detector::init(const Engine *pEngine) {
     m_chart->removeAllSeries();
 
     m_engine = pEngine;
@@ -72,7 +70,7 @@ void Graf::init(const Engine *pEngine) {
     int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
         ConstituentSeries *series = new ConstituentSeries(sample, this);
-        connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+        connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
         m_chart->addSeries(series);
 
         double x = 0;
@@ -84,7 +82,7 @@ void Graf::init(const Engine *pEngine) {
         }
 
     ConstituentSeries *series = new PhSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
     series->setName(tr("pH"));
     series->setUseOpenGL(true);
     series->setVisible(m_visiblePh);
@@ -107,7 +105,7 @@ void Graf::init(const Engine *pEngine) {
     m_chart->addSeries(series);
 
     series = new ConductivitySeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
     series->setName(tr("κ"));
     series->setUseOpenGL(true);
     series->setVisible(m_visibleKapa);
@@ -126,26 +124,6 @@ void Graf::init(const Engine *pEngine) {
         }
     m_chart->addSeries(series);
 
-    series = new ElectricFieldSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setName(tr("Electric field"));
-    series->setUseOpenGL(true);
-    series->setVisible(m_visibleE);
-    QBrush efieldbrush = series->brush();
-    efieldbrush.setColor(E_COLOR);
-    QPen efieldpen = series->pen();
-    efieldpen.setColor(E_COLOR);
-    efieldpen.setWidthF(PENWIDTH);
-    series->setPen(efieldpen);
-    series->setBrush(efieldbrush);
-    x = 0;
-    auto efield = pEngine->getE();
-    for (unsigned int i = 0; i <= p; i++){
-        series->append(QPointF(x * 1000.0, fabs(efield[i]/1000.0)));
-        x += inc_x;
-        }
-    m_chart->addSeries(series);
-
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
 
@@ -153,7 +131,7 @@ void Graf::init(const Engine *pEngine) {
 }
 
 
-void Graf::autoscale() {
+void Detector::autoscale() {
     PDEBUG;
     if (m_engine == nullptr) { return; }
     double maximum = 0;
@@ -214,17 +192,6 @@ void Graf::autoscale() {
             }
         }
 
-    bool rescaleE = (m_rescaleIndividually && m_rescaleE && m_visibleE) ||
-                    (!m_rescaleIndividually && m_visibleE);
-    for (unsigned int i = xleft; rescaleE && i <= xright; i++) {
-        if (fabs(efield[i] / 1000.0) > maximum) {
-            maximum = fabs(efield[i] / 1000.0);
-            }
-        if (fabs(efield[i] / 1000.0) < minimum) {
-            minimum = fabs(efield[i] / 1000.0);
-            }
-        }
-
     QRectF rect;
     rect.setTop    (minimum - 0.09 * maximum);
     rect.setBottom (1.09 * maximum);
@@ -242,7 +209,7 @@ void Graf::autoscale() {
 }
 
 
-void Graf::rescalePh() {
+void Detector::rescalePh() {
     m_rescaleIndividually = true;
     m_rescalePh = true;
     autoscale();
@@ -250,15 +217,8 @@ void Graf::rescalePh() {
     m_rescaleIndividually = false;
 }
 
-void Graf::rescaleE() {
-    m_rescaleIndividually = true;
-    m_rescaleE = true;
-    autoscale();
-    m_rescaleE = false;
-    m_rescaleIndividually = false;
-}
 
-void Graf::rescaleKapa() {
+void Detector::rescaleKapa() {
     m_rescaleIndividually = true;
     m_rescaleKapa = true;
     autoscale();
@@ -266,7 +226,7 @@ void Graf::rescaleKapa() {
     m_rescaleIndividually = false;
 }
 
-void Graf::rescale(int internalId) {
+void Detector::rescale(int internalId) {
     m_rescaleIndividually = true;
     m_rescaleId = internalId;
     autoscale();
@@ -277,7 +237,7 @@ void Graf::rescale(int internalId) {
 
 
 
-void Graf::manualScale() {
+void Detector::manualScale() {
     double caplen = 100;
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
@@ -304,7 +264,7 @@ void Graf::manualScale() {
 }
 
 
-void Graf::setAxisLabels() {
+void Detector::setAxisLabels() {
     if (m_axis_y == nullptr || m_axis_x == nullptr) { 
         return;
         }
@@ -316,7 +276,7 @@ void Graf::setAxisLabels() {
 
 
 // prevents the unlimited scale
-void Graf::mousePressEvent(QMouseEvent *event) {
+void Detector::mousePressEvent(QMouseEvent *event) {
     m_pressedPoint = event->pos();
     if (event->button() != Qt::LeftButton) {
         QChartView::mousePressEvent(event);
@@ -341,7 +301,7 @@ void Graf::mousePressEvent(QMouseEvent *event) {
 
 
 // prevents the context menu 
-void Graf::mouseReleaseEvent(QMouseEvent *event) { 
+void Detector::mouseReleaseEvent(QMouseEvent *event) { 
     if (event->button() == Qt::RightButton) { 
         event->accept();
         QChartView::mouseReleaseEvent(event);
@@ -366,7 +326,7 @@ void Graf::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 
-void Graf::subselected() {
+void Detector::subselected() {
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
 
@@ -383,7 +343,7 @@ void Graf::subselected() {
 }
 
 
-void Graf::setScale(const QRectF& rect) {
+void Detector::setScale(const QRectF& rect) {
     PDEBUG << rect;
     if (rect.isNull()) {
         return;
@@ -452,7 +412,7 @@ void Graf::setScale(const QRectF& rect) {
 }
 
 
-double Graf::axisTable(double maximum) {
+double Detector::axisTable(double maximum) {
     maximum = maximum * 0.8;
     return
           (maximum <= 0.000000000000010) ? 0.0000000000000020
@@ -528,7 +488,7 @@ double Graf::axisTable(double maximum) {
 }
 
 
-void Graf::setVisible(int id, bool visible) {
+void Detector::setVisible(int id, bool visible) {
     QList<QAbstractSeries *> list = m_chart->series();
     for (int i=0; i<list.size(); i++) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
@@ -541,7 +501,7 @@ void Graf::setVisible(int id, bool visible) {
 }
 
 
-void Graf::setVisiblePh(bool visible) {
+void Detector::setVisiblePh(bool visible) {
     m_visiblePh = visible;
     QList<QAbstractSeries *> list = m_chart->series();
     int i = list.size()-3;
@@ -551,7 +511,7 @@ void Graf::setVisiblePh(bool visible) {
 }
 
 
-void Graf::setVisibleKapa(bool visible) {
+void Detector::setVisibleKapa(bool visible) {
     m_visibleKapa = visible;
     QList<QAbstractSeries *> list = m_chart->series();
     int i = list.size()-2;
@@ -561,17 +521,7 @@ void Graf::setVisibleKapa(bool visible) {
 }
 
 
-void Graf::setVisibleE(bool visible) {
-    m_visibleE = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-1;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-    // autoscale();
-}
-
-
-void Graf::drawGraph(const Engine *pEngine)
+void Detector::drawGraph(const Engine *pEngine)
 {
     pEngine->lock(); 
     size_t p = pEngine->getNp(); // points
@@ -618,6 +568,7 @@ void Graf::drawGraph(const Engine *pEngine)
     series->replace(plist);
     id += 1;
 
+/*
     x = 0;
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     auto efield = pEngine->getE();
@@ -628,12 +579,12 @@ void Graf::drawGraph(const Engine *pEngine)
         }
     series->replace(plist);
     id += 1;
-
+*/
     pEngine->unlock(); 
 }
 
 
-void Graf::seriesClicked(const QPointF& point) {
+void Detector::seriesClicked(const QPointF& point) {
     // PDEBUG;
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
@@ -667,38 +618,46 @@ void Graf::seriesClicked(const QPointF& point) {
             }
         m_engine->unlock();
         PDEBUG << s2->name() << s2->internalId();
-        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
+/*
+        DetectorDetail *d = new DetectorDetail(this, s2->name(), "mM", x, minimumy, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
+*/
         return;
         }
 
     int seriescount = m_chart->series().size();
     if (s1 == m_chart->series()[seriescount-3]) {
         double pH = -log(hpl[node]) / log(10);
-        GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
+/*
+        DetectorDetail *d = new DetectorDetail(this, tr("pH"), "", x, pH, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
+*/
         return;
         }
 
     if (s1 == m_chart->series()[seriescount-2]) {
         double k = kapa[node] * 1000.0;
-        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
+/*
+        DetectorDetail *d = new DetectorDetail(this, tr("Conductivity"), "mS/m", x, k, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
+*/
         return;
         }
 
     if (s1 == m_chart->series()[seriescount-1]) {
         double e = efield[node];
-        GrafDetail *d = new GrafDetail(this, tr("Electric field"), "V/m", x, e, node);
+/*
+        DetectorDetail *d = new DetectorDetail(this, tr("Electric field"), "V/m", x, e, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
+*/
         return;
         }
 
