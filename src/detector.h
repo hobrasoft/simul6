@@ -66,6 +66,8 @@ private:
     bool m_initialized;
     int  m_rescaleId;
 
+    double m_time;
+
     const Engine *m_engine;
 };
 

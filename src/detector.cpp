@@ -64,71 +64,46 @@ void Detector::init(const Engine *pEngine) {
 
     m_engine = pEngine;
     pEngine->lock();
-    size_t p = pEngine->getNp(); // points
-    double inc_x = pEngine->getCapLen() / p;
+
+    int detector_position = 1900;
+    double time = pEngine->getTime();
 
     int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
         ConstituentSeries *series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
         m_chart->addSeries(series);
-
-        double x = 0;
-        for (unsigned int i = 0; i <= p; i++){
-            series->append(QPointF(x * 1000.0, sample.getA(0, i)));
-            x += inc_x;
-            }
-        id += 1;
+        series->append(QPointF(time, sample.getA(0, detector_position)));
         }
-
-    ConstituentSeries *series = new PhSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-    series->setName(tr("pH"));
-    series->setUseOpenGL(true);
-    series->setVisible(m_visiblePh);
-    QBrush phbrush = series->brush();
-    phbrush.setColor(PH_COLOR);
-    QPen phpen = series->pen();
-    phpen.setColor(PH_COLOR);
-    phpen.setWidthF(PENWIDTH);
-    series->setPen(phpen);
-    series->setBrush(phbrush);
-    double x = 0;
-    auto hpl = pEngine->getHpl();
-    for (unsigned int i = 0; i <= p; i++){
-        if (hpl[i] > 0) {
-            double pH = -log(hpl[i]) / log(10);
-            series->append(QPointF(x * 1000.0, pH));
-            }
-        x += inc_x;
-        }
-    m_chart->addSeries(series);
-
-    series = new ConductivitySeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-    series->setName(tr("κ"));
-    series->setUseOpenGL(true);
-    series->setVisible(m_visibleKapa);
-    QBrush kappabrush = series->brush();
-    kappabrush.setColor(KAPPA_COLOR);
-    QPen kappapen = series->pen();
-    kappapen.setColor(KAPPA_COLOR);
-    kappapen.setWidthF(PENWIDTH);
-    series->setPen(kappapen);
-    series->setBrush(kappabrush);
-    x = 0;
-    auto kapa = pEngine->getKapa();
-    for (unsigned int i = 0; i <= p; i++){
-        series->append(QPointF(x * 1000.0, kapa[i]*100.0));
-        x += inc_x;
-        }
-    m_chart->addSeries(series);
 
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
 
     setAxisLabels();
 }
+
+
+void Detector::drawGraph(const Engine *pEngine)
+{
+    pEngine->lock(); 
+
+    int detector_position = 1900;
+    m_time = pEngine->getTime();
+
+    int id = 0;
+    for (auto &sample : pEngine->getMix().getSamples()) {
+        QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        PDEBUG << m_time << sample.getName() << sample.getA(0, detector_position);
+        series->append(QPointF(m_time, sample.getA(0, detector_position)));
+        series->setVisible(sample.visible());
+        id += 1;
+        }
+
+    pEngine->unlock(); 
+    autoscale();
+}
+
+
 
 
 void Detector::autoscale() {
@@ -142,7 +117,6 @@ void Detector::autoscale() {
     auto mix    = m_engine->getMix();
     auto kapa   = m_engine->getKapa();
     auto efield = m_engine->getE();
-    double mcaplen = 1000 * m_engine->getCapLen();
     m_engine->unlock();
 
     unsigned int xleft = 0;
@@ -150,8 +124,8 @@ void Detector::autoscale() {
     if (m_rescaleIndividually && m_axis_x != nullptr) {
         double d_xleft  = m_axis_x->min();
         double d_xright = m_axis_x->max();
-        xleft = p * d_xleft /mcaplen;
-        xright = p * d_xright /mcaplen;
+        xleft = p * d_xleft / m_time;
+        xright = p * d_xright / m_time;
         }
 
     for (auto &sample : mix.getSamples()) {
@@ -196,7 +170,7 @@ void Detector::autoscale() {
     rect.setTop    (minimum - 0.09 * maximum);
     rect.setBottom (1.09 * maximum);
     rect.setLeft   (0);
-    rect.setRight  (mcaplen);
+    rect.setRight  (m_time);
     setScale(rect.normalized());
 
     if (m_rescaleIndividually && m_axis_x != nullptr) {
@@ -244,7 +218,6 @@ void Detector::manualScale() {
         }
     if (m_engine != nullptr) {
         m_engine->lock();
-        caplen =  m_engine->getCapLen() * 1000;
         m_engine->unlock();
         }
 
@@ -256,7 +229,7 @@ void Detector::manualScale() {
 
     ManualScale *d = new ManualScale(this);
     d->setRect(rect);
-    d->setCaplen(caplen);
+    d->setCaplen(m_time);
     if (d->exec() == QDialog::Accepted) {
         setScale(d->rect().normalized());
         }
@@ -518,69 +491,6 @@ void Detector::setVisibleKapa(bool visible) {
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
-}
-
-
-void Detector::drawGraph(const Engine *pEngine)
-{
-    pEngine->lock(); 
-    size_t p = pEngine->getNp(); // points
-    QLineSeries *series;
-
-    int id = 0;
-    double inc_x = pEngine->getCapLen() / p;
-    for (auto &sample : pEngine->getMix().getSamples()) {
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        // PDEBUG << sample.getName() << sample.getInternalId();
-        double x = 0;
-        QList<double> vlist;
-        QVector<QPointF> plist;
-        for (unsigned int i = 0; i <= p; i++){
-            plist << QPointF(x * 1000.0, sample.getA(0, i));
-            vlist << x;
-            x += inc_x;
-            }
-        series->replace(plist);
-        series->setVisible(sample.visible());
-        id += 1;
-        }
-
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    double x = 0;
-    auto hpl = pEngine->getHpl();
-    QVector<QPointF> plist;
-    for (unsigned int i = 0; i <= p; i++) {
-        double pH = (hpl[i] > 0) ? (-log(hpl[i]) / log(10)) : 0;
-        plist << QPointF(x * 1000.0, pH);
-        x += inc_x;
-        }
-    series->replace(plist);
-    id += 1;
-
-    x = 0;
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    auto kapa = pEngine->getKapa();
-    plist.clear();;
-    for (unsigned int i = 0; i <= p; i++) {
-        plist << QPointF(x * 1000.0, kapa[i]*100.0);
-        x += inc_x;
-        }
-    series->replace(plist);
-    id += 1;
-
-/*
-    x = 0;
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    auto efield = pEngine->getE();
-    plist.clear();;
-    for (unsigned int i = 0; i <= p; i++) {
-        plist << QPointF(x * 1000.0, fabs(efield[i]/1000.0));
-        x += inc_x;
-        }
-    series->replace(plist);
-    id += 1;
-*/
-    pEngine->unlock(); 
 }
 
 
