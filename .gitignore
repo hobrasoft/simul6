@@ -3,3 +3,5 @@ simul6b.pro.user.*
 Makefile
 .qmake.stash
 src/.tmp/*
+*.AppImage
+AppDir
