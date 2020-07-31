@@ -32,6 +32,9 @@ class GrafAbstract : public QChartView {
 
 */
 
+    virtual void showGlobalActions(bool) = 0;
+
+
     virtual void rescale(int internalId) = 0;
     virtual void rescaleE() {};
     virtual void rescalePh() = 0;

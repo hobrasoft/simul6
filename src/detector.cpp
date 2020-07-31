@@ -83,6 +83,12 @@ void Detector::init(const Engine *pEngine) {
 }
 
 
+void Detector::showGlobalActions(bool x) {
+    m_actionRescale->setVisible(x);
+    m_actionManualScale->setVisible(x);
+}
+
+
 void Detector::drawGraph(const Engine *pEngine)
 {
     pEngine->lock(); 
