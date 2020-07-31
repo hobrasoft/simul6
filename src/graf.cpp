@@ -346,7 +346,7 @@ void Graf::mousePressEvent(QMouseEvent *event) {
 void Graf::mouseReleaseEvent(QMouseEvent *event) { 
     if (event->button() == Qt::RightButton) { 
         event->accept();
-        QChartView::mouseReleaseEvent(event);
+        // QChartView::mouseReleaseEvent(event);
         return;
         }
 
