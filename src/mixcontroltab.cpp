@@ -75,7 +75,8 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
 }
 
 
-void MixControlTab::currentChanged(const QModelIndex&, const QModelIndex&) {
+void MixControlTab::currentChanged(const QModelIndex& current, const QModelIndex&) {
+    ui->f_view->scrollTo(current);
     enableActions();
 }
 
