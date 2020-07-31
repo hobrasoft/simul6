@@ -34,6 +34,7 @@ public slots:
     void setScale(const QRectF& rect);
     void manualScale();
     void autoscale();
+    void showGlobalActions(bool);
 
     void rescalePh();
     void rescaleE();

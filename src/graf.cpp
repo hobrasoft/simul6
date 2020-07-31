@@ -251,6 +251,7 @@ void Graf::rescalePh() {
     m_rescaleIndividually = false;
 }
 
+
 void Graf::rescaleE() {
     m_rescaleIndividually = true;
     m_rescaleE = true;
@@ -258,6 +259,7 @@ void Graf::rescaleE() {
     m_rescaleE = false;
     m_rescaleIndividually = false;
 }
+
 
 void Graf::rescaleKapa() {
     m_rescaleIndividually = true;
@@ -267,6 +269,7 @@ void Graf::rescaleKapa() {
     m_rescaleIndividually = false;
 }
 
+
 void Graf::rescale(int internalId) {
     m_rescaleIndividually = true;
     m_rescaleId = internalId;
@@ -274,8 +277,6 @@ void Graf::rescale(int internalId) {
     m_rescaleId = 0;
     m_rescaleIndividually = false;
 }
-
-
 
 
 void Graf::manualScale() {
@@ -569,6 +570,12 @@ void Graf::setVisibleE(bool visible) {
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
+}
+
+
+void Graf::showGlobalActions(bool x) {
+    m_actionRescale->setVisible(x);
+    m_actionManualScale->setVisible(x);
 }
 
 

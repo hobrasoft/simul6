@@ -59,6 +59,7 @@ void ConstituentSeries::createActions() {
 
 
 void ConstituentSeries::slotRemoveActions() {
+    m_graf->showGlobalActions(true);
     m_graf->removeAction(m_scale);
     m_graf->removeAction(m_hide);
 }
@@ -88,6 +89,7 @@ void ConstituentSeries::slotHovered(const QPointF& point, bool state) {
     setPen(lpen);
     if (visible) { show(); }
     if (state) {
+        m_graf->showGlobalActions(false);
         m_graf->addAction(m_scale);
         m_graf->addAction(m_hide);
       } else {
