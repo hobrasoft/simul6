@@ -73,7 +73,6 @@ void Graf::init(const Engine *pEngine) {
     for (auto &sample : pEngine->getMix().getSamples()) {
         ConstituentSeries *series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-        m_chart->addSeries(series);
 
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
@@ -81,6 +80,8 @@ void Graf::init(const Engine *pEngine) {
             x += inc_x;
             }
         id += 1;
+
+        m_chart->addSeries(series);
         }
 
     ConstituentSeries *series = new PhSeries(this);
