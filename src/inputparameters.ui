@@ -163,7 +163,7 @@
    <item row="2" column="0">
     <widget class="QCheckBox" name="f_constant_voltage">
      <property name="text">
-      <string>Constant Voltage</string>
+      <string>Constant voltage</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -198,7 +198,7 @@
       <bool>true</bool>
      </property>
      <property name="text">
-      <string>Constant Current Density</string>
+      <string>Constant current density</string>
      </property>
     </widget>
    </item>

@@ -389,6 +389,7 @@ void Simul6::createActions() {
     menu->addAction(ui->f_dock_composition->toggleViewAction());
     menu->addAction(ui->f_dock_replay->toggleViewAction());
     menu->addAction(ui->f_dock_saveprogress->toggleViewAction());
+    menu->addAction(ui->f_mixcontrol->toggleViewSwapAction());
     ui->menuBar->addMenu(menu);
 
 

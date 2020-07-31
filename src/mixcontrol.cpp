@@ -2,10 +2,11 @@
 #include "mixcontroldelegate.h"
 #include "ui_mixcontrol.h"
 #include "constituentsdialog.h"
+#include "msettings.h"
 #include "pdebug.h"
 #include <QAction>
 #include <QToolButton>
-#include <QMessageBox>
+#include <QTimer>
 
 
 MixControl::~MixControl()
@@ -26,17 +27,17 @@ MixControl::MixControl(QWidget *parent) :
 
     QToolButton *button = new QToolButton(this);
     button->setContextMenuPolicy(Qt::ActionsContextMenu);
-    ui->f_tab->setCornerWidget(button);
+    button->setVisible(false);
 
-    m_addTab = new QAction(tr("Add empty mix"));
-    m_addTab->setToolTip(tr("Add an empty mix to be swapped in part of capilary."));
+    m_addTab = new QAction(tr("Add swap content"));
+    m_addTab->setToolTip(tr("Add swap content to be swapped in part of capilary."));
     button->setDefaultAction(m_addTab);
     button->setToolButtonStyle(Qt::ToolButtonTextOnly);
     connect(m_addTab, &QAction::triggered, [this]() {
         createNewSwap();
         });
 
-    m_cloneTab = new QAction(tr("Clone current mix"));
+    m_cloneTab = new QAction(tr("Clone current swap content"));
     button->addAction(m_cloneTab);
     connect(m_cloneTab, &QAction::triggered, [this]() {
         MixControlTab *currentTab = qobject_cast<MixControlTab *>(ui->f_tab->currentWidget());
@@ -44,19 +45,45 @@ MixControl::MixControl(QWidget *parent) :
         createNewSwap(data);
         });
 
-    m_removeTab = new QAction(tr("Remove current mix"));
+    m_removeTab = new QAction(tr("Remove current swap content"));
     button->addAction(m_removeTab);
     connect(m_removeTab, &QAction::triggered, this, &MixControl::removeCurrentTab);
+
+
+    m_viewSwap = new QAction(tr("Add swap content"));
+    m_viewSwap->setCheckable(true);
+    m_viewSwap->setChecked(false);
+    connect(m_viewSwap, &QAction::triggered, [this,button]() {
+        bool visible = m_viewSwap->isChecked();
+        QWidget *w = (visible) ? button : nullptr; 
+        ui->f_tab->setCornerWidget(w, Qt::TopLeftCorner);
+        button->setVisible(visible);
+        writeSettings();
+        });
 
     connect(ui->f_tab, &QTabWidget::currentChanged, this, &MixControl::currentTabChanged);
 
     currentTabChanged(0);
+    readSettings();
+
+    QTimer::singleShot(1, m_viewSwap, &QAction::trigger);
+}
+
+
+void MixControl::readSettings() {
+    bool visible = MSETTINGS->guiShowSwapButton();
+    m_viewSwap->setChecked(!visible); // Should be negated!
+}
+
+
+void MixControl::writeSettings() {
+    MSETTINGS->setGuiShowSwapButton(m_viewSwap->isChecked());
 }
 
 
 MixControlTab *MixControl::createNewSwap(const QList<SegmentedConstituent>& data) {
     MixControlTab *newTab = new MixControlTab(this);
-    ui->f_tab->addTab(newTab, tr("Swap"));
+    ui->f_tab->addTab(newTab, tr("Swap content"));
     ui->f_tab->setCurrentIndex( ui->f_tab->count()-1 );
     connect(newTab, &MixControlTab::swap, this, &MixControl::swap);
     connect(newTab, &MixControlTab::swap, [this]() { currentTabChanged(-1); });
