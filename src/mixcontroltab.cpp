@@ -111,6 +111,7 @@ void MixControlTab::swapPressed() {
 
 
 bool MixControlTab::removable() const {
+    if (m_model->rowCount() <= 0) { return true; }
     return ui->f_swap->isEnabled();
 }
 
