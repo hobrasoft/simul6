@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>313</width>
+    <width>331</width>
     <height>106</height>
    </rect>
   </property>
@@ -29,6 +29,9 @@
    </item>
    <item row="0" column="1">
     <widget class="QSpinBox" name="f_ratio1">
+     <property name="maximum">
+      <number>1000</number>
+     </property>
      <property name="value">
       <number>1</number>
      </property>
@@ -39,6 +42,9 @@
      <property name="minimum">
       <number>1</number>
      </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
      <property name="value">
       <number>1</number>
      </property>
@@ -46,6 +52,9 @@
    </item>
    <item row="0" column="3">
     <widget class="QSpinBox" name="f_ratio3">
+     <property name="maximum">
+      <number>1000</number>
+     </property>
      <property name="value">
       <number>8</number>
      </property>
