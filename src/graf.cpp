@@ -151,6 +151,23 @@ void Graf::init(const Engine *pEngine) {
     m_chart->legend()->setVisible(false);
 
     setAxisLabels();
+
+    m_detectorSeries = new QLineSeries(this);
+    m_detectorSeries->append(QPointF(-10, -99999));
+    m_detectorSeries->append(QPointF(-10, +99999));
+    m_detectorSeries->setUseOpenGL(true);
+    m_detectorSeries->setVisible(true);
+    m_detectorSeries->setPen(efieldpen);
+    m_detectorSeries->setBrush(efieldbrush);
+    m_chart->addSeries(m_detectorSeries);
+
+}
+
+
+void Graf::setDetectorPosition(double x) {
+    m_detectorSeries->clear();
+    m_detectorSeries->append(QPointF(x, -99999));
+    m_detectorSeries->append(QPointF(x, +99999));
 }
 
 

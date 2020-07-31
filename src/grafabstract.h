@@ -33,6 +33,7 @@ class GrafAbstract : public QChartView {
 */
 
     virtual void showGlobalActions(bool) = 0;
+    virtual void setDetectorPosition(double) = 0;
 
 
     virtual void rescale(int internalId) = 0;

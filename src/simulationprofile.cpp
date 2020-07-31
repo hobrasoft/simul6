@@ -4,6 +4,7 @@
 #include "mixcontrolmodel.h"
 #include "simul6.h"
 #include "pdebug.h"
+#include <QTabBar>
 
 
 SimulationProfile::~SimulationProfile() {
@@ -32,6 +33,17 @@ Graf *SimulationProfile::graf() const {
 
 Detector *SimulationProfile::detector() const {
     return ui->f_detector;
+}
+
+
+void SimulationProfile::enableDetector(bool x) {
+    ui->f_tabwidget->tabBar()->setVisible(x);
+}
+
+
+void SimulationProfile::setDetectorPosition(double x) {
+    ui->f_graf->setDetectorPosition(x);
+    ui->f_detector->setDetectorPosition(x);
 }
 
 
@@ -81,7 +93,7 @@ void SimulationProfile::createEngine(int np)
     connect(m_engine, &Engine::mixChanged, ui->f_detector, &Detector::init);
     connect(m_engine, &Engine::drawGraph, ui->f_detector, &Detector::drawGraph);
 
-    connect(m_engine, &Engine::timeChanged, this, &SimulationProfile::timeChanged);
+    connect(m_engine, QOverload<double>::of(&Engine::timeChanged), this, &SimulationProfile::timeChanged);
     connect(m_engine, &Engine::errorChanged, this, &SimulationProfile::errorChanged);
     connect(m_engine, &Engine::curDenChanged, this, &SimulationProfile::curDenChanged);
     connect(m_engine, &Engine::voltageChanged, this, &SimulationProfile::voltageChanged);

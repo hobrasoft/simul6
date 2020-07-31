@@ -229,8 +229,14 @@
     <layout class="QGridLayout" name="gridLayout_6">
      <item row="2" column="0">
       <widget class="QDoubleSpinBox" name="f_detector_position">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="suffix">
         <string> mm</string>
+       </property>
+       <property name="maximum">
+        <double>0.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -256,6 +262,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="f_detector_label">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Detector position</string>
        </property>

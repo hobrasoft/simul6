@@ -30,6 +30,8 @@ public:
 
 signals:
     void   errHChanged(double);
+    void   detectorChanged(bool);
+    void   detectorPositionChanged(double);
 
 public slots:
     void showError(double);
@@ -37,11 +39,14 @@ public slots:
     void showVoltage(double);
     void showDt(double);
 
+    void setCaplen(double);
+
 private slots:
     void enableInputs();
 
     void voltageCheckboxChanged();
     void currentCheckboxChanged();
+    void detectorCheckboxChanged();
 
 private:
     Ui::InputParameters *ui;

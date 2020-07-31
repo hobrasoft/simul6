@@ -35,6 +35,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_engine = nullptr;
     m_axis_x = nullptr;
     m_axis_y = nullptr;
+    m_detectorPosition = 0;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Detector::autoscale);
@@ -56,6 +57,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
     setMouseTracking(true);
+
 }
 
 
@@ -65,8 +67,8 @@ void Detector::init(const Engine *pEngine) {
     m_engine = pEngine;
     pEngine->lock();
 
-    int detector_position = 1900;
     double time = pEngine->getTime();
+    int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
 
     int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
@@ -83,6 +85,11 @@ void Detector::init(const Engine *pEngine) {
 }
 
 
+void Detector::setDetectorPosition(double x) {
+    m_detectorPosition = x;
+}
+
+
 void Detector::showGlobalActions(bool x) {
     m_actionRescale->setVisible(x);
     m_actionManualScale->setVisible(x);
@@ -93,13 +100,12 @@ void Detector::drawGraph(const Engine *pEngine)
 {
     pEngine->lock(); 
 
-    int detector_position = 1900;
     m_time = pEngine->getTime();
+    int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
 
     int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
         QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        PDEBUG << m_time << sample.getName() << sample.getA(0, detector_position);
         series->append(QPointF(m_time, sample.getA(0, detector_position)));
         series->setVisible(sample.visible());
         id += 1;
@@ -113,7 +119,6 @@ void Detector::drawGraph(const Engine *pEngine)
 
 
 void Detector::autoscale() {
-    PDEBUG;
     if (m_engine == nullptr) { return; }
     double maximum = 0;
     double minimum = 99999;
@@ -147,6 +152,7 @@ void Detector::autoscale() {
             }
         }
 
+/*
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
                      (!m_rescaleIndividually && m_visiblePh);
     for (unsigned int i = xleft; rescalePh && i <= xright; i++) {
@@ -171,6 +177,7 @@ void Detector::autoscale() {
             minimum = kapa[i] * 100.0;
             }
         }
+*/
 
     QRectF rect;
     rect.setTop    (minimum - 0.09 * maximum);
@@ -218,6 +225,7 @@ void Detector::rescale(int internalId) {
 
 
 void Detector::manualScale() {
+return;
     double caplen = 100;
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
@@ -323,7 +331,6 @@ void Detector::subselected() {
 
 
 void Detector::setScale(const QRectF& rect) {
-    PDEBUG << rect;
     if (rect.isNull()) {
         return;
         }
@@ -506,6 +513,7 @@ void Detector::seriesClicked(const QPointF& point) {
     if (s1 == nullptr) { return; }
     if (m_engine == nullptr) { return; }
 
+return;
     m_engine->lock();
     QPoint position = mapToGlobal(QPoint(15,15));
     double caplen   = m_engine->getCapLen() * 1000.0;

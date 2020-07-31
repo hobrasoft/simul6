@@ -1,7 +1,9 @@
 #include "inputparameters.h"
 #include "ui_inputparameters.h"
 #include "math.h"
+#include "simul6.h"
 #include "pdebug.h"
+#include <QTimer>
 
 InputParameters::InputParameters(QWidget *parent) :
     QWidget(parent),
@@ -15,11 +17,23 @@ InputParameters::InputParameters(QWidget *parent) :
     connect(ui->f_maxerr, QOverload<int>::of(&QSpinBox::valueChanged), [this](int) {
         emit errHChanged(getErrH());
         });
+    connect(ui->f_detector, &QCheckBox::stateChanged, this, &InputParameters::detectorCheckboxChanged);
+    connect(ui->f_detector_position, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &InputParameters::detectorPositionChanged);
+    connect (Simul6::instance(), &Simul6::caplenChanged, this, &InputParameters::setCaplen);
+
+    QTimer::singleShot(1, this, [this](){
+        emit detectorChanged(ui->f_detector->isChecked());
+        });
 }
 
 InputParameters::~InputParameters()
 {
     delete ui;
+}
+
+
+void InputParameters::setCaplen(double x) {
+    ui->f_detector_position->setMaximum(x);
 }
 
 
@@ -46,6 +60,12 @@ void InputParameters::currentCheckboxChanged() {
     ui->f_current->setEnabled(checked);
 }
 
+void InputParameters::detectorCheckboxChanged() {
+    bool checked = ui->f_detector->isChecked();
+    ui->f_detector_position->setEnabled(checked);
+    ui->f_detector_label->setEnabled(checked);
+    emit detectorChanged(checked);
+}
 
 bool InputParameters::getConstantVoltage() const {
     return ui->f_constant_voltage->isChecked();

@@ -33,7 +33,7 @@
     <number>1</number>
    </property>
    <item row="0" column="0">
-    <widget class="QTabWidget" name="stackedWidget">
+    <widget class="QTabWidget" name="f_tabwidget">
      <property name="tabPosition">
       <enum>QTabWidget::East</enum>
      </property>

@@ -59,10 +59,14 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_simulationProfile, &SimulationProfile::voltageChanged, ui->f_parameters, &InputParameters::showVoltage);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, this, &Simul6::engineFinished);
     connect(ui->f_simulationProfile, &SimulationProfile::replacedConstituent, this, &Simul6::replacedConstituent);
+
+    connect(ui->f_parameters, &InputParameters::detectorChanged, ui->f_simulationProfile, &SimulationProfile::enableDetector);
+    connect(ui->f_parameters, &InputParameters::detectorPositionChanged, ui->f_simulationProfile, &SimulationProfile::setDetectorPosition);
     connect(ui->f_parameters, &InputParameters::errHChanged, [this](double x) {
         if (nullptr == ui->f_simulationProfile->engine()) { return; }
         ui->f_simulationProfile->engine()->setErrH(x);
         });
+
 
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedPh, ui->f_simulationProfile, &SimulationProfile::setVisiblePh);
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedKapa, ui->f_simulationProfile, &SimulationProfile::setVisibleKapa);

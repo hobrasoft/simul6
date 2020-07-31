@@ -33,6 +33,7 @@ public slots:
     void manualScale();
     void autoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
+    void setDetectorPosition(double) Q_DECL_OVERRIDE;
 
     void rescalePh();
     void rescaleKapa();
@@ -68,6 +69,7 @@ private:
     int  m_rescaleId;
 
     double m_time;
+    double m_detectorPosition;
 
     const Engine *m_engine;
 };

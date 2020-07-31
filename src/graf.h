@@ -10,6 +10,7 @@
 #include <QRectF>
 #include <QValueAxis>
 #include <QAction>
+#include <QLineSeries>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -34,6 +35,8 @@ public slots:
     void manualScale();
     void autoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
+
+    void setDetectorPosition(double) Q_DECL_OVERRIDE;
 
     void rescalePh() Q_DECL_OVERRIDE;
     void rescaleE() Q_DECL_OVERRIDE;
@@ -70,6 +73,8 @@ private:
     bool m_rescaleKapa;
     bool m_initialized;
     int  m_rescaleId;
+
+    QLineSeries *m_detectorSeries;
 
     const Engine *m_engine;
 };

@@ -36,6 +36,9 @@ public slots:
     void setVisibleKapa(bool visible);
     void setVisibleE(bool visible);
 
+    void enableDetector(bool);
+    void setDetectorPosition(double);
+
 signals:
     void timeChanged(double);
     void errorChanged(double);

@@ -1,6 +1,7 @@
 #include "computecontrol.h"
 #include "ui_computecontrol.h"
 #include "pdebug.h"
+#include <QTimer>
 #include <omp.h>
 
 ComputeControl::ComputeControl(QWidget *parent) :
@@ -21,6 +22,9 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_show_e, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedE);
     connect(ui->f_caplen, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &ComputeControl::caplenChanged);
     setParallelComputation();
+    QTimer::singleShot(0, this, [this](){
+        emit caplenChanged(ui->f_caplen->value());
+        });
 }
 
 ComputeControl::~ComputeControl()
