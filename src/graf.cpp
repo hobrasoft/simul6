@@ -157,7 +157,7 @@ void Graf::autoscale() {
     PDEBUG;
     if (m_engine == nullptr) { return; }
     double maximum = 0;
-    double minimum = 99999;
+    double minimum = 9999999;
     m_engine->lock();
     size_t p    = m_engine->getNp();
     auto hpl    = m_engine->getHpl();
@@ -178,7 +178,7 @@ void Graf::autoscale() {
 
     for (auto &sample : mix.getSamples()) {
         if (!sample.visible()) { continue; }
-        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { continue; }
+        if (m_rescaleIndividually && sample.getInternalId() != m_rescaleId) { continue; }
         for (unsigned int i = xleft; i <= xright; i++){
             if (sample.getA(0, i) > maximum)  {
                 maximum = sample.getA(0,i);
