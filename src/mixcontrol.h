@@ -26,6 +26,8 @@ public:
     QVariantList mixJson() const;
     void setMixJson(const QVariantList& list);
 
+    QAction *toggleViewSwapAction() { return m_viewSwap; }
+
 signals:
     void visibilityChanged(int id, bool visible);
     void swap(const QList<SegmentedConstituent>&);
@@ -39,6 +41,8 @@ public slots:
 private slots:
     void removeCurrentTab();
     void currentTabChanged(int);
+    void readSettings();
+    void writeSettings();
     MixControlTab *createNewSwap(const QList<SegmentedConstituent>& data = QList<SegmentedConstituent>());
 
 private:
@@ -49,6 +53,8 @@ private:
     QAction *m_addTab;
     QAction *m_cloneTab;
     QAction *m_removeTab;
+    QAction *m_viewSwap;
+
 };
 
 #endif // MIXCONTROL_H

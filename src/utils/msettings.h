@@ -57,6 +57,7 @@ class MSettings : public QSettings {
     static constexpr const char *GuiDockSaveProgressGeometry    = "gui/dock-save-progress-geometry";
     static constexpr const char *GuiDockReplayGeometry          = "gui/dock-replay-geometry";
     static constexpr const char *GuiDockCompositionGeometry     = "gui/dock-composition-geometry";
+    static constexpr const char *GuiShowSwapButton              = "gui/show-swap-button";
 
     static constexpr const char *DbConstituentsDefault   = "://data/constituents.json";
 
@@ -101,6 +102,8 @@ class MSettings : public QSettings {
     void setGuiMoveable(bool x) { setValue(GuiMoveable, x); }
     bool guiCloseable() const { return value(GuiCloseable, false).toBool(); }
     void setGuiCloseable(bool x) { setValue(GuiCloseable, x); }
+    bool guiShowSwapButton() const { return value(GuiShowSwapButton, false).toBool(); }
+    void setGuiShowSwapButton(bool x) { setValue(GuiShowSwapButton, x); }
 
   protected:
 

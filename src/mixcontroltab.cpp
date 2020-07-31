@@ -75,7 +75,8 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
 }
 
 
-void MixControlTab::currentChanged(const QModelIndex&, const QModelIndex&) {
+void MixControlTab::currentChanged(const QModelIndex& current, const QModelIndex&) {
+    ui->f_view->scrollTo(current);
     enableActions();
 }
 
@@ -111,6 +112,7 @@ void MixControlTab::swapPressed() {
 
 
 bool MixControlTab::removable() const {
+    if (m_model->rowCount() <= 0) { return true; }
     return ui->f_swap->isEnabled();
 }
 

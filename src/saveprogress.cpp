@@ -181,9 +181,6 @@ void SaveProgress::init() {
     m_savedTimeReal = 0;
     m_active = false;
     m_worker->setHeaderData(m_simul6->data());
-    m_filename.clear();
-    ui->f_filename->setText(QString());
-    ui->f_active->setEnabled(false);
     showStepsForm();
 }
 

@@ -73,7 +73,6 @@ void Graf::init(const Engine *pEngine) {
     for (auto &sample : pEngine->getMix().getSamples()) {
         ConstituentSeries *series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-        m_chart->addSeries(series);
 
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
@@ -81,6 +80,8 @@ void Graf::init(const Engine *pEngine) {
             x += inc_x;
             }
         id += 1;
+
+        m_chart->addSeries(series);
         }
 
     ConstituentSeries *series = new PhSeries(this);
@@ -157,7 +158,7 @@ void Graf::autoscale() {
     PDEBUG;
     if (m_engine == nullptr) { return; }
     double maximum = 0;
-    double minimum = 99999;
+    double minimum = 9999999;
     m_engine->lock();
     size_t p    = m_engine->getNp();
     auto hpl    = m_engine->getHpl();
@@ -178,7 +179,7 @@ void Graf::autoscale() {
 
     for (auto &sample : mix.getSamples()) {
         if (!sample.visible()) { continue; }
-        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { continue; }
+        if (m_rescaleIndividually && sample.getInternalId() != m_rescaleId) { continue; }
         for (unsigned int i = xleft; i <= xright; i++){
             if (sample.getA(0, i) > maximum)  {
                 maximum = sample.getA(0,i);
@@ -250,6 +251,7 @@ void Graf::rescalePh() {
     m_rescaleIndividually = false;
 }
 
+
 void Graf::rescaleE() {
     m_rescaleIndividually = true;
     m_rescaleE = true;
@@ -257,6 +259,7 @@ void Graf::rescaleE() {
     m_rescaleE = false;
     m_rescaleIndividually = false;
 }
+
 
 void Graf::rescaleKapa() {
     m_rescaleIndividually = true;
@@ -266,6 +269,7 @@ void Graf::rescaleKapa() {
     m_rescaleIndividually = false;
 }
 
+
 void Graf::rescale(int internalId) {
     m_rescaleIndividually = true;
     m_rescaleId = internalId;
@@ -273,8 +277,6 @@ void Graf::rescale(int internalId) {
     m_rescaleId = 0;
     m_rescaleIndividually = false;
 }
-
-
 
 
 void Graf::manualScale() {
@@ -344,7 +346,7 @@ void Graf::mousePressEvent(QMouseEvent *event) {
 void Graf::mouseReleaseEvent(QMouseEvent *event) { 
     if (event->button() == Qt::RightButton) { 
         event->accept();
-        QChartView::mouseReleaseEvent(event);
+        // QChartView::mouseReleaseEvent(event);
         return;
         }
 
@@ -568,6 +570,12 @@ void Graf::setVisibleE(bool visible) {
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
+}
+
+
+void Graf::showGlobalActions(bool x) {
+    m_actionRescale->setVisible(x);
+    m_actionManualScale->setVisible(x);
 }
 
 

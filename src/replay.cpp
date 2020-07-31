@@ -158,7 +158,7 @@ void Replay::setStep(int step) {
     const QVariantList& constituents = stepData["constituents"].toList();
 
     // If the constituent does not exist in engine yet,
-    // add the constituent to enginet.
+    // add the constituent to engine.
     // This can happen when swap data are in steps data
     for (int i=0; i<constituents.size(); i++) {
         int internalId = constituents[i].toMap()["internal_id"].toInt();

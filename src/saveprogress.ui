@@ -106,7 +106,7 @@
      <item row="1" column="2">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>secs</string>
+        <string>sec</string>
        </property>
       </widget>
      </item>

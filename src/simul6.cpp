@@ -43,8 +43,8 @@ Simul6::Simul6(QWidget *parent) :
     ui->setupUi(this);
     setWindowIcon(QIcon("://icons/appicon.svg"));
     createActions();
-    connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
     connect(ui->f_computeControl, &ComputeControl::init, SAVEPROGRESS, &SaveProgress::init);
+    connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
     connect(ui->f_computeControl, &ComputeControl::init, ui->f_mixcontrol, &MixControl::init);
     connect(ui->f_computeControl, &ComputeControl::init, ui->f_simulationProfile, &SimulationProfile::init);
     connect(ui->f_computeControl, &ComputeControl::run, this, &Simul6::runEngine);
@@ -394,6 +394,7 @@ void Simul6::createActions() {
     menu->addAction(ui->f_dock_composition->toggleViewAction());
     menu->addAction(ui->f_dock_replay->toggleViewAction());
     menu->addAction(ui->f_dock_saveprogress->toggleViewAction());
+    menu->addAction(ui->f_mixcontrol->toggleViewSwapAction());
     ui->menuBar->addMenu(menu);
 
 
