@@ -27,6 +27,9 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     setRubberBand(QChartView::RectangleRubberBand);
     m_chart = new QChart();
     setChart(m_chart);
+    // Color: #AARRGGBB - AA = alpha channel, RR,GG,BB - red, gree, blue
+    m_chart->setPlotAreaBackgroundBrush(QBrush(QColor("#100000ff")));
+    m_chart->setPlotAreaBackgroundVisible(true);
     m_rescaleIndividually = false;
     m_rescalePh = false;
     m_rescaleKapa = false;
@@ -58,6 +61,7 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
     setMouseTracking(true);
+
 }
 
 

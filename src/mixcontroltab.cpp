@@ -51,7 +51,7 @@ MixControlTab::MixControlTab(QWidget *parent, TabType tabType) :
     connect(m_actionEdit, &QAction::triggered, this, QOverload<>::of(&MixControlTab::editComponent));
     ui->f_view->addAction(m_actionEdit);
 
-    m_actionToggleVisibility = new QAction("Toggle Visibility", this);
+    m_actionToggleVisibility = new QAction("Toggle visibility", this);
     m_actionToggleVisibility->setEnabled(false);
     ui->f_toggle->setDefaultAction(m_actionToggleVisibility);
     connect(m_actionToggleVisibility, &QAction::triggered, this, &MixControlTab::toggleVisibility);

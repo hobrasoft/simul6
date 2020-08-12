@@ -395,9 +395,9 @@ void Simul6::createActions() {
     menu = new QMenu(tr("View"), this);
     menu->addAction(ui->f_dock_computeControl->toggleViewAction());
     menu->addAction(ui->f_dock_inputParams->toggleViewAction());
+    menu->addAction(ui->f_dock_saveprogress->toggleViewAction());
     menu->addAction(ui->f_dock_composition->toggleViewAction());
     menu->addAction(ui->f_dock_replay->toggleViewAction());
-    menu->addAction(ui->f_dock_saveprogress->toggleViewAction());
     menu->addAction(ui->f_mixcontrol->toggleViewSwapAction());
     ui->menuBar->addMenu(menu);
 

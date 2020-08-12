@@ -33,6 +33,8 @@ MixControl::MixControl(QWidget *parent) :
     m_addTab->setToolTip(tr("Add swap content to be swapped in part of capilary."));
     button->setDefaultAction(m_addTab);
     button->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    // button->setStyleSheet("background-color:#606060;color:white");
+    button->setStyleSheet("background-color:darkgray");
     connect(m_addTab, &QAction::triggered, [this]() {
         createNewSwap();
         });
