@@ -91,7 +91,8 @@ void SimulationProfile::createEngine(int np)
     connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);
 
     connect(m_engine, &Engine::mixChanged, ui->f_detector, &Detector::init);
-    connect(m_engine, &Engine::drawGraph, ui->f_detector, &Detector::drawGraph);
+//  connect(m_engine, &Engine::drawGraph, ui->f_detector, &Detector::drawGraph);
+    connect(m_engine, QOverload<const Engine*>::of(&Engine::timeChanged), ui->f_detector, &Detector::drawGraph);
 
     connect(m_engine, QOverload<double>::of(&Engine::timeChanged), this, &SimulationProfile::timeChanged);
     connect(m_engine, &Engine::errorChanged, this, &SimulationProfile::errorChanged);

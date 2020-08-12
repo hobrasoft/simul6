@@ -120,7 +120,7 @@ public:
     Engine(int pNp);
 
     double getTime() const { return t; }
-	void setTime(double x) { t = x; emit timeChanged(x); }
+	void setTime(double x) { t = x; emit timeChanged(x); timeChanged(this); }
 	void setDx(double pDx) { dx = pDx; }
 	void setT(double pT) { t = pT; }
 	void setDt(double pDt) { dt = pDt; }
@@ -168,6 +168,7 @@ signals:
     void drawGraph(const Engine *pEngine);
     void mixChanged(const Engine *pEngine);
     void timeChanged(double);
+    void timeChanged(const Engine *pEngine);
     void errorChanged(double);
     void finished();
     void dtChanged(double);

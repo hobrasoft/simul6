@@ -405,7 +405,8 @@ void Engine::setStep(const QVariantMap& data) {
         }
 
     init();
-    timeChanged(t);
+    emit timeChanged(t);
+    emit timeChanged(this);
 }
 
 void Engine::gCalc()
@@ -819,6 +820,7 @@ void Engine::run()
     m_running = true;
     if (t == 0) {
         emit timeChanged(t);
+        emit timeChanged(this);
         }
     timeDisplay = timeInterval;
     intervalCounter = 0;
@@ -831,6 +833,7 @@ void Engine::runPrivate() {
         PDEBUG;
         emit drawGraph(this);
         emit timeChanged(t);
+        emit timeChanged(this);
         emit finished();
         qDebug() << "Time elapsed " << intervalCounter / 1000 << " s";
         return;
@@ -851,6 +854,7 @@ void Engine::runPrivate() {
     }
 
     emit timeChanged(t);
+    emit timeChanged(this);
     if (m_sendSignals) {
         emit errorChanged(errMax);
         emit dtChanged(dt);
