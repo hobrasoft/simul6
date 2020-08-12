@@ -12,7 +12,9 @@ ManualScale::ManualScale(QWidget *parent) : QDialog(parent), ui(new Ui::ManualSc
 
 
 void ManualScale::setCaplen(double x) {
-    ui->f_right->setMaximum(x);
+    ui->f_right->setMaximum(x*1.5);
+    ui->f_left->setMinimum(x*-0.5);
+    ui->f_left->setMaximum(x);
 }
 
 
