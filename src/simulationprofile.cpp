@@ -96,11 +96,14 @@ void SimulationProfile::createEngine(int np)
     m_engine = new Engine(np);
     m_engine->moveToThread(&m_thread);
 
-    connect(m_engine, &Engine::mixChanged, ui->f_graf, &Graf::init);
-    connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);
-
-    connect(m_engine, &Engine::mixChanged, ui->f_detector, &Detector::init);
-    connect(m_engine, &Engine::drawGraph, ui->f_detector, &Detector::drawGraph);
+    connect(m_engine, &Engine::mixChanged, [this](const Engine *engine) {
+        ui->f_graf->init(engine);
+        ui->f_detector->init(engine);
+        });
+    connect(m_engine, &Engine::drawGraph, [this](const Engine *engine) {
+        ui->f_graf->drawGraph(engine);
+        ui->f_detector->drawGraph(engine);
+        });
     connect(m_engine, QOverload<const Engine*>::of(&Engine::timeChanged), ui->f_detector, &Detector::appendData);
 
     connect(m_engine, QOverload<double>::of(&Engine::timeChanged), this, &SimulationProfile::timeChanged);

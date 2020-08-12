@@ -15,9 +15,8 @@
 #include "grafstyle.h"
 #include "manualscale.h"
 
-#define E_COLOR     "#00ff00"
-#define PH_COLOR    "#0000ff"
-#define KAPPA_COLOR "#000000"
+#define PH_OFFSET -2
+#define KAPA_OFFSET -1
 
 Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 {
@@ -37,7 +36,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_axis_y = nullptr;
     m_detectorPosition = 0;
     m_isVisible = false; 
-    m_active = true; 
+    m_active = false; 
     m_initialized = false;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
@@ -66,21 +65,41 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 
 void Detector::init(const Engine *pEngine) {
     m_chart->removeAllSeries();
+    m_initialized = false;
 
     m_engine = pEngine;
     pEngine->lock();
+    const Mix& mix = m_engine->getMix();
 
     double time = pEngine->getTime();
     int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
+    ConstituentSeries *series;
 
-    for (auto &sample : pEngine->getMix().getSamples()) {
-        ConstituentSeries *series = new ConstituentSeries(sample, this);
+    for (auto &sample : mix.getSamples()) {
+        series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-        m_chart->addSeries(series);
         series->append(QPointF(time, sample.getA(0, detector_position)));
+        m_chart->addSeries(series);
         }
 
     pEngine->unlock();
+
+    series = new PhSeries(this);
+    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
+    auto hpl = pEngine->getHpl();
+    double pH = (hpl[detector_position] > 0) ? (-log(hpl[detector_position]) / log(10)) : 0;
+    series->append(QPointF(m_time, pH));
+    series->setVisible(m_isVisible && m_visiblePh);
+    m_chart->addSeries(series);
+
+    series = new ConductivitySeries(this);
+    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
+    auto kapal = pEngine->getKapa();
+    double kapa = kapal[detector_position] * 100.0;
+    series->append(QPointF(m_time, kapa));
+    series->setVisible(m_isVisible && m_visibleKapa);
+    m_chart->addSeries(series);
+
     m_chart->legend()->setVisible(false);
 
     setAxisLabels();
@@ -100,18 +119,37 @@ void Detector::showGlobalActions(bool x) {
 
 void Detector::appendData(const Engine *pEngine) {
     if (m_initialized && !m_active) { return; }
+    QList<QAbstractSeries*> list = m_chart->series();
+    if (list.isEmpty()) { return; }
+    if (pEngine->getCapLen() <= 0) { return; }
     pEngine->lock(); 
+    const Mix& mix = m_engine->getMix();
+    QLineSeries *series;
 
     m_time = pEngine->getTime();
     int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
 
     int id = 0;
-    for (auto &sample : pEngine->getMix().getSamples()) {
-        QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    for (auto &sample : mix.getSamples()) {
+        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         series->append(QPointF(m_time, sample.getA(0, detector_position)));
         series->setVisible(m_isVisible && sample.visible());
         id += 1;
         }
+
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    auto hpl = pEngine->getHpl();
+    double pH = (hpl[detector_position] > 0) ? (-log(hpl[detector_position]) / log(10)) : 0;
+    series->append(QPointF(m_time, pH));
+    series->setVisible(m_isVisible && m_visiblePh);
+    id += 1;
+
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    auto kapal = pEngine->getKapa();
+    double kapa = kapal[detector_position] * 100.0;
+    series->append(QPointF(m_time, kapa));
+    series->setVisible(m_isVisible && m_visibleKapa);
+    id += 1;
 
     pEngine->unlock(); 
     m_initialized = true;
@@ -123,12 +161,27 @@ void Detector::drawGraph(const Engine *pEngine)
 {
     if (!m_active) { return; }
     if (!m_isVisible) { return; }
+    if (m_chart->series().isEmpty()) { return; }
+    pEngine->lock(); 
+    const Mix& mix = m_engine->getMix();
+
+    QLineSeries *series;
     int id = 0;
-    for (auto &sample : pEngine->getMix().getSamples()) {
-        QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    for (auto &sample : mix.getSamples()) {
+        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         series->setVisible(sample.visible());
         id += 1;
         }
+    pEngine->unlock(); 
+
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    series->setVisible(m_isVisible && m_visiblePh);
+    id += 1;
+
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+    series->setVisible(m_isVisible && m_visibleKapa);
+    id += 1;
+
     autoscale();
 }
 
@@ -175,7 +228,6 @@ void Detector::autoscale() {
         }
     m_engine->unlock();
 
-/*
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
                      (!m_rescaleIndividually && m_visiblePh);
     for (unsigned int i = xleft; rescalePh && i <= xright; i++) {
@@ -200,8 +252,6 @@ void Detector::autoscale() {
             minimum = kapa[i] * 100.0;
             }
         }
-*/
-
 
     QRectF rect;
     rect.setTop    (minimum - 0.09 * maximum);
@@ -315,7 +365,7 @@ void Detector::mousePressEvent(QMouseEvent *event) {
 void Detector::mouseReleaseEvent(QMouseEvent *event) { 
     if (event->button() == Qt::RightButton) { 
         event->accept();
-        QChartView::mouseReleaseEvent(event);
+        // QChartView::mouseReleaseEvent(event);
         return;
         }
 
@@ -366,6 +416,7 @@ void Detector::setScale(const QRectF& rect) {
     if (m_engine == nullptr) {
         return;
         }
+    if (m_chart->series().isEmpty()) { return; }
 
     m_actionManualScale->setEnabled(true);
     m_actionRescale->setEnabled(true);
@@ -499,6 +550,7 @@ double Detector::axisTable(double maximum) {
 
 
 void Detector::setVisible(int id, bool visible) {
+    if (m_chart->series().isEmpty()) { return; }
     QList<QAbstractSeries *> list = m_chart->series();
     for (int i=0; i<list.size(); i++) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
@@ -512,9 +564,10 @@ void Detector::setVisible(int id, bool visible) {
 
 
 void Detector::setVisiblePh(bool visible) {
+    if (m_chart->series().isEmpty()) { return; }
     m_visiblePh = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-3;
+    int i = list.size()+PH_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
@@ -522,9 +575,10 @@ void Detector::setVisiblePh(bool visible) {
 
 
 void Detector::setVisibleKapa(bool visible) {
+    if (m_chart->series().isEmpty()) { return; }
     m_visibleKapa = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-2;
+    int i = list.size()+KAPA_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
@@ -532,12 +586,11 @@ void Detector::setVisibleKapa(bool visible) {
 
 
 void Detector::seriesClicked(const QPointF& point) {
-    // PDEBUG;
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
     if (m_engine == nullptr) { return; }
+    if (m_chart->series().isEmpty()) { return; }
 
-return;
     m_engine->lock();
     QPoint position = mapToGlobal(QPoint(15,15));
     double caplen   = m_engine->getCapLen() * 1000.0;
@@ -546,17 +599,14 @@ return;
     double x        = ((double)node) * (caplen / ((double)np));
     double y        = point.y();
     auto   hpl      = m_engine->getHpl();
-    auto   mix      = m_engine->getMix();
     auto   kapa     = m_engine->getKapa();
-    auto   efield   = m_engine->getE();
-    m_engine->unlock();
+    const Mix& mix  = m_engine->getMix();
 
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
     if (s2 != nullptr && s2->internalId() != 0) {
         double minimumd = 1e99;
         double minimumy = 1e99;
-        m_engine->lock();
-        for (auto &sample : m_engine->getMix().getSamples()) {
+        for (auto &sample : mix.getSamples()) {
             double sample_y = sample.getA(0, node);
             double distance = fabs(y - sample_y);
             if (distance < minimumd) {
@@ -565,49 +615,33 @@ return;
                 }
             }
         m_engine->unlock();
-        PDEBUG << s2->name() << s2->internalId();
-/*
-        DetectorDetail *d = new DetectorDetail(this, s2->name(), "mM", x, minimumy, node);
+        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
-*/
         return;
         }
+    m_engine->unlock();
 
     int seriescount = m_chart->series().size();
-    if (s1 == m_chart->series()[seriescount-3]) {
+    if (s1 == m_chart->series()[seriescount+PH_OFFSET]) {
         double pH = -log(hpl[node]) / log(10);
-/*
-        DetectorDetail *d = new DetectorDetail(this, tr("pH"), "", x, pH, node);
+        GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
-*/
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount-2]) {
+    if (s1 == m_chart->series()[seriescount+KAPA_OFFSET]) {
         double k = kapa[node] * 1000.0;
-/*
-        DetectorDetail *d = new DetectorDetail(this, tr("Conductivity"), "mS/m", x, k, node);
+        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
-*/
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount-1]) {
-        double e = efield[node];
-/*
-        DetectorDetail *d = new DetectorDetail(this, tr("Electric field"), "V/m", x, e, node);
-        d->move(position);
-        d->show();
-        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
-*/
-        return;
-        }
 
 }
 

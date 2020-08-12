@@ -831,9 +831,9 @@ void Engine::run()
 void Engine::runPrivate() {
     if (!m_running || t > timeStop) {
         PDEBUG;
-        emit drawGraph(this);
         emit timeChanged(t);
         emit timeChanged(this);
+        emit drawGraph(this);
         emit finished();
         qDebug() << "Time elapsed " << intervalCounter / 1000 << " s";
         return;

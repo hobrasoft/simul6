@@ -15,9 +15,11 @@
 #include "grafstyle.h"
 #include "manualscale.h"
 
-#define E_COLOR     "#00ff00"
-#define PH_COLOR    "#0000ff"
-#define KAPPA_COLOR "#000000"
+#define PH_OFFSET -4
+#define KAPA_OFFSET  -3
+#define E_OFFSET  -2
+#define DETECTOR_OFFSET -1
+
 
 Graf::Graf(QWidget *parent) : GrafAbstract(parent)
 {
@@ -72,9 +74,10 @@ void Graf::init(const Engine *pEngine) {
     pEngine->lock();
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
+    const Mix& mix = m_engine->getMix();
 
     int id = 0;
-    for (auto &sample : pEngine->getMix().getSamples()) {
+    for (auto &sample : mix.getSamples()) {
         ConstituentSeries *series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
 
@@ -90,16 +93,7 @@ void Graf::init(const Engine *pEngine) {
 
     ConstituentSeries *series = new PhSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setName(tr("pH"));
-    series->setUseOpenGL(true);
     series->setVisible(m_visiblePh);
-    QBrush phbrush = series->brush();
-    phbrush.setColor(PH_COLOR);
-    QPen phpen = series->pen();
-    phpen.setColor(PH_COLOR);
-    phpen.setWidthF(PENWIDTH);
-    series->setPen(phpen);
-    series->setBrush(phbrush);
     double x = 0;
     auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
@@ -113,16 +107,7 @@ void Graf::init(const Engine *pEngine) {
 
     series = new ConductivitySeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setName(tr("κ"));
-    series->setUseOpenGL(true);
     series->setVisible(m_visibleKapa);
-    QBrush kappabrush = series->brush();
-    kappabrush.setColor(KAPPA_COLOR);
-    QPen kappapen = series->pen();
-    kappapen.setColor(KAPPA_COLOR);
-    kappapen.setWidthF(PENWIDTH);
-    series->setPen(kappapen);
-    series->setBrush(kappabrush);
     x = 0;
     auto kapa = pEngine->getKapa();
     for (unsigned int i = 0; i <= p; i++){
@@ -133,16 +118,7 @@ void Graf::init(const Engine *pEngine) {
 
     series = new ElectricFieldSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setName(tr("Electric field"));
-    series->setUseOpenGL(true);
     series->setVisible(m_visibleE);
-    QBrush efieldbrush = series->brush();
-    efieldbrush.setColor(E_COLOR);
-    QPen efieldpen = series->pen();
-    efieldpen.setColor(E_COLOR);
-    efieldpen.setWidthF(PENWIDTH);
-    series->setPen(efieldpen);
-    series->setBrush(efieldbrush);
     x = 0;
     auto efield = pEngine->getE();
     for (unsigned int i = 0; i <= p; i++){
@@ -156,13 +132,17 @@ void Graf::init(const Engine *pEngine) {
 
     setAxisLabels();
 
+
+    QBrush detectorBrush(QColor(DETECTOR_COLOR));
+    QPen   detectorPen(detectorBrush, PENWIDTH);
+
     m_detectorSeries = new QLineSeries(this);
     m_detectorSeries->append(QPointF(-10, -99999));
     m_detectorSeries->append(QPointF(-10, +99999));
     m_detectorSeries->setUseOpenGL(true);
     m_detectorSeries->setVisible(true);
-    m_detectorSeries->setPen(efieldpen);
-    m_detectorSeries->setBrush(efieldbrush);
+    m_detectorSeries->setPen(detectorPen);
+    m_detectorSeries->setBrush(detectorBrush);
     m_chart->addSeries(m_detectorSeries);
 
 }
@@ -181,13 +161,12 @@ void Graf::autoscale() {
     double maximum = 0;
     double minimum = 9999999;
     m_engine->lock();
-    size_t p    = m_engine->getNp();
-    auto hpl    = m_engine->getHpl();
-    auto mix    = m_engine->getMix();
-    auto kapa   = m_engine->getKapa();
-    auto efield = m_engine->getE();
+    size_t p        = m_engine->getNp();
+    auto hpl        = m_engine->getHpl();
+    const Mix& mix  = m_engine->getMix();
+    auto kapa       = m_engine->getKapa();
+    auto efield     = m_engine->getE();
     double mcaplen = 1000 * m_engine->getCapLen();
-    m_engine->unlock();
 
     unsigned int xleft = 0;
     unsigned int xright = p;
@@ -210,6 +189,7 @@ void Graf::autoscale() {
                 }
             }
         }
+    m_engine->unlock();
 
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
                      (!m_rescaleIndividually && m_visiblePh);
@@ -567,7 +547,7 @@ void Graf::setVisible(int id, bool visible) {
 void Graf::setVisiblePh(bool visible) {
     m_visiblePh = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-3;
+    int i = list.size()+PH_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
@@ -577,7 +557,7 @@ void Graf::setVisiblePh(bool visible) {
 void Graf::setVisibleKapa(bool visible) {
     m_visibleKapa = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-2;
+    int i = list.size()+KAPA_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
@@ -587,7 +567,7 @@ void Graf::setVisibleKapa(bool visible) {
 void Graf::setVisibleE(bool visible) {
     m_visibleE = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()-1;
+    int i = list.size()+E_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
     // autoscale();
@@ -604,11 +584,12 @@ void Graf::drawGraph(const Engine *pEngine)
 {
     pEngine->lock(); 
     size_t p = pEngine->getNp(); // points
+    const Mix& mix = m_engine->getMix();
     QLineSeries *series;
 
     int id = 0;
     double inc_x = pEngine->getCapLen() / p;
-    for (auto &sample : pEngine->getMix().getSamples()) {
+    for (auto &sample : mix.getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         // PDEBUG << sample.getName() << sample.getInternalId();
         double x = 0;
@@ -676,17 +657,15 @@ void Graf::seriesClicked(const QPointF& point) {
     double x        = ((double)node) * (caplen / ((double)np));
     double y        = point.y();
     auto   hpl      = m_engine->getHpl();
-    auto   mix      = m_engine->getMix();
+    const Mix& mix  = m_engine->getMix();
     auto   kapa     = m_engine->getKapa();
     auto   efield   = m_engine->getE();
-    m_engine->unlock();
 
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
     if (s2 != nullptr && s2->internalId() != 0) {
         double minimumd = 1e99;
         double minimumy = 1e99;
-        m_engine->lock();
-        for (auto &sample : m_engine->getMix().getSamples()) {
+        for (auto &sample : mix.getSamples()) {
             double sample_y = sample.getA(0, node);
             double distance = fabs(y - sample_y);
             if (distance < minimumd) {
@@ -702,9 +681,13 @@ void Graf::seriesClicked(const QPointF& point) {
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
         return;
         }
+    m_engine->unlock();
 
     int seriescount = m_chart->series().size();
-    if (s1 == m_chart->series()[seriescount-3]) {
+    PDEBUG << seriescount << s1 << m_chart->series()[seriescount+PH_OFFSET] << "PH";
+    PDEBUG << seriescount << s1 << m_chart->series()[seriescount+KAPA_OFFSET] << "KAPA";
+    PDEBUG << seriescount << s1 << m_chart->series()[seriescount+E_OFFSET] << "E";
+    if (s1 == m_chart->series()[seriescount+PH_OFFSET]) {
         double pH = -log(hpl[node]) / log(10);
         GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
         d->move(position);
@@ -713,7 +696,7 @@ void Graf::seriesClicked(const QPointF& point) {
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount-2]) {
+    if (s1 == m_chart->series()[seriescount+KAPA_OFFSET]) {
         double k = kapa[node] * 1000.0;
         GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
         d->move(position);
@@ -722,7 +705,7 @@ void Graf::seriesClicked(const QPointF& point) {
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount-1]) {
+    if (s1 == m_chart->series()[seriescount+E_OFFSET]) {
         double e = efield[node];
         GrafDetail *d = new GrafDetail(this, tr("Electric field"), "V/m", x, e, node);
         d->move(position);
