@@ -47,6 +47,9 @@ void SimulationProfile::enableDetector(bool x) {
     ui->f_tabwidget->tabBar()->setVisible(x);
     ui->f_detector->setActive(x);
     ui->f_detector->drawGraph(m_engine);
+    if (!x) {
+        ui->f_tabwidget->setCurrentWidget(ui->page_graf);
+        }
 }
 
 

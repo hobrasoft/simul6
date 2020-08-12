@@ -299,7 +299,6 @@ void Detector::rescale(int internalId) {
 
 
 void Detector::manualScale() {
-return;
     double caplen = 100;
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
