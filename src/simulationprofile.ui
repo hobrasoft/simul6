@@ -49,7 +49,7 @@
      <property name="tabBarAutoHide">
       <bool>false</bool>
      </property>
-     <widget class="QWidget" name="page_1">
+     <widget class="QWidget" name="page_graf">
       <attribute name="title">
        <string>Chart</string>
       </attribute>
@@ -74,7 +74,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_2">
+     <widget class="QWidget" name="page_detector">
       <attribute name="title">
        <string>Detector</string>
       </attribute>

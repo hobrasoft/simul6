@@ -23,6 +23,7 @@ public:
 signals:
 
 public slots:
+    void appendData(const Engine *pEngine);
     void drawGraph(const Engine *pEngine);
     void init(const Engine *pEngine);
     void setVisible(int id, bool visible);
@@ -38,6 +39,8 @@ public slots:
     void rescalePh();
     void rescaleKapa();
     void rescale(int internalId);
+    void setIsVisible(bool x);
+    void setActive(bool x) { m_active = x; }
 
 private slots:
     void seriesClicked(const QPointF&);
@@ -66,6 +69,8 @@ private:
     bool m_rescalePh;
     bool m_rescaleKapa;
     bool m_initialized;
+    bool m_isVisible;
+    bool m_active;
     int  m_rescaleId;
 
     double m_time;

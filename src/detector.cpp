@@ -36,6 +36,9 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_axis_x = nullptr;
     m_axis_y = nullptr;
     m_detectorPosition = 0;
+    m_isVisible = false; 
+    m_active = true; 
+    m_initialized = false;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Detector::autoscale);
@@ -70,7 +73,6 @@ void Detector::init(const Engine *pEngine) {
     double time = pEngine->getTime();
     int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
 
-    int id = 0;
     for (auto &sample : pEngine->getMix().getSamples()) {
         ConstituentSeries *series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
@@ -96,8 +98,8 @@ void Detector::showGlobalActions(bool x) {
 }
 
 
-void Detector::drawGraph(const Engine *pEngine)
-{
+void Detector::appendData(const Engine *pEngine) {
+    if (m_initialized && !m_active) { return; }
     pEngine->lock(); 
 
     m_time = pEngine->getTime();
@@ -107,15 +109,36 @@ void Detector::drawGraph(const Engine *pEngine)
     for (auto &sample : pEngine->getMix().getSamples()) {
         QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         series->append(QPointF(m_time, sample.getA(0, detector_position)));
-        series->setVisible(sample.visible());
+        series->setVisible(m_isVisible && sample.visible());
         id += 1;
         }
 
     pEngine->unlock(); 
+    m_initialized = true;
+}
+
+
+
+void Detector::drawGraph(const Engine *pEngine)
+{
+    if (!m_active) { return; }
+    if (!m_isVisible) { return; }
+    int id = 0;
+    for (auto &sample : pEngine->getMix().getSamples()) {
+        QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        series->setVisible(sample.visible());
+        id += 1;
+        }
     autoscale();
 }
 
 
+void Detector::setIsVisible(bool x) { 
+    m_isVisible = x; 
+    if (m_isVisible) {
+        autoscale();
+        }
+}
 
 
 void Detector::autoscale() {
@@ -123,12 +146,11 @@ void Detector::autoscale() {
     double maximum = 0;
     double minimum = 99999;
     m_engine->lock();
-    size_t p    = m_engine->getNp();
-    auto hpl    = m_engine->getHpl();
-    auto mix    = m_engine->getMix();
-    auto kapa   = m_engine->getKapa();
-    auto efield = m_engine->getE();
-    m_engine->unlock();
+    size_t p        = m_engine->getNp();
+    auto hpl        = m_engine->getHpl();
+    const Mix& mix  = m_engine->getMix();
+    auto kapa       = m_engine->getKapa();
+    auto efield     = m_engine->getE();
 
     unsigned int xleft = 0;
     unsigned int xright = p;
@@ -151,6 +173,7 @@ void Detector::autoscale() {
                 }
             }
         }
+    m_engine->unlock();
 
 /*
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
@@ -178,6 +201,7 @@ void Detector::autoscale() {
             }
         }
 */
+
 
     QRectF rect;
     rect.setTop    (minimum - 0.09 * maximum);

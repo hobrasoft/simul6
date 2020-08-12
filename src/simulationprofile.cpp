@@ -23,6 +23,13 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
 
     m_thread.start();
     m_engine = nullptr;
+
+    connect(ui->f_tabwidget, &QTabWidget::currentChanged, [this](int) {
+        bool detector_visible = (ui->f_tabwidget->currentWidget() == ui->page_detector);
+        ui->f_detector->setIsVisible(detector_visible);
+        ui->f_detector->drawGraph(m_engine);
+        });
+
 }
 
 
@@ -38,6 +45,8 @@ Detector *SimulationProfile::detector() const {
 
 void SimulationProfile::enableDetector(bool x) {
     ui->f_tabwidget->tabBar()->setVisible(x);
+    ui->f_detector->setActive(x);
+    ui->f_detector->drawGraph(m_engine);
 }
 
 
@@ -91,8 +100,8 @@ void SimulationProfile::createEngine(int np)
     connect(m_engine, &Engine::drawGraph, ui->f_graf, &Graf::drawGraph);
 
     connect(m_engine, &Engine::mixChanged, ui->f_detector, &Detector::init);
-//  connect(m_engine, &Engine::drawGraph, ui->f_detector, &Detector::drawGraph);
-    connect(m_engine, QOverload<const Engine*>::of(&Engine::timeChanged), ui->f_detector, &Detector::drawGraph);
+    connect(m_engine, &Engine::drawGraph, ui->f_detector, &Detector::drawGraph);
+    connect(m_engine, QOverload<const Engine*>::of(&Engine::timeChanged), ui->f_detector, &Detector::appendData);
 
     connect(m_engine, QOverload<double>::of(&Engine::timeChanged), this, &SimulationProfile::timeChanged);
     connect(m_engine, &Engine::errorChanged, this, &SimulationProfile::errorChanged);
