@@ -30,7 +30,7 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     m_chart = new QChart();
     setChart(m_chart);
     // Color: #AARRGGBB - AA = alpha channel, RR,GG,BB - red, gree, blue
-    m_chart->setPlotAreaBackgroundBrush(QBrush(QColor("#100000ff")));
+    m_chart->setPlotAreaBackgroundPen(QPen(QColor("#50101010")));
     m_chart->setPlotAreaBackgroundVisible(true);
     m_rescaleIndividually = false;
     m_rescalePh = false;
