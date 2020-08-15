@@ -52,7 +52,7 @@ MixControl::MixControl(QWidget *parent) :
     connect(m_removeTab, &QAction::triggered, this, &MixControl::removeCurrentTab);
 
 
-    m_viewSwap = new QAction(tr("Add swap content"));
+    m_viewSwap = new QAction(tr("Swapping"));
     m_viewSwap->setCheckable(true);
     m_viewSwap->setChecked(false);
     connect(m_viewSwap, &QAction::triggered, [this,button]() {
