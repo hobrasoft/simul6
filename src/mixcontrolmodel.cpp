@@ -38,7 +38,7 @@ void MixControlModel::setConstituent(const SegmentedConstituent& constituent, in
         double ratioLen = (ratioSum > 0) ? 1000 * constituent.segments[i].ratio * caplen / ratioSum : 0;
         ratio << QString("%1").arg(constituent.segments[i].ratio, 0, 'f', 2);
         len   << QString("%1").arg(ratioLen, 0, 'f', 2);
-        conc  << QString("%1").arg(constituent.segments[i].concentration, 0, 'f', 3);
+        conc  << QString("%1").arg(constituent.segments[i].concentration, 0, 'g', 8);
     }
 
     setData(index(row, 0), QVariant::fromValue(constituent), ConstituentRole);
