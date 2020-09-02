@@ -114,6 +114,7 @@ public:
     std::vector<double> e;
 //    std::vector<double> error;
     std::vector<double> difPot;
+    std::vector<double> cross;
 
     Mix mix;
 

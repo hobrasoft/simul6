@@ -136,6 +136,7 @@ void Engine::initVectors()
     oH.resize(np + 1, 0);
     e.resize(np + 1, 0);
     difPot.resize(np + 1, 0);
+    cross.resize(np + 1, 1);
 }
 
 
@@ -331,11 +332,11 @@ void Engine::init() {
     }
 
 
-//Calculation of curden/voltage
+//Calculation of current/voltage
     double Resist = 0;
     #pragma omp parallel for reduction(+:Resist)
-    for (int i = 1; i <= np - 1; i++) Resist += (2+2*(i%2))/kapa[i];
-    Resist += (1/kapa[0] + 1/kapa[np]);
+    for (int i = 1; i <= np - 1; i++) Resist += (2+2*(i%2))/kapa[i]/cross[i];
+    Resist += (1/kapa[0]/cross[0] + 1/kapa[np]/cross[np]);
     Resist *= (dx / 3);
 
     if (m_constantvoltage) {
@@ -345,7 +346,7 @@ void Engine::init() {
     }
 
     for (int i = 0; i <= np; i++) {
-        e[i] = curDen / kapa[i];
+        e[i] = curDen / kapa[i] / cross[i];
     }
 
 
@@ -559,8 +560,8 @@ void Engine::der()
 
 /*Simpson integration of resistance*/
     Resist = 0;
-    for (int i = 1; i <= np - 1; i++) Resist += (2+2*(i%2))/kapa[i];
-    Resist += (1/kapa[0] + 1/kapa[np]);
+    for (int i = 1; i <= np - 1; i++) Resist += (2+2*(i%2))/kapa[i] / cross[i];
+    Resist += (1/kapa[0]/cross[0] + 1/kapa[np]/cross[np]);
     Resist *= (dx / 3);
 
     if (m_constantvoltage) {
@@ -572,7 +573,7 @@ void Engine::der()
 #pragma omp parallel for schedule(static)
     for (int i = 1; i <= np-1; i++) {
         double aV;
-        e[i] = -(curDen + farc * (( -difPot[i - 1] + difPot[i + 1]) / 2 / dx)) / kapa[i];
+        e[i] = -(curDen/cross[i] + farc * (( -difPot[i - 1] + difPot[i + 1]) / 2 / dx)) / kapa[i];
 
         for (auto &s : mix.getSamples()) {
             aV = 0;
@@ -605,7 +606,7 @@ void Engine::der()
 #pragma omp parallel for schedule(static)
     for (int i = 1; i <= np - 1; i++) {
         for (auto &s : mix.getSamples()) {
-            s.setD(0, i, (-s.getPd(i - 1) + s.getPd(i + 1)) / 2 / dx);
+            s.setD(0, i, (-s.getPd(i - 1)*cross[i - 1] + s.getPd(i + 1)*cross[i + 1]) / 2 / dx / cross[i]);
             s.addD(0, i, (s.getA(0, i - 1) * s.getDif(i) -2 * s.getA(0, i) * s.getDif(i) + s.getA(0, i + 1) * s.getDif(i)) / dx / dx);
         }
     }
