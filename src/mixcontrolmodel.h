@@ -26,6 +26,9 @@ public:
 
     void setConstituent(const SegmentedConstituent& constituent, int row) Q_DECL_OVERRIDE;
 
+private slots:
+    void recalculateCaplen(double);
+
 private:
 };
 

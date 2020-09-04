@@ -6,7 +6,6 @@
 #include "json.h"
 
 #define ConstituentRole Qt::UserRole+1
-#define SegmentsRole Qt::UserRole+2
 
 
 MixControlModel::MixControlModel(QObject *parent)
@@ -21,6 +20,9 @@ MixControlModel::MixControlModel(QObject *parent)
     setHeaderData(SegCount, Qt::Horizontal, tr("Segments"));
     setHeaderData(Concentrations, Qt::Horizontal, tr("Concentrations"));
     setHeaderData(Ratio, Qt::Horizontal, tr("Ratio"));
+
+    connect(Simul6::instance(), &Simul6::caplenChanged, this, &MixControlModel::recalculateCaplen);
+
 }
 
 
@@ -53,4 +55,30 @@ void MixControlModel::setConstituent(const SegmentedConstituent& constituent, in
 
 }
 
+void MixControlModel::recalculateCaplen(double caplen) {
+    caplen = caplen / 1000.0;
+    for (int row = 0; row < rowCount(); row++) {
+        SegmentedConstituent constituent = MixControlModelAbstract::constituent(row);
+
+        double ratioSum = 0;
+        QStringList ratio;
+        QStringList len;
+        QStringList conc;
+        for (int i=0; i<constituent.segments.size(); i++) {
+            double ratio = constituent.segments[i].ratio;
+            ratioSum += ratio;
+            }
+
+        for (int i=0; i<constituent.segments.size(); i++) {
+            double ratioLen = (ratioSum > 0) ? 1000 * constituent.segments[i].ratio * caplen / ratioSum : 0;
+            ratio << QString("%1").arg(constituent.segments[i].ratio, 0, 'f', 2);
+            len   << QString("%1").arg(ratioLen, 0, 'f', 2);
+            conc  << QString("%1").arg(constituent.segments[i].concentration, 0, 'g', 8);
+            }
+
+        setData(index(row, SegCount), len.join("; "));
+        setData(index(row, Concentrations), conc.join("; "));
+        setData(index(row, Ratio), ratio.join("; "));
+        }
+}
 
