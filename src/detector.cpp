@@ -25,6 +25,8 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
         }
     setRubberBand(QChartView::RectangleRubberBand);
     m_chart = new QChart();
+    m_chart->setPlotAreaBackgroundPen(QPen(QColor("#50101010")));
+    m_chart->setPlotAreaBackgroundVisible(true);
     setChart(m_chart);
     m_rescaleIndividually = false;
     m_rescalePh = false;
