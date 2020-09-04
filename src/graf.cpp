@@ -540,6 +540,7 @@ void Graf::setVisible(int id, bool visible) {
     QList<QAbstractSeries *> list = m_chart->series();
     for (int i=0; i<list.size(); i++) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
+        if (series == nullptr) { continue; }
         if (series->internalId() == id) {
             series->setVisible(visible);
             // autoscale();
@@ -596,6 +597,7 @@ void Graf::drawGraph(const Engine *pEngine)
     double inc_x = pEngine->getCapLen() / p;
     for (auto &sample : mix.getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        if (series == nullptr) { continue; }
         // PDEBUG << sample.getName() << sample.getInternalId();
         double x = 0;
         QList<double> vlist;

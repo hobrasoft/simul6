@@ -133,7 +133,7 @@ void Detector::appendData(const Engine *pEngine) {
     for (auto &sample : mix.getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         series->append(QPointF(m_time, sample.getA(0, detector_position)));
-        series->setVisible(m_isVisible && sample.visible());
+        // series->setVisible(m_isVisible && sample.visible());
         id += 1;
         }
 
@@ -141,14 +141,14 @@ void Detector::appendData(const Engine *pEngine) {
     auto hpl = pEngine->getHpl();
     double pH = (hpl[detector_position] > 0) ? (-log(hpl[detector_position]) / log(10)) : 0;
     series->append(QPointF(m_time, pH));
-    series->setVisible(m_isVisible && m_visiblePh);
+    // series->setVisible(m_isVisible && m_visiblePh);
     id += 1;
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     auto kapal = pEngine->getKapa();
     double kapa = kapal[detector_position] * 100.0;
     series->append(QPointF(m_time, kapa));
-    series->setVisible(m_isVisible && m_visibleKapa);
+    // series->setVisible(m_isVisible && m_visibleKapa);
     id += 1;
 
     pEngine->unlock(); 
