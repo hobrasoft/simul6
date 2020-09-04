@@ -114,6 +114,11 @@ const MixControlModelAbstract *Simul6::mixControlModel() const {
 }
 
 
+const CrosssectionModel *Simul6::crosssectionModel() const {
+    return ui->f_computeControl->crosssectionModel();
+}
+
+
 int Simul6::mixSize() const {
     return ui->f_mixcontrol->mixSize();
 }
@@ -166,6 +171,8 @@ void Simul6::initEngine() {
     ui->f_simulationProfile->engine()->setConstantVoltage(ui->f_parameters->getConstantVoltage());
     ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
     ui->f_simulationProfile->engine()->setMix(mixControlModel()->constituents()); // Nakrmí nový engine směsí
+    ui->f_simulationProfile->engine()->setCrosssection(crosssectionModel()->sections());
+    ui->f_simulationProfile->engine()->init();
     ui->f_simulationProfile->engine()->setTime(0);
 }
 

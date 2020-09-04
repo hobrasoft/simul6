@@ -1,5 +1,6 @@
 #include "computecontrol.h"
 #include "ui_computecontrol.h"
+#include "crosssectiondialog.h"
 #include "pdebug.h"
 #include <QTimer>
 #include <omp.h>
@@ -9,6 +10,7 @@ ComputeControl::ComputeControl(QWidget *parent) :
     ui(new Ui::ComputeControl)
 {
     ui->setupUi(this);
+    m_crosssectionModel = new CrosssectionModel(this);
     m_maxThreads = omp_get_max_threads();
     connect(ui->f_init, &QPushButton::clicked, this, &ComputeControl::init);
     connect(ui->f_run, &QPushButton::clicked, this, &ComputeControl::run);
@@ -25,7 +27,19 @@ ComputeControl::ComputeControl(QWidget *parent) :
     QTimer::singleShot(0, this, [this](){
         emit caplenChanged(ui->f_caplen->value());
         });
+    connect(ui->f_crosssection, &QToolButton::clicked, [this]() {
+        CrosssectionDialog d(this);
+        d.exec();
+        ui->f_diameter->setEnabled(m_crosssectionModel->unifiedDiameter());
+        if (m_crosssectionModel->unifiedDiameter()) {
+            ui->f_diameter->setValue(m_crosssectionModel->firstSegmentDiameter());
+            }
+        });
+    connect(ui->f_diameter, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this](double x) {
+        m_crosssectionModel->setDefaultDiameter(x);
+        });
 }
+
 
 ComputeControl::~ComputeControl()
 {

@@ -82,7 +82,7 @@ void InputParameters::showError(double time) {
 }
 
 void InputParameters::showCurrent(double current) {
-    ui->f_current->setValue(current);
+    ui->f_current->setValue(current*1e6);
 }
 
 void InputParameters::showVoltage(double voltage) {
@@ -98,7 +98,7 @@ double InputParameters::getVoltage() const {
 }
 
 double InputParameters::getCurrent() const {
-    return ui->f_current->value();
+    return ui->f_current->value()/1e6;
 }
 
 double InputParameters::getErrH() const {
@@ -126,7 +126,7 @@ void InputParameters::setVoltage(double x) {
 }
 
 void InputParameters::setCurrent(double x) {
-    ui->f_current->setValue(x);
+    ui->f_current->setValue(x*1e6);
 }
 
 

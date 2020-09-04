@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
+    <width>359</width>
     <height>319</height>
    </rect>
   </property>
@@ -171,7 +171,7 @@
         <bool>true</bool>
        </property>
        <property name="text">
-        <string>Constant current density</string>
+        <string>Constant current</string>
        </property>
       </widget>
      </item>
@@ -213,7 +213,7 @@
         <bool>false</bool>
        </property>
        <property name="suffix">
-        <string> A/m²</string>
+        <string> µA</string>
        </property>
        <property name="minimum">
         <double>-100000.000000000000000</double>

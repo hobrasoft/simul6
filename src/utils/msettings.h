@@ -48,6 +48,7 @@ class MSettings : public QSettings {
     static constexpr const char *GuiDataDirName             = "gui/data-dir-name";
     static constexpr const char *GuiExportDirName           = "gui/export-dir-name";
     static constexpr const char *GuiAmpholinesWindowSize    = "gui/ampholines-window-size";
+    static constexpr const char *GuiCrosssectionDialogSize  = "gui/crosssection-dialog-size";
     static constexpr const char *GuiChartAntialiasing       = "gui/chart-antialiasing";
     static constexpr const char *GuiFloatable               = "gui/floatable";
     static constexpr const char *GuiCloseable               = "gui/closeable";
@@ -104,6 +105,8 @@ class MSettings : public QSettings {
     void setGuiCloseable(bool x) { setValue(GuiCloseable, x); }
     bool guiShowSwapButton() const { return value(GuiShowSwapButton, false).toBool(); }
     void setGuiShowSwapButton(bool x) { setValue(GuiShowSwapButton, x); }
+    QSize guiCrosssectionDialogSize() const { return value(GuiCrosssectionDialogSize, QSize(800, 320)).toSize(); }
+    void setGuiCrosssectionDialogSize(const QSize& size) { setValue(GuiCrosssectionDialogSize, size); }
 
   protected:
 

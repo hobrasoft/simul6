@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 #include "mixcontrolmodelabstract.h"
+#include "crosssectionmodel.h"
 
 namespace Ui {
 class Simul6;
@@ -22,6 +23,8 @@ public:
     static Simul6 *instance();
 
     const MixControlModelAbstract *mixControlModel() const;
+    const CrosssectionModel *crosssectionModel() const;
+    
     int mixSize() const;
     Graf *graf() const;
     Detector *detector() const;

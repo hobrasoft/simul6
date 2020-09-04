@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>351</width>
-    <height>350</height>
+    <width>394</width>
+    <height>394</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -78,28 +78,50 @@
    </item>
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="0">
+     <item row="8" column="1">
+      <widget class="QCheckBox" name="f_show_ph">
+       <property name="text">
+        <string>Show pH</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Display each</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_5">
+     <item row="6" column="1">
+      <widget class="QLabel" name="f_time">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>2</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
-        <string>Stop time</string>
+        <string>---</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
+     <item row="6" column="0">
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>2</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
-        <string>Number of points</string>
+        <string>Time</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="1">
       <widget class="QDoubleSpinBox" name="f_timestop">
        <property name="suffix">
         <string> sec</string>
@@ -115,39 +137,20 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QDoubleSpinBox" name="f_timeinterval">
-       <property name="suffix">
-        <string> sec</string>
-       </property>
-       <property name="decimals">
-        <number>3</number>
-       </property>
-       <property name="maximum">
-        <double>10000.000000000000000</double>
-       </property>
-       <property name="value">
-        <double>1.000000000000000</double>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Number of points</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_6">
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="f_parallel">
        <property name="text">
-        <string>Zone edge</string>
+        <string>Parallel computation</string>
        </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="f_time">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-         <horstretch>2</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>---</string>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -168,35 +171,9 @@
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QLabel" name="label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-         <horstretch>2</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Time</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="f_np">
-       <property name="maximum">
-        <number>100000</number>
-       </property>
-       <property name="value">
-        <number>2000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="f_bw">
-       <property name="suffix">
-        <string> mm</string>
-       </property>
-       <property name="value">
-        <double>0.500000000000000</double>
+        <string>Stop time</string>
        </property>
       </widget>
      </item>
@@ -207,7 +184,51 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="f_np">
+       <property name="maximum">
+        <number>100000</number>
+       </property>
+       <property name="value">
+        <number>2000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDoubleSpinBox" name="f_bw">
+       <property name="suffix">
+        <string> mm</string>
+       </property>
+       <property name="value">
+        <double>0.500000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Capillary diameter</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Zone edge</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="f_diameter">
+       <property name="maximum">
+        <double>1000000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>50.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
       <widget class="QCheckBox" name="f_show_kapa">
        <property name="text">
         <string>Show conductivity</string>
@@ -217,27 +238,23 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="1">
+      <widget class="QDoubleSpinBox" name="f_timeinterval">
+       <property name="suffix">
+        <string> sec</string>
+       </property>
+       <property name="decimals">
+        <number>3</number>
+       </property>
+       <property name="maximum">
+        <double>10000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
+     </item>
      <item row="7" column="1">
-      <widget class="QCheckBox" name="f_show_ph">
-       <property name="text">
-        <string>Show pH</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QCheckBox" name="f_parallel">
-       <property name="text">
-        <string>Parallel computation</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
       <widget class="QCheckBox" name="f_show_e">
        <property name="text">
         <string>Show electric field</string>
@@ -247,16 +264,29 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="2">
+      <widget class="QToolButton" name="f_crosssection">
+       <property name="text">
+        <string>Ø</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>f_caplen</tabstop>
+  <tabstop>f_diameter</tabstop>
+  <tabstop>f_crosssection</tabstop>
   <tabstop>f_bw</tabstop>
   <tabstop>f_np</tabstop>
   <tabstop>f_timeinterval</tabstop>
   <tabstop>f_timestop</tabstop>
+  <tabstop>f_parallel</tabstop>
+  <tabstop>f_show_e</tabstop>
+  <tabstop>f_show_kapa</tabstop>
+  <tabstop>f_show_ph</tabstop>
   <tabstop>f_init</tabstop>
   <tabstop>f_run</tabstop>
   <tabstop>f_stop</tabstop>

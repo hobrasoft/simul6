@@ -2,6 +2,7 @@
 #define COMPUTECONTROL_H
 
 #include <QWidget>
+#include "crosssectionmodel.h"
 
 namespace Ui {
 class ComputeControl;
@@ -15,7 +16,6 @@ public:
     explicit ComputeControl(QWidget *parent = nullptr);
     ~ComputeControl();
 
-public:
     double getCapLen() const;
     double getTimeStop() const;
     double getTimeInterval() const;
@@ -36,6 +36,8 @@ public:
     void   setKapaVisible(bool);
     void   setPhVisible(bool);
     void   setEVisible(bool);
+
+    CrosssectionModel *crosssectionModel() { return m_crosssectionModel; }
 
 signals:
     void init();
@@ -60,6 +62,7 @@ private slots:
 private:
     Ui::ComputeControl *ui;
     int m_maxThreads;
+    CrosssectionModel *m_crosssectionModel;
 };
 
 #endif // COMPUTECONTROL_H

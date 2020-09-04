@@ -7,6 +7,7 @@
 #include "Mix.h"
 #include "Vec2d.h"
 #include "segmentedconstituent.h"
+#include "crosssection.h"
 #include <list>
 #include <string>
 #include <vector>
@@ -146,7 +147,8 @@ public:
     const std::vector<double>& getKapa() const { return kapa; }
     const std::vector<double>& getE() const { return e; }
 	const Mix &getMix() const;
-    
+
+    void setCrosssection(const Crosssection&); 
     void setMix(const QList<SegmentedConstituent>&);
     void addMix(const QList<SegmentedConstituent>&);
     void addConstituent(const SegmentedConstituent& constituent);

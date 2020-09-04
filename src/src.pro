@@ -103,6 +103,8 @@ SOURCES += \
     manualscale.cpp \
     swapsegmentwidget.cpp \
     swapsegmentwidgetchart.cpp \
+    crosssectiondialog.cpp \
+    crosssectionmodel.cpp \
 
 HEADERS += \
     simul6.h \
@@ -149,6 +151,9 @@ HEADERS += \
     manualscale.h \
     swapsegmentwidget.h \
     swapsegmentwidgetchart.h \
+    crosssectiondialog.h \
+    crosssectionmodel.h \
+    crosssection.h \
 
 FORMS += \
     simul6.ui \
@@ -165,6 +170,7 @@ FORMS += \
     saveprogress.ui \
     manualscale.ui \
     swapsegmentwidget.ui \
+    crosssectiondialog.ui \
 
 RESOURCES += \
     simul6.qrc \
