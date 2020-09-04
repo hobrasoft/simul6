@@ -398,7 +398,7 @@ void Detector::subselected() {
     QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
     QRectF rext(topLeft, bottomRight);
 
-    PDEBUG << rect << rext.normalized() << m_chart->plotArea();
+    // PDEBUG << rect << rext.normalized() << m_chart->plotArea();
 
     setScale(rext.normalized());
 
@@ -410,7 +410,7 @@ void Detector::setScale(const QRectF& rect) {
         return;
         }
     if (rect.height() <= 0 || rect.width() <= 0) {
-        PDEBUG << "Invalid rect dimensions" << rect << rect.height() << rect.width();
+        // PDEBUG << "Invalid rect dimensions" << rect << rect.height() << rect.width();
         return;
         }
     Q_ASSERT (m_engine != nullptr);

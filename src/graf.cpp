@@ -161,7 +161,7 @@ void Graf::setDetectorPosition(double x) {
 
 
 void Graf::autoscale() {
-    PDEBUG;
+    // PDEBUG;
     if (m_engine == nullptr) { return; }
     double maximum = 0;
     double minimum = 9999999;
@@ -384,7 +384,7 @@ void Graf::subselected() {
     QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
     QRectF rext(topLeft, bottomRight);
 
-    PDEBUG << rect << rext.normalized() << m_chart->plotArea();
+    // PDEBUG << rect << rext.normalized() << m_chart->plotArea();
 
     setScale(rext.normalized());
 
@@ -392,12 +392,11 @@ void Graf::subselected() {
 
 
 void Graf::setScale(const QRectF& rect) {
-    PDEBUG << rect;
     if (rect.isNull()) {
         return;
         }
     if (rect.height() <= 0 || rect.width() <= 0) {
-        PDEBUG << "Invalid rect dimensions" << rect << rect.height() << rect.width();
+        // PDEBUG << "Invalid rect dimensions" << rect << rect.height() << rect.width();
         return;
         }
     Q_ASSERT (m_engine != nullptr);
