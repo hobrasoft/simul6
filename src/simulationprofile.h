@@ -48,6 +48,10 @@ signals:
     void finished();
     void replacedConstituent(int replacedInternalId, int replaceeInternalId);
 
+private slots:
+    void drawGraph(const Engine*);
+    void setMix(const Engine*);
+
 private:
     Ui::SimulationProfile *ui;
 

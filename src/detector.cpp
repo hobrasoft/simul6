@@ -162,6 +162,7 @@ void Detector::drawGraph(const Engine *pEngine)
     if (!m_active) { return; }
     if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
+
     pEngine->lock(); 
     const Mix& mix = m_engine->getMix();
 
@@ -169,7 +170,7 @@ void Detector::drawGraph(const Engine *pEngine)
     int id = 0;
     for (auto &sample : mix.getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->setVisible(sample.visible());
+        series->setVisible(m_isVisible && sample.visible());
         id += 1;
         }
     pEngine->unlock(); 
@@ -266,7 +267,7 @@ void Detector::autoscale() {
         rect.setLeft (d_xleft);
         rect.setRight(d_xright);
         }
-    repaint();
+//  repaint();
 }
 
 
@@ -299,7 +300,6 @@ void Detector::rescale(int internalId) {
 
 
 void Detector::manualScale() {
-    double caplen = 100;
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
         }

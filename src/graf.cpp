@@ -42,6 +42,8 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     m_engine = nullptr;
     m_axis_x = nullptr;
     m_axis_y = nullptr;
+    m_detectorSeries = nullptr;
+    m_detectorPosition = 0;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
@@ -144,11 +146,14 @@ void Graf::init(const Engine *pEngine) {
     m_detectorSeries->setPen(detectorPen);
     m_detectorSeries->setBrush(detectorBrush);
     m_chart->addSeries(m_detectorSeries);
+    setDetectorPosition(m_detectorPosition);
 
 }
 
 
 void Graf::setDetectorPosition(double x) {
+    m_detectorPosition = x;
+    if (m_detectorSeries == nullptr) { return; }
     m_detectorSeries->clear();
     m_detectorSeries->append(QPointF(x, -99999));
     m_detectorSeries->append(QPointF(x, +99999));

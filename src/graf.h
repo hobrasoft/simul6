@@ -75,6 +75,7 @@ private:
     int  m_rescaleId;
 
     QLineSeries *m_detectorSeries;
+    double m_detectorPosition;
 
     const Engine *m_engine;
 };
