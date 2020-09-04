@@ -2,6 +2,8 @@
 #ifndef ENGINE_CPP
 #define ENGINE_CPP
 
+#define _USE_MATH_DEFINES
+
 #include "Engine.h"
 #include "settings.h"
 #include "pdebug.h"
