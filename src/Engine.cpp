@@ -317,17 +317,19 @@ void Engine::setCrosssection(const Crosssection& x) {
         double diameter     = x[segmentNumber].diameter;
         double segmentRatio = x[segmentNumber].ratio;
         int segmentEnd      = segmentBegin + (int)((double)(np)/((double)ratioSum)*(segmentRatio));
+        double currentCross = 1e-12 * diameter * diameter * M_PI / 4;
 
         if (segmentEnd >= np -5) { segmentEnd = np + 1; }
 
         for (unsigned int i = segmentBegin; i< segmentEnd && i <= np; i++) {
-            double currentCross = 1e-12 * diameter * diameter * M_PI / 4;
-            double smooth = (i < segmentBegin + bw) 
-                   ? (prevCross + (currentCross - prevCross) * (erf(-3 * static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2)
-                   :  currentCross;
-            cross[i] = smooth;
-            prevCross = currentCross;
+            auto smooth = [&segmentBegin,&i,this](double previous, double current) {
+                return (i < segmentBegin + bw)
+                    ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2)
+                    : current;
+                };
+            cross[i] = smooth(prevCross, currentCross);
             }
+        prevCross = currentCross;
         segmentBegin = segmentEnd;
         }
 

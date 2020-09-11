@@ -16,6 +16,7 @@ CrosssectionModel::CrosssectionModel(QObject *parent) : QStandardItemModel(paren
         setData(index(Ratio, column), 1.0);
         setData(index(Diameter, column), m_defaultDiameter);
         }
+    connect(this, &QAbstractItemModel::dataChanged, this, &CrosssectionModel::recalculate);
 }
 
 
