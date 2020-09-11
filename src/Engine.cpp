@@ -310,27 +310,25 @@ void Engine::setMix(const QList<SegmentedConstituent>& pconstituents)
 void Engine::setCrosssection(const Crosssection& x) {
     int ratioSum = x.ratioSum();    
     const Crosssection::Section& firstSection = x[0];
-    int segmentBegin = 0;
+    unsigned int segmentBegin = 0;
 
     double prevCross = 1e-12 * firstSection.diameter * firstSection.diameter * M_PI / 4;
     for (int segmentNumber = 0; segmentNumber < x.size(); segmentNumber++) {
         double diameter     = x[segmentNumber].diameter;
         double segmentRatio = x[segmentNumber].ratio;
-        int segmentEnd      = (int)((double)(np)/((double)ratioSum)*(segmentRatio));
+        int segmentEnd      = segmentBegin + (int)((double)(np)/((double)ratioSum)*(segmentRatio));
 
         if (segmentEnd >= np -5) { segmentEnd = np + 1; }
 
-        for (int i = segmentBegin; i< segmentEnd && i <= np; i++) {
-            auto smooth = [&segmentBegin,&i,this](double previous, double current) {
-                return (i < segmentBegin + bw)
-                    ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2)
-                    : current;
-                };
+        for (unsigned int i = segmentBegin; i< segmentEnd && i <= np; i++) {
             double currentCross = 1e-12 * diameter * diameter * M_PI / 4;
-            cross[i] = smooth(prevCross, currentCross);
-//          cross[i] = 0.1;
+            double smooth = (i < segmentBegin + bw) 
+                   ? (prevCross + (currentCross - prevCross) * (erf(-3 * static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2)
+                   :  currentCross;
+            cross[i] = smooth;
             prevCross = currentCross;
             }
+        segmentBegin = segmentEnd;
         }
 
 }
