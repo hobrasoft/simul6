@@ -28,6 +28,7 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     m_constituentsProxyModel = new QSortFilterProxyModel(this);
     m_constituentsProxyModel->setSourceModel(m_constituentsModel);
     ui->f_databaseView->setModel(m_constituentsProxyModel);
+    connect(ui->f_databaseView->selectionModel(), &QItemSelectionModel::currentChanged, this, &ConstituentsDialog::currentDatabaseChanged);
     connect(m_constituentsModel, &ConstituentsModel::loaded, this, &ConstituentsDialog::modelLoaded);
     connect(ui->f_manuallyGroupBox, &QGroupBox::toggled, this, &ConstituentsDialog::enableGroupBoxes);
     enableGroupBoxes();
@@ -54,6 +55,11 @@ ConstituentsDialog::ConstituentsDialog(QWidget *parent) :
     m_color = ColorsGenerator::color(Simul6::instance()->mixSize());
     ui->f_color->setStyleSheet("background: "+m_color.name(QColor::HexRgb));
     
+}
+
+
+void ConstituentsDialog::currentDatabaseChanged(const QModelIndex& current, const QModelIndex&) {
+    ui->f_databaseView->scrollTo(current);
 }
 
 

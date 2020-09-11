@@ -35,6 +35,7 @@ private slots:
 
     void readSettings();
     void writeSettings();
+    void currentDatabaseChanged(const QModelIndex& current, const QModelIndex&);
 
 private:
     Ui::ConstituentsDialog *ui;
