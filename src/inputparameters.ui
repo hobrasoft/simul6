@@ -215,6 +215,9 @@
        <property name="suffix">
         <string> µA</string>
        </property>
+       <property name="decimals">
+        <number>3</number>
+       </property>
        <property name="minimum">
         <double>-100000.000000000000000</double>
        </property>
@@ -222,7 +225,7 @@
         <double>100000.000000000000000</double>
        </property>
        <property name="value">
-        <double>-100.000000000000000</double>
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
