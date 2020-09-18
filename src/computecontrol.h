@@ -50,6 +50,7 @@ signals:
 
 public slots:
     void showTime(double);
+    void showTimeElapsed(double);
     void slotFinished();
     void initForm();
 

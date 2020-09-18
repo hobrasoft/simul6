@@ -51,6 +51,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_computeControl, &ComputeControl::stop, this, &Simul6::stopEngine);
 
     connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, ui->f_computeControl, &ComputeControl::showTime);
+    connect(ui->f_simulationProfile, &SimulationProfile::timeElapsed, ui->f_computeControl, &ComputeControl::showTimeElapsed);
     connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, SAVEPROGRESS, &SaveProgress::slotTimeChanged);
     connect(ui->f_simulationProfile, &SimulationProfile::finished, SAVEPROGRESS, &SaveProgress::slotFinished);
     connect(ui->f_simulationProfile, &SimulationProfile::errorChanged, ui->f_parameters, &InputParameters::showError);

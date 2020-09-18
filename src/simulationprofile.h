@@ -42,6 +42,7 @@ public slots:
 
 signals:
     void timeChanged(double);
+    void timeElapsed(double);
     void errorChanged(double);
     void curDenChanged(double);
     void voltageChanged(double);

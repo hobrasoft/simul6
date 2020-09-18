@@ -143,7 +143,6 @@ void Engine::initVectors()
 
 
 void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
-    PDEBUG;
     Q_ASSERT(pconstituents.isEmpty() != true);
     const SegmentedConstituent& firstConstituent = pconstituents[0];
     int ratioSum = firstConstituent.ratioSum();
@@ -829,7 +828,7 @@ void Engine::setVisible(int id, bool visible) {
 
 
 void Engine::stop() {
-    PDEBUG;
+    // PDEBUG;
     m_running = false;
 }
 
@@ -846,7 +845,7 @@ void Engine::unlock() const {
 
 void Engine::run()
 {
-    PDEBUG;
+    // PDEBUG;
     Q_ASSERT (m_initialized == true);
     m_running = true;
     if (t == 0) {
@@ -861,12 +860,12 @@ void Engine::run()
 
 void Engine::runPrivate() {
     if (!m_running || t > timeStop) {
-        PDEBUG;
+        // PDEBUG;
         emit timeChanged(t);
         emit timeChanged(this);
         emit drawGraph(this);
         emit finished();
-        qDebug() << "Time elapsed " << intervalCounter / 1000 << " s";
+        emit timeElapsed(intervalCounter/1000);
         return;
     }
 

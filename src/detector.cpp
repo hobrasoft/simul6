@@ -14,6 +14,7 @@
 #include <QTimer>
 #include "grafstyle.h"
 #include "manualscale.h"
+#include "printiming.h"
 
 #define PH_OFFSET -2
 #define KAPA_OFFSET -1

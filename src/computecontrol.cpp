@@ -78,8 +78,14 @@ void ComputeControl::setParallelComputation() {
         }
 }
 
+
 void ComputeControl::showTime(double time) {
     ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
+}
+
+
+void ComputeControl::showTimeElapsed(double time) {
+    ui->f_time_elapsed->setText(QString("%1 s elapsed").arg(time, 0, 'f', 1));
 }
 
 

@@ -105,8 +105,8 @@ void SimulationProfile::createEngine(int np)
     m_engine->moveToThread(&m_thread);
 
     connect(m_engine, &Engine::mixChanged, this, &SimulationProfile::setMix);
-    connect(m_engine, &Engine::drawGraph, this, &SimulationProfile::drawGraph);
     connect(m_engine, QOverload<const Engine*>::of(&Engine::timeChanged), ui->f_detector, &Detector::appendData);
+    connect(m_engine, &Engine::drawGraph, this, &SimulationProfile::drawGraph);
 
     connect(m_engine, QOverload<double>::of(&Engine::timeChanged), this, &SimulationProfile::timeChanged);
     connect(m_engine, &Engine::errorChanged, this, &SimulationProfile::errorChanged);
@@ -115,6 +115,7 @@ void SimulationProfile::createEngine(int np)
     connect(m_engine, &Engine::dtChanged, this, &SimulationProfile::dtChanged);
     connect(m_engine, &Engine::finished, this, &SimulationProfile::finished);
     connect(m_engine, &Engine::replacedConstituent, this, &SimulationProfile::replacedConstituent);
+    connect(m_engine, &Engine::timeElapsed, this, &SimulationProfile::timeElapsed);
 }
 
 
@@ -125,8 +126,8 @@ void SimulationProfile::setMix(const Engine *engine) {
 
 
 void SimulationProfile::drawGraph(const Engine *engine) {
-    ui->f_graf->drawGraph(engine);
     ui->f_detector->drawGraph(engine);
+    ui->f_graf->drawGraph(engine);
 }
 
 
