@@ -35,6 +35,7 @@ public slots:
     void setVisiblePh(bool visible);
     void setVisibleKapa(bool visible);
     void setVisibleE(bool visible);
+    void setVisibleDetector(bool visible);
 
     void enableDetector(bool);
     void setDetectorPosition(double);

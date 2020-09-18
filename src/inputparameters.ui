@@ -255,7 +255,10 @@
         <string> mm</string>
        </property>
        <property name="maximum">
-        <double>0.000000000000000</double>
+        <double>25.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>20.000000000000000</double>
        </property>
       </widget>
      </item>

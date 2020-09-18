@@ -21,6 +21,7 @@ public:
     double getErrH() const;
     bool optimizeDt() const;
     bool getConstantVoltage() const;
+    bool detectorActive() const;
 
     void   setDt(double);
     void   setOptimizeDt(bool);

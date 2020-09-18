@@ -39,6 +39,7 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     m_visiblePh = true;
     m_visibleKapa = true;
     m_visibleE = true;
+    m_visibleDetector = false;
     m_engine = nullptr;
     m_axis_x = nullptr;
     m_axis_y = nullptr;
@@ -142,7 +143,7 @@ void Graf::init(const Engine *pEngine) {
     m_detectorSeries->append(QPointF(-10, -99999));
     m_detectorSeries->append(QPointF(-10, +99999));
     m_detectorSeries->setUseOpenGL(true);
-    m_detectorSeries->setVisible(true);
+    m_detectorSeries->setVisible(m_visibleDetector);
     m_detectorSeries->setPen(detectorPen);
     m_detectorSeries->setBrush(detectorBrush);
     m_chart->addSeries(m_detectorSeries);
@@ -546,6 +547,15 @@ void Graf::setVisible(int id, bool visible) {
             return;
             }
         }
+}
+
+
+void Graf::setVisibleDetector(bool visible) {
+    m_visibleDetector = visible;
+    QList<QAbstractSeries *> list = m_chart->series();
+    int i = list.size()+DETECTOR_OFFSET;
+    if (i<0) { return; }
+    list[i]->setVisible(visible);
 }
 
 

@@ -80,6 +80,11 @@ void SimulationProfile::setVisiblePh(bool visible) {
 }
 
 
+void SimulationProfile::setVisibleDetector(bool visible) {
+    ui->f_graf->setVisibleDetector(visible);
+}
+
+
 void SimulationProfile::setVisibleKapa(bool visible) {
     ui->f_graf->setVisibleKapa(visible);
     ui->f_detector->setVisibleKapa(visible);

@@ -30,6 +30,7 @@ public slots:
     void setVisiblePh(bool visible);
     void setVisibleKapa(bool visible);
     void setVisibleE(bool visible);
+    void setVisibleDetector(bool visible);
     void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
     void setScale(const QRectF& rect);
     void manualScale();
@@ -57,6 +58,7 @@ private:
     bool m_visiblePh;
     bool m_visibleKapa;
     bool m_visibleE;
+    bool m_visibleDetector;
     bool m_rescaleEnabled;
 
     QValueAxis *m_axis_x;

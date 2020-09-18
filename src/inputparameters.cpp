@@ -23,6 +23,7 @@ InputParameters::InputParameters(QWidget *parent) :
 
     QTimer::singleShot(1, this, [this](){
         emit detectorChanged(ui->f_detector->isChecked());
+        emit detectorPositionChanged(ui->f_detector_position->value());
         });
 }
 
@@ -32,7 +33,13 @@ InputParameters::~InputParameters()
 }
 
 
+bool InputParameters::detectorActive() const {
+    return ui->f_detector->isChecked();
+}
+
+
 void InputParameters::setCaplen(double x) {
+    ui->f_detector_position->setValue(0.8*x);
     ui->f_detector_position->setMaximum(x);
 }
 
