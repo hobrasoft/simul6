@@ -19,10 +19,11 @@ SegmentsDelegate::SegmentsDelegate(QObject *parent) : QItemDelegate(parent) {
 QWidget *SegmentsDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem& option, const QModelIndex &index) const {
     switch (index.row()) {
         case SegmentsModel::Ratio: {
-            QSpinBox *editor = new QSpinBox(parent);
+            QDoubleSpinBox *editor = new QDoubleSpinBox(parent);
             editor->setFrame(false);
-            editor->setMinimum(1);
-            editor->setMaximum(1000);
+            editor->setMinimum(0.01);
+            editor->setMaximum(10000);
+            editor->setDecimals(2);
             return editor;
             break;
             }
