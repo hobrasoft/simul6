@@ -107,10 +107,19 @@ SaveProgress::SaveProgress(QWidget *parent) : QWidget (parent), ui(new Ui::SaveP
     ui->f_directory->setText(MSETTINGS->exportDirName());
     connect(ui->f_filename_select, &QAbstractButton::clicked, this, &SaveProgress::selectFile);
     connect(ui->f_active, &QCheckBox::stateChanged, this, &SaveProgress::activeStateChanged);
+    connect(ui->f_filename_reset, &QAbstractButton::clicked, this, &SaveProgress::resetFile);
 
     QTimer::singleShot(0, this, &SaveProgress::init);
 
 }
+
+
+void SaveProgress::resetFile() {
+    ui->f_active->setChecked(false);
+    ui->f_active->setEnabled(false);
+    ui->f_filename->setText(QString());
+}
+
 
 void SaveProgress::selectFile() {
     QString dirname = MSETTINGS->exportDirName();

@@ -77,6 +77,7 @@ class SaveProgress : public QWidget {
 
   private slots:
     void selectFile();
+    void resetFile();
     void activeStateChanged();
     void showStepsForm();
 
