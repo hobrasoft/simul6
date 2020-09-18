@@ -26,7 +26,7 @@ SaveProgressWorker::SaveProgressWorker() : QObject() {
 
 
 void SaveProgressWorker::saveTimeData(const QVariantMap& data) {
-    PDEBUG << data["time"];
+    // PDEBUG << data["time"];
     QMutexLocker locker(&m_mutex);
     m_nothingToSave = false;
 
@@ -204,7 +204,7 @@ void SaveProgress::slotTimeChanged(double time) {
     if (time > 0 && m_savedTime + m_interval > round(1000.0 * time)) {
         return; 
         }
-    PDEBUG << m_savedTime << m_interval << (m_savedTime+m_interval) << time*1000.0 << (time > 0 && m_savedTime + m_interval > round(time*1000.0));
+    // PDEBUG << m_savedTime << m_interval << (m_savedTime+m_interval) << time*1000.0 << (time > 0 && m_savedTime + m_interval > round(time*1000.0));
 
     if (m_format == Json) {
         saveJson(time);
@@ -228,7 +228,7 @@ void SaveProgress::slotTimeChanged(double time) {
 
 
 void SaveProgress::saveJson(double time) {
-    PDEBUG << time << "saving";
+    // PDEBUG << time << "saving";
 
     const Engine *engine = m_simul6->engine();
     engine->lock();
@@ -260,7 +260,7 @@ void SaveProgress::saveJson(double time) {
 
 
 void SaveProgress::saveSqlite(double time) {
-    PDEBUG << time;
+    // PDEBUG << time;
     if (m_database == nullptr) {
         QFile::remove(m_filename);
         m_database = new Db::Database(m_filename, this);
@@ -343,9 +343,9 @@ void SaveProgress::saveCsv(double time, SaveMode saveMode) {
 
 
 void SaveProgress::saveSwap() {
-    PDEBUG;
+    // PDEBUG;
     if (m_database != nullptr && m_format == Sqlite3) {
-        PDEBUG;
+        // PDEBUG;
         m_database->save(m_simul6->data());		// Saves the JSON structure of basic mix + swap
         saveSqlite(m_savedTimeReal+0.000001);	// Saves computed data
         }

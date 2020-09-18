@@ -16,7 +16,7 @@ ReplayDataSqlite3::~ReplayDataSqlite3() {
 ReplayDataSqlite3::ReplayDataSqlite3(const QString& filename) : ReplayDataAbstract() {
     m_db = new Db::Database(filename);
     m_db->open();
-    PDEBUG << filename << "opened" << m_db->isOpen();
+    // PDEBUG << filename << "opened" << m_db->isOpen();
     m_steps = m_db->steps();
 }
 

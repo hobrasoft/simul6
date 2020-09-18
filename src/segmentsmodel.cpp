@@ -25,7 +25,7 @@ SegmentsModel::SegmentsModel(QObject *parent)
 
 
 void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
-    //PDEBUG << segmentsNumber;
+    // PDEBUG << segmentsNumber;
     m_segmentsNumber = segmentsNumber;
     int currentColumnsCount = columnCount();
     if (currentColumnsCount > m_segmentsNumber) {
@@ -105,7 +105,7 @@ SegmentedConstituent SegmentsModel::constituent() const {
 
 
 void SegmentsModel::setConstituent(const SegmentedConstituent& segments) {
-    PDEBUG << segments;
+    // PDEBUG << segments;
     removeColumns(0, columnCount());
     insertColumns(0, segments.size());
     for (int i=0; i<segments.size(); i++) {

@@ -483,7 +483,7 @@ void Simul6::setDockingWindows() {
         ((MSETTINGS->guiCloseable()) ? QDockWidget::DockWidgetClosable  : QDockWidget::NoDockWidgetFeatures) |
         ((MSETTINGS->guiMoveable())  ? QDockWidget::DockWidgetMovable   : QDockWidget::NoDockWidgetFeatures) |
         ((MSETTINGS->guiFloatable()) ? QDockWidget::DockWidgetFloatable : QDockWidget::NoDockWidgetFeatures) ;
-    PDEBUG << features;
+    //PDEBUG << features;
     ui->f_dock_computeControl->setFeatures(features);
     ui->f_dock_inputParams->setFeatures(features);
     ui->f_dock_composition->setFeatures(features);

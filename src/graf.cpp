@@ -690,7 +690,7 @@ void Graf::seriesClicked(const QPointF& point) {
                 }
             }
         m_engine->unlock();
-        PDEBUG << s2->name() << s2->internalId();
+        // PDEBUG << s2->name() << s2->internalId();
         GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
         d->move(position);
         d->show();
@@ -700,9 +700,9 @@ void Graf::seriesClicked(const QPointF& point) {
     m_engine->unlock();
 
     int seriescount = m_chart->series().size();
-    PDEBUG << seriescount << s1 << m_chart->series()[seriescount+PH_OFFSET] << "PH";
-    PDEBUG << seriescount << s1 << m_chart->series()[seriescount+KAPA_OFFSET] << "KAPA";
-    PDEBUG << seriescount << s1 << m_chart->series()[seriescount+E_OFFSET] << "E";
+    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+PH_OFFSET] << "PH";
+    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+KAPA_OFFSET] << "KAPA";
+    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+E_OFFSET] << "E";
     if (s1 == m_chart->series()[seriescount+PH_OFFSET]) {
         double pH = -log(hpl[node]) / log(10);
         GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
