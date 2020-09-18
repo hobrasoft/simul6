@@ -27,6 +27,10 @@ class CrosssectionModel : public QStandardItemModel {
     double firstSegmentDiameter() const;
     Crosssection sections() const;
 
+    void reset();
+    void setCrosssection(const QVariantList&);
+    QVariantList jsonData() const;
+
   public slots:
     void recalculate();
     void setSegmentsNumber(int);

@@ -5,6 +5,7 @@
  */
 #include "crosssectionmodel.h"
 #include "simul6.h"
+#include <math.h>
 
 CrosssectionModel::CrosssectionModel(QObject *parent) : QStandardItemModel(parent) {
     m_defaultDiameter = 50;
@@ -17,6 +18,43 @@ CrosssectionModel::CrosssectionModel(QObject *parent) : QStandardItemModel(paren
         setData(index(Diameter, column), m_defaultDiameter);
         }
     connect(this, &QAbstractItemModel::dataChanged, this, &CrosssectionModel::recalculate);
+}
+
+
+void CrosssectionModel::reset() {
+    removeColumns(0, columnCount());
+    insertColumns(0, 1);
+    setData(index(Diameter, 0), 50);
+    setData(index(Ratio,    0), 1);
+    recalculate();
+}
+
+
+void CrosssectionModel::setCrosssection(const QVariantList& data) {
+    if (data.isEmpty()) {
+        reset();
+        return;
+        }
+    removeColumns(0, columnCount());
+    insertColumns(0, data.size());
+    for (int i=0; i<data.size(); i++) {
+        const QVariantMap& item = data[i].toMap();
+        setData(index(Diameter, i), item["diameter"].toDouble());
+        setData(index(Ratio,    i), item["ratio"].toInt());
+        }
+    recalculate();
+}
+
+
+QVariantList CrosssectionModel::jsonData() const {
+    QVariantList list;
+    for (int i=0; i<columnCount(); i++) {
+        QVariantMap item;
+        item["diameter"] = data(index(Diameter,i)).toDouble();
+        item["ratio"] = data(index(Ratio,i)).toInt();
+        list << item;
+        }
+    return list;
 }
 
 

@@ -119,6 +119,11 @@ const CrosssectionModel *Simul6::crosssectionModel() const {
 }
 
 
+CrosssectionModel *Simul6::crosssectionModel() {
+    return ui->f_computeControl->crosssectionModel();
+}
+
+
 int Simul6::mixSize() const {
     return ui->f_mixcontrol->mixSize();
 }
@@ -229,6 +234,7 @@ QVariantMap Simul6::data() const {
     if (mixControlModel() == nullptr) { return data; }
     data["mix"] = ui->f_mixcontrol->mixJson();
     data["swaps"] = ui->f_mixcontrol->swapsJson();
+    data["crosssection"] = crosssectionModel()->jsonData();
 
     QVariantMap ccontrol;
     ccontrol["caplen"] = ui->f_computeControl->getCapLen()/1000.0;
@@ -298,6 +304,11 @@ void Simul6::loadData() {
 
     ui->f_mixcontrol->setMixJson(data.toMap()["mix"].toList());
     ui->f_mixcontrol->setSwapsJson(data.toMap()["swaps"].toList());
+    if (data.toMap().contains("crosssection")) {
+        crosssectionModel()->setCrosssection(data.toMap()["crosssection"].toList());
+      } else {
+        crosssectionModel()->reset();
+        }
 
     ui->f_computeControl->initForm();
     initEngine();

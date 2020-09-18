@@ -58,6 +58,7 @@ private slots:
     void slotStopClicked();
     void slotInitClicked();
     void setParallelComputation();
+    void enableOrDisableDiameter();
 
 private:
     Ui::ComputeControl *ui;

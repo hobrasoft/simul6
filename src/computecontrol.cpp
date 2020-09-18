@@ -30,14 +30,22 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_crosssection, &QToolButton::clicked, [this]() {
         CrosssectionDialog d(this);
         d.exec();
-        ui->f_diameter->setEnabled(m_crosssectionModel->unifiedDiameter());
-        if (m_crosssectionModel->unifiedDiameter()) {
-            ui->f_diameter->setValue(m_crosssectionModel->firstSegmentDiameter());
-            }
         });
     connect(ui->f_diameter, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this](double x) {
         m_crosssectionModel->setDefaultDiameter(x);
         });
+    connect(m_crosssectionModel, &QAbstractItemModel::dataChanged, this, &ComputeControl::enableOrDisableDiameter);
+    connect(m_crosssectionModel, &QAbstractItemModel::columnsInserted, this, &ComputeControl::enableOrDisableDiameter);
+    connect(m_crosssectionModel, &QAbstractItemModel::columnsRemoved, this, &ComputeControl::enableOrDisableDiameter);
+
+}
+
+
+void ComputeControl::enableOrDisableDiameter() {
+    ui->f_diameter->setEnabled(m_crosssectionModel->unifiedDiameter());
+    if (m_crosssectionModel->unifiedDiameter()) {
+        ui->f_diameter->setValue(m_crosssectionModel->firstSegmentDiameter());
+        }
 }
 
 

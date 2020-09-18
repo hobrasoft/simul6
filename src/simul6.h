@@ -24,6 +24,7 @@ public:
 
     const MixControlModelAbstract *mixControlModel() const;
     const CrosssectionModel *crosssectionModel() const;
+    CrosssectionModel *crosssectionModel();
     
     int mixSize() const;
     Graf *graf() const;
