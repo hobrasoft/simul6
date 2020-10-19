@@ -6,8 +6,9 @@ DEPENDPATH += $$PWD
 TEMPNAME = $${QMAKE_QMAKE}
 QTPATH = $$system_path($$dirname(TEMPNAME))
 GCCPATH = $$system_path($$clean_path($${QTPATH}\..\..\..\Tools\mingw530_32\bin))
+MSVCPATH = "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
 BINPATH = $$system_path($$clean_path($${OUT_PWD}\..\bin\\))
-MAKENSIS = "C:\Program Files (x86)\NSIS\Bin\makensis.exe"
+MAKENSIS = "D:\NSIS\Bin\makensis.exe"
 
 QMAKE_EXTRA_TARGETS += first
 
@@ -25,11 +26,11 @@ first.commands += \
         -replace \\\"\"@APP_LOW_NAME@\"\\\", \\\"$$APP_LOW_NAME\\\" | \
             Out-File $$OUT_PWD\NSIS.definitions.nsh\" & \
     powershell -Command \
-        "\"Copy-Item\"" -Path $${GCCPATH}\\libgomp-1.dll -Destination $${BINPATH} & \
+        "\"Copy-Item\"" -Path \"$${MSVCPATH}\\msvcp140.dll\" -Destination $${BINPATH} & \
     powershell -Command \
-        "\"Copy-Item\"" -Path $${GCCPATH}\\libgcc_s_dw2-1.dll -Destination $${BINPATH} & \
+        "\"Copy-Item\"" -Path \"$${MSVCPATH}\\vcomp140.dll\" -Destination $${BINPATH} & \
     powershell -Command \
-        "\"Copy-Item\"" -Path $${GCCPATH}\\libstdc++-6.dll -Destination $${BINPATH} & \
+        "\"Copy-Item\"" -Path \"$${MSVCPATH}\\vcruntime140.dll\" -Destination $${BINPATH} & \
     \"$$QTPATH\windeployqt.exe\" $${BINPATH} & \
     \"$$MAKENSIS\" simul6b.nsi
 

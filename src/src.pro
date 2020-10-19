@@ -10,7 +10,7 @@ QT += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = simul6b
+TARGET = simul6
 TEMPLATE = app
 DESTDIR = ../bin
 
