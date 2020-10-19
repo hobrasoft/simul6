@@ -6,7 +6,7 @@ DEPENDPATH += $$PWD
 TEMPNAME = $${QMAKE_QMAKE}
 QTPATH = $$system_path($$dirname(TEMPNAME))
 GCCPATH = $$system_path($$clean_path($${QTPATH}\..\..\..\Tools\mingw530_32\bin))
-MSVCPATH = "C:\Program Files `(x86`)\Microsoft Visual Studio"
+MSVCPATH = "C:\Program Files (x86)\Microsoft Visual Studio"
 BINPATH = $$system_path($$clean_path($${OUT_PWD}\..\bin\\))
 MAKENSIS = "D:\NSIS\Bin\makensis.exe"
 
