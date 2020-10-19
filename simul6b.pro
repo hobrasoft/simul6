@@ -1,6 +1,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS += src
+SUBDIRS += src \
+    nsis/NSIS.pro
 # win32: SUBDIRS += nsis
 
 

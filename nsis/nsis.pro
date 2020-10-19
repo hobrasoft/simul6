@@ -1,12 +1,13 @@
 TEMPLATE = aux
-TARGET =
+TARGET = $${APP_LOW_NAME}-$${APP_VERSION}-win32.exe
 CONFIG += no_link target_predeps staticlib
+DEPENDPATH += $$PWD
 
 TEMPNAME = $${QMAKE_QMAKE}
 QTPATH = $$system_path($$dirname(TEMPNAME))
 GCCPATH = $$system_path($$clean_path($${QTPATH}\..\..\..\Tools\mingw530_32\bin))
 BINPATH = $$system_path($$clean_path($${OUT_PWD}\..\bin\\))
-MAKENSIS = C:\Program Files (x86)\NSIS\Bin\makensis.exe
+MAKENSIS = "C:\Program Files (x86)\NSIS\Bin\makensis.exe"
 
 QMAKE_EXTRA_TARGETS += first
 

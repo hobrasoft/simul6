@@ -7,7 +7,7 @@
 ; Basic values definitions.
 
 ; Name and file.
-Name "${APP_NAME} portable"
+Name "${APP_NAME}"
 OutFile "${OUTPUT_FILE}"
 
 ; Set custom branding text.
@@ -34,7 +34,6 @@ RequestExecutionLevel admin
 
 ; Pages for installator.
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "${LICENSE_FILE}"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_COMPONENTS
 
