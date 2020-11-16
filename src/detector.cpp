@@ -41,6 +41,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_isVisible = false; 
     m_active = false; 
     m_initialized = false;
+    m_manualScaled = false;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Detector::autoscale);
@@ -69,6 +70,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 void Detector::init(const Engine *pEngine) {
     m_chart->removeAllSeries();
     m_initialized = false;
+    m_manualScaled = false;
 
     m_engine = pEngine;
     pEngine->lock();
@@ -199,6 +201,7 @@ void Detector::setIsVisible(bool x) {
 
 
 void Detector::autoscale() {
+    if (m_manualScaled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = 0;
     double minimum = 99999;
@@ -303,6 +306,7 @@ void Detector::rescale(int internalId) {
 
 
 void Detector::manualScale() {
+    m_manualScaled = true;
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
         }
@@ -392,14 +396,13 @@ void Detector::mouseReleaseEvent(QMouseEvent *event) {
 void Detector::subselected() {
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
+    m_manualScaled = true;
 
     QRectF  rect        = m_chart->geometry(); // m_chart->plotArea();
 
     QPointF topLeft     = m_chart->mapToValue(rect.topLeft());
     QPointF bottomRight = m_chart->mapToValue(rect.bottomRight());
     QRectF rext(topLeft, bottomRight);
-
-    // PDEBUG << rect << rext.normalized() << m_chart->plotArea();
 
     setScale(rext.normalized());
 
@@ -411,7 +414,6 @@ void Detector::setScale(const QRectF& rect) {
         return;
         }
     if (rect.height() <= 0 || rect.width() <= 0) {
-        // PDEBUG << "Invalid rect dimensions" << rect << rect.height() << rect.width();
         return;
         }
     Q_ASSERT (m_engine != nullptr);
@@ -559,7 +561,6 @@ void Detector::setVisible(int id, bool visible) {
         ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
         if (series->internalId() == id) {
             series->setVisible(visible);
-            // autoscale();
             return;
             }
         }
@@ -573,7 +574,6 @@ void Detector::setVisiblePh(bool visible) {
     int i = list.size()+PH_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
-    // autoscale();
 }
 
 
@@ -584,7 +584,6 @@ void Detector::setVisibleKapa(bool visible) {
     int i = list.size()+KAPA_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
-    // autoscale();
 }
 
 

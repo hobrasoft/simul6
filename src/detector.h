@@ -71,6 +71,7 @@ private:
     bool m_initialized;
     bool m_isVisible;
     bool m_active;
+    bool m_manualScaled;
     int  m_rescaleId;
 
     double m_time;
