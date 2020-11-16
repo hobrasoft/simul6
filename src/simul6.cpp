@@ -73,6 +73,7 @@ Simul6::Simul6(QWidget *parent) :
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedKapa, ui->f_simulationProfile, &SimulationProfile::setVisibleKapa);
     connect(ui->f_computeControl, &ComputeControl::visibilityChangedE, ui->f_simulationProfile, &SimulationProfile::setVisibleE);
     connect(ui->f_computeControl, &ComputeControl::caplenChanged, this, &Simul6::caplenChanged);
+    connect(ui->f_computeControl, &ComputeControl::caplenChanged, ui->f_parameters, &InputParameters::setCaplen);
     connect(ui->f_parameters,     &InputParameters::detectorChanged, ui->f_simulationProfile, &SimulationProfile::setVisibleDetector);
     connect(ui->f_mixcontrol, &MixControl::visibilityChanged, ui->f_simulationProfile, &SimulationProfile::setVisible);
     connect(ui->f_mixcontrol, &MixControl::swap, [this](const QList<SegmentedConstituent>& constituents) {
@@ -154,6 +155,7 @@ void Simul6::runEngine() {
     ui->f_simulationProfile->engine()->setCurDen(ui->f_parameters->getCurrent());
     ui->f_simulationProfile->engine()->setTimeInterval(ui->f_computeControl->getTimeInterval());
     ui->f_simulationProfile->engine()->setDt(ui->f_parameters->getDt());
+    ui->f_simulationProfile->engine()->setDetectorActive(ui->f_parameters->detectorActive());
     ui->f_simulationProfile->slotRun();
 }
 
@@ -179,6 +181,7 @@ void Simul6::initEngine() {
     ui->f_simulationProfile->engine()->setOptimizeDt(ui->f_parameters->optimizeDt());
     ui->f_simulationProfile->engine()->setMix(mixControlModel()->constituents()); // Nakrmí nový engine směsí
     ui->f_simulationProfile->engine()->setCrosssection(crosssectionModel()->sections());
+    ui->f_simulationProfile->engine()->setDetectorActive(ui->f_parameters->detectorActive());
     ui->f_simulationProfile->engine()->init();
     ui->f_simulationProfile->engine()->setTime(0);
 }

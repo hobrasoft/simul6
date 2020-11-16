@@ -139,6 +139,7 @@ public:
     void setTimeDisplay(double pTimeDisplay) {timeDisplay = pTimeDisplay; }
     void setBW(int x) { bw = x; }
     bool containsConstituentInternalId(int internalId);
+    void setDetectorActive(bool x) { m_detectorActive = x; }
 
     size_t getNm(); // Get number of constituents
     int getNp() const { return np; }
@@ -165,6 +166,7 @@ public:
     bool m_sendSignals;
     bool m_optimizeDt;
     bool m_constantvoltage;
+    bool m_detectorActive;
 
 signals:
     //void drawGraph(Mix *pMix, std::vector<double> *pHpl);

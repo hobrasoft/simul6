@@ -258,8 +258,8 @@ void Detector::autoscale() {
         }
 
     QRectF rect;
-    rect.setTop    (minimum - 0.09 * maximum);
-    rect.setBottom (1.09 * maximum);
+    rect.setTop    (minimum - 0.09 * (maximum-minimum) );
+    rect.setBottom (maximum + 0.09 * (maximum-minimum) );
     rect.setLeft   (0);
     rect.setRight  (m_time);
     setScale(rect.normalized());

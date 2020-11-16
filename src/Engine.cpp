@@ -876,6 +876,8 @@ void Engine::runPrivate() {
         rungekutta();    // if Optimize dt is not checked
     }
     unlock();
+    emit timeChanged(t);
+    emit timeChanged(this);
 
     if (t >= timeDisplay) {
         // qDebug() << "Engine::runPrivate()" << t;
@@ -883,8 +885,6 @@ void Engine::runPrivate() {
         timeDisplay += timeInterval;
     }
 
-    emit timeChanged(t);
-    emit timeChanged(this);
     if (m_sendSignals) {
         emit errorChanged(errMax);
         emit dtChanged(dt);
@@ -894,7 +894,7 @@ void Engine::runPrivate() {
         m_sendSignals = false;
     }
 
-    QTimer::singleShot(0, this, &Engine::runPrivate);
+    QTimer::singleShot((m_detectorActive)?5:0, this, &Engine::runPrivate);
 }
 
 #endif
