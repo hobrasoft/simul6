@@ -33,6 +33,7 @@ public slots:
     void setScale(const QRectF& rect);
     void manualScale();
     void autoscale();
+    void setAutoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
     void setDetectorPosition(double) Q_DECL_OVERRIDE;
 

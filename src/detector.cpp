@@ -44,7 +44,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_manualScaled = false;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
-    connect(m_actionRescale, &QAction::triggered, this, &Detector::autoscale);
+    connect(m_actionRescale, &QAction::triggered, this, &Detector::setAutoscale);
     addAction(m_actionRescale);
     m_actionRescale->setEnabled(false);
 
@@ -199,6 +199,10 @@ void Detector::setIsVisible(bool x) {
         }
 }
 
+void Detector::setAutoscale() {
+    m_manualScaled = false;
+    autoscale();
+}
 
 void Detector::autoscale() {
     if (m_manualScaled) { return; }
