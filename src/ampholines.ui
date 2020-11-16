@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Ampholites</string>
+   <string>Ampholytes</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
@@ -213,7 +213,7 @@
      <item row="4" column="1">
       <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>Number of Ampholines</string>
+        <string>Number of Ampholytes</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

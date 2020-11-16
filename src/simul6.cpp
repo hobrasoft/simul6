@@ -405,7 +405,7 @@ void Simul6::createActions() {
     });
 
 
-    action = new QAction(tr("Ampholines"), this);
+    action = new QAction(tr("Ampholytes"), this);
     connect(action, &QAction::triggered, [this]() {
         Ampholines ampholines(this);
         if (QDialog::Accepted != ampholines.exec()) { return; }
