@@ -449,6 +449,7 @@ void Detector::setScale(const QRectF& rect) {
     m_axis_x = new QValueAxis(this);
     m_axis_y->setRange(rect.top(), rect.bottom());
     m_axis_x->setRange(rect.left(), rect.right());
+    m_axis_x->setTitleText(tr("seconds"));
 
     #if QT_VERSION > 0x050c00
     // Not supported in Qt < 5.12
