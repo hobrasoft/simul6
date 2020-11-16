@@ -20,3 +20,11 @@ GrafDetail::~GrafDetail() {
     delete ui;
 }
 
+void GrafDetail::setXname(const QString& x) {
+    ui->f_xname->setText(x);
+}
+
+void GrafDetail::setXunit(const QString& x) {
+    ui->f_xunit->setText(x);
+}
+

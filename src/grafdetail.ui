@@ -82,7 +82,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="f_xname">
         <property name="text">
          <string>Length</string>
         </property>
@@ -123,7 +123,7 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="f_xunit">
         <property name="text">
          <string>mm</string>
         </property>

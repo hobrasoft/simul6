@@ -597,42 +597,36 @@ void Detector::seriesClicked(const QPointF& point) {
     if (m_engine == nullptr) { return; }
     if (m_chart->series().isEmpty()) { return; }
 
-    m_engine->lock();
     QPoint position = mapToGlobal(QPoint(15,15));
-    double caplen   = m_engine->getCapLen() * 1000.0;
-    int    np       = m_engine->getNp();
-    int    node     = (np+1) * point.x() / caplen;
-    double x        = ((double)node) * (caplen / ((double)np));
+    double x        = point.x();
     double y        = point.y();
-    auto   hpl      = m_engine->getHpl();
-    auto   kapa     = m_engine->getKapa();
-    const Mix& mix  = m_engine->getMix();
 
+    int node = 0;
+    QVector<QPointF> data = s1->pointsVector();
+    for (int i=0; i<data.size(); i++) {
+        if (data[i].x() > point.x()) { 
+            node = i - 1;
+            break;
+            } 
+        }
+    
     ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
     if (s2 != nullptr && s2->internalId() != 0) {
-        double minimumd = 1e99;
-        double minimumy = 1e99;
-        for (auto &sample : mix.getSamples()) {
-            double sample_y = sample.getA(0, node);
-            double distance = fabs(y - sample_y);
-            if (distance < minimumd) {
-                minimumd = distance;
-                minimumy = sample_y;
-                }
-            }
-        m_engine->unlock();
-        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
+        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, y, node);
+        d->setXname(tr("Time"));
+        d->setXunit(tr("sec"));
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
+        m_engine->unlock();
         return;
         }
-    m_engine->unlock();
 
     int seriescount = m_chart->series().size();
     if (s1 == m_chart->series()[seriescount+PH_OFFSET]) {
-        double pH = -log(hpl[node]) / log(10);
-        GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
+        GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, y, node);
+        d->setXname(tr("Time"));
+        d->setXunit(tr("sec"));
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
@@ -640,14 +634,14 @@ void Detector::seriesClicked(const QPointF& point) {
         }
 
     if (s1 == m_chart->series()[seriescount+KAPA_OFFSET]) {
-        double k = kapa[node] * 1000.0;
-        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
+        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, y, node);
+        d->setXname(tr("Time"));
+        d->setXunit(tr("sec"));
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
         return;
         }
-
 
 }
 

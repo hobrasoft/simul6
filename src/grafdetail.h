@@ -20,6 +20,8 @@ class GrafDetail : public QWidget {
   public:
     GrafDetail(QWidget *parent, const QString& name, const QString& unit, const double x, const double y, int node);
    ~GrafDetail();
+    void setXname(const QString&);
+    void setXunit(const QString&);
 
   private:
     Ui::GrafDetail *ui;
