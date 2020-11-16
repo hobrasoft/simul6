@@ -30,7 +30,7 @@ first.commands += \
     powershell -Command \
         "\"Copy-Item\"" -Path \'$${MSVCPATH}\\Installer\\vcruntime140.dll\' -Destination $${BINPATH} & \
     powershell -Command \
-        "\"Copy-Item\"" -Path \'$${MSVCPATH}\\2017\\Community\\VC\\Redist\\MSVC\\14.16.27012\\x86\\Microsoft.VC141.OPENMP\\vcomp140.dll\' -Destination $${BINPATH} & \
+        "\"Copy-Item\"" -Path \'$${MSVCPATH}\\2017\\Community\\VC\\Redist\\MSVC\\14.16.27012\\x64\\Microsoft.VC141.OPENMP\\vcomp140.dll\' -Destination $${BINPATH} & \
     \"$$QTPATH\windeployqt.exe\" $${BINPATH} & \
     \"$$MAKENSIS\" simul6b.nsi
 
