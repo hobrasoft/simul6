@@ -5,7 +5,7 @@
 !define MUI_ICON "@PWD@\..\images\@APP_LOW_NAME@.ico"
 !define MUI_UNICON "@PWD@\..\images\@APP_LOW_NAME@.ico"
 !define PATCH "0"
-!define OUTPUT_FILE "@OUT_PWD@\@APP_LOW_NAME@-@APP_VERSION@-win32.exe"
+!define OUTPUT_FILE "@OUT_PWD@\@APP_LOW_NAME@-@APP_VERSION@.exe"
 !define BINARY_TREE "@OUT_PWD@\..\bin"
 !define MUI_HEADERIMAGE_BITMAP "@PWD@\..\nsis\header.bmp"
 !define MUI_HEADERIMAGE_BITMAP_RTP "@PWD@\..\nsis\header.bmp"
