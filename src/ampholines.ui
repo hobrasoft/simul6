@@ -193,7 +193,7 @@
      <item row="5" column="1">
       <widget class="QLabel" name="label_11">
        <property name="text">
-        <string>High pKA</string>
+        <string>High pKa</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -223,7 +223,7 @@
      <item row="3" column="1">
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>Low pKA</string>
+        <string>Low pKa</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -256,14 +256,14 @@
      <item row="2" column="0">
       <widget class="QLabel" name="label_12">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;pKA&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;pKa&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item row="6" column="1">
       <widget class="QLabel" name="label_14">
        <property name="text">
-        <string>Δ pKA</string>
+        <string>Δ pKa</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

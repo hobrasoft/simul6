@@ -894,7 +894,7 @@ void Engine::runPrivate() {
         m_sendSignals = false;
     }
 
-    QTimer::singleShot((m_detectorActive)?5:0, this, &Engine::runPrivate);
+    QTimer::singleShot((m_detectorActive)?0:0, this, &Engine::runPrivate);
 }
 
 #endif
