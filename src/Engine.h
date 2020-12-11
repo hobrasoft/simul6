@@ -8,6 +8,7 @@
 #include "Vec2d.h"
 #include "segmentedconstituent.h"
 #include "crosssection.h"
+#include "detectorcache.h"
 #include <list>
 #include <string>
 #include <vector>
@@ -16,6 +17,7 @@
 
 using namespace std;
 
+class DetectorCache;
 
 class Engine :  public QObject
 {
@@ -140,6 +142,7 @@ public:
     void setBW(int x) { bw = x; }
     bool containsConstituentInternalId(int internalId);
     void setDetectorActive(bool x) { m_detectorActive = x; }
+    void setDetectorCache(DetectorCache *x);
 
     size_t getNm(); // Get number of constituents
     int getNp() const { return np; }
@@ -199,7 +202,7 @@ private:
 	void rungekutta();
     void cashkarp();
     mutable QMutex m_mutex;
-
+    DetectorCache *m_detectorCache;
 };
 
 #endif

@@ -11,6 +11,7 @@
 #include "ConstituentDb.h"
 #include "Sample.h"
 #include "messagedialog.h"
+#include "detectorcache.h"
 #include "Mix.h"
 #include <iostream>
 #include <cmath>
@@ -84,7 +85,8 @@ Engine::Engine(int pNp) :
     m_initialized(false),
     m_running(false),
     m_sendSignals(false),    
-    m_optimizeDt(false)
+    m_optimizeDt(false),
+    m_detectorCache(nullptr)
 {
     cout << "Engine constructor" << endl;
     QTimer *timer = new QTimer(this);
@@ -94,6 +96,12 @@ Engine::Engine(int pNp) :
     connect(timer, &QTimer::timeout, [this](){
         m_sendSignals = true;
     });
+}
+
+
+void Engine::setDetectorCache(DetectorCache *x) { 
+    m_detectorCache = x; 
+    x->clear(); 
 }
 
 
@@ -436,7 +444,7 @@ void Engine::setStep(const QVariantMap& data) {
 
     init();
     emit timeChanged(t);
-    emit timeChanged(this);
+    m_detectorCache->appendData(this);
 }
 
 void Engine::gCalc()
@@ -850,7 +858,7 @@ void Engine::run()
     m_running = true;
     if (t == 0) {
         emit timeChanged(t);
-        emit timeChanged(this);
+        m_detectorCache->appendData(this);
         }
     timeDisplay = timeInterval;
     intervalCounter = 0;
@@ -861,8 +869,8 @@ void Engine::run()
 void Engine::runPrivate() {
     if (!m_running || t > timeStop) {
         // PDEBUG;
+        m_detectorCache->appendData(this);
         emit timeChanged(t);
-        emit timeChanged(this);
         emit drawGraph(this);
         emit finished();
         emit timeElapsed(intervalCounter/1000);
@@ -877,7 +885,7 @@ void Engine::runPrivate() {
     }
     unlock();
     emit timeChanged(t);
-    emit timeChanged(this);
+    m_detectorCache->appendData(this);
 
     if (t >= timeDisplay) {
         // qDebug() << "Engine::runPrivate()" << t;

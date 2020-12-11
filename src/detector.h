@@ -11,6 +11,8 @@
 #include <QValueAxis>
 #include <QAction>
 
+class DetectorCache;
+
 QT_CHARTS_USE_NAMESPACE
 
 // #define SET_AXIS_LABELS_MANUALLY
@@ -19,11 +21,11 @@ class Detector : public GrafAbstract {
     Q_OBJECT
 public:
     explicit Detector(QWidget *parent = nullptr);
+    void setDetectorCache(DetectorCache *x) { m_detectorCache = x; }
 
 signals:
 
 public slots:
-    void appendData(const Engine *pEngine);
     void drawGraph(const Engine *pEngine);
     void init(const Engine *pEngine);
     void setVisible(int id, bool visible);
@@ -50,6 +52,7 @@ private slots:
 
 private:
     QChart *m_chart;
+    void appendData();
     static double axisTable(double);
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -77,6 +80,7 @@ private:
 
     double m_time;
     double m_detectorPosition;
+    DetectorCache *m_detectorCache;
 
     const Engine *m_engine;
 };

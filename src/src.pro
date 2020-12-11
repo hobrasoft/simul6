@@ -79,6 +79,7 @@ SOURCES += \
     grafabstract.cpp \
     grafdetail.cpp \
     detector.cpp \
+    detectorcache.cpp \
     constituentseries.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
@@ -121,6 +122,7 @@ HEADERS += \
     grafabstract.h \
     grafdetail.h \
     detector.h \
+    detectorcache.h \
     constituentseries.h \
     conductivityseries.h \
     phseries.h \

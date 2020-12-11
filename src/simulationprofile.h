@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QThread>
 #include "mixcontrolmodel.h"
+#include "detectorcache.h"
 #include "Engine.h"
 
 namespace Ui {
@@ -58,7 +59,9 @@ private:
     Ui::SimulationProfile *ui;
 
     Engine *m_engine;
-    QThread m_thread;
+    DetectorCache *m_detectorCache;
+    QThread m_threadEngine;
+    QThread m_threadCache;
 };
 
 #endif // SIMULATIONPROFILE_H

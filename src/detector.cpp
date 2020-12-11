@@ -21,6 +21,7 @@
 
 Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 {
+    m_detectorCache = nullptr;
     if (MSETTINGS->guiChartAntialiasing()) {
         setRenderHint(QPainter::Antialiasing);
         }
@@ -122,41 +123,33 @@ void Detector::showGlobalActions(bool x) {
 }
 
 
-void Detector::appendData(const Engine *pEngine) {
+void Detector::appendData() {
+    if (m_detectorCache == nullptr) { return; }
     if (m_initialized && !m_active) { return; }
     QList<QAbstractSeries*> list = m_chart->series();
     if (list.isEmpty()) { return; }
-    if (pEngine->getCapLen() <= 0) { return; }
-    pEngine->lock(); 
-    const Mix& mix = m_engine->getMix();
+
     QLineSeries *series;
 
-    m_time = pEngine->getTime();
-    int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
+    QList<QList<QPointF> > data = m_detectorCache->data();
+    m_detectorCache->clear();
 
-    int id = 0;
-    for (auto &sample : mix.getSamples()) {
+    for (int i=0; i<data.size(); i++) {
+        const QList<QPointF>& data1 = data[i];
+        int id = 0;
+        for (id = 0; id < data1.size() -2; id++) {
+            series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+            series->append(data1[id]);
+            }
+
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->append(QPointF(m_time, sample.getA(0, detector_position)));
-        // series->setVisible(m_isVisible && sample.visible());
+        series->append(data1[id]);
         id += 1;
+
+        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        series->append(data1[id]);
         }
 
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    auto hpl = pEngine->getHpl();
-    double pH = (hpl[detector_position] > 0) ? (-log(hpl[detector_position]) / log(10)) : 0;
-    series->append(QPointF(m_time, pH));
-    // series->setVisible(m_isVisible && m_visiblePh);
-    id += 1;
-
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    auto kapal = pEngine->getKapa();
-    double kapa = kapal[detector_position] * 100.0;
-    series->append(QPointF(m_time, kapa));
-    // series->setVisible(m_isVisible && m_visibleKapa);
-    id += 1;
-
-    pEngine->unlock(); 
     m_initialized = true;
 }
 
@@ -169,6 +162,8 @@ void Detector::drawGraph(const Engine *pEngine)
     if (m_chart->series().isEmpty()) { return; }
 
     pEngine->lock(); 
+    m_time = pEngine->getTime();
+    appendData();
     const Mix& mix = m_engine->getMix();
 
     QLineSeries *series;
