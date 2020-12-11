@@ -69,6 +69,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 
 
 void Detector::init(const Engine *pEngine) {
+    PDEBUG;
     m_chart->removeAllSeries();
     m_initialized = false;
     m_manualScaled = false;
@@ -202,62 +203,77 @@ void Detector::setAutoscale() {
 void Detector::autoscale() {
     if (m_manualScaled) { return; }
     if (m_engine == nullptr) { return; }
-    double maximum = 0;
-    double minimum = 99999;
+    double maximum = -99999;
+    double minimum =  99999;
     m_engine->lock();
-    size_t p        = m_engine->getNp();
-    auto hpl        = m_engine->getHpl();
     const Mix& mix  = m_engine->getMix();
-    auto kapa       = m_engine->getKapa();
-    auto efield     = m_engine->getE();
 
-    unsigned int xleft = 0;
-    unsigned int xright = p;
+    QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[0]);
+    int count = series->count();
+
+    unsigned int xleft = 1;
+    unsigned int xright = count-1;
+/*
     if (m_rescaleIndividually && m_axis_x != nullptr) {
         double d_xleft  = m_axis_x->min();
         double d_xright = m_axis_x->max();
-        xleft = p * d_xleft / m_time;
-        xright = p * d_xright / m_time;
+        xleft = count * d_xleft / m_time;
+        xright = count * d_xright / m_time;
         }
+*/
 
+    int id = 0;
     for (auto &sample : mix.getSamples()) {
-        if (!sample.visible()) { continue; }
-        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { continue; }
+        if (!sample.visible()) { 
+            id += 1;
+            continue; 
+            }
+        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { 
+            id += 1;
+            continue; 
+            }
+        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         for (unsigned int i = xleft; i <= xright; i++){
-            if (sample.getA(0, i) > maximum)  {
-                maximum = sample.getA(0,i);
+            if (series->at(i).y() > maximum)  {
+                maximum = series->at(i).y();
                 }
-            if (sample.getA(0, i) < minimum)  {
-                minimum = sample.getA(0,i);
+            if (series->at(i).y() < minimum)  {
+                minimum = series->at(i).y();
                 }
             }
+        id += 1;
         }
     m_engine->unlock();
 
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
                      (!m_rescaleIndividually && m_visiblePh);
     for (unsigned int i = xleft; rescalePh && i <= xright; i++) {
-        if (hpl[i] > 0) {
-            double pH = -log(hpl[i]) / log(10);
-            if (pH > maximum) { 
-                maximum = pH;
+        for (unsigned int i = xleft; i <= xright; i++){
+            if (series->at(i).y() > maximum)  {
+                maximum = series->at(i).y();
                 }
-            if (pH < minimum) { 
-                minimum = pH;
+            if (series->at(i).y() < minimum)  {
+                minimum = series->at(i).y();
                 }
             }
         }
+    id += 1;
 
+    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     bool rescaleKapa = (m_rescaleIndividually && m_rescaleKapa && m_visibleKapa) ||
                        (!m_rescaleIndividually && m_visibleKapa);
     for (unsigned int i = xleft; rescaleKapa && i <= xright; i++) {
-        if (kapa[i] * 100 > maximum) {
-            maximum = kapa[i] * 100.0;
-            }
-        if (kapa[i] * 100 < minimum) {
-            minimum = kapa[i] * 100.0;
+        for (unsigned int i = xleft; i <= xright; i++){
+            if (series->at(i).y() > maximum)  {
+                maximum = series->at(i).y();
+                }
+            if (series->at(i).y() < minimum)  {
+                minimum = series->at(i).y();
+                }
             }
         }
+    id += 1;
 
     QRectF rect;
     rect.setTop    (minimum - 0.09 * (maximum-minimum) );
