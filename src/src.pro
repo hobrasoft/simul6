@@ -29,11 +29,16 @@ msvc {
     QMAKE_CXXFLAGS += /openmp
     DEFINES += PDEBUG_FUNCTION_NAME=__FUNCSIG__
 } 
-macx { # using MacPorts libomp
+macx {
     QMAKE_CXXFLAGS += -Xpreprocessor -fopenmp
     DEFINES += PDEBUG_FUNCTION_NAME=__PRETTY_FUNCTION__
+    # Look for libomp installed with Homebrew
+    INCLUDEPATH += /usr/local/opt/libomp/include
+    LIBS += -L/usr/local/opt/libomp/lib
+    # Look for libomp installed with MacPorts
     INCLUDEPATH += /opt/local/include/libomp
-    LIBS += -L/opt/local/lib/libomp -lomp
+    LIBS += -L/opt/local/lib/libomp
+    LIBS += -lomp
     TARGET = "Simul 6"
     ICON = ../images/appicon.icns
 } 
