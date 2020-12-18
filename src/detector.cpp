@@ -67,6 +67,11 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     addAction(m_actionSaveCSV);
     m_actionSaveCSV->setEnabled(false);
 
+    m_actionSaveImage = new QAction(tr("Save chart to image"), this);
+    connect(m_actionSaveImage, &QAction::triggered, this, &Detector::saveImage);
+    addAction(m_actionSaveImage);
+    m_actionSaveImage->setEnabled(false);
+
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
     setMouseTracking(true);
@@ -129,16 +134,19 @@ void Detector::showGlobalActions(bool x) {
     m_actionRescale->setVisible(x);
     m_actionManualScale->setVisible(x);
     m_actionSaveCSV->setVisible(x);
+    m_actionSaveImage->setVisible(x);
 }
 
 
 void Detector::slotRun() {
     m_actionSaveCSV->setEnabled(false);
+    m_actionSaveImage->setEnabled(false);
 }
 
 
 void Detector::slotFinished() {
     m_actionSaveCSV->setEnabled(true);
+    m_actionSaveImage->setEnabled(true);
 }
 
 
@@ -712,4 +720,23 @@ void Detector::saveCSV() {
 
 }
 
+
+void Detector::saveImage() {
+    PDEBUG;
+    QString dirname = MSETTINGS->exportDirName();
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save detector data"), dirname, tr("PNG format (*.png)")).trimmed();
+    if (filename.isEmpty()) { return; }
+    MSETTINGS->setExportDirName(QFileInfo(filename).absoluteDir().absolutePath());
+
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)) {
+        PDEBUG << "Could not open" << filename;
+        return;
+        }
+
+    QPixmap pixmap = grab();
+    pixmap.save(&file, "PNG");
+    file.close();
+
+}
 

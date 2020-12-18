@@ -149,11 +149,13 @@ void SimulationProfile::slotRun() {
     if (m_engine == nullptr) { return; }
     m_engine->run();
     ui->f_detector->slotRun();
+    ui->f_graf->slotRun();
 }
 
 
 void SimulationProfile::slotFinished() {
     ui->f_detector->slotFinished();
+    ui->f_graf->slotFinished();
 }
 
 
@@ -163,5 +165,6 @@ void SimulationProfile::slotStop() {
     m_engine->stop();
     ui->f_detector->drawGraph(m_engine);
     ui->f_detector->slotFinished();
+    ui->f_graf->slotFinished();
 }
 

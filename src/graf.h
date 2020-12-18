@@ -36,8 +36,10 @@ public slots:
     void manualScale();
     void autoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
-
     void setDetectorPosition(double) Q_DECL_OVERRIDE;
+
+    void slotRun();
+    void slotFinished();
 
     void rescalePh() Q_DECL_OVERRIDE;
     void rescaleE() Q_DECL_OVERRIDE;
@@ -48,6 +50,7 @@ private slots:
     void seriesClicked(const QPointF&);
     void subselected();
     void setAxisLabels();
+    void saveImage();
 
 private:
     QChart *m_chart;
@@ -65,6 +68,7 @@ private:
     QValueAxis *m_axis_y;
     QAction    *m_actionRescale;
     QAction    *m_actionManualScale;
+    QAction    *m_actionSaveImage;
     #ifdef SET_AXIS_LABELS_MANUALLY
     QAction    *m_actionSetAxisLabels;
     #endif

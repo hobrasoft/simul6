@@ -53,6 +53,7 @@ private slots:
     void subselected();
     void setAxisLabels();
     void saveCSV();
+    void saveImage();
 
 private:
     QChart *m_chart;
@@ -73,6 +74,7 @@ private:
     QAction    *m_actionSetAxisLabels;
     #endif
     QAction    *m_actionSaveCSV;
+    QAction    *m_actionSaveImage;
 
     bool m_rescaleIndividually;
     bool m_rescalePh;
