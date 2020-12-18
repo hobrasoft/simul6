@@ -74,6 +74,7 @@ void Detector::init(const Engine *pEngine) {
     m_initialized = false;
     m_manualScaled = false;
 
+    Q_ASSERT(pEngine != nullptr);
     m_engine = pEngine;
     pEngine->lock();
     const Mix& mix = m_engine->getMix();
@@ -605,7 +606,6 @@ void Detector::setVisibleKapa(bool visible) {
 void Detector::seriesClicked(const QPointF& point) {
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
-    if (m_engine == nullptr) { return; }
     if (m_chart->series().isEmpty()) { return; }
 
     QPoint position = mapToGlobal(QPoint(15,15));
@@ -629,7 +629,6 @@ void Detector::seriesClicked(const QPointF& point) {
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
-        m_engine->unlock();
         return;
         }
 
