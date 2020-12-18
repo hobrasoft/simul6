@@ -39,6 +39,9 @@ public slots:
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
     void setDetectorPosition(double) Q_DECL_OVERRIDE;
 
+    void slotRun();
+    void slotFinished();
+
     void rescalePh();
     void rescaleKapa();
     void rescale(int internalId);
@@ -49,6 +52,7 @@ private slots:
     void seriesClicked(const QPointF&);
     void subselected();
     void setAxisLabels();
+    void saveCSV();
 
 private:
     QChart *m_chart;
@@ -68,6 +72,7 @@ private:
     #ifdef SET_AXIS_LABELS_MANUALLY
     QAction    *m_actionSetAxisLabels;
     #endif
+    QAction    *m_actionSaveCSV;
 
     bool m_rescaleIndividually;
     bool m_rescalePh;

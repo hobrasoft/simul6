@@ -126,6 +126,7 @@ void SimulationProfile::createEngine(int np)
     connect(m_engine, &Engine::voltageChanged, this, &SimulationProfile::voltageChanged);
     connect(m_engine, &Engine::dtChanged, this, &SimulationProfile::dtChanged);
     connect(m_engine, &Engine::finished, this, &SimulationProfile::finished);
+    connect(m_engine, &Engine::finished, this, &SimulationProfile::slotFinished);
     connect(m_engine, &Engine::replacedConstituent, this, &SimulationProfile::replacedConstituent);
     connect(m_engine, &Engine::timeElapsed, this, &SimulationProfile::timeElapsed);
 }
@@ -147,6 +148,12 @@ void SimulationProfile::slotRun() {
     Q_ASSERT(m_engine != nullptr);
     if (m_engine == nullptr) { return; }
     m_engine->run();
+    ui->f_detector->slotRun();
+}
+
+
+void SimulationProfile::slotFinished() {
+    ui->f_detector->slotFinished();
 }
 
 
@@ -155,5 +162,6 @@ void SimulationProfile::slotStop() {
     if (m_engine == nullptr) { return; }
     m_engine->stop();
     ui->f_detector->drawGraph(m_engine);
+    ui->f_detector->slotFinished();
 }
 

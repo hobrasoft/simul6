@@ -12,6 +12,7 @@
 #include <math.h>
 #include <QValueAxis>
 #include <QTimer>
+#include <QFileDialog>
 #include "grafstyle.h"
 #include "manualscale.h"
 #include "printiming.h"
@@ -60,6 +61,11 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     addAction(m_actionSetAxisLabels);
     m_actionSetAxisLabels->setEnabled(false);
     #endif
+
+    m_actionSaveCSV = new QAction(tr("Save chart data to CSV file"), this);
+    connect(m_actionSaveCSV, &QAction::triggered, this, &Detector::saveCSV);
+    addAction(m_actionSaveCSV);
+    m_actionSaveCSV->setEnabled(false);
 
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
@@ -122,6 +128,17 @@ void Detector::setDetectorPosition(double x) {
 void Detector::showGlobalActions(bool x) {
     m_actionRescale->setVisible(x);
     m_actionManualScale->setVisible(x);
+    m_actionSaveCSV->setVisible(x);
+}
+
+
+void Detector::slotRun() {
+    m_actionSaveCSV->setEnabled(false);
+}
+
+
+void Detector::slotFinished() {
+    m_actionSaveCSV->setEnabled(true);
 }
 
 
@@ -654,4 +671,45 @@ void Detector::seriesClicked(const QPointF& point) {
         }
 
 }
+
+
+void Detector::saveCSV() {
+    PDEBUG;
+    QString dirname = MSETTINGS->exportDirName();
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save detector data"), dirname, tr("Csv format (*.csv)")).trimmed();
+    if (filename.isEmpty()) { return; }
+    MSETTINGS->setExportDirName(QFileInfo(filename).absoluteDir().absolutePath());
+
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)) {
+        PDEBUG << "Could not open" << filename;
+        return;
+        }
+
+    QLineSeries *firstSeries = qobject_cast<QLineSeries *>(m_chart->series()[0]);
+    int count = firstSeries->count();
+
+    QStringList header;
+    header << R"X("time")X";
+    for (int s=0; s<m_chart->series().size(); s++) {
+        QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[s]);
+        header << QString(R"X("%1")X").arg(series->name());
+        }
+    file.write(header.join(" ").toUtf8());
+    file.write("\n");
+
+    for (int i=0; i<count; i++) {
+        QStringList line;
+        line << QString::number(firstSeries->at(i).x());
+        for (int s=0; s<m_chart->series().size(); s++) {
+            QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[s]);
+            line << QString::number(series->at(i).y());
+            }
+        file.write(line.join(" ").toUtf8());
+        file.write("\n");
+        }
+    file.close();
+
+}
+
 

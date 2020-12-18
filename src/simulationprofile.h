@@ -54,6 +54,7 @@ signals:
 private slots:
     void drawGraph(const Engine*);
     void setMix(const Engine*);
+    void slotFinished();
 
 private:
     Ui::SimulationProfile *ui;
