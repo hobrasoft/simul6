@@ -136,12 +136,19 @@ void Detector::swap() {
         return;
         }
 
+    QLineSeries *firstSeries = qobject_cast<QLineSeries *>(m_chart->series()[0]);
+    int timeLength = firstSeries->count();
+
     for (unsigned int i=count-2; i<mix.size(); i++) {
-        PDEBUG << i << count << mix.size();
         const Sample& sample = mix.getSample(i);
         ConstituentSeries *series = new ConstituentSeries(sample, this);
+        for (int t=0; t<timeLength; t++) {  
+            double time = firstSeries->at(t).x();
+            series->append(QPointF(time, 0));
+            }
         connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
         m_chart->addSeries(series);
+        PDEBUG << i << sample.getName();
         }
 
     m_engine->unlock();
@@ -711,7 +718,7 @@ void Detector::saveCSV() {
         }
 
     QLineSeries *firstSeries = qobject_cast<QLineSeries *>(m_chart->series()[0]);
-    int count = firstSeries->count();
+    int count = firstSeries->count()-1;
 
     QStringList header;
     header << R"X("time")X";
@@ -722,7 +729,7 @@ void Detector::saveCSV() {
     file.write(header.join(" ").toUtf8());
     file.write("\n");
 
-    for (int i=0; i<count; i++) {
+    for (int i=1; i<count; i++) {
         QStringList line;
         line << QString::number(firstSeries->at(i).x());
         for (int s=0; s<m_chart->series().size(); s++) {

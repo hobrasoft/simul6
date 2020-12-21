@@ -144,7 +144,7 @@ void Graf::init(const Engine *pEngine) {
 
     setAxisLabels();
 
-
+    PDEBUG << "detectorSeries";
     QBrush detectorBrush(QColor(DETECTOR_COLOR));
     QPen   detectorPen(detectorBrush, PENWIDTH);
 
