@@ -30,6 +30,7 @@ public:
 
 public slots:
     void init();
+    void swap();
     void slotRun();
     void slotStop();
     void setVisible(int id, bool visible);
@@ -54,6 +55,7 @@ signals:
 private slots:
     void drawGraph(const Engine*);
     void setMix(const Engine*);
+    void mixChanged(const Engine*);
     void slotFinished();
 
 private:

@@ -17,8 +17,8 @@
 #include "manualscale.h"
 #include "printiming.h"
 
-#define PH_OFFSET -2
-#define KAPA_OFFSET -1
+#define PH_OFFSET 0
+#define KAPA_OFFSET 1
 
 Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 {
@@ -81,27 +81,17 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 
 void Detector::init(const Engine *pEngine) {
     PDEBUG;
+    if (pEngine == nullptr) { return; }
     m_chart->removeAllSeries();
     m_initialized = false;
     m_manualScaled = false;
 
-    Q_ASSERT(pEngine != nullptr);
+    ConstituentSeries *series;
     m_engine = pEngine;
     pEngine->lock();
     const Mix& mix = m_engine->getMix();
-
     double time = pEngine->getTime();
     int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
-    ConstituentSeries *series;
-
-    for (auto &sample : mix.getSamples()) {
-        series = new ConstituentSeries(sample, this);
-        connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-        series->append(QPointF(time, sample.getA(0, detector_position)));
-        m_chart->addSeries(series);
-        }
-
-    pEngine->unlock();
 
     series = new PhSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
@@ -121,7 +111,40 @@ void Detector::init(const Engine *pEngine) {
 
     m_chart->legend()->setVisible(false);
 
+    for (auto &sample : mix.getSamples()) {
+        series = new ConstituentSeries(sample, this);
+        connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
+        series->append(QPointF(time, sample.getA(0, detector_position)));
+        m_chart->addSeries(series);
+        }
+
+    pEngine->unlock();
+
     setAxisLabels();
+}
+
+
+void Detector::swap() {
+    if (m_engine == nullptr) { return; }
+    m_engine->lock();
+    Mix& mix = const_cast<Mix&>(m_engine->getMix());
+    unsigned int count = m_chart->series().count();
+    PDEBUG << m_engine << "pocet serii" << count << "mix.size" << mix.size();
+    if (mix.size()+2 == count) {
+        PDEBUG << "neni co pridat";
+        m_engine->unlock();
+        return;
+        }
+
+    for (unsigned int i=count-2; i<mix.size(); i++) {
+        PDEBUG << i << count << mix.size();
+        const Sample& sample = mix.getSample(i);
+        ConstituentSeries *series = new ConstituentSeries(sample, this);
+        connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
+        m_chart->addSeries(series);
+        }
+
+    m_engine->unlock();
 }
 
 
@@ -164,22 +187,25 @@ void Detector::appendData() {
     for (int i=0; i<data.size(); i++) {
         const QList<QPointF>& data1 = data[i];
         int id = 0;
-        for (id = 0; id < data1.size() -2; id++) {
-            series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-            series->append(data1[id]);
-            }
 
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         series->append(data1[id]);
         id += 1;
-
+        
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         series->append(data1[id]);
+        id += 1;
+
+        for (; id < data1.size(); id++) {
+            if (id >= m_chart->series().size()) { break; }
+            series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+            series->append(data1[id]);
+            }
+
         }
 
     m_initialized = true;
 }
-
 
 
 void Detector::drawGraph(const Engine *pEngine)
@@ -187,20 +213,8 @@ void Detector::drawGraph(const Engine *pEngine)
     if (!m_active) { return; }
     if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
-
-    pEngine->lock(); 
-    m_time = pEngine->getTime();
-    appendData();
-    const Mix& mix = m_engine->getMix();
-
     QLineSeries *series;
     int id = 0;
-    for (auto &sample : mix.getSamples()) {
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->setVisible(m_isVisible && sample.visible());
-        id += 1;
-        }
-    pEngine->unlock(); 
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     series->setVisible(m_isVisible && m_visiblePh);
@@ -209,6 +223,18 @@ void Detector::drawGraph(const Engine *pEngine)
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     series->setVisible(m_isVisible && m_visibleKapa);
     id += 1;
+
+    pEngine->lock(); 
+    m_time = pEngine->getTime();
+    appendData();
+    const Mix& mix = m_engine->getMix();
+    for (auto &sample : mix.getSamples()) {
+        if (id >= m_chart->series().size()) { break; }
+        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        series->setVisible(m_isVisible && sample.visible());
+        id += 1;
+        }
+    pEngine->unlock(); 
 
     autoscale();
 }
@@ -235,41 +261,11 @@ void Detector::autoscale() {
     const Mix& mix  = m_engine->getMix();
 
     QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[0]);
+    int id = 0;
     int count = series->count();
 
     unsigned int xleft = 1;
     unsigned int xright = count-1;
-/*
-    if (m_rescaleIndividually && m_axis_x != nullptr) {
-        double d_xleft  = m_axis_x->min();
-        double d_xright = m_axis_x->max();
-        xleft = count * d_xleft / m_time;
-        xright = count * d_xright / m_time;
-        }
-*/
-
-    int id = 0;
-    for (auto &sample : mix.getSamples()) {
-        if (!sample.visible()) { 
-            id += 1;
-            continue; 
-            }
-        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { 
-            id += 1;
-            continue; 
-            }
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        for (unsigned int i = xleft; i <= xright; i++){
-            if (series->at(i).y() > maximum)  {
-                maximum = series->at(i).y();
-                }
-            if (series->at(i).y() < minimum)  {
-                minimum = series->at(i).y();
-                }
-            }
-        id += 1;
-        }
-    m_engine->unlock();
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
@@ -300,6 +296,29 @@ void Detector::autoscale() {
             }
         }
     id += 1;
+
+    for (auto &sample : mix.getSamples()) {
+        if (id >= m_chart->series().size()) { break; }
+        if (!sample.visible()) { 
+            id += 1;
+            continue; 
+            }
+        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { 
+            id += 1;
+            continue; 
+            }
+        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        for (unsigned int i = xleft; i <= xright; i++){
+            if (series->at(i).y() > maximum)  {
+                maximum = series->at(i).y();
+                }
+            if (series->at(i).y() < minimum)  {
+                minimum = series->at(i).y();
+                }
+            }
+        id += 1;
+        }
+    m_engine->unlock();
 
     QRectF rect;
     rect.setTop    (minimum - 0.09 * (maximum-minimum) );
@@ -342,8 +361,6 @@ void Detector::rescale(int internalId) {
     m_rescaleId = 0;
     m_rescaleIndividually = false;
 }
-
-
 
 
 void Detector::manualScale() {
@@ -470,12 +487,6 @@ void Detector::setScale(const QRectF& rect) {
     #endif
 
     QList<QAbstractSeries *> serieslist = m_chart->series();
-    for (int i=0; i<serieslist.size(); i++) {
-        QList<QAbstractAxis *> axes = serieslist[i]->attachedAxes();
-        for (int a=0; a<axes.size(); a++) {
-            serieslist[i]->detachAxis(axes[a]);
-            }
-        }
     QList<QAbstractAxis *> axislistX = m_chart->axes(Qt::Horizontal);
     for (int i=0; i<axislistX.size(); i++) {
         m_chart->removeAxis(axislistX[i]);
@@ -483,6 +494,12 @@ void Detector::setScale(const QRectF& rect) {
     QList<QAbstractAxis *> axislistY = m_chart->axes(Qt::Vertical);
     for (int i=0; i<axislistY.size(); i++) {
         m_chart->removeAxis(axislistY[i]);
+        }
+    for (int i=0; i<serieslist.size(); i++) {
+        QList<QAbstractAxis *> axes = serieslist[i]->attachedAxes();
+        for (int a=0; a<axes.size(); a++) {
+            serieslist[i]->detachAxis(axes[a]);
+            }
         }
 
     if (m_axis_x != nullptr) { m_axis_x->deleteLater(); }
@@ -612,7 +629,7 @@ void Detector::setVisiblePh(bool visible) {
     if (m_chart->series().isEmpty()) { return; }
     m_visiblePh = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+PH_OFFSET;
+    int i = PH_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
 }
@@ -622,7 +639,7 @@ void Detector::setVisibleKapa(bool visible) {
     if (m_chart->series().isEmpty()) { return; }
     m_visibleKapa = visible;
     QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+KAPA_OFFSET;
+    int i = KAPA_OFFSET;
     if (i<0) { return; }
     list[i]->setVisible(visible);
 }
@@ -657,8 +674,7 @@ void Detector::seriesClicked(const QPointF& point) {
         return;
         }
 
-    int seriescount = m_chart->series().size();
-    if (s1 == m_chart->series()[seriescount+PH_OFFSET]) {
+    if (s1 == m_chart->series()[PH_OFFSET]) {
         GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, y, node);
         d->setXname(tr("Time"));
         d->setXunit(tr("sec"));
@@ -668,7 +684,7 @@ void Detector::seriesClicked(const QPointF& point) {
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount+KAPA_OFFSET]) {
+    if (s1 == m_chart->series()[KAPA_OFFSET]) {
         GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, y, node);
         d->setXname(tr("Time"));
         d->setXunit(tr("sec"));

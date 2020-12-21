@@ -71,12 +71,6 @@ void SimulationProfile::setDetectorPosition(double x) {
 }
 
 
-void SimulationProfile::init() {
-    ui->f_graf->autoscale();
-    ui->f_detector->autoscale();
-}
-
-
 void SimulationProfile::setVisible(int id, bool visible) {
     if (m_engine != nullptr) {
         m_engine->setVisible(id, visible);
@@ -117,7 +111,7 @@ void SimulationProfile::createEngine(int np)
     m_engine->moveToThread(&m_threadEngine);
     m_engine->setDetectorCache(m_detectorCache);
 
-    connect(m_engine, &Engine::mixChanged, this, &SimulationProfile::setMix);
+    connect(m_engine, &Engine::mixChanged, this, &SimulationProfile::mixChanged);
     connect(m_engine, &Engine::drawGraph, this, &SimulationProfile::drawGraph);
 
     connect(m_engine, QOverload<double>::of(&Engine::timeChanged), this, &SimulationProfile::timeChanged);
@@ -132,9 +126,27 @@ void SimulationProfile::createEngine(int np)
 }
 
 
+void SimulationProfile::init() {
+    ui->f_graf->init(m_engine);
+    ui->f_detector->init(m_engine);
+    ui->f_graf->autoscale();
+    ui->f_detector->autoscale();
+}
+
+
+void SimulationProfile::swap() {
+    ui->f_detector->swap();
+}
+
+
 void SimulationProfile::setMix(const Engine *engine) {
     ui->f_graf->init(engine);
     ui->f_detector->init(engine);
+}
+
+
+void SimulationProfile::mixChanged(const Engine *engine) {
+    ui->f_graf->init(engine);
 }
 
 

@@ -33,11 +33,6 @@ void DetectorCache::appendData(const Engine* pEngine) {
 
     QList<QPointF> cacheItem;
     int id = 0;
-    const Mix& mix = pEngine->getMix();
-    for (auto &sample : mix.getSamples()) {
-        cacheItem << QPointF(time, sample.getA(0, detector_position));
-        id += 1;
-        }
 
     auto hpl = pEngine->getHpl();
     double pH = (hpl[detector_position] > 0) ? (-log(hpl[detector_position]) / log(10)) : 0;
@@ -48,6 +43,12 @@ void DetectorCache::appendData(const Engine* pEngine) {
     double kapa = kapal[detector_position] * 100.0;
     cacheItem << QPointF(time, kapa);
     id += 1;
+
+    const Mix& mix = pEngine->getMix();
+    for (auto &sample : mix.getSamples()) {
+        cacheItem << QPointF(time, sample.getA(0, detector_position));
+        id += 1;
+        }
 
     pEngine->unlock();
 

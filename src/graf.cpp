@@ -79,6 +79,7 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
 
 
 void Graf::init(const Engine *pEngine) {
+    if (pEngine == nullptr) { return; }
     m_chart->removeAllSeries();
 
     m_engine = pEngine;
