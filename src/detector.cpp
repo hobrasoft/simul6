@@ -62,12 +62,12 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_actionSetAxisLabels->setEnabled(false);
     #endif
 
-    m_actionSaveCSV = new QAction(tr("Save chart data to CSV file"), this);
+    m_actionSaveCSV = new QAction(tr("Save detector data to CSV file"), this);
     connect(m_actionSaveCSV, &QAction::triggered, this, &Detector::saveCSV);
     addAction(m_actionSaveCSV);
     m_actionSaveCSV->setEnabled(false);
 
-    m_actionSaveImage = new QAction(tr("Save chart to image"), this);
+    m_actionSaveImage = new QAction(tr("Save detector as image"), this);
     connect(m_actionSaveImage, &QAction::triggered, this, &Detector::saveImage);
     addAction(m_actionSaveImage);
     m_actionSaveImage->setEnabled(false);
