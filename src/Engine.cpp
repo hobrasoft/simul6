@@ -157,7 +157,7 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
 
     // Vynuluje swap segment
     for (auto &sample : mix.getSamples()) {
-        int segmentBegin = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[0].ratio));
+        int segmentBegin = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[0].ratio)) - bw/2;
         int segmentEnd   = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[1].ratio)) + segmentBegin;
         double previousA = sample.getA(0, segmentBegin-1);
         double currentA  = 0;
@@ -173,6 +173,7 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
             segmentEnd = np + 1000;
             }
         for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
+            if (i<0) { continue; }
             sample.setA(0, i, smooth(previousA, currentA, segmentBegin, i) );
             }
 
@@ -182,10 +183,11 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
         previousA = 0;
         currentA  = sample.getA(0, segmentBegin);
 
-        if (segmentEnd >= np - 5) {
+        if (segmentEnd + bw/2 >= np - 5) {
             segmentEnd = np + 1000;
             }
         for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
+            if (i<0) { continue; }
             currentA = sample.getA(0, i);
             sample.setA(0, i, smooth(previousA, currentA, segmentBegin, i) );
             }
@@ -247,7 +249,7 @@ void Engine::replaceConstituent(const SegmentedConstituent& constituent, Sample&
         prevU[j] = constituent.segments[0].constituent.getU(j);
         }
 
-    int segmentBegin = 0;
+    int segmentBegin = -bw/2;
     for (int segmentNumber = 0; segmentNumber < segmentsCount; segmentNumber++) {
         double concentration = constituent.segments[segmentNumber].concentration;
         double segmentRatio = constituent.segments[segmentNumber].ratio;
@@ -262,12 +264,13 @@ void Engine::replaceConstituent(const SegmentedConstituent& constituent, Sample&
 
         int segmentEnd = segmentBegin + (int)((double)(np)/((double)ratioSum)*((double)segmentRatio));
         // last segment must have length + 1
-        if (segmentEnd >= np - 5) {
+        if (segmentEnd + bw/2 >= np - 5) {
             segmentEnd = np + 1;
             }
 
         // PDEBUG << "segments" << segmentBegin << segmentEnd;
         for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
+            if (i<0) { continue; }
             auto smooth = [&segmentBegin,&i,this](double previous, double current) {
                 return (i < segmentBegin + bw) 
                     ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2) 
