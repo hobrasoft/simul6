@@ -264,20 +264,18 @@ void Detector::autoscale() {
     int id = 0;
     int count = series->count();
 
-    unsigned int xleft = 1;
-    unsigned int xright = count-1;
+    unsigned int xleft = 0;
+    unsigned int xright = count;
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
                      (!m_rescaleIndividually && m_visiblePh);
-    for (unsigned int i = xleft; rescalePh && i <= xright; i++) {
-        for (unsigned int i = xleft; i <= xright; i++){
-            if (series->at(i).y() > maximum)  {
-                maximum = series->at(i).y();
-                }
-            if (series->at(i).y() < minimum)  {
-                minimum = series->at(i).y();
-                }
+    for (unsigned int i = xleft; rescalePh && i < xright; i++) {
+        if (series->at(i).y() > maximum)  {
+            maximum = series->at(i).y();
+            }
+        if (series->at(i).y() < minimum)  {
+            minimum = series->at(i).y();
             }
         }
     id += 1;
@@ -285,14 +283,12 @@ void Detector::autoscale() {
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     bool rescaleKapa = (m_rescaleIndividually && m_rescaleKapa && m_visibleKapa) ||
                        (!m_rescaleIndividually && m_visibleKapa);
-    for (unsigned int i = xleft; rescaleKapa && i <= xright; i++) {
-        for (unsigned int i = xleft; i <= xright; i++){
-            if (series->at(i).y() > maximum)  {
-                maximum = series->at(i).y();
-                }
-            if (series->at(i).y() < minimum)  {
-                minimum = series->at(i).y();
-                }
+    for (unsigned int i = xleft; rescaleKapa && i < xright; i++) {
+        if (series->at(i).y() > maximum)  {
+            maximum = series->at(i).y();
+            }
+        if (series->at(i).y() < minimum)  {
+            minimum = series->at(i).y();
             }
         }
     id += 1;
@@ -308,7 +304,7 @@ void Detector::autoscale() {
             continue; 
             }
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        for (unsigned int i = xleft; i <= xright; i++){
+        for (unsigned int i = xleft; i < xright; i++){
             if (series->at(i).y() > maximum)  {
                 maximum = series->at(i).y();
                 }

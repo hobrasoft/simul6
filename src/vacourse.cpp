@@ -88,14 +88,14 @@ void VACourse::init(const Engine *pEngine) {
     series = new CurrentSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &VACourse::seriesClicked);
     auto A = pEngine->curDen;
-    series->append(QPointF(m_time, A));
+//  series->append(QPointF(m_time, A));
     series->setVisible(m_mode == ConstantVoltage);
     m_chart->addSeries(series);
 
     series = new VoltageSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &VACourse::seriesClicked);
     auto V = pEngine->voltage;
-    series->append(QPointF(m_time, V));
+//  series->append(QPointF(m_time, V));
     series->setVisible(m_mode == ConstantCurrent);
     m_chart->addSeries(series);
 
@@ -193,10 +193,8 @@ void VACourse::autoscale() {
     m_engine->lock();
 
     QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[0]);
-    int count = series->count();
-
-    unsigned int xleft = 1;
-    unsigned int xright = count-1;
+    unsigned int xleft = 0;
+    unsigned int xright = series->count();
 
     m_mode = (m_engine->constantVoltage()) ? ConstantVoltage : ConstantCurrent;
     if (m_mode == ConstantVoltage) {
@@ -204,14 +202,12 @@ void VACourse::autoscale() {
       } else {
         series = qobject_cast<QLineSeries *>(m_chart->series()[V_OFFSET]);
         }
-    for (unsigned int i = xleft; i <= xright; i++) {
-        for (unsigned int i = xleft; i <= xright; i++){
-            if (series->at(i).y() > maximum)  {
-                maximum = series->at(i).y();
-                }
-            if (series->at(i).y() < minimum)  {
-                minimum = series->at(i).y();
-                }
+    for (unsigned int i = xleft; i < xright; i++) {
+        if (series->at(i).y() > maximum)  {
+            maximum = series->at(i).y();
+            }
+        if (series->at(i).y() < minimum)  {
+            minimum = series->at(i).y();
             }
         }
 
