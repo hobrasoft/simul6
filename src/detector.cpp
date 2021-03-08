@@ -332,6 +332,10 @@ void Detector::autoscale() {
     rect.setBottom (maximum + 0.09 * (maximum-minimum) );
     rect.setLeft   (0);
     rect.setRight  (m_time);
+
+    if (rect.width() < 1e-15 || rect.height() < 1e-15) {
+        return;
+        }
     setScale(rect.normalized());
 
     if (m_rescaleIndividually && m_axis_x != nullptr) {
