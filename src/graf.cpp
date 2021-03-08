@@ -103,6 +103,33 @@ void Graf::init(const Engine *pEngine) {
         m_chart->addSeries(series);
         }
 
+    // preparation for drawing mju over kapa
+
+
+    /*
+    id = 0;
+    for (auto &sample : mix.getSamples()) {
+        ConstituentSeries *series = new ConstituentSeries(sample, this);
+        connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+        double mjuoverkapa[p];
+        double x = 0;
+        for (unsigned int i = 0; i <= p; i++){
+            mjuoverkapa[i] = 0;
+            for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
+                mjuoverkapa[i] = mjuoverkapa[i] + s.getA(j, i) * s.getU(j, i) * sgn(j);
+            }
+            mjuoverkapa[i] = mjuoverkapa[i] / sample.getA(0, i) / kapa[i];
+
+            series->append(QPointF(x * 1000.0, mjuoverkapa[i]));
+            x += inc_x;
+            }
+        id += 1;
+
+        m_chart->addSeries(series);
+        }
+
+    */
+
     ConstituentSeries *series = new PhSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setVisible(m_visiblePh);
