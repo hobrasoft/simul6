@@ -87,6 +87,7 @@ void Graf::init(const Engine *pEngine) {
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
     const Mix& mix = m_engine->getMix();
+    auto kapa = pEngine->getKapa();
 
     int id = 0;
     for (auto &sample : mix.getSamples()) {
@@ -103,32 +104,6 @@ void Graf::init(const Engine *pEngine) {
         m_chart->addSeries(series);
         }
 
-    // preparation for drawing mju over kapa
-
-
-    /*
-    id = 0;
-    for (auto &sample : mix.getSamples()) {
-        ConstituentSeries *series = new ConstituentSeries(sample, this);
-        connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-        double mjuoverkapa[p];
-        double x = 0;
-        for (unsigned int i = 0; i <= p; i++){
-            mjuoverkapa[i] = 0;
-            for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
-                mjuoverkapa[i] = mjuoverkapa[i] + s.getA(j, i) * s.getU(j, i) * sgn(j);
-            }
-            mjuoverkapa[i] = mjuoverkapa[i] / sample.getA(0, i) / kapa[i];
-
-            series->append(QPointF(x * 1000.0, mjuoverkapa[i]));
-            x += inc_x;
-            }
-        id += 1;
-
-        m_chart->addSeries(series);
-        }
-
-    */
 
     ConstituentSeries *series = new PhSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
@@ -148,7 +123,6 @@ void Graf::init(const Engine *pEngine) {
     connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
     series->setVisible(m_visibleKapa);
     x = 0;
-    auto kapa = pEngine->getKapa();
     for (unsigned int i = 0; i <= p; i++){
         series->append(QPointF(x * 1000.0, kapa[i]*100.0));
         x += inc_x;
@@ -658,6 +632,7 @@ void Graf::drawGraph(const Engine *pEngine)
     size_t p = pEngine->getNp(); // points
     const Mix& mix = m_engine->getMix();
     QLineSeries *series;
+    auto kapa = pEngine->getKapa();
 
     int id = 0;
     double inc_x = pEngine->getCapLen() / p;
@@ -678,6 +653,45 @@ void Graf::drawGraph(const Engine *pEngine)
         id += 1;
         }
 
+/*
+    // preparation for drawing mju over kapa
+    for (auto &sample : mix.getSamples()) {
+        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        if (series == nullptr) { continue; }
+        double x = 0;
+        QList<double> vlist;
+        QVector<QPointF> plist;
+        for (unsigned int i = 0; i <= p; i++){
+            double mjuoverkapa = 0;
+            for (int j = sample.getNegCharge(); j <= sample.getPosCharge(); j++) {
+                if (j == 0) { continue; }
+                mjuoverkapa = mjuoverkapa + sample.getA(j, i) * sample.getU(j, i) * (j>0) ? 1 : (j<0) ? -1 : 0;
+            }
+
+            PDEBUG << sample.getA(-3, i)
+                   << sample.getA(-2, i)
+                   << sample.getA(-1, i)
+                   << sample.getA(+1, i)
+                   << sample.getA(+2, i)
+                   << sample.getA(+3, i);
+            PDEBUG << sample.getU(-3, i)
+                   << sample.getU(-2, i)
+                   << sample.getU(-1, i)
+                   << sample.getU(+1, i)
+                   << sample.getU(+2, i)
+                   << sample.getU(+3, i);
+
+            mjuoverkapa = mjuoverkapa / sample.getA(0, i) / kapa[i];
+            plist << QPointF(x * 1000.0, mjuoverkapa);
+            PDEBUG << sample.getName() << x << mjuoverkapa << sample.getA(0, i) << kapa[i];
+            x += inc_x;
+            }
+        series->replace(plist);
+        series->setVisible(sample.visible());
+        id += 1;
+        }
+*/
+
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     double x = 0;
     auto hpl = pEngine->getHpl();
@@ -692,7 +706,6 @@ void Graf::drawGraph(const Engine *pEngine)
 
     x = 0;
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    auto kapa = pEngine->getKapa();
     plist.clear();;
     for (unsigned int i = 0; i <= p; i++) {
         plist << QPointF(x * 1000.0, kapa[i]*100.0);
