@@ -171,7 +171,6 @@ void Graf::init(const Engine *pEngine) {
 
     setAxisLabels();
 
-    PDEBUG << "detectorSeries";
     QBrush detectorBrush(QColor(DETECTOR_COLOR));
     QPen   detectorPen(detectorBrush, PENWIDTH);
 
@@ -194,6 +193,16 @@ void Graf::setDetectorPosition(double x) {
     m_detectorSeries->clear();
     m_detectorSeries->append(QPointF(x, -99999));
     m_detectorSeries->append(QPointF(x, +99999));
+}
+
+
+void Graf::swap() {
+    QRectF rect;
+    rect.setRight  (m_axis_x->max());
+    rect.setLeft   (m_axis_x->min());
+    rect.setBottom (m_axis_y->min());
+    rect.setTop    (m_axis_y->max());
+    setScale(rect.normalized());
 }
 
 

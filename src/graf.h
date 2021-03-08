@@ -37,6 +37,7 @@ public slots:
     void autoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
     void setDetectorPosition(double) Q_DECL_OVERRIDE;
+    void swap();
 
     void slotRun();
     void slotFinished();

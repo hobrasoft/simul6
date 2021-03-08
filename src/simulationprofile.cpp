@@ -136,6 +136,7 @@ void SimulationProfile::init() {
 
 void SimulationProfile::swap() {
     ui->f_detector->swap();
+    ui->f_graf->swap();
 }
 
 
