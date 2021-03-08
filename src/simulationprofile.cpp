@@ -13,10 +13,15 @@ SimulationProfile::~SimulationProfile() {
     m_threadEngine.terminate();
     m_threadEngine.wait(100);
 
-    m_threadCache.quit();
-    m_threadCache.wait(900);
-    m_threadCache.terminate();
-    m_threadCache.wait(100);
+    m_thread1Cache.quit();
+    m_thread1Cache.wait(900);
+    m_thread1Cache.terminate();
+    m_thread1Cache.wait(100);
+
+    m_thread2Cache.quit();
+    m_thread2Cache.wait(900);
+    m_thread2Cache.terminate();
+    m_thread2Cache.wait(100);
 
     delete ui;
 }
@@ -30,13 +35,19 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
     m_threadEngine.start();
     m_engine = nullptr;
 
-    m_threadCache.start();
+    m_thread1Cache.start();
     m_detectorCache = new DetectorCache();
-    m_detectorCache->moveToThread(&m_threadCache);
+    m_detectorCache->moveToThread(&m_thread1Cache);
     ui->f_detector->setDetectorCache(m_detectorCache);
+
+    m_thread2Cache.start();
+    m_vacourseCache = new VACourseCache();
+    m_vacourseCache->moveToThread(&m_thread2Cache);
+    ui->f_vacourse->setVACourseCache(m_vacourseCache);
 
     connect(ui->f_tabwidget, &QTabWidget::currentChanged, [this](int) {
         bool detector_visible = (ui->f_tabwidget->currentWidget() == ui->page_detector);
+        PDEBUG << "detector visible" << detector_visible;
         ui->f_detector->setIsVisible(detector_visible);
         ui->f_detector->drawGraph(m_engine);
         });
@@ -55,10 +66,11 @@ Detector *SimulationProfile::detector() const {
 
 
 void SimulationProfile::enableDetector(bool x) {
-    ui->f_tabwidget->tabBar()->setVisible(x);
     ui->f_detector->setActive(x);
     ui->f_detector->drawGraph(m_engine);
+    ui->f_tabwidget->tabBar()->setTabEnabled(2,x);
     if (!x) {
+        if (ui->f_tabwidget->currentWidget() != ui->page_detector) { return; }
         ui->f_tabwidget->setCurrentWidget(ui->page_graf);
         }
 }
@@ -110,6 +122,7 @@ void SimulationProfile::createEngine(int np)
     m_engine = new Engine(np);
     m_engine->moveToThread(&m_threadEngine);
     m_engine->setDetectorCache(m_detectorCache);
+    m_engine->setVACourseCache(m_vacourseCache);
 
     connect(m_engine, &Engine::mixChanged, this, &SimulationProfile::mixChanged);
     connect(m_engine, &Engine::drawGraph, this, &SimulationProfile::drawGraph);
@@ -129,8 +142,10 @@ void SimulationProfile::createEngine(int np)
 void SimulationProfile::init() {
     ui->f_graf->init(m_engine);
     ui->f_detector->init(m_engine);
+    ui->f_vacourse->init(m_engine);
     ui->f_graf->autoscale();
     ui->f_detector->autoscale();
+    ui->f_vacourse->autoscale();
 }
 
 
@@ -153,6 +168,7 @@ void SimulationProfile::mixChanged(const Engine *engine) {
 
 void SimulationProfile::drawGraph(const Engine *engine) {
     ui->f_detector->drawGraph(engine);
+    ui->f_vacourse->drawGraph(engine);
     ui->f_graf->drawGraph(engine);
 }
 
@@ -162,12 +178,14 @@ void SimulationProfile::slotRun() {
     if (m_engine == nullptr) { return; }
     m_engine->run();
     ui->f_detector->slotRun();
+    ui->f_vacourse->slotRun();
     ui->f_graf->slotRun();
 }
 
 
 void SimulationProfile::slotFinished() {
     ui->f_detector->slotFinished();
+    ui->f_vacourse->slotFinished();
     ui->f_graf->slotFinished();
 }
 
@@ -178,6 +196,7 @@ void SimulationProfile::slotStop() {
     m_engine->stop();
     ui->f_detector->drawGraph(m_engine);
     ui->f_detector->slotFinished();
+    ui->f_vacourse->slotFinished();
     ui->f_graf->slotFinished();
 }
 

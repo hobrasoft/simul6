@@ -1,10 +1,9 @@
-#include "detector.h"
+#include "vacourse.h"
+#include "vacoursecache.h"
 #include "omp.h"
 #include "pdebug.h"
-#include "constituentseries.h"
-#include "conductivityseries.h"
-#include "phseries.h"
-#include "electricfieldseries.h"
+#include "voltageseries.h"
+#include "currentseries.h"
 #include "grafdetail.h"
 #include "msettings.h"
 #include <iostream>
@@ -17,10 +16,10 @@
 #include "manualscale.h"
 #include "printiming.h"
 
-#define PH_OFFSET 0
-#define KAPA_OFFSET 1
+#define A_OFFSET 0
+#define V_OFFSET 1
 
-Detector::Detector(QWidget *parent) : GrafAbstract(parent)
+VACourse::VACourse(QWidget *parent) : GrafAbstract(parent)
 {
     m_detectorCache = nullptr;
     if (MSETTINGS->guiChartAntialiasing()) {
@@ -31,44 +30,38 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_chart->setPlotAreaBackgroundPen(QPen(QColor("#50101010")));
     m_chart->setPlotAreaBackgroundVisible(true);
     setChart(m_chart);
-    m_rescaleIndividually = false;
-    m_rescalePh = false;
-    m_rescaleKapa = false;
-    m_visiblePh = true;
-    m_visibleKapa = true;
     m_engine = nullptr;
     m_axis_x = nullptr;
     m_axis_y = nullptr;
-    m_detectorPosition = 0;
-    m_isVisible = false; 
-    m_active = false; 
+    m_isVisible = true; 
     m_initialized = false;
     m_manualScaled = false;
+    m_mode = ConstantVoltage;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
-    connect(m_actionRescale, &QAction::triggered, this, &Detector::setAutoscale);
+    connect(m_actionRescale, &QAction::triggered, this, &VACourse::setAutoscale);
     addAction(m_actionRescale);
     m_actionRescale->setEnabled(false);
 
     m_actionManualScale = new QAction(tr("Manual scale"), this);
-    connect(m_actionManualScale, &QAction::triggered, this, &Detector::manualScale);
+    connect(m_actionManualScale, &QAction::triggered, this, &VACourse::manualScale);
     addAction(m_actionManualScale);
     m_actionManualScale->setEnabled(false);
 
     #ifdef SET_AXIS_LABELS_MANUALLY
     m_actionSetAxisLabels = new QAction(tr("Adjust axis labels"), this);
-    connect(m_actionSetAxisLabels, &QAction::triggered, this, &Detector::setAxisLabels);
+    connect(m_actionSetAxisLabels, &QAction::triggered, this, &VACourse::setAxisLabels);
     addAction(m_actionSetAxisLabels);
     m_actionSetAxisLabels->setEnabled(false);
     #endif
 
     m_actionSaveCSV = new QAction(tr("Save detector data to CSV file"), this);
-    connect(m_actionSaveCSV, &QAction::triggered, this, &Detector::saveCSV);
+    connect(m_actionSaveCSV, &QAction::triggered, this, &VACourse::saveCSV);
     addAction(m_actionSaveCSV);
     m_actionSaveCSV->setEnabled(false);
 
     m_actionSaveImage = new QAction(tr("Save detector as image"), this);
-    connect(m_actionSaveImage, &QAction::triggered, this, &Detector::saveImage);
+    connect(m_actionSaveImage, &QAction::triggered, this, &VACourse::saveImage);
     addAction(m_actionSaveImage);
     m_actionSaveImage->setEnabled(false);
 
@@ -79,44 +72,34 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
 }
 
 
-void Detector::init(const Engine *pEngine) {
+void VACourse::init(const Engine *pEngine) {
     PDEBUG;
     if (pEngine == nullptr) { return; }
     m_chart->removeAllSeries();
     m_initialized = false;
     m_manualScaled = false;
+    m_time = 0;
 
     ConstituentSeries *series;
     m_engine = pEngine;
     pEngine->lock();
-    const Mix& mix = m_engine->getMix();
-    double time = pEngine->getTime();
-    int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
+    m_mode = (pEngine->constantVoltage()) ? ConstantVoltage : ConstantCurrent;
 
-    series = new PhSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-    auto hpl = pEngine->getHpl();
-    double pH = (hpl[detector_position] > 0) ? (-log(hpl[detector_position]) / log(10)) : 0;
-    series->append(QPointF(m_time, pH));
-    series->setVisible(m_isVisible && m_visiblePh);
+    series = new CurrentSeries(this);
+    connect(series, &ConstituentSeries::clicked, this, &VACourse::seriesClicked);
+    auto A = pEngine->curDen;
+    series->append(QPointF(m_time, A));
+    series->setVisible(m_mode == ConstantVoltage);
     m_chart->addSeries(series);
 
-    series = new ConductivitySeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-    auto kapal = pEngine->getKapa();
-    double kapa = kapal[detector_position] * 100.0;
-    series->append(QPointF(m_time, kapa));
-    series->setVisible(m_isVisible && m_visibleKapa);
+    series = new VoltageSeries(this);
+    connect(series, &ConstituentSeries::clicked, this, &VACourse::seriesClicked);
+    auto V = pEngine->voltage;
+    series->append(QPointF(m_time, V));
+    series->setVisible(m_mode == ConstantCurrent);
     m_chart->addSeries(series);
 
     m_chart->legend()->setVisible(false);
-
-    for (auto &sample : mix.getSamples()) {
-        series = new ConstituentSeries(sample, this);
-        connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-        series->append(QPointF(time, sample.getA(0, detector_position)));
-        m_chart->addSeries(series);
-        }
 
     pEngine->unlock();
 
@@ -124,43 +107,7 @@ void Detector::init(const Engine *pEngine) {
 }
 
 
-void Detector::swap() {
-    if (m_engine == nullptr) { return; }
-    m_engine->lock();
-    Mix& mix = const_cast<Mix&>(m_engine->getMix());
-    unsigned int count = m_chart->series().count();
-    PDEBUG << m_engine << "pocet serii" << count << "mix.size" << mix.size();
-    if (mix.size()+2 == count) {
-        PDEBUG << "neni co pridat";
-        m_engine->unlock();
-        return;
-        }
-
-    QLineSeries *firstSeries = qobject_cast<QLineSeries *>(m_chart->series()[0]);
-    int timeLength = firstSeries->count();
-
-    for (unsigned int i=count-2; i<mix.size(); i++) {
-        const Sample& sample = mix.getSample(i);
-        ConstituentSeries *series = new ConstituentSeries(sample, this);
-        for (int t=0; t<timeLength; t++) {  
-            double time = firstSeries->at(t).x();
-            series->append(QPointF(time, 0));
-            }
-        connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-        m_chart->addSeries(series);
-        PDEBUG << i << sample.getName();
-        }
-
-    m_engine->unlock();
-}
-
-
-void Detector::setDetectorPosition(double x) {
-    m_detectorPosition = x;
-}
-
-
-void Detector::showGlobalActions(bool x) {
+void VACourse::showGlobalActions(bool x) {
     m_actionRescale->setVisible(x);
     m_actionManualScale->setVisible(x);
     m_actionSaveCSV->setVisible(x);
@@ -168,109 +115,96 @@ void Detector::showGlobalActions(bool x) {
 }
 
 
-void Detector::slotRun() {
+void VACourse::slotRun() {
     m_actionSaveCSV->setEnabled(false);
     m_actionSaveImage->setEnabled(false);
 }
 
 
-void Detector::slotFinished() {
+void VACourse::slotFinished() {
     m_actionSaveCSV->setEnabled(true);
     m_actionSaveImage->setEnabled(true);
 }
 
 
-void Detector::appendData() {
+void VACourse::appendData() {
+    PDEBUG;
     if (m_detectorCache == nullptr) { return; }
-    if (m_initialized && !m_active) { return; }
     QList<QAbstractSeries*> list = m_chart->series();
     if (list.isEmpty()) { return; }
 
-    QLineSeries *series;
-
-    QList<QList<QPointF> > data = m_detectorCache->data();
+    QList<QPointF> voltage = m_detectorCache->V();
+    QList<QPointF> current = m_detectorCache->A();
     m_detectorCache->clear();
 
-    for (int i=0; i<data.size(); i++) {
-        const QList<QPointF>& data1 = data[i];
-        int id = 0;
 
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->append(data1[id]);
-        id += 1;
-        
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->append(data1[id]);
-        id += 1;
+    VoltageSeries *vseries = qobject_cast<VoltageSeries *>(m_chart->series()[V_OFFSET]);
+    for (int i=0; i<voltage.size(); i++) {
+        vseries->append(voltage[i]);
+        }
 
-        for (; id < data1.size(); id++) {
-            if (id >= m_chart->series().size()) { break; }
-            series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-            series->append(data1[id]);
-            }
-
+    CurrentSeries *aseries = qobject_cast<CurrentSeries *>(m_chart->series()[A_OFFSET]);
+    for (int i=0; i<current.size(); i++) {
+        aseries->append(current[i]);
         }
 
     m_initialized = true;
 }
 
 
-void Detector::drawGraph(const Engine *pEngine)
+void VACourse::drawGraph(const Engine *pEngine)
 {
-    if (!m_active) { return; }
+    PDEBUG;
     if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
     QLineSeries *series;
-    int id = 0;
+    pEngine->lock(); 
+    m_mode = (pEngine->constantVoltage()) ? ConstantVoltage : ConstantCurrent;
+    pEngine->unlock(); 
 
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    series->setVisible(m_isVisible && m_visiblePh);
-    id += 1;
+    series = qobject_cast<QLineSeries *>(m_chart->series()[V_OFFSET]);
+    series->setVisible((m_mode == ConstantCurrent));
+    PDEBUG << series->isVisible();
 
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    series->setVisible(m_isVisible && m_visibleKapa);
-    id += 1;
+    series = qobject_cast<QLineSeries *>(m_chart->series()[A_OFFSET]);
+    series->setVisible((m_mode == ConstantVoltage));
+    PDEBUG << series->isVisible();
 
     pEngine->lock(); 
     m_time = pEngine->getTime();
     appendData();
-    const Mix& mix = m_engine->getMix();
-    for (auto &sample : mix.getSamples()) {
-        if (id >= m_chart->series().size()) { break; }
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->setVisible(m_isVisible && sample.visible());
-        id += 1;
-        }
     pEngine->unlock(); 
 
     autoscale();
 }
 
 
-void Detector::setAutoscale() {
+void VACourse::setAutoscale() {
     m_manualScaled = false;
     autoscale();
 }
 
-void Detector::autoscale() {
+void VACourse::autoscale() {
+    PDEBUG;
     if (m_manualScaled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = -99999;
     double minimum =  99999;
     m_engine->lock();
-    const Mix& mix  = m_engine->getMix();
 
     QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[0]);
-    int id = 0;
     int count = series->count();
 
     unsigned int xleft = 1;
     unsigned int xright = count-1;
 
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    bool rescalePh = (m_rescaleIndividually && m_rescalePh && m_visiblePh) ||
-                     (!m_rescaleIndividually && m_visiblePh);
-    for (unsigned int i = xleft; rescalePh && i <= xright; i++) {
+    m_mode = (m_engine->constantVoltage()) ? ConstantVoltage : ConstantCurrent;
+    if (m_mode == ConstantVoltage) {
+        series = qobject_cast<QLineSeries *>(m_chart->series()[A_OFFSET]);
+      } else {
+        series = qobject_cast<QLineSeries *>(m_chart->series()[V_OFFSET]);
+        }
+    for (unsigned int i = xleft; i <= xright; i++) {
         for (unsigned int i = xleft; i <= xright; i++){
             if (series->at(i).y() > maximum)  {
                 maximum = series->at(i).y();
@@ -280,44 +214,7 @@ void Detector::autoscale() {
                 }
             }
         }
-    id += 1;
 
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    bool rescaleKapa = (m_rescaleIndividually && m_rescaleKapa && m_visibleKapa) ||
-                       (!m_rescaleIndividually && m_visibleKapa);
-    for (unsigned int i = xleft; rescaleKapa && i <= xright; i++) {
-        for (unsigned int i = xleft; i <= xright; i++){
-            if (series->at(i).y() > maximum)  {
-                maximum = series->at(i).y();
-                }
-            if (series->at(i).y() < minimum)  {
-                minimum = series->at(i).y();
-                }
-            }
-        }
-    id += 1;
-
-    for (auto &sample : mix.getSamples()) {
-        if (id >= m_chart->series().size()) { break; }
-        if (!sample.visible()) { 
-            id += 1;
-            continue; 
-            }
-        if (m_rescaleIndividually && sample.getId() != m_rescaleId) { 
-            id += 1;
-            continue; 
-            }
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        for (unsigned int i = xleft; i <= xright; i++){
-            if (series->at(i).y() > maximum)  {
-                maximum = series->at(i).y();
-                }
-            if (series->at(i).y() < minimum)  {
-                minimum = series->at(i).y();
-                }
-            }
-        id += 1;
-        }
     m_engine->unlock();
 
     QRectF rect;
@@ -326,48 +223,15 @@ void Detector::autoscale() {
     rect.setLeft   (0);
     rect.setRight  (m_time);
 
+    PDEBUG << rect << minimum << maximum << m_time;
     if (rect.width() < 1e-15 || rect.height() < 1e-15) {
         return;
         }
     setScale(rect.normalized());
 
-    if (m_rescaleIndividually && m_axis_x != nullptr) {
-        double d_xleft  = m_axis_x->min();
-        double d_xright = m_axis_x->max();
-        rect.setLeft (d_xleft);
-        rect.setRight(d_xright);
-        }
-//  repaint();
 }
 
-
-void Detector::rescalePh() {
-    m_rescaleIndividually = true;
-    m_rescalePh = true;
-    autoscale();
-    m_rescalePh = false;
-    m_rescaleIndividually = false;
-}
-
-
-void Detector::rescaleKapa() {
-    m_rescaleIndividually = true;
-    m_rescaleKapa = true;
-    autoscale();
-    m_rescaleKapa = false;
-    m_rescaleIndividually = false;
-}
-
-void Detector::rescale(int internalId) {
-    m_rescaleIndividually = true;
-    m_rescaleId = internalId;
-    autoscale();
-    m_rescaleId = 0;
-    m_rescaleIndividually = false;
-}
-
-
-void Detector::manualScale() {
+void VACourse::manualScale() {
     m_manualScaled = true;
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
@@ -393,7 +257,7 @@ void Detector::manualScale() {
 }
 
 
-void Detector::setAxisLabels() {
+void VACourse::setAxisLabels() {
     if (m_axis_y == nullptr || m_axis_x == nullptr) { 
         return;
         }
@@ -405,7 +269,7 @@ void Detector::setAxisLabels() {
 
 
 // prevents the unlimited scale
-void Detector::mousePressEvent(QMouseEvent *event) {
+void VACourse::mousePressEvent(QMouseEvent *event) {
     m_pressedPoint = event->pos();
     if (event->button() != Qt::LeftButton) {
         QChartView::mousePressEvent(event);
@@ -430,7 +294,7 @@ void Detector::mousePressEvent(QMouseEvent *event) {
 
 
 // prevents the context menu 
-void Detector::mouseReleaseEvent(QMouseEvent *event) { 
+void VACourse::mouseReleaseEvent(QMouseEvent *event) { 
     if (event->button() == Qt::RightButton) { 
         event->accept();
         // QChartView::mouseReleaseEvent(event);
@@ -455,7 +319,7 @@ void Detector::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 
-void Detector::subselected() {
+void VACourse::subselected() {
     if (m_axis_x == nullptr) { return; }
     if (m_axis_y == nullptr) { return; }
     m_manualScaled = true;
@@ -471,15 +335,7 @@ void Detector::subselected() {
 }
 
 
-void Detector::setIsVisible(bool x) { 
-    m_isVisible = x; 
-    if (m_isVisible) {
-        autoscale();
-        }
-}
-
-
-void Detector::setScale(const QRectF& rect) {
+void VACourse::setScale(const QRectF& rect) {
     if (rect.isNull()) {
         return;
         }
@@ -548,7 +404,7 @@ void Detector::setScale(const QRectF& rect) {
 }
 
 
-double Detector::axisTable(double maximum) {
+double VACourse::axisTable(double maximum) {
     maximum = maximum * 0.8;
     return
           (maximum <= 0.000000000000010) ? 0.0000000000000020
@@ -624,40 +480,7 @@ double Detector::axisTable(double maximum) {
 }
 
 
-void Detector::setVisible(int id, bool visible) {
-    if (m_chart->series().isEmpty()) { return; }
-    QList<QAbstractSeries *> list = m_chart->series();
-    for (int i=0; i<list.size(); i++) {
-        ConstituentSeries *series = qobject_cast<ConstituentSeries *>(m_chart->series()[i]);
-        if (series->internalId() == id) {
-            series->setVisible(visible);
-            return;
-            }
-        }
-}
-
-
-void Detector::setVisiblePh(bool visible) {
-    if (m_chart->series().isEmpty()) { return; }
-    m_visiblePh = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = PH_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-}
-
-
-void Detector::setVisibleKapa(bool visible) {
-    if (m_chart->series().isEmpty()) { return; }
-    m_visibleKapa = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = KAPA_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-}
-
-
-void Detector::seriesClicked(const QPointF& point) {
+void VACourse::seriesClicked(const QPointF& point) {
     QLineSeries *s1 = qobject_cast<QLineSeries *>(sender());
     if (s1 == nullptr) { return; }
     if (m_chart->series().isEmpty()) { return; }
@@ -675,44 +498,33 @@ void Detector::seriesClicked(const QPointF& point) {
             } 
         }
     
-    ConstituentSeries *s2 = qobject_cast<ConstituentSeries *>(s1);
-    if (s2 != nullptr && s2->internalId() != 0) {
-        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, y, node);
+    if (s1 == m_chart->series()[V_OFFSET]) {
+        GrafDetail *d = new GrafDetail(this, tr("Voltage"), "V", x, y, node);
         d->setXname(tr("Time"));
         d->setXunit(tr("sec"));
         d->move(position);
         d->show();
-        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
+//      connect(d, &QObject::destroyed, s1, &ConstituentSeries::setNormalWidth);
         return;
         }
 
-    if (s1 == m_chart->series()[PH_OFFSET]) {
-        GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, y, node);
+    if (s1 == m_chart->series()[A_OFFSET]) {
+        GrafDetail *d = new GrafDetail(this, tr("Current"), "A", x, y, node);
         d->setXname(tr("Time"));
         d->setXunit(tr("sec"));
         d->move(position);
         d->show();
-        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
-        return;
-        }
-
-    if (s1 == m_chart->series()[KAPA_OFFSET]) {
-        GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, y, node);
-        d->setXname(tr("Time"));
-        d->setXunit(tr("sec"));
-        d->move(position);
-        d->show();
-        connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
+//      connect(d, &QObject::destroyed, s1, &ConstituentSeries::setNormalWidth);
         return;
         }
 
 }
 
 
-void Detector::saveCSV() {
+void VACourse::saveCSV() {
     PDEBUG;
     QString dirname = MSETTINGS->exportDirName();
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save detector data"), dirname, tr("Csv format (*.csv)")).trimmed();
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save VA data"), dirname, tr("Csv format (*.csv)")).trimmed();
     if (filename.isEmpty()) { return; }
     MSETTINGS->setExportDirName(QFileInfo(filename).absoluteDir().absolutePath());
 
@@ -749,7 +561,7 @@ void Detector::saveCSV() {
 }
 
 
-void Detector::saveImage() {
+void VACourse::saveImage() {
     PDEBUG;
     QString dirname = MSETTINGS->exportDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save detector data"), dirname, tr("PNG format (*.png)")).trimmed();

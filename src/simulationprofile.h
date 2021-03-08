@@ -5,6 +5,7 @@
 #include <QThread>
 #include "mixcontrolmodel.h"
 #include "detectorcache.h"
+#include "vacoursecache.h"
 #include "Engine.h"
 
 namespace Ui {
@@ -63,8 +64,10 @@ private:
 
     Engine *m_engine;
     DetectorCache *m_detectorCache;
+    VACourseCache *m_vacourseCache;
     QThread m_threadEngine;
-    QThread m_threadCache;
+    QThread m_thread1Cache;
+    QThread m_thread2Cache;
 };
 
 #endif // SIMULATIONPROFILE_H

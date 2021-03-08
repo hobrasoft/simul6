@@ -11,6 +11,8 @@
 #define PH_COLOR    "#ff00ff"
 #define KAPPA_COLOR "#000000"
 #define DETECTOR_COLOR "#000000"
+#define A_COLOR         "#ff0000"
+#define V_COLOR         "#0000ff"
 
 
 #endif

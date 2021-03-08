@@ -32,14 +32,14 @@ class GrafAbstract : public QChartView {
 
 */
 
-    virtual void showGlobalActions(bool) = 0;
-    virtual void setDetectorPosition(double) = 0;
+    virtual void showGlobalActions(bool) {}
+    virtual void setDetectorPosition(double) {}
 
 
-    virtual void rescale(int internalId) = 0;
-    virtual void rescaleE() {};
-    virtual void rescalePh() = 0;
-    virtual void rescaleKapa() = 0;
+    virtual void rescale(int internalId) { Q_UNUSED(internalId); }
+    virtual void rescaleE() {}
+    virtual void rescalePh() {}
+    virtual void rescaleKapa() {}
 
 };
 

@@ -1,5 +1,5 @@
-#ifndef _Detector_H_
-#define _Detector_H_
+#ifndef _VACourse_H_
+#define _VACourse_H_
 
 #include "Mix.h"
 #include "Engine.h"
@@ -11,43 +11,32 @@
 #include <QValueAxis>
 #include <QAction>
 
-class DetectorCache;
+class VACourseCache;
 
 QT_CHARTS_USE_NAMESPACE
 
 // #define SET_AXIS_LABELS_MANUALLY
 
-class Detector : public GrafAbstract {
+class VACourse : public GrafAbstract {
     Q_OBJECT
 public:
-    explicit Detector(QWidget *parent = nullptr);
-    void setDetectorCache(DetectorCache *x) { m_detectorCache = x; }
+    explicit VACourse(QWidget *parent = nullptr);
+    void setVACourseCache(VACourseCache *x) { m_detectorCache = x; }
 
 signals:
 
 public slots:
     void drawGraph(const Engine *pEngine);
     void init(const Engine *pEngine);
-    void swap();
-    void setVisible(int id, bool visible);
-    void setVisiblePh(bool visible);
-    void setVisibleKapa(bool visible);
     void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
     void setScale(const QRectF& rect);
     void manualScale();
     void autoscale();
     void setAutoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
-    void setDetectorPosition(double) Q_DECL_OVERRIDE;
-    void setIsVisible(bool);
 
     void slotRun();
     void slotFinished();
-
-    void rescalePh();
-    void rescaleKapa();
-    void rescale(int internalId);
-    void setActive(bool x) { m_active = x; }
 
 private slots:
     void seriesClicked(const QPointF&);
@@ -63,8 +52,6 @@ private:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     QPoint m_pressedPoint;
-    bool m_visiblePh;
-    bool m_visibleKapa;
     bool m_rescaleEnabled;
 
     QValueAxis *m_axis_x;
@@ -77,20 +64,21 @@ private:
     QAction    *m_actionSaveCSV;
     QAction    *m_actionSaveImage;
 
-    bool m_rescaleIndividually;
-    bool m_rescalePh;
-    bool m_rescaleKapa;
     bool m_initialized;
     bool m_isVisible;
-    bool m_active;
     bool m_manualScaled;
     int  m_rescaleId;
 
     double m_time;
-    double m_detectorPosition;
-    DetectorCache *m_detectorCache;
+    VACourseCache *m_detectorCache;
 
     const Engine *m_engine;
+
+    enum Mode {
+        ConstantVoltage, ConstantCurrent
+        };
+
+    Mode m_mode;
 };
 
 #endif // GRAF_H

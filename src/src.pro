@@ -80,6 +80,8 @@ SOURCES += \
     grafdetail.cpp \
     detector.cpp \
     detectorcache.cpp \
+    vacourse.cpp \
+    vacoursecache.cpp \
     constituentseries.cpp \
     inputparameters.cpp \
     constituentsmodel.cpp \
@@ -123,10 +125,14 @@ HEADERS += \
     grafdetail.h \
     detector.h \
     detectorcache.h \
+    vacourse.h \
+    vacoursecache.h \
     constituentseries.h \
     conductivityseries.h \
     phseries.h \
     electricfieldseries.h \
+    currentseries.h \
+    voltageseries.h \
     inputparameters.h \
     constituentsmodel.h \
     settings.h \

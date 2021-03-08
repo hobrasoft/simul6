@@ -12,6 +12,7 @@
 #include "Sample.h"
 #include "messagedialog.h"
 #include "detectorcache.h"
+#include "vacoursecache.h"
 #include "Mix.h"
 #include <iostream>
 #include <cmath>
@@ -86,7 +87,8 @@ Engine::Engine(int pNp) :
     m_running(false),
     m_sendSignals(false),    
     m_optimizeDt(false),
-    m_detectorCache(nullptr)
+    m_detectorCache(nullptr),
+    m_vacourseCache(nullptr)
 {
     cout << "Engine constructor" << endl;
     QTimer *timer = new QTimer(this);
@@ -104,6 +106,11 @@ void Engine::setDetectorCache(DetectorCache *x) {
     x->clear(); 
 }
 
+
+void Engine::setVACourseCache(VACourseCache *x) { 
+    m_vacourseCache = x; 
+    x->clear(); 
+}
 
 const Mix &Engine::getMix() const 
 {
@@ -448,6 +455,7 @@ void Engine::setStep(const QVariantMap& data) {
     init();
     emit timeChanged(t);
     m_detectorCache->appendData(this);
+    m_vacourseCache->appendData(this);
 }
 
 void Engine::gCalc()
@@ -862,6 +870,7 @@ void Engine::run()
     if (t == 0) {
         emit timeChanged(t);
         m_detectorCache->appendData(this);
+        m_vacourseCache->appendData(this);
         }
     timeDisplay = timeInterval;
     intervalCounter = 0;
@@ -873,6 +882,7 @@ void Engine::runPrivate() {
     if (!m_running || t > timeStop) {
         // PDEBUG;
         m_detectorCache->appendData(this);
+        m_vacourseCache->appendData(this);
         emit timeChanged(t);
         emit drawGraph(this);
         emit finished();
@@ -889,6 +899,7 @@ void Engine::runPrivate() {
     unlock();
     emit timeChanged(t);
     m_detectorCache->appendData(this);
+    m_vacourseCache->appendData(this);
 
     if (t >= timeDisplay) {
         // qDebug() << "Engine::runPrivate()" << t;

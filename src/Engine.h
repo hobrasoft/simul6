@@ -18,6 +18,7 @@
 using namespace std;
 
 class DetectorCache;
+class VACourseCache;
 
 class Engine :  public QObject
 {
@@ -131,6 +132,7 @@ public:
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
     void setVoltage(double pVoltage) { voltage = pVoltage; }
     void setConstantVoltage(bool x) { m_constantvoltage = x; }
+    bool constantVoltage() const { return m_constantvoltage; }
     void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
     double getCapLen() const { return capLen; }
     void setTimeStop(double pTimeStop) { timeStop = pTimeStop; }
@@ -143,6 +145,7 @@ public:
     bool containsConstituentInternalId(int internalId);
     void setDetectorActive(bool x) { m_detectorActive = x; }
     void setDetectorCache(DetectorCache *x);
+    void setVACourseCache(VACourseCache *x);
 
     size_t getNm(); // Get number of constituents
     int getNp() const { return np; }
@@ -203,6 +206,7 @@ private:
     void cashkarp();
     mutable QMutex m_mutex;
     DetectorCache *m_detectorCache;
+    VACourseCache *m_vacourseCache;
 };
 
 #endif

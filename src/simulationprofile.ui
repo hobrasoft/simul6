@@ -74,6 +74,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="page_vacourse">
+      <attribute name="title">
+       <string>VA course</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="VACourse" name="f_vacourse" native="true"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="page_detector">
       <attribute name="title">
        <string>Detector</string>
@@ -114,6 +124,12 @@
    <class>Detector</class>
    <extends>QWidget</extends>
    <header>detector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>VACourse</class>
+   <extends>QWidget</extends>
+   <header>vacourse.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
