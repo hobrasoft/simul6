@@ -48,7 +48,7 @@ void SegmentsModel::setSegmentsNumber(int segmentsNumber) {
             QVariant pk1n = data(index(Pk1n, currentColumnsCount-1));
             QVariant pk1p = data(index(Pk1p, currentColumnsCount-1));
             QVariant pk2p = data(index(Pk2p, currentColumnsCount-1));
-            QVariant pk3p = data(index(Pk3n, currentColumnsCount-1));
+            QVariant pk3p = data(index(Pk3p, currentColumnsCount-1));
             setData(index(Ratio, column), 1.0);
             setData(index(Concentration, column), 0.0);
             setData(index(U3n, column), u3n);
