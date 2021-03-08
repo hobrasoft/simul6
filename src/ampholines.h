@@ -7,6 +7,7 @@
 #define _Ampholines_H_
 
 #include <QDialog>
+#include <QKeyEvent>
 #include "segmentsmodel.h"
 #include "segmentedconstituent.h"
 #include "msettings.h"
@@ -38,6 +39,7 @@ private:
     SegmentsModel *m_segmentsModel;
 
     QList<SegmentedConstituent> m_constituents;
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 };
 
 #endif
