@@ -73,7 +73,6 @@ VACourse::VACourse(QWidget *parent) : GrafAbstract(parent)
 
 
 void VACourse::init(const Engine *pEngine) {
-    PDEBUG;
     if (pEngine == nullptr) { return; }
     m_chart->removeAllSeries();
     m_initialized = false;
@@ -128,7 +127,6 @@ void VACourse::slotFinished() {
 
 
 void VACourse::appendData() {
-    PDEBUG;
     if (m_detectorCache == nullptr) { return; }
     QList<QAbstractSeries*> list = m_chart->series();
     if (list.isEmpty()) { return; }
@@ -154,7 +152,6 @@ void VACourse::appendData() {
 
 void VACourse::drawGraph(const Engine *pEngine)
 {
-    PDEBUG;
     if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
     QLineSeries *series;
@@ -164,11 +161,9 @@ void VACourse::drawGraph(const Engine *pEngine)
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[V_OFFSET]);
     series->setVisible((m_mode == ConstantCurrent));
-    PDEBUG << series->isVisible();
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[A_OFFSET]);
     series->setVisible((m_mode == ConstantVoltage));
-    PDEBUG << series->isVisible();
 
     pEngine->lock(); 
     m_time = pEngine->getTime();
@@ -185,7 +180,6 @@ void VACourse::setAutoscale() {
 }
 
 void VACourse::autoscale() {
-    PDEBUG;
     if (m_manualScaled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = -99999;
@@ -219,7 +213,6 @@ void VACourse::autoscale() {
     rect.setLeft   (0);
     rect.setRight  (m_time);
 
-    PDEBUG << rect << minimum << maximum << m_time;
     if (rect.width() < 1e-15 || rect.height() < 1e-15) {
         return;
         }
@@ -518,7 +511,6 @@ void VACourse::seriesClicked(const QPointF& point) {
 
 
 void VACourse::saveCSV() {
-    PDEBUG;
     QString dirname = MSETTINGS->exportDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save VA data"), dirname, tr("Csv format (*.csv)")).trimmed();
     if (filename.isEmpty()) { return; }
@@ -558,7 +550,6 @@ void VACourse::saveCSV() {
 
 
 void VACourse::saveImage() {
-    PDEBUG;
     QString dirname = MSETTINGS->exportDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save detector data"), dirname, tr("PNG format (*.png)")).trimmed();
     if (filename.isEmpty()) { return; }
