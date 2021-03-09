@@ -80,20 +80,20 @@ void VACourse::init(const Engine *pEngine) {
     m_time = 0;
 
     ConstituentSeries *series;
-    m_engine = pEngine;
+    m_engine = QPointer<const Engine>(pEngine);
     pEngine->lock();
     m_mode = (pEngine->constantVoltage()) ? ConstantVoltage : ConstantCurrent;
 
     series = new CurrentSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &VACourse::seriesClicked);
-    auto A = pEngine->curDen;
+//  auto A = pEngine->curDen;
 //  series->append(QPointF(m_time, A));
     series->setVisible(m_mode == ConstantVoltage);
     m_chart->addSeries(series);
 
     series = new VoltageSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &VACourse::seriesClicked);
-    auto V = pEngine->voltage;
+//  auto V = pEngine->voltage;
 //  series->append(QPointF(m_time, V));
     series->setVisible(m_mode == ConstantCurrent);
     m_chart->addSeries(series);
@@ -225,10 +225,6 @@ void VACourse::manualScale() {
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
         }
-    if (m_engine != nullptr) {
-        m_engine->lock();
-        m_engine->unlock();
-        }
 
     QRectF rect;
     rect.setBottom(m_axis_y->min());
@@ -331,10 +327,7 @@ void VACourse::setScale(const QRectF& rect) {
     if (rect.height() <= 0 || rect.width() <= 0) {
         return;
         }
-    Q_ASSERT (m_engine != nullptr);
-    if (m_engine == nullptr) {
-        return;
-        }
+    if (m_engine == nullptr) { return; }
     if (m_chart->series().isEmpty()) { return; }
 
     m_actionManualScale->setEnabled(true);

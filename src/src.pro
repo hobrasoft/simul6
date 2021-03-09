@@ -6,7 +6,7 @@
 
 QT += core gui charts
 
-# CONFIG += debug debug_and_release
+CONFIG += debug debug_and_release
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

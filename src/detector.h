@@ -10,6 +10,7 @@
 #include <QRectF>
 #include <QValueAxis>
 #include <QAction>
+#include <QPointer>
 
 class DetectorCache;
 
@@ -90,7 +91,7 @@ private:
     double m_detectorPosition;
     DetectorCache *m_detectorCache;
 
-    const Engine *m_engine;
+    QPointer<const Engine> m_engine;
 };
 
 #endif // GRAF_H

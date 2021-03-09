@@ -11,6 +11,7 @@
 #include <QValueAxis>
 #include <QAction>
 #include <QLineSeries>
+#include <QPointer>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -84,7 +85,7 @@ private:
     QLineSeries *m_detectorSeries;
     double m_detectorPosition;
 
-    const Engine *m_engine;
+    QPointer<const Engine> m_engine;
 };
 
 #endif // GRAF_H

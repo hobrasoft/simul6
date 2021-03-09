@@ -82,7 +82,7 @@ void Graf::init(const Engine *pEngine) {
     if (pEngine == nullptr) { return; }
     m_chart->removeAllSeries();
 
-    m_engine = pEngine;
+    m_engine = QPointer<const Engine>(pEngine);
     pEngine->lock();
     size_t p = pEngine->getNp(); // points
     double inc_x = pEngine->getCapLen() / p;
@@ -419,10 +419,7 @@ void Graf::setScale(const QRectF& rect) {
         // PDEBUG << "Invalid rect dimensions" << rect << rect.height() << rect.width();
         return;
         }
-    Q_ASSERT (m_engine != nullptr);
-    if (m_engine == nullptr) {
-        return;
-        }
+    if (m_engine == nullptr) { return; }
 
     m_actionManualScale->setEnabled(true);
     m_actionRescale->setEnabled(true);
@@ -630,7 +627,7 @@ void Graf::drawGraph(const Engine *pEngine)
 {
     pEngine->lock(); 
     size_t p = pEngine->getNp(); // points
-    const Mix& mix = m_engine->getMix();
+    const Mix& mix = pEngine->getMix();
     QLineSeries *series;
     auto kapa = pEngine->getKapa();
 

@@ -87,7 +87,7 @@ void Detector::init(const Engine *pEngine) {
     m_manualScaled = false;
 
     ConstituentSeries *series;
-    m_engine = pEngine;
+    m_engine = QPointer<const Engine>(pEngine);
     pEngine->lock();
     const Mix& mix = m_engine->getMix();
     double time = pEngine->getTime();
@@ -220,6 +220,7 @@ void Detector::drawGraph(const Engine *pEngine)
     if (!m_active) { return; }
     if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
+    if (m_engine == nullptr) { return; }
     QLineSeries *series;
     int id = 0;
 
@@ -368,10 +369,6 @@ void Detector::manualScale() {
     if (m_axis_y == nullptr || m_axis_y == nullptr) {
         return;
         }
-    if (m_engine != nullptr) {
-        m_engine->lock();
-        m_engine->unlock();
-        }
 
     QRectF rect;
     rect.setBottom(m_axis_y->min());
@@ -482,10 +479,7 @@ void Detector::setScale(const QRectF& rect) {
     if (rect.height() <= 0 || rect.width() <= 0) {
         return;
         }
-    Q_ASSERT (m_engine != nullptr);
-    if (m_engine == nullptr) {
-        return;
-        }
+    if (m_engine == nullptr) { return; }
     if (m_chart->series().isEmpty()) { return; }
 
     m_actionManualScale->setEnabled(true);

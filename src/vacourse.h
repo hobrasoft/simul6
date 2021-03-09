@@ -10,6 +10,7 @@
 #include <QRectF>
 #include <QValueAxis>
 #include <QAction>
+#include <QPointer>
 
 class VACourseCache;
 
@@ -72,7 +73,7 @@ private:
     double m_time;
     VACourseCache *m_detectorCache;
 
-    const Engine *m_engine;
+    QPointer<const Engine> m_engine;
 
     enum Mode {
         ConstantVoltage, ConstantCurrent
