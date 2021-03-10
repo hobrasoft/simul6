@@ -633,6 +633,7 @@ void Graf::drawGraph(const Engine *pEngine)
 
     int id = 0;
     double inc_x = pEngine->getCapLen() / p;
+
     for (auto &sample : mix.getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         if (series == nullptr) { continue; }
@@ -651,7 +652,7 @@ void Graf::drawGraph(const Engine *pEngine)
         }
 
 /*
-    // preparation for drawing mju over kapa
+    // drawing mju over kapa
     for (auto &sample : mix.getSamples()) {
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
         if (series == nullptr) { continue; }
@@ -662,25 +663,11 @@ void Graf::drawGraph(const Engine *pEngine)
             double mjuoverkapa = 0;
             for (int j = sample.getNegCharge(); j <= sample.getPosCharge(); j++) {
                 if (j == 0) { continue; }
-                mjuoverkapa = mjuoverkapa + sample.getA(j, i) * sample.getU(j, i) * (j>0) ? 1 : (j<0) ? -1 : 0;
+                mjuoverkapa = mjuoverkapa + sample.getA(j, i) * sample.getU(j, i) * j / abs(j); // (j>0) ? 1 : (j<0) ? -1 : 0;
+//                PDEBUG << i << j << sample.getU(j,i) << sample.getA(j,i) << mjuoverkapa;
             }
-
-            PDEBUG << sample.getA(-3, i)
-                   << sample.getA(-2, i)
-                   << sample.getA(-1, i)
-                   << sample.getA(+1, i)
-                   << sample.getA(+2, i)
-                   << sample.getA(+3, i);
-            PDEBUG << sample.getU(-3, i)
-                   << sample.getU(-2, i)
-                   << sample.getU(-1, i)
-                   << sample.getU(+1, i)
-                   << sample.getU(+2, i)
-                   << sample.getU(+3, i);
-
-            mjuoverkapa = mjuoverkapa / sample.getA(0, i) / kapa[i];
-            plist << QPointF(x * 1000.0, mjuoverkapa);
-            PDEBUG << sample.getName() << x << mjuoverkapa << sample.getA(0, i) << kapa[i];
+            if (sample.getA(0, i) > 0.001) mjuoverkapa = mjuoverkapa / sample.getA(0, i) / kapa[i]; else mjuoverkapa = 0;
+            plist << QPointF(x * 1000.0, mjuoverkapa * 1E7);
             x += inc_x;
             }
         series->replace(plist);
@@ -689,6 +676,7 @@ void Graf::drawGraph(const Engine *pEngine)
         }
 */
 
+//    int id = 8;
     series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
     double x = 0;
     auto hpl = pEngine->getHpl();

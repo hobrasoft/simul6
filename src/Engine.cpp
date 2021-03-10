@@ -177,7 +177,7 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
 
         // last segment must have length + 1
         if (segmentEnd >= np - 5) {
-            segmentEnd = np + 1000;
+            segmentEnd = np + 1;
             }
         for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
             if (i<0) { continue; }
@@ -374,7 +374,7 @@ void Engine::init() {
         for (auto &s : mix.getSamples()) {
             for (int j = s.getNegCharge(); j <= s.getPosCharge(); j++) {
                     aV += s.getU(j, i) * s.getA(j, i) * abs(j);
-                    // PDEBUG << i << j << s.getU(1,i) << s.getA(j,i);
+//                    PDEBUG << i << j << s.getU(j,i) << s.getA(j,i);
                 }
         }
         aV =(aV + c0 * uHpl * hpl[i] + c0 * uOHmin * oH[i]) * farc;
