@@ -12,9 +12,11 @@
 #include <QValueAxis>
 #include <QTimer>
 #include <QFileDialog>
+#include <QSignalBlocker>
 #include "grafstyle.h"
 #include "manualscale.h"
 #include "printiming.h"
+#include "drawingflag.h"
 
 #define A_OFFSET 0
 #define V_OFFSET 1
@@ -36,6 +38,7 @@ VACourse::VACourse(QWidget *parent) : GrafAbstract(parent)
     m_isVisible = true; 
     m_initialized = false;
     m_manualScaled = false;
+    m_drawing = false;
     m_mode = ConstantVoltage;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
@@ -137,11 +140,13 @@ void VACourse::appendData() {
 
 
     VoltageSeries *vseries = qobject_cast<VoltageSeries *>(m_chart->series()[V_OFFSET]);
+    QSignalBlocker vblock(vseries);
     for (int i=0; i<voltage.size(); i++) {
         vseries->append(voltage[i]);
         }
 
     CurrentSeries *aseries = qobject_cast<CurrentSeries *>(m_chart->series()[A_OFFSET]);
+    QSignalBlocker ablock(aseries);
     for (int i=0; i<current.size(); i++) {
         aseries->append(current[i]);
         }
@@ -152,12 +157,12 @@ void VACourse::appendData() {
 
 void VACourse::drawGraph(const Engine *pEngine)
 {
+    if (m_drawing) { return; }
+    DrawingFlag flag(&m_drawing);
     if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
     QLineSeries *series;
-    pEngine->lock(); 
     m_mode = (pEngine->constantVoltage()) ? ConstantVoltage : ConstantCurrent;
-    pEngine->unlock(); 
 
     series = qobject_cast<QLineSeries *>(m_chart->series()[V_OFFSET]);
     series->setVisible((m_mode == ConstantCurrent));
@@ -165,12 +170,10 @@ void VACourse::drawGraph(const Engine *pEngine)
     series = qobject_cast<QLineSeries *>(m_chart->series()[A_OFFSET]);
     series->setVisible((m_mode == ConstantVoltage));
 
-    pEngine->lock(); 
     m_time = pEngine->getTime();
     appendData();
-    pEngine->unlock(); 
 
-    autoscale();
+    autoscale(false);
 }
 
 
@@ -179,12 +182,12 @@ void VACourse::setAutoscale() {
     autoscale();
 }
 
-void VACourse::autoscale() {
+void VACourse::autoscale(bool lock) {
     if (m_manualScaled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = -99999;
     double minimum =  99999;
-    m_engine->lock();
+    if (lock) { m_engine->lock(); }
 
     QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[0]);
     unsigned int xleft = 0;
@@ -205,7 +208,7 @@ void VACourse::autoscale() {
             }
         }
 
-    m_engine->unlock();
+    if (lock) { m_engine->unlock(); }
 
     QRectF rect;
     rect.setTop    (minimum - 0.09 * (maximum-minimum) );

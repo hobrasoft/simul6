@@ -167,9 +167,11 @@ void SimulationProfile::mixChanged(const Engine *engine) {
 
 
 void SimulationProfile::drawGraph(const Engine *engine) {
+    if (!engine->tryLock()) { return; }
     ui->f_detector->drawGraph(engine);
     ui->f_vacourse->drawGraph(engine);
     ui->f_graf->drawGraph(engine);
+    engine->unlock();
 }
 
 

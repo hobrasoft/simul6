@@ -358,6 +358,7 @@ void Engine::setCrosssection(const Crosssection& x) {
 
 
 void Engine::init() {
+    timeDisplay = timeInterval;
 //Calculation of pH
    #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++){
@@ -403,6 +404,7 @@ void Engine::init() {
 
 //Drawing
     emit mixChanged(this);
+    // PDEBUG << "drawGraph";
     emit drawGraph(this);
     emit curDenChanged(curDen);
     emit voltageChanged(voltage);
@@ -856,6 +858,11 @@ void Engine::stop() {
 }
 
 
+bool Engine::tryLock(int msec) const {
+    return m_mutex.tryLock(msec);
+}
+
+
 void Engine::lock() const {
     m_mutex.lock();
 }
@@ -876,7 +883,7 @@ void Engine::run()
         m_detectorCache->appendData(this);
         m_vacourseCache->appendData(this);
         }
-    timeDisplay = timeInterval;
+    // timeDisplay = timeInterval;
     intervalCounter = 0;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
@@ -888,6 +895,7 @@ void Engine::runPrivate() {
         m_detectorCache->appendData(this);
         m_vacourseCache->appendData(this);
         emit timeChanged(t);
+        // PDEBUG << "drawGraph !running || t>timeStop";
         emit drawGraph(this);
         emit finished();
         emit timeElapsed(intervalCounter/1000);
@@ -907,6 +915,7 @@ void Engine::runPrivate() {
 
     if (t >= timeDisplay) {
         // qDebug() << "Engine::runPrivate()" << t;
+        // PDEBUG << "t >= timeDisplay" << t << timeDisplay;
         emit drawGraph(this);
         timeDisplay += timeInterval;
     }

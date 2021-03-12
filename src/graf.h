@@ -65,6 +65,7 @@ private:
     bool m_visibleE;
     bool m_visibleDetector;
     bool m_rescaleEnabled;
+    bool m_drawing;
 
     QValueAxis *m_axis_x;
     QValueAxis *m_axis_y;

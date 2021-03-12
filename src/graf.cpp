@@ -17,6 +17,7 @@
 #include <QFileDialog>
 #include "grafstyle.h"
 #include "manualscale.h"
+#include "drawingflag.h"
 
 #define PH_OFFSET -4
 #define KAPA_OFFSET  -3
@@ -48,6 +49,7 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     m_axis_y = nullptr;
     m_detectorSeries = nullptr;
     m_detectorPosition = 0;
+    m_drawing = false;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Graf::autoscale);
@@ -625,7 +627,8 @@ void Graf::slotFinished() {
 
 void Graf::drawGraph(const Engine *pEngine)
 {
-    pEngine->lock(); 
+    if (m_drawing) { return; }
+    DrawingFlag flag(&m_drawing);
     size_t p = pEngine->getNp(); // points
     const Mix& mix = pEngine->getMix();
     QLineSeries *series;
@@ -710,7 +713,6 @@ void Graf::drawGraph(const Engine *pEngine)
     series->replace(plist);
     id += 1;
 
-    pEngine->unlock(); 
 }
 
 

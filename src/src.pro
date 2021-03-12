@@ -162,6 +162,7 @@ HEADERS += \
     crosssectiondialog.h \
     crosssectionmodel.h \
     crosssection.h \
+    drawingflag.h \
 
 FORMS += \
     simul6.ui \

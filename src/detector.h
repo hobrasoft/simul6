@@ -36,7 +36,7 @@ public slots:
     void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
     void setScale(const QRectF& rect);
     void manualScale();
-    void autoscale();
+    void autoscale(bool lock = true);
     void setAutoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
     void setDetectorPosition(double) Q_DECL_OVERRIDE;
@@ -85,6 +85,7 @@ private:
     bool m_isVisible;
     bool m_active;
     bool m_manualScaled;
+    bool m_drawing;
     int  m_rescaleId;
 
     double m_time;

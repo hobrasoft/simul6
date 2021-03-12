@@ -16,6 +16,8 @@
 #include "grafstyle.h"
 #include "manualscale.h"
 #include "printiming.h"
+#include "drawingflag.h"
+#include <QSignalBlocker>
 
 #define PH_OFFSET 0
 #define KAPA_OFFSET 1
@@ -44,6 +46,7 @@ Detector::Detector(QWidget *parent) : GrafAbstract(parent)
     m_active = false; 
     m_initialized = false;
     m_manualScaled = false;
+    m_drawing = false;
 
     m_actionRescale = new QAction(tr("Auto scale"), this);
     connect(m_actionRescale, &QAction::triggered, this, &Detector::setAutoscale);
@@ -196,15 +199,17 @@ void Detector::appendData() {
         int id = 0;
 
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        QSignalBlocker blocker(series);
         series->append(data1[id]);
         id += 1;
         
-        series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->append(data1[id]);
-        id += 1;
+        // series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
+        // series->append(data1[id]);
+        // id += 1;
 
         for (; id < data1.size(); id++) {
             if (id >= m_chart->series().size()) { break; }
+            QSignalBlocker blocker(series);
             series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
             series->append(data1[id]);
             }
@@ -217,6 +222,8 @@ void Detector::appendData() {
 
 void Detector::drawGraph(const Engine *pEngine)
 {
+    if (m_drawing) { return; }
+    DrawingFlag flag(&m_drawing);
     if (!m_active) { return; }
     if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
@@ -232,7 +239,6 @@ void Detector::drawGraph(const Engine *pEngine)
     series->setVisible(m_isVisible && m_visibleKapa);
     id += 1;
 
-    pEngine->lock(); 
     m_time = pEngine->getTime();
     appendData();
     const Mix& mix = m_engine->getMix();
@@ -242,9 +248,8 @@ void Detector::drawGraph(const Engine *pEngine)
         series->setVisible(m_isVisible && sample.visible());
         id += 1;
         }
-    pEngine->unlock(); 
 
-    autoscale();
+    autoscale(false);
 }
 
 
@@ -253,12 +258,12 @@ void Detector::setAutoscale() {
     autoscale();
 }
 
-void Detector::autoscale() {
+void Detector::autoscale(bool lock) {
     if (m_manualScaled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = -99999;
     double minimum =  99999;
-    m_engine->lock();
+    if (lock) { m_engine->lock(); }
     const Mix& mix  = m_engine->getMix();
 
     QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[0]);
@@ -315,7 +320,7 @@ void Detector::autoscale() {
             }
         id += 1;
         }
-    m_engine->unlock();
+    if (lock) { m_engine->unlock(); }
 
     QRectF rect;
     rect.setTop    (minimum - 0.09 * (maximum-minimum) );
