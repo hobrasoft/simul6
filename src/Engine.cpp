@@ -883,7 +883,7 @@ void Engine::run()
         m_detectorCache->appendData(this);
         m_vacourseCache->appendData(this);
         }
-    // timeDisplay = timeInterval;
+    timeDisplay = timeInterval;   //it is not a bug!
     intervalCounter = 0;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
