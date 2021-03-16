@@ -13,6 +13,7 @@ class Simul6;
 class Engine;
 class Graf;
 class Detector;
+class ReplayDataAbstract;
 
 class Simul6 : public QMainWindow
 {
@@ -29,6 +30,7 @@ public:
     int mixSize() const;
     Graf *graf() const;
     Detector *detector() const;
+    const ReplayDataAbstract *replayData() const;
 
     double getCaplen() const;
 

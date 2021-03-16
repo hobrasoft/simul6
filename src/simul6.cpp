@@ -14,6 +14,7 @@
 #include "about.h"
 #include "localurl.h"
 #include "detector.h"
+#include "replaydataabstract.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QDir>
@@ -100,6 +101,11 @@ void Simul6::init() {
     setVisible(true);
     ui->f_dock_replay->setVisible(false);
     ui->f_replay->clear();
+}
+
+
+const ReplayDataAbstract *Simul6::replayData() const {
+    return ui->f_replay->replayData();
 }
 
 

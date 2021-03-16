@@ -28,6 +28,8 @@ class Replay : public QWidget {
     void clear();
     void setEngine(Engine *);
 
+    const ReplayDataAbstract *replayData() const { return m_data; }
+
   private slots:
     void toBegin();
     void toEnd();

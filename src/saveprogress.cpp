@@ -9,8 +9,10 @@
 #include "Engine.h"
 #include "messagedialog.h"
 #include "msettings.h"
+#include "replaydataabstract.h"
 #include "json.h"
 #include <QFileDialog>
+#include <QMessageBox>
 #include <math.h>
 
 SaveProgress *SaveProgress::m_instance = nullptr;
@@ -26,7 +28,7 @@ SaveProgressWorker::SaveProgressWorker() : QObject() {
 
 
 void SaveProgressWorker::saveTimeData(const QVariantMap& data) {
-    // PDEBUG << data["time"];
+    PDEBUG << qPrintable(JSON::json(data));
     QMutexLocker locker(&m_mutex);
     m_nothingToSave = false;
 
@@ -145,17 +147,28 @@ void SaveProgress::selectFile() {
 void SaveProgress::activeStateChanged() {
     bool active = ui->f_active->isChecked();
     ui->f_form->setEnabled(!active);
+    PDEBUG;
 
     if (active)  {
         m_active = true;
         m_interval = 1000 * ui->f_interval->value();
+
+        const ReplayDataAbstract *replayData = Simul6::instance()->replayData();
+        if (replayData != nullptr && replayData->size() > 0) {
+            QMessageBox::warning(this,
+                    tr("I have a warning"),
+                    tr("The present record data will not be included"),
+                    QMessageBox::Ok, QMessageBox::NoButton);
+            }
+
         if (m_database != nullptr) {
             m_database->close();
             delete m_database;
             m_database = nullptr;
+            QFile::remove(m_filename);
             }
-        QFile::remove(m_filename);
         m_worker->setFilename(m_filename);
+
         showStepsForm();
         return;
         }
