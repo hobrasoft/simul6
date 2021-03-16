@@ -12,6 +12,7 @@ class GrafMju : public Graf {
 
   public slots:
     double value(const Sample& sample, int i, double kapa) Q_DECL_OVERRIDE;
+    QString valueUnit() const Q_DECL_OVERRIDE;
 };
 
 #endif // GRAFMJU_H

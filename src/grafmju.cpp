@@ -13,3 +13,7 @@ double GrafMju::value(const Sample& sample, int i, double kapa) {
     return mjuoverkapa * 1e7;
 }
 
+QString GrafMju::valueUnit() const {
+    return QStringLiteral("");
+}
+

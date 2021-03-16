@@ -632,6 +632,10 @@ double Graf::value(const Sample& sample, int i, double kapa) {
 }
 
 
+QString Graf::valueUnit() const {
+    return QStringLiteral("mM");
+}
+
 void Graf::drawGraph(const Engine *pEngine)
 {
     if (m_drawing) { return; }
@@ -755,7 +759,7 @@ void Graf::seriesClicked(const QPointF& point) {
             }
         m_engine->unlock();
         // PDEBUG << s2->name() << s2->internalId();
-        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
+        GrafDetail *d = new GrafDetail(this, s2->name(), valueUnit(), x, minimumy, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);

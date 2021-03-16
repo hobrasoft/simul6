@@ -57,6 +57,7 @@ protected slots:
 
 protected:
     virtual double value(const Sample& sample, int i, double kapa);
+    virtual QString valueUnit() const;
 
 
     QChart *m_chart;
