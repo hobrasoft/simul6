@@ -41,7 +41,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="documentMode">
       <bool>false</bool>
@@ -71,6 +71,16 @@
        </property>
        <item row="0" column="0">
         <widget class="Graf" name="f_graf" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>µ / κ</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="GrafMju" name="f_grafmju" native="true"/>
        </item>
       </layout>
      </widget>
@@ -130,6 +140,12 @@
    <class>VACourse</class>
    <extends>QWidget</extends>
    <header>vacourse.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GrafMju</class>
+   <extends>QWidget</extends>
+   <header>grafmju.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

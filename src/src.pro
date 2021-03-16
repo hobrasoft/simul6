@@ -78,6 +78,7 @@ SOURCES += \
     graf.cpp \
     grafabstract.cpp \
     grafdetail.cpp \
+    grafmju.cpp \
     detector.cpp \
     detectorcache.cpp \
     vacourse.cpp \
@@ -123,6 +124,7 @@ HEADERS += \
     graf.h \
     grafabstract.h \
     grafdetail.h \
+    grafmju.h \
     detector.h \
     detectorcache.h \
     vacourse.h \

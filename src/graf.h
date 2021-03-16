@@ -27,6 +27,7 @@ signals:
 public slots:
     void drawGraph(const Engine *pEngine);
     void init(const Engine *pEngine);
+    void autoscale();
     void setVisible(int id, bool visible);
     void setVisiblePh(bool visible);
     void setVisibleKapa(bool visible);
@@ -35,7 +36,6 @@ public slots:
     void setRescaleEnabled(bool rescaleEnabled) { m_rescaleEnabled = rescaleEnabled; }
     void setScale(const QRectF& rect);
     void manualScale();
-    void autoscale();
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
     void setDetectorPosition(double) Q_DECL_OVERRIDE;
     void swap();
@@ -48,13 +48,17 @@ public slots:
     void rescaleKapa() Q_DECL_OVERRIDE;
     void rescale(int internalId) Q_DECL_OVERRIDE;
 
-private slots:
     void seriesClicked(const QPointF&);
+
+protected slots:
     void subselected();
     void setAxisLabels();
     void saveImage();
 
-private:
+protected:
+    virtual double value(const Sample& sample, int i, double kapa);
+
+
     QChart *m_chart;
     static double axisTable(double);
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

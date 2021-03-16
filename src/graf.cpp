@@ -98,7 +98,7 @@ void Graf::init(const Engine *pEngine) {
 
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
-            series->append(QPointF(x * 1000.0, sample.getA(0, i)));
+            series->append(QPointF(x * 1000.0, value(sample, i, kapa[i]))); // sample.getA(0, i)));
             x += inc_x;
             }
         id += 1;
@@ -185,8 +185,8 @@ void Graf::swap() {
 void Graf::autoscale() {
     // PDEBUG;
     if (m_engine == nullptr) { return; }
-    double maximum = 0;
-    double minimum = 9999999;
+    double maximum = -9999999;
+    double minimum =  9999999;
     m_engine->lock();
     size_t p        = m_engine->getNp();
     auto hpl        = m_engine->getHpl();
@@ -208,11 +208,12 @@ void Graf::autoscale() {
         if (!sample.visible()) { continue; }
         if (m_rescaleIndividually && sample.getInternalId() != m_rescaleId) { continue; }
         for (unsigned int i = xleft; i <= xright; i++){
-            if (sample.getA(0, i) > maximum)  {
-                maximum = sample.getA(0,i);
+            double val = value(sample, i, kapa[i]);
+            if (val > maximum)  {
+                maximum = val;
                 }
-            if (sample.getA(0, i) < minimum)  {
-                minimum = sample.getA(0,i);
+            if (val < minimum)  {
+                minimum = val;
                 }
             }
         }
@@ -625,6 +626,12 @@ void Graf::slotFinished() {
 }
 
 
+double Graf::value(const Sample& sample, int i, double kapa) {
+    Q_UNUSED(kapa);
+    return sample.getA(0, i);
+}
+
+
 void Graf::drawGraph(const Engine *pEngine)
 {
     if (m_drawing) { return; }
@@ -645,7 +652,7 @@ void Graf::drawGraph(const Engine *pEngine)
         QList<double> vlist;
         QVector<QPointF> plist;
         for (unsigned int i = 0; i <= p; i++){
-            plist << QPointF(x * 1000.0, sample.getA(0, i));
+            plist << QPointF(x * 1000.0, value(sample, i, kapa[i]));
             vlist << x;
             x += inc_x;
             }
@@ -739,7 +746,7 @@ void Graf::seriesClicked(const QPointF& point) {
         double minimumd = 1e99;
         double minimumy = 1e99;
         for (auto &sample : mix.getSamples()) {
-            double sample_y = sample.getA(0, node);
+            double sample_y = value(sample, node, kapa[node]); // sample.getA(0, node);
             double distance = fabs(y - sample_y);
             if (distance < minimumd) {
                 minimumd = distance;
