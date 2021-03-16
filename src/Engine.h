@@ -192,7 +192,7 @@ public slots:
     void run();
     void stop();
     void lock() const;
-    bool tryLock(int msec=200) const;
+    bool tryLock(int msec=5000) const;
     void unlock() const;
     void setVisible(int id, bool visible);
 
