@@ -162,7 +162,7 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
     const SegmentedConstituent& firstConstituent = pconstituents[0];
     int ratioSum = firstConstituent.ratioSum();
 
-    // Vynuluje swap segment
+    // Zeroes swap segment
     for (auto &sample : mix.getSamples()) {
         int segmentBegin = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[0].ratio)) - bw/2;
         int segmentEnd   = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[1].ratio)) + segmentBegin;
@@ -176,16 +176,17 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
             };
 
         // last segment must have length + 1
-        if (segmentEnd >= np - 5) {
+        if (segmentEnd + bw/2 >= np - 5) {
             segmentEnd = np + 1;
             }
+        // create left edge of the swap
         for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
             if (i<0) { continue; }
             sample.setA(0, i, smooth(previousA, currentA, segmentBegin, i) );
             }
 
         segmentBegin = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[0].ratio));
-        segmentBegin = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[1].ratio)) + segmentBegin;
+        segmentBegin = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[1].ratio)) + segmentBegin - bw/2;
         segmentEnd   = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[2].ratio)) + segmentBegin;
         previousA = 0;
         currentA  = sample.getA(0, segmentBegin);
