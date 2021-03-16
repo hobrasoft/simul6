@@ -660,10 +660,13 @@ void Engine::der()
 #pragma omp parallel for schedule(static)
     for (int i = 1; i <= np - 1; i++) {
         for (auto &s : mix.getSamples()) {
-            s.setD(0, i, (-s.getPd(i - 1)*cross[i - 1] + s.getPd(i + 1)*cross[i + 1]) / 2 / dx / cross[i]);
-            s.addD(0, i, (s.getA(0, i - 1) * s.getDif(i) -2 * s.getA(0, i) * s.getDif(i) + s.getA(0, i + 1) * s.getDif(i)) / dx / dx);
+            s.setD(0, i, (-s.getPd(i - 1)*cross[i - 1] + s.getPd(i + 1)*cross[i + 1]) /2.0 /dx /cross[i]);
+            s.addD(0, i, ((s.getA(0, i - 1) - 2 * s.getA(0, i) + s.getA(0, i + 1)) /dx /dx
+                   + (-s.getA(0, i - 1) + s.getA(0, i + 1)) * (-cross[i - 1] + cross[i + 1])/4.0 /dx /dx /cross[i]) * s.getDif(i));
         }
     }
+
+
 for (auto &s : mix.getSamples()) {
          s.setD(0, 0, s.getD(0, 1));
          s.setD(0, np, s.getD(0, np - 1));
@@ -883,7 +886,7 @@ void Engine::run()
         m_detectorCache->appendData(this);
         m_vacourseCache->appendData(this);
         }
-    // timeDisplay = timeInterval;
+    //timeDisplay = timeInterval;   it is a bug!
     intervalCounter = 0;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
