@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QSortFilterProxyModel>
 #include <QColor>
-#include <QKeyEvent>
 #include "segmentsmodel.h"
 #include "constituentsmodel.h"
 #include "segmentedconstituent.h"
@@ -46,7 +45,6 @@ private:
     SegmentsModel *m_segmentsModel;
     ConstituentsModel *m_constituentsModel;
     QSortFilterProxyModel *m_constituentsProxyModel;
-    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 };
 
 #endif // CONSTITUENTSDIALOG_H
