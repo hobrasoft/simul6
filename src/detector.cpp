@@ -93,14 +93,13 @@ void Detector::init(const Engine *pEngine) {
     m_engine = QPointer<const Engine>(pEngine);
     pEngine->lock();
     const Mix& mix = m_engine->getMix();
-    double time = pEngine->getTime();
+    m_time = pEngine->getTime();
     int detector_position = pEngine->getNp() * m_detectorPosition / (pEngine->getCapLen() * 1000.0);
 
     series = new PhSeries(this);
     connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
     auto hpl = pEngine->getHpl();
     double pH = (hpl[detector_position] > 0) ? (-log(hpl[detector_position]) / log(10)) : 0;
-    series->append(QPointF(m_time, pH));
     series->setVisible(m_isVisible && m_visiblePh);
     m_chart->addSeries(series);
 
@@ -108,7 +107,6 @@ void Detector::init(const Engine *pEngine) {
     connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
     auto kapal = pEngine->getKapa();
     double kapa = kapal[detector_position] * 100.0;
-    series->append(QPointF(m_time, kapa));
     series->setVisible(m_isVisible && m_visibleKapa);
     m_chart->addSeries(series);
 
@@ -117,7 +115,6 @@ void Detector::init(const Engine *pEngine) {
     for (auto &sample : mix.getSamples()) {
         series = new ConstituentSeries(sample, this);
         connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
-        series->append(QPointF(time, sample.getA(0, detector_position)));
         m_chart->addSeries(series);
         }
 
@@ -132,9 +129,7 @@ void Detector::swap() {
     m_engine->lock();
     Mix& mix = const_cast<Mix&>(m_engine->getMix());
     unsigned int count = m_chart->series().count();
-    PDEBUG << m_engine << "pocet serii" << count << "mix.size" << mix.size();
     if (mix.size()+2 == count) {
-        PDEBUG << "neni co pridat";
         m_engine->unlock();
         return;
         }
@@ -151,7 +146,6 @@ void Detector::swap() {
             }
         connect(series, &ConstituentSeries::clicked, this, &Detector::seriesClicked);
         m_chart->addSeries(series);
-        PDEBUG << i << sample.getName();
         }
 
     m_engine->unlock();
@@ -189,6 +183,8 @@ void Detector::appendData() {
     QList<QAbstractSeries*> list = m_chart->series();
     if (list.isEmpty()) { return; }
 
+    QSignalBlocker blocker_ch(m_chart);
+
     QLineSeries *series;
 
     QList<QList<QPointF> > data = m_detectorCache->data();
@@ -225,27 +221,25 @@ void Detector::drawGraph(const Engine *pEngine)
     if (m_drawing) { return; }
     DrawingFlag flag(&m_drawing);
     if (!m_active) { return; }
-    if (!m_isVisible) { return; }
+//  if (!m_isVisible) { return; }
     if (m_chart->series().isEmpty()) { return; }
     if (m_engine == nullptr) { return; }
     QLineSeries *series;
-    int id = 0;
 
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    series->setVisible(m_isVisible && m_visiblePh);
-    id += 1;
+    series = qobject_cast<QLineSeries *>(m_chart->series()[PH_OFFSET]);
+    series->setVisible(m_visiblePh);
 
-    series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-    series->setVisible(m_isVisible && m_visibleKapa);
-    id += 1;
+    series = qobject_cast<QLineSeries *>(m_chart->series()[KAPA_OFFSET]);
+    series->setVisible(m_visibleKapa);
 
     m_time = pEngine->getTime();
     appendData();
     const Mix& mix = m_engine->getMix();
+    int id = 2;
     for (auto &sample : mix.getSamples()) {
         if (id >= m_chart->series().size()) { break; }
         series = qobject_cast<QLineSeries *>(m_chart->series()[id]);
-        series->setVisible(m_isVisible && sample.visible());
+        series->setVisible(sample.visible());
         id += 1;
         }
 
@@ -705,7 +699,6 @@ void Detector::seriesClicked(const QPointF& point) {
 
 
 void Detector::saveCSV() {
-    PDEBUG;
     QString dirname = MSETTINGS->exportDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save detector data"), dirname, tr("Csv format (*.csv)")).trimmed();
     if (filename.isEmpty()) { return; }
