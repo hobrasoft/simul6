@@ -352,7 +352,7 @@ void SaveProgress::saveCsv(double time, SaveMode saveMode) {
                 mjuoverkapa = mjuoverkapa + sample.getA(j, i) * sample.getU(j, i) * j / abs(j); // (j>0) ? 1 : (j<0) ? -1 : 0;
                 }
             if (sample.getA(0, i) > 0.001) mjuoverkapa = mjuoverkapa / sample.getA(0, i) / kapa; else mjuoverkapa = 0;
-            line << QString("%1").arg(mjuoverkapa * 1e7);
+            line << QString("%1").arg(mjuoverkapa * 1e9);
             }
         file.write(line.join(" ").toUtf8());
         file.write("\n");
