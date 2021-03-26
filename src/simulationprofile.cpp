@@ -68,7 +68,7 @@ Detector *SimulationProfile::detector() const {
 void SimulationProfile::enableDetector(bool x) {
     ui->f_detector->setActive(x);
     ui->f_detector->drawGraph(m_engine);
-    ui->f_tabwidget->tabBar()->setTabEnabled(2,x);
+    ui->f_tabwidget->tabBar()->setTabEnabled(3,x);
     if (!x) {
         if (ui->f_tabwidget->currentWidget() != ui->page_detector) { return; }
         ui->f_tabwidget->setCurrentWidget(ui->page_graf);

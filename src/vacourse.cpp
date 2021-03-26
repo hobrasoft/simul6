@@ -532,10 +532,10 @@ void VACourse::saveCSV() {
 
     for (int i=1; i<count; i++) {
         QStringList line;
-        line << QString::number(firstSeries->at(i).x());
+        line << QString::number(firstSeries->at(i).x(), 'g', 9);
         for (int s=0; s<m_chart->series().size(); s++) {
             QLineSeries *series = qobject_cast<QLineSeries *>(m_chart->series()[s]);
-            line << QString::number(series->at(i).y());
+            line << QString::number(series->at(i).y(), 'g', 9);
             }
         file.write(line.join(" ").toUtf8());
         file.write("\n");
