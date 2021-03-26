@@ -327,6 +327,9 @@ void SaveProgress::saveCsv(double time, SaveMode saveMode) {
     for (auto &sample : engine->getMix().getSamples()) {
         header << "\""+sample.getName()+"\"";
         }
+    for (auto &sample : engine->getMix().getSamples()) {
+        header << "\""+sample.getName()+"-mjukapa\"";
+        }
     file.write(header.join(" ").toUtf8());
     file.write("\n");
 
@@ -343,8 +346,14 @@ void SaveProgress::saveCsv(double time, SaveMode saveMode) {
         line << QString("%1").arg(pH);
         line << QString("%1").arg(cond);
         line << QString("%1").arg(efield);
+
         for (unsigned int c = 0; c<constituentsCount; c++) {
-            const Sample sample = engine->getMix().getSample(c);
+            const Sample& sample = engine->getMix().getSample(c);
+            line << QString("%1").arg(sample.getA(0, i));
+            }
+
+        for (unsigned int c = 0; c<constituentsCount; c++) {
+            const Sample& sample = engine->getMix().getSample(c);
             double mjuoverkapa = 0;
             double kapa = engine->getKapa()[i];
             for (int j = sample.getNegCharge(); j <= sample.getPosCharge(); j++) {
@@ -354,6 +363,7 @@ void SaveProgress::saveCsv(double time, SaveMode saveMode) {
             if (sample.getA(0, i) > 0.001) mjuoverkapa = mjuoverkapa / sample.getA(0, i) / kapa; else mjuoverkapa = 0;
             line << QString("%1").arg(mjuoverkapa * 1e9);
             }
+
         file.write(line.join(" ").toUtf8());
         file.write("\n");
         }
