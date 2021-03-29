@@ -166,6 +166,7 @@ public:
 	void initArrays();
     void initVectors();
     void init();
+    void reinit();
 
     bool m_initialized;
     bool m_running;
