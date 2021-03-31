@@ -1,5 +1,3 @@
-See [simul6.app](https://www.simul6.app) for an overview.
-
 About Simul
 ======================
 
@@ -43,6 +41,10 @@ qmake
 make -j
 ```
 
+Download
+========
+Windows binaries and documentation can be downloaded from here:
+https://www.simul6.app
 
 
 
