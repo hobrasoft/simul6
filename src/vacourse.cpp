@@ -138,6 +138,7 @@ void VACourse::appendData() {
     QList<QPointF> current = m_detectorCache->A();
     m_detectorCache->clear();
 
+    if (voltage.size() < 10 || current.size() < 10) { return; }
 
     VoltageSeries *vseries = qobject_cast<VoltageSeries *>(m_chart->series()[V_OFFSET]);
     QSignalBlocker vblock(vseries);
