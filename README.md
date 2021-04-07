@@ -41,6 +41,17 @@ qmake
 make -j
 ```
 
+macOS:
+
+The Apple-provided Clang compiler does not support OpenMP, so you must install a new version of LLVM (includes the Clang compiler) and the OpenMP
+libraries. If you use [Homebrew](https://brew.sh), this can be done by running the command:
+
+```
+brew install llvm libomp
+```
+
+The project can then be compiled with Qt after changing the configuration to use the Clang compiler included in the downloaded LLVM package.
+
 Download
 ========
 Windows binaries and documentation can be downloaded from here:
