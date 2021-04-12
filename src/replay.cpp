@@ -124,6 +124,7 @@ void Replay::nextStep() {
         m_actionPlay->setIcon(QIcon("://icons/play.svg"));
         }
     ui->f_slider->setValue(m_step); // invokes setStep
+    emit newStep();
 }
 
 

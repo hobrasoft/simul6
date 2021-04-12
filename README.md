@@ -54,7 +54,7 @@ The project can then be compiled with Qt after changing the configuration to use
 
 Download
 ========
-Windows binaries and documentation can be downloaded from here:
+Windows and MacOS binaries and documentation can be downloaded from here:
 https://www.simul6.app
 
 

@@ -159,6 +159,15 @@ void SaveProgress::activeStateChanged() {
                     tr("I have a warning"),
                     tr("The present record data will not be included"),
                     QMessageBox::Ok, QMessageBox::NoButton);
+            const Engine *engine = m_simul6->engine();
+            if (engine == nullptr) { return; }
+            engine->lock();
+            double time = engine->getTime();
+            PDEBUG << time;
+            engine->unlock();
+            m_savedTime = (quint64)(time*1000.0);
+            m_savedTimeReal = time;
+            QFile::remove(m_filename);
             }
 
         if (m_database != nullptr) {
@@ -198,9 +207,15 @@ SaveProgress *SaveProgress::instance() {
 
 
 void SaveProgress::init() {
+    const Engine *engine = m_simul6->engine();
+    if (engine == nullptr) { return; }
+    engine->lock();
+    double time = engine->getTime();
+    // PDEBUG << time;
+    engine->unlock();
+    m_savedTime = time;
+    m_savedTimeReal = time;
     m_savedSteps = 0;
-    m_savedTime = 0;
-    m_savedTimeReal = 0;
     m_active = false;
     m_worker->setHeaderData(m_simul6->data());
     showStepsForm();
