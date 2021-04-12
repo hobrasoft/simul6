@@ -28,7 +28,7 @@ SaveProgressWorker::SaveProgressWorker() : QObject() {
 
 
 void SaveProgressWorker::saveTimeData(const QVariantMap& data) {
-    PDEBUG << qPrintable(JSON::json(data));
+    // PDEBUG << qPrintable(JSON::json(data));
     QMutexLocker locker(&m_mutex);
     m_nothingToSave = false;
 
@@ -147,7 +147,7 @@ void SaveProgress::selectFile() {
 void SaveProgress::activeStateChanged() {
     bool active = ui->f_active->isChecked();
     ui->f_form->setEnabled(!active);
-    PDEBUG;
+    // PDEBUG;
 
     if (active)  {
         m_active = true;
@@ -159,23 +159,36 @@ void SaveProgress::activeStateChanged() {
                     tr("I have a warning"),
                     tr("The present record data will not be included"),
                     QMessageBox::Ok, QMessageBox::NoButton);
+
+            if (m_database != nullptr) {
+                m_database->close();
+                delete m_database;
+                m_database = nullptr;
+                QFile::remove(m_filename);
+                }
+
             const Engine *engine = m_simul6->engine();
             if (engine == nullptr) { return; }
             engine->lock();
             double time = engine->getTime();
-            PDEBUG << time;
             engine->unlock();
-            m_savedTime = (quint64)(time*1000.0);
-            m_savedTimeReal = time;
+            if (time > 0) {
+                m_savedTime = (quint64)(time*1000.0);
+                m_savedTimeReal = time;
+                m_savedSteps = 1;
+                // PDEBUG << time;
+                saveTimeStep(time);
+              } else {
+                init();
+                QFile::remove(m_filename);
+                m_active = true;
+                }
+          } else {
+            init();
             QFile::remove(m_filename);
+            m_active = true;
             }
 
-        if (m_database != nullptr) {
-            m_database->close();
-            delete m_database;
-            m_database = nullptr;
-            QFile::remove(m_filename);
-            }
         m_worker->setFilename(m_filename);
 
         showStepsForm();
@@ -207,14 +220,14 @@ SaveProgress *SaveProgress::instance() {
 
 
 void SaveProgress::init() {
-    const Engine *engine = m_simul6->engine();
-    if (engine == nullptr) { return; }
-    engine->lock();
-    double time = engine->getTime();
-    // PDEBUG << time;
-    engine->unlock();
-    m_savedTime = time;
-    m_savedTimeReal = time;
+    // PDEBUG;
+    if (m_database != nullptr) {
+        m_database->close();
+        delete m_database;
+        }
+    m_database = nullptr;
+    m_savedTime = 0;
+    m_savedTimeReal = 0;
     m_savedSteps = 0;
     m_active = false;
     m_worker->setHeaderData(m_simul6->data());
@@ -228,10 +241,22 @@ void SaveProgress::slotFinished() {
 
 
 void SaveProgress::slotTimeChanged(double time) {
+    // PDEBUG << m_savedTime << time << m_interval << m_active;
     if (!m_active) { return; }
     if (time > 0 && m_savedTime + m_interval > round(1000.0 * time)) {
         return; 
         }
+    saveTimeStep(time);
+    m_savedTimeReal = time;
+    m_savedSteps += 1;
+    if (time > 0) {
+        m_savedTime += m_interval;
+        }
+    showStepsForm();
+}
+
+
+void SaveProgress::saveTimeStep(double time) {
     // PDEBUG << m_savedTime << m_interval << (m_savedTime+m_interval) << time*1000.0 << (time > 0 && m_savedTime + m_interval > round(time*1000.0));
 
     if (m_format == Json) {
@@ -244,14 +269,6 @@ void SaveProgress::slotTimeChanged(double time) {
         saveSqlite(time);
         }
 
-    if (time > 0) {
-        m_savedTime += m_interval;
-        }
-
-    m_savedTimeReal = time;
-    m_savedSteps += 1;
-
-    showStepsForm();
 }
 
 
@@ -296,8 +313,14 @@ void SaveProgress::saveSqlite(double time) {
         m_database->save(m_simul6->data());
         }
 
-    if (m_database == nullptr) { return; }
-    if (!m_database->isOpen()) { return; }
+    if (m_database == nullptr) { 
+        PDEBUG << "m_database == nullptr !!";
+        return; 
+        }
+    if (!m_database->isOpen()) { 
+        PDEBUG << "m_database->isOpen() == false !!";
+        return; 
+        }
 
     const Engine *engine = m_simul6->engine();
     engine->lock();
@@ -316,6 +339,7 @@ void SaveProgress::saveSqlite(double time) {
         }
     
     engine->unlock();
+    // PDEBUG << "saved";
 }
 
 

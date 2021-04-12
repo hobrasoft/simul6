@@ -86,6 +86,7 @@ class SaveProgress : public QWidget {
     QThread m_workerThread;
     SaveProgressWorker *m_worker;
 
+    void saveTimeStep(double time);
     void saveJson(double time);
     void saveCsv(double time, SaveMode saveMode = Normal);
     void saveSqlite(double time);
