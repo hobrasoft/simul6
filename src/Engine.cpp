@@ -881,6 +881,12 @@ void Engine::unlock() const {
 }
 
 
+void Engine::setTimeInterval(double pTimeInterval) { 
+    timeInterval = (pTimeInterval <= 0) ? 1 : pTimeInterval; 
+    timeDisplay = floor(timeDisplay / timeInterval) * timeInterval;
+}
+
+
 void Engine::run()
 {
     // PDEBUG;
