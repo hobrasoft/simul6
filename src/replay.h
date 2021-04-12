@@ -30,9 +30,6 @@ class Replay : public QWidget {
 
     const ReplayDataAbstract *replayData() const { return m_data; }
 
-  signals:
-    void newStep();
-
   private slots:
     void toBegin();
     void toEnd();

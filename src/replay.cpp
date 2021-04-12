@@ -102,6 +102,7 @@ void Replay::initReplay() {
     ui->f_step_number->setText("0");
     ui->f_size->setText(QString("%1").arg(m_data->size()-1));
     m_actionPlay->setIcon(QIcon("://icons/play.svg"));
+    setStep(m_step);
 }
 
 
@@ -124,7 +125,6 @@ void Replay::nextStep() {
         m_actionPlay->setIcon(QIcon("://icons/play.svg"));
         }
     ui->f_slider->setValue(m_step); // invokes setStep
-    emit newStep();
 }
 
 
