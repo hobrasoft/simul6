@@ -136,7 +136,7 @@ public:
     void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
     double getCapLen() const { return capLen; }
     void setTimeStop(double pTimeStop) { timeStop = pTimeStop; }
-    void setTimeInterval(double pTimeInterval) { timeInterval = pTimeInterval; }
+    void setTimeInterval(double pTimeInterval);
     void setErrMax(double pErrMax) { errMax = pErrMax; }
     void setErrH(double pErrH) { errH = pErrH; errL = errH / 10.0; }
     void setOptimizeDt(bool x) { m_optimizeDt = x; }
@@ -166,6 +166,7 @@ public:
 	void initArrays();
     void initVectors();
     void init();
+    void reinit();
 
     bool m_initialized;
     bool m_running;

@@ -210,7 +210,7 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
             }
         }
 
-    init();
+    reinit();
 
 }
 
@@ -357,9 +357,13 @@ void Engine::setCrosssection(const Crosssection& x) {
 
 }
 
-
 void Engine::init() {
     timeDisplay = timeInterval;
+    reinit();
+}
+
+
+void Engine::reinit() {
 //Calculation of pH
    #pragma omp parallel for schedule(static)
     for (int i = 0; i <= np; i++){
@@ -459,7 +463,7 @@ void Engine::setStep(const QVariantMap& data) {
             }
         }
 
-    init();
+    reinit();
     emit timeChanged(t);
     m_detectorCache->appendData(this);
     m_vacourseCache->appendData(this);
@@ -874,6 +878,12 @@ void Engine::lock() const {
 
 void Engine::unlock() const {
     m_mutex.unlock();
+}
+
+
+void Engine::setTimeInterval(double pTimeInterval) { 
+    timeInterval = (pTimeInterval <= 0) ? 1 : pTimeInterval; 
+    timeDisplay = floor(timeDisplay / timeInterval) * timeInterval;
 }
 
 
