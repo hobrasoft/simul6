@@ -345,7 +345,7 @@ void SaveProgress::saveSqlite(double time) {
 
 void SaveProgress::saveCsv(double time, SaveMode saveMode) {
     QString filename = m_filename;
-    QString timestamp = QString("%1").arg(time, 6, 'f', 2, QChar('0'));
+    QString timestamp = QString("%1").arg(time, 10, 'f', 2, QChar('0'));
     if (saveMode == Swapped) { timestamp += "-swap"; }
     filename = filename.replace(QRegExp("\\.csv$", Qt::CaseInsensitive), timestamp+".csv");
     QFile file(filename);
