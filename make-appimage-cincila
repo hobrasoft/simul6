@@ -1,20 +1,22 @@
 #!/bin/bash
 
+HOST=ubuntu18.cincila.hobrasoft.cz
 
-ssh root@localhost virsh start ubuntu18.hobrasoft.cz
+ssh root@localhost virsh start $HOST
 while true
     do
-    ping6 -c3 ubuntu18.cincila.hobrasoft.cz
+    ping6 -c3 $HOST
     if [ $? -eq 0 ]; then break; fi
     done
 sleep 5
 
-ssh ubuntu18.cincila.hobrasoft.cz bash -c "\
+ssh $HOST bash -c "\
     rm -fr Simul6b; \
     git clone -b master ssh://git@dev.hobrasoft.cz/source/Simul6b.git; \
     cd Simul6b; \
     ./make-appimage; \
     "
-scp ubuntu18.cincila.hobrasoft.cz:Simul6b/Simul6-*-x86_64.AppImage ~/Mezisklad
+scp $HOST:Simul6b/Simul6-*-x86_64.AppImage ~/Mezisklad
 
+ssh root@localhost virsh shutdown $HOST
 
