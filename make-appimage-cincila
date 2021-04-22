@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+ssh root@localhost virsh start ubuntu18.hobrasoft.cz
+while true
+    do
+    ping6 -c3 ubuntu18.cincila.hobrasoft.cz
+    if [ $? -eq 0 ]; then break; fi
+    done
+sleep 5
+
+ssh ubuntu18.cincila.hobrasoft.cz bash -c "\
+    rm -fr Simul6b; \
+    git clone -b master ssh://git@dev.hobrasoft.cz/source/Simul6b.git; \
+    cd Simul6b; \
+    ./make-appimage; \
+    "
+scp ubuntu18.cincila.hobrasoft.cz:Simul6b/Simul6-*-x86_64.AppImage ~/Mezisklad
+
+
