@@ -97,6 +97,8 @@ SaveProgress::~SaveProgress() {
 SaveProgress::SaveProgress(QWidget *parent) : QWidget (parent), ui(new Ui::SaveProgress) {
     ui->setupUi(this);
     m_instance = this;
+    m_truncateVA = false;
+    m_active = false;
     m_database = nullptr;
     m_simul6 = Simul6::instance();
     m_format = Csv;
@@ -151,6 +153,7 @@ void SaveProgress::activeStateChanged() {
 
     if (active)  {
         m_active = true;
+        m_truncateVA = true;
         m_interval = 1000 * ui->f_interval->value();
 
         const ReplayDataAbstract *replayData = Simul6::instance()->replayData();
@@ -408,7 +411,43 @@ void SaveProgress::saveCsv(double time, SaveMode saveMode) {
         }
     
     file.close();
+
     engine->unlock();
+}
+
+
+void SaveProgress::saveVA(double time, double voltage, double amperage) {
+    if (!m_active) { return; }
+    QString filename = m_filename;
+    QString timestamp = QString("%1").arg(time, 10, 'f', 2, QChar('0'));
+    filename = filename.replace(QRegExp("\\.csv$", Qt::CaseInsensitive), ".va.csv");
+
+    QFileInfo fileinfo(filename);
+    bool createHeader = (!fileinfo.exists() || fileinfo.size() <= 0 || m_truncateVA);
+
+    QFile file(filename);
+
+    if (createHeader) {
+        if (!file.open(QIODevice::WriteOnly)) { return; }
+        QStringList header;
+        header << "\"time\"";
+        header << "\"v\"";
+        header << "\"a\"";
+        file.write(header.join(" ").toUtf8());
+        file.write("\n");
+        m_truncateVA = false;
+      } else {
+        if (!file.open(QIODevice::Append)) { return; }
+        }
+
+    QStringList line;
+    line << QString("%1").arg(time);
+    line << QString("%1").arg(voltage);
+    line << QString("%1").arg(amperage);
+    file.write(line.join(" ").toUtf8());
+    file.write("\n");
+
+    file.close();
 }
 
 
