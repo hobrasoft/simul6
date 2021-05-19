@@ -66,7 +66,7 @@ QWidget *SegmentsDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
                 }
             QDoubleSpinBox *editor = new QDoubleSpinBox(parent);
             editor->setFrame(false);
-            editor->setMinimum(-5);
+            editor->setMinimum(-6);
             editor->setMaximum(+20);
             editor->setDecimals(3);
             return editor;
