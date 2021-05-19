@@ -63,8 +63,8 @@ const double Engine:: C63 = 575.0/13824.0;
 const double Engine:: C64 = 44275.0/110592.0;
 const double Engine:: C65 = 253.0/4096.0;
 
-const double Engine::uHpl = 363e-9;
-const double Engine::uOHmin = 205e-9;
+const double Engine::uHpl = 362.5e-9;
+const double Engine::uOHmin = 205.5e-9;
 const double Engine::difHpl = Engine::uHpl * Engine::r * Engine::te/ Engine::farc;
 const double Engine::difOHmin = Engine::uOHmin * Engine::r * Engine::te / Engine::farc;
 const double Engine::pKw = 14;
