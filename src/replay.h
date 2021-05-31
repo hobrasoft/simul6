@@ -29,6 +29,7 @@ class Replay : public QWidget {
     void setEngine(Engine *);
 
     const ReplayDataAbstract *replayData() const { return m_data; }
+    const QHash<int, QVariant>& mixData() const { return m_mixData; }
 
   private slots:
     void toBegin();

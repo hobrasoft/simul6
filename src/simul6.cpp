@@ -14,6 +14,7 @@
 #include "about.h"
 #include "localurl.h"
 #include "detector.h"
+#include "exportprogresscsv.h"
 #include "replaydataabstract.h"
 #include <QFileDialog>
 #include <QFileInfo>
@@ -328,8 +329,10 @@ void Simul6::loadData() {
 
     ui->f_replay->clear();
     ui->f_dock_replay->setVisible(false);
+    m_actionExportCsv->setEnabled(false);
 
     if (jsonformat && data.toMap().contains("simulation")) {
+        m_actionExportCsv->setEnabled(true);
         ui->f_dock_replay->setVisible(true);
         ui->f_replay->setEngine(ui->f_simulationProfile->engine());
         ui->f_replay->setData(data.toMap()["simulation"].toList());
@@ -339,6 +342,7 @@ void Simul6::loadData() {
 
     if (sqliteformat && db->containsStepData()) {
         db->close();
+        m_actionExportCsv->setEnabled(true);
         ui->f_dock_replay->setVisible(true);
         ui->f_replay->setEngine(ui->f_simulationProfile->engine());
         ui->f_replay->setData(filename);
@@ -409,6 +413,30 @@ void Simul6::createActions() {
     menu->addAction(action);
     connect(action, &QAction::triggered, [this]() {
         saveData();
+    });
+
+    action = m_actionExportCsv = new QAction(tr("Export CSV data"), this);
+    m_actionExportCsv->setEnabled(false);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, [this]() {
+        ExportProgressCsv *epc = new ExportProgressCsv(this, ui->f_computeControl->getNp());
+        epc->setErrH(ui->f_parameters->getErrH());
+        epc->setCapLen(ui->f_computeControl->getCapLen()/1000.0);
+        epc->setBW(ui->f_computeControl->getBW());
+        epc->setTimeInterval(ui->f_computeControl->getTimeInterval());
+        epc->setTimeStop(ui->f_computeControl->getTimeStop());
+        epc->setDt(ui->f_parameters->getDt());
+        epc->setVoltage(ui->f_parameters->getVoltage());
+        epc->setCurDen(ui->f_parameters->getCurrent());
+        epc->setConstantVoltage(ui->f_parameters->getConstantVoltage());
+        epc->setOptimizeDt(ui->f_parameters->optimizeDt());
+        epc->setMix(mixControlModel()->constituents()); // Nakrmí nový engine směsí
+        epc->setCrosssection(crosssectionModel()->sections());
+        epc->setDetectorActive(ui->f_parameters->detectorActive());
+        epc->setReplayData(ui->f_replay->replayData());
+        epc->setMixData(ui->f_replay->mixData());
+        epc->exec();
+        epc->deleteLater();
     });
 
 
