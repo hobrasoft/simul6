@@ -65,7 +65,6 @@ class SaveProgress : public QWidget {
     bool   active() const { return m_active; }
     double interval() const { return ((double)m_interval)/1000.0; }
     Format format() const { return m_format; }
-    void saveVA(double time, double voltage, double amperage);
 
   signals:
     void timeData(const QVariantMap& data);
@@ -93,7 +92,6 @@ class SaveProgress : public QWidget {
     void saveSqlite(double time);
 
     bool    m_active;
-    bool    m_truncateVA;
     quint64 m_interval;
     quint64 m_savedTime;
     double  m_savedTimeReal;

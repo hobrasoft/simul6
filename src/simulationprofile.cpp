@@ -5,7 +5,6 @@
 #include "simul6.h"
 #include "pdebug.h"
 #include <QTabBar>
-#include "saveprogress.h"
 
 
 SimulationProfile::~SimulationProfile() {
@@ -184,7 +183,6 @@ void SimulationProfile::drawGraph(const Engine *engine) {
     ui->f_vacourse->drawGraph(engine);
     ui->f_graf->drawGraph(engine);
     ui->f_grafmju->drawGraph(engine);
-    SAVEPROGRESS->saveVA(engine->getTime(), engine->voltage, engine->curDen);
     engine->unlock();
 }
 
