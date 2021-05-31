@@ -130,8 +130,11 @@ public:
 	void setT(double pT) { t = pT; }
 	void setDt(double pDt) { dt = pDt; }
 	void setCurDen(double pCurDen) { curDen = pCurDen; }
+	double getCurDen() const { return curDen; }
     void setVoltage(double pVoltage) { voltage = pVoltage; }
+    double getVoltage() const { return voltage; }
     void setConstantVoltage(bool x) { m_constantvoltage = x; }
+    bool getConstantVoltage() const { return m_constantvoltage; }
     bool constantVoltage() const { return m_constantvoltage; }
     void setCapLen(double pCapLen) { capLen = pCapLen; dx = capLen / np; }
     double getCapLen() const { return capLen; }
@@ -142,6 +145,7 @@ public:
     void setOptimizeDt(bool x) { m_optimizeDt = x; }
     void setTimeDisplay(double pTimeDisplay) {timeDisplay = pTimeDisplay; }
     void setBW(int x) { bw = x; }
+    int getBW() const { return bw; }
     bool containsConstituentInternalId(int internalId);
     void setDetectorActive(bool x) { m_detectorActive = x; }
     void setDetectorCache(DetectorCache *x);

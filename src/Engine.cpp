@@ -465,8 +465,8 @@ void Engine::setStep(const QVariantMap& data) {
 
     reinit();
     emit timeChanged(t);
-    m_detectorCache->appendData(this);
-    m_vacourseCache->appendData(this);
+    if (m_detectorCache != nullptr) { m_detectorCache->appendData(this); }
+    if (m_vacourseCache != nullptr) { m_vacourseCache->appendData(this); }
 }
 
 void Engine::gCalc()
@@ -894,8 +894,8 @@ void Engine::run()
     m_running = true;
     if (t == 0) {
         emit timeChanged(t);
-        m_detectorCache->appendData(this);
-        m_vacourseCache->appendData(this);
+        if (m_detectorCache != nullptr) { m_detectorCache->appendData(this); }
+        if (m_vacourseCache != nullptr) { m_vacourseCache->appendData(this); }
         }
     //timeDisplay = timeInterval;   it is a bug!
     intervalCounter = 0;
@@ -906,8 +906,8 @@ void Engine::run()
 void Engine::runPrivate() {
     if (!m_running || t > timeStop) {
         // PDEBUG;
-        m_detectorCache->appendData(this);
-        m_vacourseCache->appendData(this);
+        if (m_detectorCache != nullptr) { m_detectorCache->appendData(this); }
+        if (m_vacourseCache != nullptr) { m_vacourseCache->appendData(this); }
         emit timeChanged(t);
         // PDEBUG << "drawGraph !running || t>timeStop";
         emit drawGraph(this);
@@ -924,8 +924,8 @@ void Engine::runPrivate() {
     }
     unlock();
     emit timeChanged(t);
-    m_detectorCache->appendData(this);
-    m_vacourseCache->appendData(this);
+    if (m_detectorCache != nullptr) { m_detectorCache->appendData(this); }
+    if (m_vacourseCache != nullptr) { m_vacourseCache->appendData(this); }
 
     if (t >= timeDisplay) {
         // qDebug() << "Engine::runPrivate()" << t;

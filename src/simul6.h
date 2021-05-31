@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QAction>
 #include "mixcontrolmodelabstract.h"
 #include "crosssectionmodel.h"
 
@@ -69,6 +70,8 @@ private:
     static Simul6 *m_instance;
     Ui::Simul6 *ui;
     void closeEvent(QCloseEvent *) override;
+
+    QAction *m_actionExportCsv;
 };
 
 #endif // SIMUL6_H

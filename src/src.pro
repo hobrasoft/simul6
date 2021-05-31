@@ -6,7 +6,7 @@
 
 QT += core gui charts
 
-# CONFIG += debug debug_and_release
+CONFIG += debug debug_and_release
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -113,6 +113,7 @@ SOURCES += \
     swapsegmentwidgetchart.cpp \
     crosssectiondialog.cpp \
     crosssectionmodel.cpp \
+    exportprogresscsv.cpp \
 
 HEADERS += \
     simul6.h \
@@ -168,6 +169,7 @@ HEADERS += \
     crosssectionmodel.h \
     crosssection.h \
     drawingflag.h \
+    exportprogresscsv.h \
 
 FORMS += \
     simul6.ui \
@@ -185,6 +187,7 @@ FORMS += \
     manualscale.ui \
     swapsegmentwidget.ui \
     crosssectiondialog.ui \
+    exportprogresscsv.ui \
 
 RESOURCES += \
     simul6.qrc \
