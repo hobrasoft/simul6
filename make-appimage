@@ -19,7 +19,7 @@ chmod +x linuxdeploy*.AppImage
     --appdir AppDir/   \
     -d Simul6.desktop  \
     -i images/appicon.svg  \
-    -e bin/simul6b  \
+    -e bin/simul6  \
     --output appimage \
     --plugin qt \
 
