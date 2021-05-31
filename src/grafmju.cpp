@@ -3,7 +3,8 @@
 #include "constituentseries.h"
 
 
-double GrafMju::value(const Sample& sample, int i, double kapa) {
+double GrafMju::value(const Sample& sample, int i, double kapa, double cross) {
+    Q_UNUSED (cross);
     double mjuoverkapa = 0;
     for (int j = sample.getNegCharge(); j <= sample.getPosCharge(); j++) {
         if (j == 0) { continue; }

@@ -56,7 +56,7 @@ protected slots:
     void saveImage();
 
 protected:
-    virtual double value(const Sample& sample, int i, double kapa);
+    virtual double value(const Sample& sample, int i, double kapa, double cross);
     virtual QString valueUnit() const;
 
 

@@ -41,7 +41,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>false</bool>
@@ -79,8 +79,48 @@
        <string>µ / κ</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="GrafMju" name="f_grafmju" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Lconc</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="GrafLConc" name="f_graflconc" native="true"/>
        </item>
       </layout>
      </widget>
@@ -89,6 +129,21 @@
        <string>VA course</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="VACourse" name="f_vacourse" native="true"/>
        </item>
@@ -146,6 +201,12 @@
    <class>GrafMju</class>
    <extends>QWidget</extends>
    <header>grafmju.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GrafLConc</class>
+   <extends>QWidget</extends>
+   <header>graflconc.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

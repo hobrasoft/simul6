@@ -98,7 +98,7 @@ void Graf::init(const Engine *pEngine) {
 
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
-            series->append(QPointF(x * 1000.0, value(sample, i, kapa[i]))); // sample.getA(0, i)));
+            series->append(QPointF(x * 1000.0, value(sample, i, kapa[i], pEngine->cross[i]))); // sample.getA(0, i)));
             x += inc_x;
             }
         id += 1;
@@ -208,7 +208,7 @@ void Graf::autoscale() {
         if (!sample.visible()) { continue; }
         if (m_rescaleIndividually && sample.getInternalId() != m_rescaleId) { continue; }
         for (unsigned int i = xleft; i <= xright; i++){
-            double val = value(sample, i, kapa[i]);
+            double val = value(sample, i, kapa[i], m_engine->cross[i]);
             if (val > maximum)  {
                 maximum = val;
                 }
@@ -626,8 +626,9 @@ void Graf::slotFinished() {
 }
 
 
-double Graf::value(const Sample& sample, int i, double kapa) {
+double Graf::value(const Sample& sample, int i, double kapa, double cross) {
     Q_UNUSED(kapa);
+    Q_UNUSED(cross);
     return sample.getA(0, i);
 }
 
@@ -656,7 +657,7 @@ void Graf::drawGraph(const Engine *pEngine)
         QList<double> vlist;
         QVector<QPointF> plist;
         for (unsigned int i = 0; i <= p; i++){
-            plist << QPointF(x * 1000.0, value(sample, i, kapa[i]));
+            plist << QPointF(x * 1000.0, value(sample, i, kapa[i], pEngine->cross[i]));
             vlist << x;
             x += inc_x;
             }
@@ -750,7 +751,7 @@ void Graf::seriesClicked(const QPointF& point) {
         double minimumd = 1e99;
         double minimumy = 1e99;
         for (auto &sample : mix.getSamples()) {
-            double sample_y = value(sample, node, kapa[node]); // sample.getA(0, node);
+            double sample_y = value(sample, node, kapa[node], m_engine->cross[node]); // sample.getA(0, node);
             double distance = fabs(y - sample_y);
             if (distance < minimumd) {
                 minimumd = distance;

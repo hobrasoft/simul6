@@ -79,6 +79,7 @@ void SimulationProfile::enableDetector(bool x) {
 void SimulationProfile::setDetectorPosition(double x) {
     ui->f_graf->setDetectorPosition(x);
     ui->f_grafmju->setDetectorPosition(x);
+    ui->f_graflconc->setDetectorPosition(x);
     ui->f_detector->setDetectorPosition(x);
     m_detectorCache->setDetectorPosition(x);
 }
@@ -90,6 +91,7 @@ void SimulationProfile::setVisible(int id, bool visible) {
         }
     ui->f_graf->setVisible(id, visible);
     ui->f_grafmju->setVisible(id, visible);
+    ui->f_graflconc->setVisible(id, visible);
     ui->f_detector->setVisible(id, visible);
 }
 
@@ -97,6 +99,7 @@ void SimulationProfile::setVisible(int id, bool visible) {
 void SimulationProfile::setVisiblePh(bool visible) {
     ui->f_graf->setVisiblePh(visible);
     ui->f_grafmju->setVisiblePh(visible);
+    ui->f_graflconc->setVisiblePh(visible);
     ui->f_detector->setVisiblePh(visible);
 }
 
@@ -104,12 +107,14 @@ void SimulationProfile::setVisiblePh(bool visible) {
 void SimulationProfile::setVisibleDetector(bool visible) {
     ui->f_graf->setVisibleDetector(visible);
     ui->f_grafmju->setVisibleDetector(visible);
+    ui->f_graflconc->setVisibleDetector(visible);
 }
 
 
 void SimulationProfile::setVisibleKapa(bool visible) {
     ui->f_graf->setVisibleKapa(visible);
     ui->f_grafmju->setVisibleKapa(visible);
+    ui->f_graflconc->setVisibleKapa(visible);
     ui->f_detector->setVisibleKapa(visible);
 }
 
@@ -117,6 +122,7 @@ void SimulationProfile::setVisibleKapa(bool visible) {
 void SimulationProfile::setVisibleE(bool visible) {
     ui->f_graf->setVisibleE(visible);
     ui->f_grafmju->setVisibleE(visible);
+    ui->f_graflconc->setVisibleE(visible);
 }
 
 
@@ -148,10 +154,12 @@ void SimulationProfile::createEngine(int np)
 void SimulationProfile::init() {
     ui->f_graf->init(m_engine);
     ui->f_grafmju->init(m_engine);
+    ui->f_graflconc->init(m_engine);
     ui->f_detector->init(m_engine);
     ui->f_vacourse->init(m_engine);
     ui->f_graf->autoscale();
     ui->f_grafmju->autoscale();
+    ui->f_graflconc->autoscale();
     ui->f_detector->autoscale();
     ui->f_vacourse->autoscale();
 }
@@ -161,12 +169,14 @@ void SimulationProfile::swap() {
     ui->f_detector->swap();
     ui->f_graf->swap();
     ui->f_grafmju->swap();
+    ui->f_graflconc->swap();
 }
 
 
 void SimulationProfile::setMix(const Engine *engine) {
     ui->f_graf->init(engine);
     ui->f_grafmju->init(engine);
+    ui->f_graflconc->init(engine);
     ui->f_detector->init(engine);
 }
 
@@ -174,6 +184,7 @@ void SimulationProfile::setMix(const Engine *engine) {
 void SimulationProfile::mixChanged(const Engine *engine) {
     ui->f_graf->init(engine);
     ui->f_grafmju->init(engine);
+    ui->f_graflconc->init(engine);
 }
 
 
@@ -183,6 +194,7 @@ void SimulationProfile::drawGraph(const Engine *engine) {
     ui->f_vacourse->drawGraph(engine);
     ui->f_graf->drawGraph(engine);
     ui->f_grafmju->drawGraph(engine);
+    ui->f_graflconc->drawGraph(engine);
     engine->unlock();
 }
 
@@ -195,6 +207,7 @@ void SimulationProfile::slotRun() {
     ui->f_vacourse->slotRun();
     ui->f_graf->slotRun();
     ui->f_grafmju->slotRun();
+    ui->f_graflconc->slotRun();
 }
 
 
@@ -203,6 +216,7 @@ void SimulationProfile::slotFinished() {
     ui->f_vacourse->slotFinished();
     ui->f_graf->slotFinished();
     ui->f_grafmju->slotFinished();
+    ui->f_graflconc->slotFinished();
 }
 
 
@@ -215,5 +229,6 @@ void SimulationProfile::slotStop() {
     ui->f_vacourse->slotFinished();
     ui->f_graf->slotFinished();
     ui->f_grafmju->slotFinished();
+    ui->f_graflconc->slotFinished();
 }
 
