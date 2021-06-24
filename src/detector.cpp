@@ -253,6 +253,7 @@ void Detector::setAutoscale() {
 }
 
 void Detector::autoscale(bool lock) {
+    if (!m_isVisible) { return; }
     if (m_manualScaled) { return; }
     if (m_engine == nullptr) { return; }
     double maximum = -99999;
