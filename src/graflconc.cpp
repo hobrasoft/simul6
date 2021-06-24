@@ -9,6 +9,6 @@ double GrafLConc::value(const Sample& sample, int i, double kapa, double cross) 
 }
 
 QString GrafLConc::valueUnit() const {
-    return QStringLiteral("10⁹·mol/m");
+    return QStringLiteral("1E-9 mol/m");
 }
 

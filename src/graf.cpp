@@ -549,10 +549,21 @@ double Graf::axisTable(double maximum) {
 
         : (maximum <= 100.) ? 20.0
         : (maximum <= 200.) ? 50.0  
-        : (maximum <= 500.) ? 100.0  
-        : (maximum <= 1000.) ? 200.0  
+        : (maximum <= 500.) ? 100.0           
 
-        : 500;
+        : (maximum <= 1000.) ? 200.0
+        : (maximum <= 2000.) ? 500.0
+        : (maximum <= 5000.) ? 1000.0
+
+        : (maximum <= 10000.) ? 2000.0
+        : (maximum <= 20000.) ? 5000.0
+        : (maximum <= 50000.) ? 10000.0
+
+        : (maximum <= 100000.) ? 20000.0
+        : (maximum <= 200000.) ? 50000.0
+        : (maximum <= 500000.) ? 100000.0
+
+        : 2000000;
 }
 
 
