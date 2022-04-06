@@ -80,7 +80,7 @@ void ComputeControl::setParallelComputation() {
 
 
 void ComputeControl::showTime(double time) {
-    ui->f_time->setText(QString("%1").arg(time, 0, 'f', 2));
+    ui->f_time->setText(QString("%1").arg(time, 0, 'f', 6));
 }
 
 

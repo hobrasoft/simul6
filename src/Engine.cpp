@@ -143,6 +143,7 @@ void Engine::initArrays()
     initArray(q4);
     initArray(pd1);
     initArray(pd2);
+
 }
 
 void Engine::initVectors()
@@ -346,7 +347,7 @@ void Engine::setCrosssection(const Crosssection& x) {
         for (int i = segmentBegin; i< segmentEnd && i <= np + bw/2; i++) {
             auto smooth = [&segmentBegin,&i,this](double previous, double current) {
                 return (i < segmentBegin + bw)
-                    ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2)
+                    ? (previous + (current - previous) * (erf(-4 + static_cast<double>(i-segmentBegin) / bw * 8) + 1) / 2)
                     : current;
                 };
             cross[i] = smooth(prevCross, currentCross);

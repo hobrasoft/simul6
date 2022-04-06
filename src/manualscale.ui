@@ -48,7 +48,7 @@
        <item>
         <widget class="QDoubleSpinBox" name="f_top">
          <property name="decimals">
-          <number>3</number>
+          <number>9</number>
          </property>
          <property name="minimum">
           <double>-9999999.000000000000000</double>
@@ -97,6 +97,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="f_left">
+         <property name="decimals">
+          <number>3</number>
+         </property>
          <property name="minimum">
           <double>-1.000000000000000</double>
          </property>
@@ -144,6 +147,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="f_right">
+         <property name="decimals">
+          <number>3</number>
+         </property>
          <property name="minimum">
           <double>-100000.000000000000000</double>
          </property>
@@ -192,7 +198,7 @@
        <item>
         <widget class="QDoubleSpinBox" name="f_bottom">
          <property name="decimals">
-          <number>3</number>
+          <number>9</number>
          </property>
          <property name="minimum">
           <double>-9999999.000000000000000</double>

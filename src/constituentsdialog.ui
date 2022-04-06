@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1103</width>
-    <height>767</height>
+    <height>888</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -241,8 +241,14 @@
             </item>
             <item row="0" column="0">
              <widget class="QTableView" name="f_segmentsView">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <attribute name="verticalHeaderMinimumSectionSize">
-               <number>20</number>
+               <number>25</number>
               </attribute>
               <attribute name="verticalHeaderDefaultSectionSize">
                <number>25</number>
