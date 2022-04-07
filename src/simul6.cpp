@@ -277,7 +277,7 @@ void Simul6::loadData() {
     bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
     bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
 
-    setWindowTitle(tr("Simul6: ") + filename);
+    setWindowTitle(tr("Simul6 mjukappa: ") + filename);
     if (filename.isEmpty()) { return; }
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
 
