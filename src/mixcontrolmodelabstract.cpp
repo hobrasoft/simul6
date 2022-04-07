@@ -111,7 +111,7 @@ QList<SegmentedConstituent> MixControlModelAbstract::constituents() const {
 
 QVariantList MixControlModelAbstract::json() const {
     QVariantList list;
-    for (int row=0; row<rowCount(); row++) {
+    for (int row = rowCount()-1; row>=0; row--) {
         QVariantMap sample;
         sample["constituent"] = constituent(row).json();
         list << sample;
