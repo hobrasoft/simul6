@@ -166,10 +166,17 @@ void Engine::addMix(const QList<SegmentedConstituent>& pconstituents) {
     for (auto &sample : mix.getSamples()) {
         int segmentBegin = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[0].ratio)) - bw/2;
         int segmentEnd   = (int)((double)(np)/((double)ratioSum)*((double)firstConstituent.segments[1].ratio)) + segmentBegin;
-        double previousA = sample.getA(0, segmentBegin-1);
+        double previousA = 0; 
         double currentA  = 0;
+        if (segmentBegin <= 0) { 
+            segmentBegin = 0; 
+            previousA = sample.getA(0, 0);
+          } else {
+            previousA = sample.getA(0, segmentBegin-1);
+            }
 
         auto smooth = [this](double previous, double current, int segmentBegin, int i) {
+            if (segmentBegin <= 0) { return current; }
             return (i < segmentBegin + bw)
                 ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2)
                 : current;
@@ -280,6 +287,7 @@ void Engine::replaceConstituent(const SegmentedConstituent& constituent, Sample&
         for (int i = segmentBegin; i < segmentEnd && i <= np; i++) {
             if (i<0) { continue; }
             auto smooth = [&segmentBegin,&i,this](double previous, double current) {
+                if (segmentBegin <= 0) { return current; }
                 return (i < segmentBegin + bw) 
                     ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2) 
                     : current;
@@ -345,6 +353,7 @@ void Engine::setCrosssection(const Crosssection& x) {
 
         for (int i = segmentBegin; i< segmentEnd && i <= np + bw/2; i++) {
             auto smooth = [&segmentBegin,&i,this](double previous, double current) {
+                if (segmentBegin <= 0) { return current; }
                 return (i < segmentBegin + bw)
                     ? (previous + (current - previous) * (erf(-3 + static_cast<double>(i-segmentBegin) / bw * 6) + 1) / 2)
                     : current;
