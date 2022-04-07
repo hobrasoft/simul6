@@ -323,7 +323,7 @@ void Detector::autoscale(bool lock) {
     rect.setLeft   (0);
     rect.setRight  (m_time);
 
-    if (rect.width() < 1e-15 || rect.height() < 1e-15) {
+    if (rect.width() < 1e-10 || rect.height() < 1e-10) {
         return;
         }
     setScale(rect.normalized());

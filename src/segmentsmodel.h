@@ -14,6 +14,7 @@ public:
     SegmentedConstituent constituent() const;
     void setConstituent(const SegmentedConstituent&);
     void setRatios(const QList<int>& ratios);
+    void set3FixedSegments(bool x) { m_3fixedsegments = x; }
 
     enum Rows {
         Ratio = 0,
@@ -42,6 +43,7 @@ private slots:
 
 private:
     int m_segmentsNumber;
+    bool m_3fixedsegments;
 };
 
 #endif // SEGMENTSMODEL_H

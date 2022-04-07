@@ -23,8 +23,10 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_show_ph, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedPh);
     connect(ui->f_show_e, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedE);
     connect(ui->f_caplen, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &ComputeControl::caplenChanged);
+    connect(ui->f_caplen, QOverload<double>::of(&QDoubleSpinBox::valueChanged), m_crosssectionModel, &CrosssectionModel::recalculate);
     setParallelComputation();
     QTimer::singleShot(0, this, [this](){
+        m_crosssectionModel->recalculate();
         emit caplenChanged(ui->f_caplen->value());
         });
     connect(ui->f_crosssection, &QToolButton::clicked, [this]() {

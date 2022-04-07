@@ -44,7 +44,7 @@ void MSqlQuery::jeChyba() {
             .arg(text)
             ;
     // PDEBUG << a << "\n" << stacktrace(16);
-    PDEBUG << a;
+    // PDEBUG << a;
     if (m_inTransaction) { rollback(); }
 }
 

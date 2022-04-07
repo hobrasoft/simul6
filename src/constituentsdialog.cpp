@@ -71,6 +71,7 @@ void ConstituentsDialog::set3FixedSegments(const QList<int>& ratios) {
     ui->f_segmentsView->verticalHeader()->hideSection(0);
     ui->f_segmentsNumberWidget->setVisible(false);
     m_segmentsModel->setRatios(ratios);
+    m_segmentsModel->set3FixedSegments(true);
 }
 
 

@@ -203,8 +203,8 @@ void Simul6::stopEngine() {
 void Simul6::saveData() {
     QString dirname = MSETTINGS->dataDirName();
     QString filename = QFileDialog::getSaveFileName(this, tr("Save simulation"), dirname,
-        tr("JSON format (*.json);;"
-           "Sqlite3 format (*.sqlite3)")
+        tr("Sqlite3 format (*.sqlite3);;"
+           "JSON format (*.json);;")
         ).trimmed();
     if (filename.isEmpty()) { return; }
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
@@ -277,7 +277,7 @@ void Simul6::loadData() {
     bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
     bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
 
-    setWindowTitle(tr("Simul: ") + filename);
+    setWindowTitle(tr("Simul6: ") + filename);
     if (filename.isEmpty()) { return; }
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
 

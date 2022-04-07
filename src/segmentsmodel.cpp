@@ -5,6 +5,7 @@
 SegmentsModel::SegmentsModel(QObject *parent)
     : QStandardItemModel(parent)
 {
+    m_3fixedsegments = false;
     insertRows(0, LastRow);
     setHeaderData(Ratio, Qt::Vertical, tr("Ratio"));
     setHeaderData(Concentration, Qt::Vertical, tr("c [mM]"));
@@ -163,6 +164,7 @@ void SegmentsModel::setRatios(const QList<int>& ratios) {
 
 
 void SegmentsModel::recalculate() {
+    blockSignals(true);
     double caplen = Simul6::instance()->getCaplen();
     double ratioSum = 0;
     for (int column = 0; column < columnCount(); column++) {
@@ -173,7 +175,48 @@ void SegmentsModel::recalculate() {
         double ratio = data(index(Ratio, column)).toDouble();
         double ratioLen = (ratioSum > 0) ? 1000*ratio*caplen/ratioSum : 0;
         setHeaderData(column, Qt::Horizontal, QString("%1").arg(ratioLen, 0, 'f', 2));
+        if (m_3fixedsegments) {
+            QVariant u3n = data(index(U3n, 1));
+            QVariant u2n = data(index(U2n, 1));
+            QVariant u1n = data(index(U1n, 1));
+            QVariant u1p = data(index(U1p, 1));
+            QVariant u2p = data(index(U2p, 1));
+            QVariant u3p = data(index(U3p, 1));
+            QVariant pk3n = data(index(Pk3n, 1));
+            QVariant pk2n = data(index(Pk2n, 1));
+            QVariant pk1n = data(index(Pk1n, 1));
+            QVariant pk1p = data(index(Pk1p, 1));
+            QVariant pk2p = data(index(Pk2p, 1));
+            QVariant pk3p = data(index(Pk3p, 1));
+            setData(index(Concentration, 0), 0.0);
+            setData(index(Concentration, 2), 0.0);
+            setData(index(U3n, 0), u3n);
+            setData(index(U2n, 0), u2n);
+            setData(index(U1n, 0), u1n);
+            setData(index(U1p, 0), u1p);
+            setData(index(U2p, 0), u2p);
+            setData(index(U3p, 0), u3p);
+            setData(index(Pk3n, 0), pk3n);
+            setData(index(Pk2n, 0), pk2n);
+            setData(index(Pk1n, 0), pk1n);
+            setData(index(Pk1p, 0), pk1p);
+            setData(index(Pk2p, 0), pk2p);
+            setData(index(Pk3p, 0), pk3p);
+            setData(index(U3n, 2), u3n);
+            setData(index(U2n, 2), u2n);
+            setData(index(U1n, 2), u1n);
+            setData(index(U1p, 2), u1p);
+            setData(index(U2p, 2), u2p);
+            setData(index(U3p, 2), u3p);
+            setData(index(Pk3n, 2), pk3n);
+            setData(index(Pk2n, 2), pk2n);
+            setData(index(Pk1n, 2), pk1n);
+            setData(index(Pk1p, 2), pk1p);
+            setData(index(Pk2p, 2), pk2p);
+            setData(index(Pk3p, 2), pk3p);
+            }
     }
+    blockSignals(false);
 }
 
 
