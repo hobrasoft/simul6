@@ -218,6 +218,7 @@ void Simul6::saveData() {
         filename = filename.replace(QRegExp("\\.+$"),"");
         filename += ".json";
         }
+    setWindowTitle(tr("Simul6: ") + filename);
 
     bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
     bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
