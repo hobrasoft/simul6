@@ -102,6 +102,12 @@ void Simul6::init() {
     setVisible(true);
     ui->f_dock_replay->setVisible(false);
     ui->f_replay->clear();
+
+    QStringList arguments = QCoreApplication::arguments();
+    if (arguments.isEmpty()) { return; }
+    arguments.removeFirst();
+    if (arguments.isEmpty()) { return; }
+    loadData(arguments[0]);
 }
 
 
@@ -213,6 +219,7 @@ void Simul6::saveData() {
         filename = filename.replace(QRegExp("\\.+$"),"");
         filename += ".json";
         }
+    setWindowTitle(tr("Simul6: ") + filename);
 
     bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
     bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
@@ -277,9 +284,17 @@ void Simul6::loadData() {
     bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
     bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
 
-    setWindowTitle(tr("Simul6 mjukappa: ") + filename);
     if (filename.isEmpty()) { return; }
     MSETTINGS->setDataDirName(QFileInfo(filename).absoluteDir().absolutePath());
+    loadData(filename);
+}
+
+
+void Simul6::loadData(const QString& filename) {
+    bool sqliteformat = filename.endsWith(".sqlite3", Qt::CaseInsensitive);
+    bool jsonformat   = filename.endsWith(".json", Qt::CaseInsensitive);
+    if (filename.isEmpty()) { return; }
+    setWindowTitle(tr("Simul6: ") + filename);
 
     QVariant data;
     if (jsonformat) {

@@ -941,6 +941,7 @@ void Engine::runPrivate() {
         // qDebug() << "Engine::runPrivate()" << t;
         // PDEBUG << "t >= timeDisplay" << t << timeDisplay;
         emit drawGraph(this);
+        emit timeElapsed(intervalCounter/1000);
         timeDisplay += timeInterval;
     }
 
