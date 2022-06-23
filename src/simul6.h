@@ -59,6 +59,7 @@ private slots:
     void engineFinished();
     void saveData();
     void loadData();
+    void loadData(const QString& filename);
     void setDockingWindows();
 
     void readSettings();
