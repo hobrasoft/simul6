@@ -6,22 +6,59 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1298</width>
-    <height>299</height>
+    <width>1166</width>
+    <height>355</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Crosssections settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="1">
-    <widget class="QPushButton" name="pushButton">
+   <item row="0" column="0" colspan="4">
+    <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Accept</string>
+      <string>Please, choose wisely the capillary length, zone edge and number of points let the zone edge is more then 20 points wide when more then one segment was used. Edge width less then 20 points can lead to instability.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="2">
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Current edge width:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="f_edgeWidth">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>points</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>762</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="0" rowspan="2" colspan="4">
     <widget class="QTableView" name="f_view">
      <attribute name="verticalHeaderMinimumSectionSize">
       <number>20</number>
@@ -31,7 +68,7 @@
      </attribute>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="2" column="4">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="3" column="0">
       <spacer name="verticalSpacer">
@@ -67,6 +104,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="3" column="4">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Accept</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

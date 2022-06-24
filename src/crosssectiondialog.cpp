@@ -21,7 +21,7 @@ CrosssectionDialog::CrosssectionDialog(QWidget *parent) :
     ui->f_view->setModel(model);
     connect(ui->f_segmentsNumber, SIGNAL(valueChanged(int)), model, SLOT(setSegmentsNumber(int)));
     ui->f_segmentsNumber->setValue(model->columnCount());
-
+    ui->f_edgeWidth->setText(QString("%1").arg(cc->crosssectionBW()));
 }
 
 

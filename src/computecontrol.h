@@ -38,6 +38,7 @@ public:
     void   setEVisible(bool);
 
     CrosssectionModel *crosssectionModel() { return m_crosssectionModel; }
+    int crosssectionBW() const { return m_crosssectionBW; }
 
 signals:
     void init();
@@ -60,11 +61,13 @@ private slots:
     void slotInitClicked();
     void setParallelComputation();
     void enableOrDisableDiameter();
+    void checkCrosssection();
 
 private:
     Ui::ComputeControl *ui;
     int m_maxThreads;
     CrosssectionModel *m_crosssectionModel;
+    int m_crosssectionBW;
 };
 
 #endif // COMPUTECONTROL_H

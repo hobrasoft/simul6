@@ -22,6 +22,9 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_show_kapa, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedKapa);
     connect(ui->f_show_ph, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedPh);
     connect(ui->f_show_e, &QCheckBox::toggled, this, &ComputeControl::visibilityChangedE);
+    connect(ui->f_np,     QOverload<int>::of(&QSpinBox::valueChanged), this, &ComputeControl::checkCrosssection);
+    connect(ui->f_caplen, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &ComputeControl::checkCrosssection);
+    connect(ui->f_bw,     QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &ComputeControl::checkCrosssection);
     connect(ui->f_caplen, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &ComputeControl::caplenChanged);
     connect(ui->f_caplen, QOverload<double>::of(&QDoubleSpinBox::valueChanged), m_crosssectionModel, &CrosssectionModel::recalculate);
     setParallelComputation();
@@ -32,6 +35,7 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(ui->f_crosssection, &QToolButton::clicked, [this]() {
         CrosssectionDialog d(this);
         d.exec();
+        checkCrosssection();
         });
     connect(ui->f_diameter, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [this](double x) {
         m_crosssectionModel->setDefaultDiameter(x);
@@ -39,7 +43,7 @@ ComputeControl::ComputeControl(QWidget *parent) :
     connect(m_crosssectionModel, &QAbstractItemModel::dataChanged, this, &ComputeControl::enableOrDisableDiameter);
     connect(m_crosssectionModel, &QAbstractItemModel::columnsInserted, this, &ComputeControl::enableOrDisableDiameter);
     connect(m_crosssectionModel, &QAbstractItemModel::columnsRemoved, this, &ComputeControl::enableOrDisableDiameter);
-
+    checkCrosssection();
 }
 
 
@@ -54,6 +58,31 @@ void ComputeControl::enableOrDisableDiameter() {
 ComputeControl::~ComputeControl()
 {
     delete ui;
+}
+
+
+void ComputeControl::checkCrosssection() {
+    double l_caplen = ui->f_caplen->value();
+    double l_bw     = ui->f_bw->value();
+    int    l_np     = ui->f_np->value();
+    bool   l_sections = (m_crosssectionModel->columnCount() > 1);
+    m_crosssectionBW = l_bw * l_np / l_caplen;
+    PDEBUG
+        << "caplen" << l_caplen
+        << "bw" << l_bw
+        << "np" << l_np
+        << "sections" << l_sections
+        << "crosssection bw" << m_crosssectionBW;
+
+    if (l_sections && m_crosssectionBW < 20) {
+        ui->f_crosssection->setStyleSheet("background-color:red");
+        return;
+        }
+    if (l_sections && m_crosssectionBW >= 20) {
+        ui->f_crosssection->setStyleSheet("background-color:transparent");
+        return;
+        }
+    ui->f_crosssection->setStyleSheet("background-color:transparent");
 }
 
 
@@ -160,14 +189,17 @@ double ComputeControl::getBWmeters() const {
 
 void   ComputeControl::setCaplen(double x) {
     ui->f_caplen->setValue(x);
+    checkCrosssection();
 }
 
 void   ComputeControl::setBWmeters(double x) {
     ui->f_bw->setValue(x*1000.0);
+    checkCrosssection();
 }
 
 void   ComputeControl::setNp(int x) {
     ui->f_np->setValue(x);
+    checkCrosssection();
 }
 
 void   ComputeControl::setTimeInterval(double x) {
