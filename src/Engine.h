@@ -14,6 +14,7 @@
 #include <vector>
 #include <QObject>
 #include <QMutex>
+#include <QDateTime>
 
 using namespace std;
 
@@ -91,7 +92,10 @@ public:
     double timeInterval; // how often to display
     double timeDisplay; // time to display
     double timeStop;  // when to stop calculation
-    double intervalCounter;  // for measuring time elapsed
+    QDateTime m_startTime;  // for measuring time elapsed
+    QDateTime m_endTime;  // for measuring time elapsed
+    QDateTime startTime() const { return m_startTime; }  // for measuring time elapsed
+    QDateTime endTime() const { return m_endTime; }  // for measuring time elapsed
 
 
     // 2-dimensional arrays
@@ -187,7 +191,6 @@ signals:
     void curDenChanged(double);
     void voltageChanged(double);
     void replacedConstituent(int replacedInternalId, int replaceeInternalId);
-    void timeElapsed(double);
 
 public slots:
     void run();
