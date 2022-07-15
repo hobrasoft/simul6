@@ -908,7 +908,8 @@ void Engine::run()
         if (m_vacourseCache != nullptr) { m_vacourseCache->appendData(this); }
         }
     //timeDisplay = timeInterval;   it is a bug!
-    intervalCounter = 0;
+    m_startTime = QDateTime::currentDateTime();
+    m_endTime = m_startTime;
     QTimer::singleShot(0, this, &Engine::runPrivate);
 }
 
@@ -919,10 +920,8 @@ void Engine::runPrivate() {
         if (m_detectorCache != nullptr) { m_detectorCache->appendData(this); }
         if (m_vacourseCache != nullptr) { m_vacourseCache->appendData(this); }
         emit timeChanged(t);
-        // PDEBUG << "drawGraph !running || t>timeStop";
         emit drawGraph(this);
         emit finished();
-        emit timeElapsed(intervalCounter/1000);
         return;
     }
 
@@ -933,6 +932,7 @@ void Engine::runPrivate() {
         rungekutta();    // if Optimize dt is not checked
     }
     unlock();
+    m_endTime = QDateTime::currentDateTime();
     emit timeChanged(t);
     if (m_detectorCache != nullptr) { m_detectorCache->appendData(this); }
     if (m_vacourseCache != nullptr) { m_vacourseCache->appendData(this); }
@@ -941,7 +941,6 @@ void Engine::runPrivate() {
         // qDebug() << "Engine::runPrivate()" << t;
         // PDEBUG << "t >= timeDisplay" << t << timeDisplay;
         emit drawGraph(this);
-        emit timeElapsed(intervalCounter/1000);
         timeDisplay += timeInterval;
     }
 
@@ -950,7 +949,6 @@ void Engine::runPrivate() {
         emit dtChanged(dt);
         emit curDenChanged(curDen);
         emit voltageChanged(voltage);
-        intervalCounter += 500;
         m_sendSignals = false;
     }
 

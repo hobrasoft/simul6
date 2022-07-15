@@ -147,7 +147,9 @@ void SimulationProfile::createEngine(int np)
     connect(m_engine, &Engine::finished, this, &SimulationProfile::finished);
     connect(m_engine, &Engine::finished, this, &SimulationProfile::slotFinished);
     connect(m_engine, &Engine::replacedConstituent, this, &SimulationProfile::replacedConstituent);
-    connect(m_engine, &Engine::timeElapsed, this, &SimulationProfile::timeElapsed);
+    connect(m_engine, QOverload<double>::of(&Engine::timeChanged), [this]() {
+            emit timeElapsed(m_engine->startTime().msecsTo(m_engine->endTime())/1000.0);
+            });
 }
 
 
