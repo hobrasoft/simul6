@@ -6,6 +6,7 @@
 #include "mixcontrolmodel.h"
 #include "detectorcache.h"
 #include "vacoursecache.h"
+#include "linesmodel.h"
 #include "Engine.h"
 
 namespace Ui {
@@ -24,6 +25,7 @@ public:
    ~SimulationProfile();
 
     Engine *engine() const { return m_engine; }
+    LinesModel *linesModel() const { return m_linesModel; }
 
     void createEngine(int np);
     Graf *graf() const;
@@ -65,6 +67,7 @@ private:
     Engine *m_engine;
     DetectorCache *m_detectorCache;
     VACourseCache *m_vacourseCache;
+    LinesModel    *m_linesModel;
     QThread m_threadEngine;
     QThread m_thread1Cache;
     QThread m_thread2Cache;

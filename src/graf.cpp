@@ -18,6 +18,7 @@
 #include "grafstyle.h"
 #include "manualscale.h"
 #include "drawingflag.h"
+#include "linesmanager.h"
 
 #define PH_OFFSET -4
 #define KAPA_OFFSET  -3
@@ -73,16 +74,20 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     addAction(m_actionSaveImage);
     m_actionSaveImage->setEnabled(false);
 
+    m_actionLines = new QAction(tr("Add/Edit/Remove vertical lines"), this);
+    connect(m_actionLines, &QAction::triggered, this, &Graf::manageLines);
+    addAction(m_actionLines);
+    m_actionLines->setEnabled(true);
+
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
     setMouseTracking(true);
 
 }
 
-
 void Graf::init(const Engine *pEngine) {
     if (pEngine == nullptr) { return; }
-    m_chart->removeAllSeries();
+    removeAllSeries();
 
     m_engine = QPointer<const Engine>(pEngine);
     pEngine->lock();
@@ -159,7 +164,7 @@ void Graf::init(const Engine *pEngine) {
     m_detectorSeries->setBrush(detectorBrush);
     m_chart->addSeries(m_detectorSeries);
     setDetectorPosition(m_detectorPosition);
-
+    createVerticalLines();
 }
 
 
@@ -169,6 +174,46 @@ void Graf::setDetectorPosition(double x) {
     m_detectorSeries->clear();
     m_detectorSeries->append(QPointF(x, -99999));
     m_detectorSeries->append(QPointF(x, +99999));
+}
+
+
+void Graf::removeAllSeries() {
+    for (int i=0; i<m_verticalLines.size(); i++) {
+        QAbstractSeries *serie = m_verticalLines[i];
+        m_chart->removeSeries(serie);
+        serie->deleteLater();
+        }
+    m_verticalLines.clear();
+    m_chart->removeAllSeries();
+}
+
+void Graf::createVerticalLines() {
+    for (int i=0; i<m_verticalLines.size(); i++) {
+        QAbstractSeries *serie = m_verticalLines[i];
+        m_chart->removeSeries(serie);
+        serie->deleteLater();
+        PDEBUG << "remove" << i;
+        }
+    m_verticalLines.clear();
+    LinesModel *model = Simul6::instance()->linesModel();
+    for (int i=0; i<model->rowCount(); i++) {
+        double position = model->data(model->index(i, LinesModel::Position)).toDouble();
+        QColor color = model->data(model->index(i, LinesModel::Color)).value<QColor>();
+        QBrush brush(color);
+        QPen   pen(brush, PENWIDTH);
+        QLineSeries *serie = new QLineSeries(this);
+        m_verticalLines << serie;
+        m_chart->addSeries(serie);
+        serie->setUseOpenGL(true);
+        serie->setPen(pen);
+        serie->setBrush(brush);
+        serie->setVisible(true);
+        serie->append(QPointF(position, -99999));
+        serie->append(QPointF(position, +99999));
+        serie->setName(tr("Vertical line"));
+        if (m_axis_y != nullptr) { serie->attachAxis(m_axis_y); }
+        if (m_axis_x != nullptr) { serie->attachAxis(m_axis_x); }
+        }
 }
 
 
@@ -261,12 +306,16 @@ void Graf::autoscale() {
     rect.setRight  (mcaplen);
     setScale(rect.normalized());
 
+/*
+    // ????????
     if (m_rescaleIndividually && m_axis_x != nullptr) {
         double d_xleft  = m_axis_x->min();
         double d_xright = m_axis_x->max();
         rect.setLeft (d_xleft);
         rect.setRight(d_xright);
         }
+*/
+
     repaint();
 }
 
@@ -476,6 +525,7 @@ void Graf::setScale(const QRectF& rect) {
         serieslist[i]->attachAxis(m_axis_x);
         }
 
+    createVerticalLines();
 }
 
 
@@ -808,5 +858,11 @@ void Graf::saveImage() {
     file.close();
 }
 
+
+void Graf::manageLines() {
+    LinesManager lm(this);
+    lm.exec();
+    createVerticalLines();
+}
 
 

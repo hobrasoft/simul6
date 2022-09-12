@@ -53,12 +53,15 @@ private slots:
     void subselected();
     void setAxisLabels();
     void saveImage();
+    void manageLines();
 
 private:
     QChart *m_chart;
     static double axisTable(double);
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void createVerticalLines();
+    void removeAllSeries();
     QPoint m_pressedPoint;
     bool m_visiblePh;
     bool m_visibleKapa;
@@ -72,6 +75,7 @@ private:
     QAction    *m_actionRescale;
     QAction    *m_actionManualScale;
     QAction    *m_actionSaveImage;
+    QAction    *m_actionLines;
     #ifdef SET_AXIS_LABELS_MANUALLY
     QAction    *m_actionSetAxisLabels;
     #endif
@@ -84,6 +88,7 @@ private:
     int  m_rescaleId;
 
     QLineSeries *m_detectorSeries;
+    QList<QLineSeries *> m_verticalLines;
     double m_detectorPosition;
 
     QPointer<const Engine> m_engine;

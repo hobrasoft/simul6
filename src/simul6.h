@@ -5,6 +5,7 @@
 #include <QCloseEvent>
 #include "mixcontrolmodelabstract.h"
 #include "crosssectionmodel.h"
+#include "linesmodel.h"
 
 namespace Ui {
 class Simul6;
@@ -26,6 +27,7 @@ public:
     const MixControlModelAbstract *mixControlModel() const;
     const CrosssectionModel *crosssectionModel() const;
     CrosssectionModel *crosssectionModel();
+    LinesModel *linesModel() const;
     
     int mixSize() const;
     Graf *graf() const;

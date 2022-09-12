@@ -145,6 +145,11 @@ CrosssectionModel *Simul6::crosssectionModel() {
 }
 
 
+LinesModel *Simul6::linesModel() const {
+    return ui->f_simulationProfile->linesModel();
+}
+
+
 int Simul6::mixSize() const {
     return ui->f_mixcontrol->mixSize();
 }

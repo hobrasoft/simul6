@@ -113,6 +113,9 @@ SOURCES += \
     swapsegmentwidgetchart.cpp \
     crosssectiondialog.cpp \
     crosssectionmodel.cpp \
+    linesmanager.cpp \
+    linesmodel.cpp \
+    linesdelegate.cpp \
 
 HEADERS += \
     simul6.h \
@@ -168,6 +171,9 @@ HEADERS += \
     crosssectionmodel.h \
     crosssection.h \
     drawingflag.h \
+    linesmanager.h \
+    linesmodel.h \
+    linesdelegate.h \
 
 FORMS += \
     simul6.ui \
@@ -185,6 +191,7 @@ FORMS += \
     manualscale.ui \
     swapsegmentwidget.ui \
     crosssectiondialog.ui \
+    linesmanager.ui \
 
 RESOURCES += \
     simul6.qrc \
