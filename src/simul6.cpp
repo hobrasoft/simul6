@@ -44,12 +44,17 @@ Simul6::Simul6(QWidget *parent) :
     ui->setupUi(this);
     setWindowIcon(QIcon("://icons/appicon.svg"));
     createActions();
+    connect(ui->f_computeControl, &ComputeControl::run, this, &Simul6::runEngine);
+    connect(ui->f_computeControl, &ComputeControl::stop, this, &Simul6::stopEngine);
     connect(ui->f_computeControl, &ComputeControl::init, SAVEPROGRESS, &SaveProgress::init);
     connect(ui->f_computeControl, &ComputeControl::init, this, &Simul6::initEngine);
     connect(ui->f_computeControl, &ComputeControl::init, ui->f_mixcontrol, &MixControl::init);
-    connect(ui->f_computeControl, &ComputeControl::init, ui->f_simulationProfile, &SimulationProfile::init);
-    connect(ui->f_computeControl, &ComputeControl::run, this, &Simul6::runEngine);
-    connect(ui->f_computeControl, &ComputeControl::stop, this, &Simul6::stopEngine);
+    connect(ui->f_computeControl, &ComputeControl::init, [this]() {
+        ui->f_simulationProfile->init();
+        ui->f_simulationProfile->setVisiblePh  (ui->f_computeControl->showPh());
+        ui->f_simulationProfile->setVisibleKapa(ui->f_computeControl->showKapa());
+        ui->f_simulationProfile->setVisibleE   (ui->f_computeControl->showE());
+        });
 
     connect(ui->f_simulationProfile, &SimulationProfile::timeChanged, ui->f_computeControl, &ComputeControl::showTime);
     connect(ui->f_simulationProfile, &SimulationProfile::timeElapsed, ui->f_computeControl, &ComputeControl::showTimeElapsed);
