@@ -116,6 +116,9 @@ SOURCES += \
     crosssectiondialog.cpp \
     crosssectionmodel.cpp \
     exportprogresscsv.cpp \
+    linesmanager.cpp \
+    linesmodel.cpp \
+    linesdelegate.cpp \
 
 HEADERS += \
     simul6.h \
@@ -174,6 +177,9 @@ HEADERS += \
     crosssection.h \
     drawingflag.h \
     exportprogresscsv.h \
+    linesmanager.h \
+    linesmodel.h \
+    linesdelegate.h \
 
 FORMS += \
     simul6.ui \
@@ -192,6 +198,7 @@ FORMS += \
     swapsegmentwidget.ui \
     crosssectiondialog.ui \
     exportprogresscsv.ui \
+    linesmanager.ui \
 
 RESOURCES += \
     simul6.qrc \

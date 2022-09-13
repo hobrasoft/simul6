@@ -54,6 +54,7 @@ protected slots:
     void subselected();
     void setAxisLabels();
     void saveImage();
+    void manageLines();
 
 protected:
     virtual double value(const Sample& sample, int i, double kapa, double cross);
@@ -64,6 +65,8 @@ protected:
     static double axisTable(double);
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void createVerticalLines();
+    void removeAllSeries();
     QPoint m_pressedPoint;
     bool m_visiblePh;
     bool m_visibleKapa;
@@ -77,6 +80,7 @@ protected:
     QAction    *m_actionRescale;
     QAction    *m_actionManualScale;
     QAction    *m_actionSaveImage;
+    QAction    *m_actionLines;
     #ifdef SET_AXIS_LABELS_MANUALLY
     QAction    *m_actionSetAxisLabels;
     #endif
@@ -89,6 +93,10 @@ protected:
     int  m_rescaleId;
 
     QLineSeries *m_detectorSeries;
+    QLineSeries *m_phSeries;
+    QLineSeries *m_kapaSeries;
+    QLineSeries *m_eSeries;
+    QList<QLineSeries *> m_verticalLines;
     double m_detectorPosition;
 
     QPointer<const Engine> m_engine;

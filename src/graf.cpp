@@ -18,12 +18,7 @@
 #include "grafstyle.h"
 #include "manualscale.h"
 #include "drawingflag.h"
-
-#define PH_OFFSET -4
-#define KAPA_OFFSET  -3
-#define E_OFFSET  -2
-#define DETECTOR_OFFSET -1
-
+#include "linesmanager.h"
 
 Graf::Graf(QWidget *parent) : GrafAbstract(parent)
 {
@@ -48,6 +43,9 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     m_axis_x = nullptr;
     m_axis_y = nullptr;
     m_detectorSeries = nullptr;
+    m_phSeries = nullptr;
+    m_kapaSeries = nullptr;
+    m_eSeries = nullptr;
     m_detectorPosition = 0;
     m_drawing = false;
 
@@ -73,16 +71,20 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     addAction(m_actionSaveImage);
     m_actionSaveImage->setEnabled(false);
 
+    m_actionLines = new QAction(tr("Add/Edit/Remove vertical lines"), this);
+    connect(m_actionLines, &QAction::triggered, this, &Graf::manageLines);
+    addAction(m_actionLines);
+    m_actionLines->setEnabled(true);
+
     setContextMenuPolicy(Qt::ActionsContextMenu);
     m_rescaleEnabled = true;
     setMouseTracking(true);
 
 }
 
-
 void Graf::init(const Engine *pEngine) {
     if (pEngine == nullptr) { return; }
-    m_chart->removeAllSeries();
+    removeAllSeries();
 
     m_engine = QPointer<const Engine>(pEngine);
     pEngine->lock();
@@ -107,40 +109,40 @@ void Graf::init(const Engine *pEngine) {
         }
 
 
-    ConstituentSeries *series = new PhSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setVisible(m_visiblePh);
+    m_phSeries = new PhSeries(this);
+    connect(m_phSeries, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    m_phSeries->setVisible(m_visiblePh);
     double x = 0;
     auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
         if (hpl[i] > 0) {
             double pH = -log(hpl[i]) / log(10);
-            series->append(QPointF(x * 1000.0, pH));
+            m_phSeries->append(QPointF(x * 1000.0, pH));
             }
         x += inc_x;
         }
-    m_chart->addSeries(series);
+    m_chart->addSeries(m_phSeries);
 
-    series = new ConductivitySeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setVisible(m_visibleKapa);
+    m_kapaSeries = new ConductivitySeries(this);
+    connect(m_kapaSeries, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    m_kapaSeries->setVisible(m_visibleKapa);
     x = 0;
     for (unsigned int i = 0; i <= p; i++){
-        series->append(QPointF(x * 1000.0, kapa[i]*100.0));
+        m_kapaSeries->append(QPointF(x * 1000.0, kapa[i]*100.0));
         x += inc_x;
         }
-    m_chart->addSeries(series);
+    m_chart->addSeries(m_kapaSeries);
 
-    series = new ElectricFieldSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setVisible(m_visibleE);
+    m_eSeries = new ElectricFieldSeries(this);
+    connect(m_eSeries, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    m_eSeries->setVisible(m_visibleE);
     x = 0;
     auto efield = pEngine->getE();
     for (unsigned int i = 0; i <= p; i++){
-        series->append(QPointF(x * 1000.0, fabs(efield[i]/1000.0)));
+        m_eSeries->append(QPointF(x * 1000.0, fabs(efield[i]/1000.0)));
         x += inc_x;
         }
-    m_chart->addSeries(series);
+    m_chart->addSeries(m_eSeries);
 
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
@@ -159,7 +161,7 @@ void Graf::init(const Engine *pEngine) {
     m_detectorSeries->setBrush(detectorBrush);
     m_chart->addSeries(m_detectorSeries);
     setDetectorPosition(m_detectorPosition);
-
+    createVerticalLines();
 }
 
 
@@ -169,6 +171,46 @@ void Graf::setDetectorPosition(double x) {
     m_detectorSeries->clear();
     m_detectorSeries->append(QPointF(x, -99999));
     m_detectorSeries->append(QPointF(x, +99999));
+}
+
+
+void Graf::removeAllSeries() {
+    for (int i=0; i<m_verticalLines.size(); i++) {
+        QAbstractSeries *serie = m_verticalLines[i];
+        m_chart->removeSeries(serie);
+        serie->deleteLater();
+        }
+    m_verticalLines.clear();
+    m_chart->removeAllSeries();
+}
+
+void Graf::createVerticalLines() {
+    for (int i=0; i<m_verticalLines.size(); i++) {
+        QAbstractSeries *serie = m_verticalLines[i];
+        m_chart->removeSeries(serie);
+        serie->deleteLater();
+        PDEBUG << "remove" << i;
+        }
+    m_verticalLines.clear();
+    LinesModel *model = Simul6::instance()->linesModel();
+    for (int i=0; i<model->rowCount(); i++) {
+        double position = model->data(model->index(i, LinesModel::Position)).toDouble();
+        QColor color = model->data(model->index(i, LinesModel::Color)).value<QColor>();
+        QBrush brush(color);
+        QPen   pen(brush, PENWIDTH);
+        QLineSeries *serie = new QLineSeries(this);
+        m_verticalLines << serie;
+        m_chart->addSeries(serie);
+        serie->setUseOpenGL(true);
+        serie->setPen(pen);
+        serie->setBrush(brush);
+        serie->setVisible(true);
+        serie->append(QPointF(position, -99999));
+        serie->append(QPointF(position, +99999));
+        serie->setName(tr("Vertical line"));
+        if (m_axis_y != nullptr) { serie->attachAxis(m_axis_y); }
+        if (m_axis_x != nullptr) { serie->attachAxis(m_axis_x); }
+        }
 }
 
 
@@ -262,12 +304,16 @@ void Graf::autoscale() {
     rect.setRight  (mcaplen);
     setScale(rect.normalized());
 
+/*
+    // ????????
     if (m_rescaleIndividually && m_axis_x != nullptr) {
         double d_xleft  = m_axis_x->min();
         double d_xright = m_axis_x->max();
         rect.setLeft (d_xleft);
         rect.setRight(d_xright);
         }
+*/
+
     repaint();
 }
 
@@ -477,6 +523,7 @@ void Graf::setScale(const QRectF& rect) {
         serieslist[i]->attachAxis(m_axis_x);
         }
 
+    createVerticalLines();
 }
 
 
@@ -583,40 +630,29 @@ void Graf::setVisible(int id, bool visible) {
 
 void Graf::setVisibleDetector(bool visible) {
     m_visibleDetector = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+DETECTOR_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
+    if (m_detectorSeries == nullptr) { return; }
+    m_detectorSeries->setVisible(visible);
 }
 
 
 void Graf::setVisiblePh(bool visible) {
     m_visiblePh = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+PH_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-    // autoscale();
+    if (m_phSeries == nullptr) { return; }
+    m_phSeries->setVisible(visible);
 }
 
 
 void Graf::setVisibleKapa(bool visible) {
     m_visibleKapa = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+KAPA_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-    // autoscale();
+    if (m_kapaSeries == nullptr) { return; }
+    m_kapaSeries->setVisible(visible);
 }
 
 
 void Graf::setVisibleE(bool visible) {
     m_visibleE = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+E_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-    // autoscale();
+    if (m_eSeries == nullptr) { return; }
+    m_eSeries->setVisible(visible);
 }
 
 
@@ -779,11 +815,7 @@ void Graf::seriesClicked(const QPointF& point) {
         }
     m_engine->unlock();
 
-    int seriescount = m_chart->series().size();
-    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+PH_OFFSET] << "PH";
-    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+KAPA_OFFSET] << "KAPA";
-    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+E_OFFSET] << "E";
-    if (s1 == m_chart->series()[seriescount+PH_OFFSET]) {
+    if (s1 == m_phSeries) {
         double pH = -log(hpl[node]) / log(10);
         GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
         d->move(position);
@@ -792,7 +824,7 @@ void Graf::seriesClicked(const QPointF& point) {
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount+KAPA_OFFSET]) {
+    if (s1 == m_kapaSeries) {
         double k = kapa[node] * 1000.0;
         GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
         d->move(position);
@@ -801,7 +833,7 @@ void Graf::seriesClicked(const QPointF& point) {
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount+E_OFFSET]) {
+    if (s1 == m_eSeries) {
         double e = efield[node];
         GrafDetail *d = new GrafDetail(this, tr("Electric field"), "V/m", x, e, node);
         d->move(position);
@@ -831,5 +863,11 @@ void Graf::saveImage() {
     file.close();
 }
 
+
+void Graf::manageLines() {
+    LinesManager lm(this);
+    lm.exec();
+    createVerticalLines();
+}
 
 

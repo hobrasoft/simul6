@@ -34,6 +34,7 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
 
     m_threadEngine.start();
     m_engine = nullptr;
+    m_linesModel = new LinesModel(this);
 
     m_thread1Cache.start();
     m_detectorCache = new DetectorCache();
