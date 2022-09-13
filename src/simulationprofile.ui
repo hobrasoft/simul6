@@ -49,7 +49,7 @@
      <property name="tabBarAutoHide">
       <bool>false</bool>
      </property>
-     <widget class="QWidget" name="page_graf">
+     <widget class="QWidget" name="f_page_graf">
       <attribute name="title">
        <string>Chart</string>
       </attribute>
@@ -74,7 +74,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="f_page_grafmju">
       <attribute name="title">
        <string>µ / κ</string>
       </attribute>
@@ -99,7 +99,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="f_page_graflconc">
       <attribute name="title">
        <string>Lconc</string>
       </attribute>
@@ -124,7 +124,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_vacourse">
+     <widget class="QWidget" name="f_page_vacourse">
       <attribute name="title">
        <string>VA course</string>
       </attribute>
@@ -149,7 +149,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_detector">
+     <widget class="QWidget" name="f_page_detector">
       <attribute name="title">
        <string>Detector</string>
       </attribute>

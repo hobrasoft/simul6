@@ -39,6 +39,7 @@ public slots:
     void showGlobalActions(bool) Q_DECL_OVERRIDE;
     void setDetectorPosition(double) Q_DECL_OVERRIDE;
     void swap();
+    void repaintVerticalLines() { createVerticalLines(); }
 
     void slotRun();
     void slotFinished();

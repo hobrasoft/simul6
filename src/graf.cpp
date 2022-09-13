@@ -189,7 +189,6 @@ void Graf::createVerticalLines() {
         QAbstractSeries *serie = m_verticalLines[i];
         m_chart->removeSeries(serie);
         serie->deleteLater();
-        PDEBUG << "remove" << i;
         }
     m_verticalLines.clear();
     LinesModel *model = Simul6::instance()->linesModel();

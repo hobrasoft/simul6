@@ -47,10 +47,13 @@ SimulationProfile::SimulationProfile(QWidget *parent) :
     ui->f_vacourse->setVACourseCache(m_vacourseCache);
 
     connect(ui->f_tabwidget, &QTabWidget::currentChanged, [this](int) {
-        bool detector_visible = (ui->f_tabwidget->currentWidget() == ui->page_detector);
-        PDEBUG << "detector visible" << detector_visible;
-        ui->f_detector->setIsVisible(detector_visible);
+        const QWidget *currentWidget = ui->f_tabwidget->currentWidget();
+        bool detectorpage_visible = (currentWidget == ui->f_page_detector);
+        ui->f_detector->setIsVisible(detectorpage_visible);
         ui->f_detector->drawGraph(m_engine);
+        if (currentWidget == ui->f_page_graf) { ui->f_graf->repaintVerticalLines(); }
+        if (currentWidget == ui->f_page_grafmju) { ui->f_grafmju->repaintVerticalLines(); }
+        if (currentWidget == ui->f_page_graflconc) { ui->f_graflconc->repaintVerticalLines(); }
         });
 
 }
@@ -71,8 +74,8 @@ void SimulationProfile::enableDetector(bool x) {
     ui->f_detector->drawGraph(m_engine);
     ui->f_tabwidget->tabBar()->setTabEnabled(4,x);  // 4 = index of Detector tab
     if (!x) {
-        if (ui->f_tabwidget->currentWidget() != ui->page_detector) { return; }
-        ui->f_tabwidget->setCurrentWidget(ui->page_graf);
+        if (ui->f_tabwidget->currentWidget() != ui->f_page_detector) { return; }
+        ui->f_tabwidget->setCurrentWidget(ui->f_page_graf);
         }
 }
 
