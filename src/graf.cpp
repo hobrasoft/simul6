@@ -20,12 +20,6 @@
 #include "drawingflag.h"
 #include "linesmanager.h"
 
-#define PH_OFFSET -4
-#define KAPA_OFFSET  -3
-#define E_OFFSET  -2
-#define DETECTOR_OFFSET -1
-
-
 Graf::Graf(QWidget *parent) : GrafAbstract(parent)
 {
     if (MSETTINGS->guiChartAntialiasing()) {
@@ -49,6 +43,9 @@ Graf::Graf(QWidget *parent) : GrafAbstract(parent)
     m_axis_x = nullptr;
     m_axis_y = nullptr;
     m_detectorSeries = nullptr;
+    m_phSeries = nullptr;
+    m_kapaSeries = nullptr;
+    m_eSeries = nullptr;
     m_detectorPosition = 0;
     m_drawing = false;
 
@@ -103,7 +100,7 @@ void Graf::init(const Engine *pEngine) {
 
         double x = 0;
         for (unsigned int i = 0; i <= p; i++){
-            series->append(QPointF(x * 1000.0, sample.getA(0, i)));
+            series->append(QPointF(x * 1000.0, value(sample, i, kapa[i], pEngine->cross[i]))); // sample.getA(0, i)));
             x += inc_x;
             }
         id += 1;
@@ -112,40 +109,40 @@ void Graf::init(const Engine *pEngine) {
         }
 
 
-    ConstituentSeries *series = new PhSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setVisible(m_visiblePh);
+    m_phSeries = new PhSeries(this);
+    connect(m_phSeries, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    m_phSeries->setVisible(m_visiblePh);
     double x = 0;
     auto hpl = pEngine->getHpl();
     for (unsigned int i = 0; i <= p; i++){
         if (hpl[i] > 0) {
             double pH = -log(hpl[i]) / log(10);
-            series->append(QPointF(x * 1000.0, pH));
+            m_phSeries->append(QPointF(x * 1000.0, pH));
             }
         x += inc_x;
         }
-    m_chart->addSeries(series);
+    m_chart->addSeries(m_phSeries);
 
-    series = new ConductivitySeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setVisible(m_visibleKapa);
+    m_kapaSeries = new ConductivitySeries(this);
+    connect(m_kapaSeries, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    m_kapaSeries->setVisible(m_visibleKapa);
     x = 0;
     for (unsigned int i = 0; i <= p; i++){
-        series->append(QPointF(x * 1000.0, kapa[i]*100.0));
+        m_kapaSeries->append(QPointF(x * 1000.0, kapa[i]*100.0));
         x += inc_x;
         }
-    m_chart->addSeries(series);
+    m_chart->addSeries(m_kapaSeries);
 
-    series = new ElectricFieldSeries(this);
-    connect(series, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
-    series->setVisible(m_visibleE);
+    m_eSeries = new ElectricFieldSeries(this);
+    connect(m_eSeries, &ConstituentSeries::clicked, this, &Graf::seriesClicked);
+    m_eSeries->setVisible(m_visibleE);
     x = 0;
     auto efield = pEngine->getE();
     for (unsigned int i = 0; i <= p; i++){
-        series->append(QPointF(x * 1000.0, fabs(efield[i]/1000.0)));
+        m_eSeries->append(QPointF(x * 1000.0, fabs(efield[i]/1000.0)));
         x += inc_x;
         }
-    m_chart->addSeries(series);
+    m_chart->addSeries(m_eSeries);
 
     pEngine->unlock();
     m_chart->legend()->setVisible(false);
@@ -230,8 +227,8 @@ void Graf::swap() {
 void Graf::autoscale() {
     // PDEBUG;
     if (m_engine == nullptr) { return; }
-    double maximum = 0;
-    double minimum = 9999999;
+    double maximum = -9999999;
+    double minimum =  9999999;
     m_engine->lock();
     size_t p        = m_engine->getNp();
     auto hpl        = m_engine->getHpl();
@@ -253,11 +250,12 @@ void Graf::autoscale() {
         if (!sample.visible()) { continue; }
         if (m_rescaleIndividually && sample.getInternalId() != m_rescaleId) { continue; }
         for (unsigned int i = xleft; i <= xright; i++){
-            if (sample.getA(0, i) > maximum)  {
-                maximum = sample.getA(0,i);
+            double val = value(sample, i, kapa[i], m_engine->cross[i]);
+            if (val > maximum)  {
+                maximum = val;
                 }
-            if (sample.getA(0, i) < minimum)  {
-                minimum = sample.getA(0,i);
+            if (val < minimum)  {
+                minimum = val;
                 }
             }
         }
@@ -598,10 +596,21 @@ double Graf::axisTable(double maximum) {
 
         : (maximum <= 100.) ? 20.0
         : (maximum <= 200.) ? 50.0  
-        : (maximum <= 500.) ? 100.0  
-        : (maximum <= 1000.) ? 200.0  
+        : (maximum <= 500.) ? 100.0           
 
-        : 500;
+        : (maximum <= 1000.) ? 200.0
+        : (maximum <= 2000.) ? 500.0
+        : (maximum <= 5000.) ? 1000.0
+
+        : (maximum <= 10000.) ? 2000.0
+        : (maximum <= 20000.) ? 5000.0
+        : (maximum <= 50000.) ? 10000.0
+
+        : (maximum <= 100000.) ? 20000.0
+        : (maximum <= 200000.) ? 50000.0
+        : (maximum <= 500000.) ? 100000.0
+
+        : 2000000;
 }
 
 
@@ -621,40 +630,29 @@ void Graf::setVisible(int id, bool visible) {
 
 void Graf::setVisibleDetector(bool visible) {
     m_visibleDetector = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+DETECTOR_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
+    if (m_detectorSeries == nullptr) { return; }
+    m_detectorSeries->setVisible(visible);
 }
 
 
 void Graf::setVisiblePh(bool visible) {
     m_visiblePh = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+PH_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-    // autoscale();
+    if (m_phSeries == nullptr) { return; }
+    m_phSeries->setVisible(visible);
 }
 
 
 void Graf::setVisibleKapa(bool visible) {
     m_visibleKapa = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+KAPA_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-    // autoscale();
+    if (m_kapaSeries == nullptr) { return; }
+    m_kapaSeries->setVisible(visible);
 }
 
 
 void Graf::setVisibleE(bool visible) {
     m_visibleE = visible;
-    QList<QAbstractSeries *> list = m_chart->series();
-    int i = list.size()+E_OFFSET;
-    if (i<0) { return; }
-    list[i]->setVisible(visible);
-    // autoscale();
+    if (m_eSeries == nullptr) { return; }
+    m_eSeries->setVisible(visible);
 }
 
 
@@ -674,6 +672,17 @@ void Graf::slotFinished() {
     m_actionSaveImage->setEnabled(true);
 }
 
+
+double Graf::value(const Sample& sample, int i, double kapa, double cross) {
+    Q_UNUSED(kapa);
+    Q_UNUSED(cross);
+    return sample.getA(0, i);
+}
+
+
+QString Graf::valueUnit() const {
+    return QStringLiteral("mM");
+}
 
 void Graf::drawGraph(const Engine *pEngine)
 {
@@ -695,7 +704,7 @@ void Graf::drawGraph(const Engine *pEngine)
         QList<double> vlist;
         QVector<QPointF> plist;
         for (unsigned int i = 0; i <= p; i++){
-            plist << QPointF(x * 1000.0, sample.getA(0, i));
+            plist << QPointF(x * 1000.0, value(sample, i, kapa[i], pEngine->cross[i]));
             vlist << x;
             x += inc_x;
             }
@@ -789,7 +798,7 @@ void Graf::seriesClicked(const QPointF& point) {
         double minimumd = 1e99;
         double minimumy = 1e99;
         for (auto &sample : mix.getSamples()) {
-            double sample_y = sample.getA(0, node);
+            double sample_y = value(sample, node, kapa[node], m_engine->cross[node]); // sample.getA(0, node);
             double distance = fabs(y - sample_y);
             if (distance < minimumd) {
                 minimumd = distance;
@@ -798,7 +807,7 @@ void Graf::seriesClicked(const QPointF& point) {
             }
         m_engine->unlock();
         // PDEBUG << s2->name() << s2->internalId();
-        GrafDetail *d = new GrafDetail(this, s2->name(), "mM", x, minimumy, node);
+        GrafDetail *d = new GrafDetail(this, s2->name(), valueUnit(), x, minimumy, node);
         d->move(position);
         d->show();
         connect(d, &QObject::destroyed, s2, &ConstituentSeries::setNormalWidth);
@@ -806,11 +815,7 @@ void Graf::seriesClicked(const QPointF& point) {
         }
     m_engine->unlock();
 
-    int seriescount = m_chart->series().size();
-    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+PH_OFFSET] << "PH";
-    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+KAPA_OFFSET] << "KAPA";
-    // PDEBUG << seriescount << s1 << m_chart->series()[seriescount+E_OFFSET] << "E";
-    if (s1 == m_chart->series()[seriescount+PH_OFFSET]) {
+    if (s1 == m_phSeries) {
         double pH = -log(hpl[node]) / log(10);
         GrafDetail *d = new GrafDetail(this, tr("pH"), "", x, pH, node);
         d->move(position);
@@ -819,7 +824,7 @@ void Graf::seriesClicked(const QPointF& point) {
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount+KAPA_OFFSET]) {
+    if (s1 == m_kapaSeries) {
         double k = kapa[node] * 1000.0;
         GrafDetail *d = new GrafDetail(this, tr("Conductivity"), "mS/m", x, k, node);
         d->move(position);
@@ -828,7 +833,7 @@ void Graf::seriesClicked(const QPointF& point) {
         return;
         }
 
-    if (s1 == m_chart->series()[seriescount+E_OFFSET]) {
+    if (s1 == m_eSeries) {
         double e = efield[node];
         GrafDetail *d = new GrafDetail(this, tr("Electric field"), "V/m", x, e, node);
         d->move(position);
