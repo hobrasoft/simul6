@@ -164,7 +164,7 @@ void SegmentsModel::setRatios(const QList<int>& ratios) {
 
 
 void SegmentsModel::recalculate() {
-    blockSignals(true);
+//  blockSignals(true);
     double caplen = Simul6::instance()->getCaplen();
     double ratioSum = 0;
     for (int column = 0; column < columnCount(); column++) {
@@ -216,7 +216,7 @@ void SegmentsModel::recalculate() {
             setData(index(Pk3p, 2), pk3p);
             }
     }
-    blockSignals(false);
+//  blockSignals(false);
 }
 
 
