@@ -44,6 +44,7 @@ private slots:
 private:
     int m_segmentsNumber;
     bool m_3fixedsegments;
+    bool m_recalculating;
 };
 
 #endif // SEGMENTSMODEL_H

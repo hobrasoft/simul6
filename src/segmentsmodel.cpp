@@ -6,6 +6,7 @@ SegmentsModel::SegmentsModel(QObject *parent)
     : QStandardItemModel(parent)
 {
     m_3fixedsegments = false;
+    m_recalculating = false;
     insertRows(0, LastRow);
     setHeaderData(Ratio, Qt::Vertical, tr("Ratio"));
     setHeaderData(Concentration, Qt::Vertical, tr("c [mM]"));
@@ -164,6 +165,8 @@ void SegmentsModel::setRatios(const QList<int>& ratios) {
 
 
 void SegmentsModel::recalculate() {
+    if (m_recalculating) { return; }
+    m_recalculating = true;
 //  blockSignals(true);
     double caplen = Simul6::instance()->getCaplen();
     double ratioSum = 0;
@@ -215,8 +218,9 @@ void SegmentsModel::recalculate() {
             setData(index(Pk2p, 2), pk2p);
             setData(index(Pk3p, 2), pk3p);
             }
-    }
+        }
 //  blockSignals(false);
+    m_recalculating = false;
 }
 
 
