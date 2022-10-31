@@ -1,4 +1,4 @@
-APP_VERSION = "6.1.4"
+APP_VERSION = "6.1.5"
 APP_NAME = "Simul6"
 APP_LOW_NAME = $$lower($$APP_NAME)
 EXE_NAME = "simul6.exe"
